@@ -1,0 +1,69 @@
+{
+	"AppFooter": {
+		"links": {
+			"imprint": "Imprint"
+		},
+		"navigation-secondary": "Secondary"
+	},
+	"AppHeader": {
+		"links": {
+			"home": "Home"
+		},
+		"navigation-menu": "Navigation menu",
+		"navigation-primary": "Primary",
+		"toggle-navigation-menu": "Toggle navigation menu"
+	},
+	"ColorSchemeSwitcher": {
+		"change-color-scheme": "Change color scheme",
+		"color-schemes": {
+			"dark": "Dark",
+			"light": "Light",
+			"system": "System"
+		}
+	},
+	"Error": {
+		"something-went-wrong": "Something went wrong!",
+		"try-again": "Try again"
+	},
+	"ImprintPage": {
+		"meta": {
+			"title": "Imprint"
+		},
+		"title": "Imprint"
+	},
+	"IndexPage": {
+		"badge": "DARIAH Unified National Reporting",
+		"lead-in": "Pariatur sunt dolore mollit occaecat laborum sit. Nulla est laboris labore et aliquip proident eu aliquip ullamco aute. Ut ad sunt pariatur irure commodo enim est non officia.",
+		"title": "We want to see performance indicators!"
+	},
+	"Loading": {
+		"loading": "Loading"
+	},
+	"LocaleLayout": {
+		"meta": {
+			"description": "Key performance indicators for DARIAH member countries.",
+			"title": "DARIAH Unified National Reporting",
+			"twitter": {
+				"creator": "@dariaheu",
+				"site": "@dariaheu"
+			}
+		},
+		"skip-to-main-content": "Skip to main content"
+	},
+	"LocaleSwitcher": {
+		"current-locale": "Current language: {locale}",
+		"switch-locale": "Switch locale",
+		"switch-locale-to": "Switch to {locale}"
+	},
+	"Manifest": {
+		"description": "Key performance indicators for DARIAH member countries.",
+		"name": "DARIAH Unified National Reporting",
+		"short-name": "DARIAH UNR"
+	},
+	"NotFoundPage": {
+		"meta": {
+			"title": "Page not found"
+		},
+		"title": "Page not found"
+	}
+}
