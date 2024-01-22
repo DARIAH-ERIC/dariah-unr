@@ -13,6 +13,7 @@ Table bodies {
 
 Table roles {
   id String [pk]
+  
   name String [not null]
   bodies bodies [not null]
   contributors contributors [not null]
@@ -25,8 +26,9 @@ Table contributors {
   name String [not null]
   startDate DateTime
   endDate DateTime
-  persons persons [not null]
-  roles roles [not null]
+  person persons [not null]
+  role roles [not null]
+  country countries [not null]
   workingGroups working_groups [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
@@ -87,14 +89,14 @@ Table services {
   id String [pk]
   name String [not null]
   type ServiceType [not null]
-  url String
+  url String[]
   status ServiceStatus
   audience ServiceAudience
   agreements String
   valueProposition String
   sshoc ServiceSshocStatus
   service_owner String
-  serviceProvider String
+  serviceProvider institutions [ not null]
   privateSupplier Boolean
   trl Int
   technical_contact String
@@ -103,6 +105,7 @@ Table services {
   monitoring Boolean
   dariah_branding Boolean
   countries countries [not null]
+
   reports service_reports [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
@@ -114,6 +117,16 @@ Table software {
   url String
   sshocEntry String
   sshocComment String
+  countries countries [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table publication {
+  id String [pk]
+  title String [not null]
+  url String
+  citation String
   countries countries [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
@@ -198,6 +211,7 @@ Table reports {
   year Int [not null]
   comments Json
   countryId String [not null]
+  countContributors Int [not null]
   country countries [not null]
   events event_reports [not null]
   projectsFundingLeverage projects_funding_leverage [not null]
@@ -251,15 +265,7 @@ Table BodyToRole {
   bodiesId String [ref: > bodies.id]
 }
 
-Table ContributorToRole {
-  contributorsId String [ref: > contributors.id]
-  rolesId String [ref: > roles.id]
-}
 
-Table ContributorToPerson {
-  personsId String [ref: > persons.id]
-  contributorsId String [ref: > contributors.id]
-}
 
 Table ContributorToWorkingGroup {
   workinggroupsId String [ref: > working_groups.id]
@@ -286,9 +292,20 @@ Table CountryToService {
   countriesId String [ref: > countries.id]
 }
 
+Table CountryToPublication {
+  publicationId String [ref: > publication.id]
+  countriesId String [ref: > countries.id]
+}
+
+
 Table CountryToSoftware {
   softwareId String [ref: > software.id]
   countriesId String [ref: > countries.id]
+}
+
+Table InstitutionToService {
+  servicesId String [ref: > services.id]
+  institutionId String [ref: > institutions.id]
 }
 
 Table ReportToResearchPolicyDevelopment {
@@ -391,3 +408,11 @@ Ref: reports.countryId > countries.id [delete: Cascade]
 Ref: accounts.userId > users.id [delete: Cascade]
 
 Ref: users.countryId > countries.id
+
+Ref: contributors.role > roles.id
+
+Ref: contributors.person > persons.id
+
+Ref: contributors.country > countries.id
+
+Ref: "ReportToServiceReport"."reportsId" < "ReportToServiceReport"."servicesId"
