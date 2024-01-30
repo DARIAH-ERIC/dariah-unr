@@ -44,7 +44,7 @@ Table persons {
   updatedAt DateTime [not null]
 }
 
-Table working_groups {
+Table workingGroups {
   id String [pk]
   name String [not null]
   startDate DateTime
@@ -115,8 +115,10 @@ Table software {
   id String [pk]
   name String [not null]
   url String
-  sshocEntry String
-  sshocComment String
+  mpUrl String
+  comment String
+  softwareStatus SoftwareStatus
+  mpOnboardingStatus mpOnboardingStatus [not null]
   countries countries [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
@@ -132,17 +134,17 @@ Table publication {
   updatedAt DateTime [not null]
 }
 
-Table social_media {
+Table socialMedia {
   id String [pk]
   url String [not null]
   type SocialMediaType [not null]
   countries countries [not null]
-  reports social_media_reports [not null]
+  reports socialMediaReports [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
 
-Table research_policy_developments {
+Table researchPolicyDevelopments {
   id String [pk]
   name String [not null]
   level ResearchPolicyLevel [not null]
@@ -152,7 +154,7 @@ Table research_policy_developments {
   updatedAt DateTime [not null]
 }
 
-Table event_reports {
+Table eventReports {
   id String [pk]
   smallMeetings Int
   mediumMeetings Int
@@ -165,7 +167,7 @@ Table event_reports {
   updatedAt DateTime [not null]
 }
 
-Table projects_funding_leverage {
+Table projectsFundingLeverage {
   id String [pk]
   name String [not null]
   amount Int
@@ -179,7 +181,7 @@ Table projects_funding_leverage {
   updatedAt DateTime [not null]
 }
 
-Table service_reports {
+Table serviceReports {
   id String [pk]
   interactions Int
   uniqueUsers Int
@@ -191,7 +193,7 @@ Table service_reports {
   updatedAt DateTime [not null]
 }
 
-Table social_media_reports {
+Table socialMediaReports {
   id String [pk]
   users Int
   pageViews Int
@@ -200,7 +202,7 @@ Table social_media_reports {
   uniqueUsers Int
   registeredItems Int
   socialMediaId String [not null]
-  socialMedia social_media [not null]
+  socialMedia socialMedia [not null]
   reports reports [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
@@ -213,11 +215,11 @@ Table reports {
   countryId String [not null]
   countContributors Int [not null]
   country countries [not null]
-  events event_reports [not null]
-  projectsFundingLeverage projects_funding_leverage [not null]
-  services service_reports [not null]
-  socialMedia social_media_reports [not null]
-  researchPolicyDevelopments research_policy_developments [not null]
+  events eventReports [not null]
+  projectsFundingLeverage projectsFundingLeverage [not null]
+  services serviceReports [not null]
+  socialMedia socialMediaReports [not null]
+  researchPolicyDevelopments researchPolicyDevelopments [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 
@@ -236,8 +238,8 @@ Table accounts {
   expires_at Int
   token_type String
   scope String
-  id_token String
-  session_state String
+  idToken String
+  sessionState String
   userId String [not null]
   user users [not null]
 
@@ -260,148 +262,158 @@ Table users {
   country countries
 }
 
-Table BodyToRole {
+Table bodyToRole {
   rolesId String [ref: > roles.id]
   bodiesId String [ref: > bodies.id]
 }
 
 
 
-Table ContributorToWorkingGroup {
-  workinggroupsId String [ref: > working_groups.id]
+Table contributorToWorkingGroup {
+  workinggroupsId String [ref: > workingGroups.id]
   chairsId String [ref: > contributors.id]
 }
 
-Table InstitutionToPerson {
+Table institutionToPerson {
   institutionsId String [ref: > institutions.id]
   personsId String [ref: > persons.id]
 }
 
-Table CountryToInstitution {
+Table countryToInstitution {
   countriesId String [ref: > countries.id]
   institutionsId String [ref: > institutions.id]
 }
 
-Table CountryToSocialMedia {
-  socialmediaId String [ref: > social_media.id]
+Table countryToSocialMedia {
+  socialmediaId String [ref: > socialMedia.id]
   countriesId String [ref: > countries.id]
 }
 
-Table CountryToService {
+Table countryToService {
   servicesId String [ref: > services.id]
   countriesId String [ref: > countries.id]
 }
 
-Table CountryToPublication {
+Table countryToPublication {
   publicationId String [ref: > publication.id]
   countriesId String [ref: > countries.id]
 }
 
 
-Table CountryToSoftware {
+Table countryToSoftware {
   softwareId String [ref: > software.id]
   countriesId String [ref: > countries.id]
 }
 
-Table InstitutionToService {
+Table institutionToService {
   servicesId String [ref: > services.id]
   institutionId String [ref: > institutions.id]
 }
 
-Table ReportToResearchPolicyDevelopment {
+Table reportToResearchPolicyDevelopment {
   reportsId String [ref: > reports.id]
-  researchpolicydevelopmentsId String [ref: > research_policy_developments.id]
+  researchPolicyDevelopmentsId String [ref: > researchPolicyDevelopments.id]
 }
 
-Table EventReportToReport {
+Table eventReportToReport {
   reportsId String [ref: > reports.id]
-  eventsId String [ref: > event_reports.id]
+  eventsId String [ref: > eventReports.id]
 }
 
-Table ProjectsFundingLeverageToReport {
+Table projectsFundingLeverageToReport {
   reportsId String [ref: > reports.id]
-  projectsfundingleverageId String [ref: > projects_funding_leverage.id]
+  projectsfundingleverageId String [ref: > projectsFundingLeverage.id]
 }
 
-Table ReportToServiceReport {
+Table reportToServiceReport {
   reportsId String [ref: > reports.id]
-  servicesId String [ref: > service_reports.id]
+  servicesId String [ref: > serviceReports.id]
 }
 
-Table ReportToSocialMediaReport {
+Table reportToSocialMediaReport {
   reportsId String [ref: > reports.id]
-  socialmediaId String [ref: > social_media_reports.id]
+  socialmediaId String [ref: > socialMediaReports.id]
 }
 
-Enum InstitutionType {
-  cooperating_partner
-  national_coordinating_institution
-  national_representative_institution
+Enum institutionType {
+  cooperatingPartner
+  nationalCoordinatingInstitution
+  nationalRepresentativeInstitution
+  partnerInstitution
   other
-  partner_institution
+  
 }
 
-Enum CountryType {
-  cooperating_partnership
-  member_country
+Enum countryType {
+  cooperatingPartnership
+  memberCountry
   other
 }
 
-Enum ServiceType {
+Enum serviceType {
   community
   core
   internal
 }
 
-Enum ServiceStatus {
+Enum serviceStatus {
   discontinued
-  in_preparation
+  inPreparation
   live
-  needs_review
-  to_be_discontinued
+  needsReview
+  toBeDiscontinued
 }
 
-Enum ServiceAudience {
-  dariah_team
+Enum serviceAudience {
+  dariahTeam
   global
-  national_local
+  nationalLocal
 }
 
-Enum ServiceSshocStatus {
-  yes
+Enum socialMediaType {
+  nationalWebsite
+  socialMedia
+}
+
+Enum softwareStatus {
+  maintained
+  notMaintained
+  needsReview
+}
+
+Enum mpOnboardingStatus {
+  addedAsItem
+  addedAsExternalId
   no
-  not_applicable
+  notApplicable
 }
 
-Enum SocialMediaType {
-  national_website
-  social_media
-}
 
-Enum ResearchPolicyLevel {
+Enum researchPolicyLevel {
   eu
   national
+  institutional
 }
 
-Enum ProjectScope {
+Enum projectScope {
   eu
   national
   regional
 }
 
-Enum UserRole {
+Enum userRole {
   admin
   contributor
 }
 
-Enum UserStatus {
+Enum userStatus {
   unverified
   verified
 }
 
-Ref: service_reports.serviceId > services.id [delete: Cascade]
+Ref: serviceReports.serviceId > services.id [delete: Cascade]
 
-Ref: social_media_reports.socialMediaId > social_media.id [delete: Cascade]
+Ref: socialMediaReports.socialMediaId > socialMedia.id [delete: Cascade]
 
 Ref: reports.countryId > countries.id [delete: Cascade]
 
@@ -415,4 +427,6 @@ Ref: contributors.person > persons.id
 
 Ref: contributors.country > countries.id
 
-Ref: "ReportToServiceReport"."reportsId" < "ReportToServiceReport"."servicesId"
+Ref: "reportToServiceReport"."reportsId" < "reportToServiceReport"."servicesId"
+
+Ref: "projectsFundingLeverageToReport"."reportsId" < "projectsFundingLeverageToReport"."projectsfundingleverageId"
