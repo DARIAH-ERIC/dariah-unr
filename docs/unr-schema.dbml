@@ -77,7 +77,7 @@ Table countries {
   logo String
   institutions institutions [not null]
   users users [not null]
-  socialMedia social_media [not null]
+  outreach social_media [not null]
   services services [not null]
   software software [not null]
   reports reports [not null]
@@ -95,12 +95,9 @@ Table services {
   agreements String
   valueProposition String
   sshoc ServiceSshocStatus
-  service_owner String
-  serviceProvider institutions [ not null]
   privateSupplier Boolean
   trl Int
   technical_contact String
-  content_provider String
   eosc_onboarding Boolean
   monitoring Boolean
   dariah_branding Boolean
@@ -134,12 +131,12 @@ Table publication {
   updatedAt DateTime [not null]
 }
 
-Table socialMedia {
+Table outreach {
   id String [pk]
   url String [not null]
-  type SocialMediaType [not null]
+  type outreachType [not null]
   countries countries [not null]
-  reports socialMediaReports [not null]
+  reports outreachReports [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
@@ -183,9 +180,9 @@ Table projectsFundingLeverage {
 
 Table serviceReports {
   id String [pk]
-  interactions Int
+  /* interactions Int
   uniqueUsers Int
-  registeredItems Int
+  registeredItems Int */
   serviceId String [not null]
   service services [not null]
   reports reports [not null]
@@ -193,19 +190,33 @@ Table serviceReports {
   updatedAt DateTime [not null]
 }
 
-Table socialMediaReports {
+Table serviceReports2 {
   id String [pk]
-  users Int
+  value Int
+  unit kpiType [not null]
+  serviceReport String [ref: > serviceReports.id]  
+}
+
+
+Table outreachReports {
+  id String [pk]
+  /* users Int
   pageViews Int
   sessions Int
   interactions Int
   uniqueUsers Int
-  registeredItems Int
-  socialMediaId String [not null]
-  socialMedia socialMedia [not null]
+  registeredItems Int */
+  outreachId String [not null]
   reports reports [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+}
+
+Table outreachReports2 {
+  id String [pk]
+  value Int
+  unit kpiOutreachType [not null]
+  outreachReport String [ref: > outreachReports.id]  
 }
 
 Table reports {
@@ -218,7 +229,7 @@ Table reports {
   events eventReports [not null]
   projectsFundingLeverage projectsFundingLeverage [not null]
   services serviceReports [not null]
-  socialMedia socialMediaReports [not null]
+  outreach outreachReports [not null]
   researchPolicyDevelopments researchPolicyDevelopments [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
@@ -284,8 +295,8 @@ Table countryToInstitution {
   institutionsId String [ref: > institutions.id]
 }
 
-Table countryToSocialMedia {
-  socialmediaId String [ref: > socialMedia.id]
+Table countryToOutreach {
+  outreachId String [ref: > outreach.id]
   countriesId String [ref: > countries.id]
 }
 
@@ -308,6 +319,7 @@ Table countryToSoftware {
 Table institutionToService {
   servicesId String [ref: > services.id]
   institutionId String [ref: > institutions.id]
+  role actorServiceRole
 }
 
 Table reportToResearchPolicyDevelopment {
@@ -330,11 +342,18 @@ Table reportToServiceReport {
   servicesId String [ref: > serviceReports.id]
 }
 
-Table reportToSocialMediaReport {
+Table reportToOutreachReport {
   reportsId String [ref: > reports.id]
-  socialmediaId String [ref: > socialMediaReports.id]
+  outreachId String [ref: > outreachReports.id]
 }
 
+Enum  actorServiceRole {
+  serviceProvider
+  serviceOwner
+  technicalContact
+  contentProvider
+  
+}
 Enum institutionType {
   cooperatingPartner
   nationalCoordinatingInstitution
@@ -370,9 +389,9 @@ Enum serviceAudience {
   nationalLocal
 }
 
-Enum socialMediaType {
+Enum outreachType {
   nationalWebsite
-  socialMedia
+  outreach
 }
 
 Enum softwareStatus {
@@ -411,9 +430,45 @@ Enum userStatus {
   verified
 }
 
+Enum kpiType {
+  visits
+  pageCiews
+  jobsProcessed
+  uniqueDownloads
+  websitesHosted
+  downloads
+  hits
+  searches
+  sessions
+  uniqueUsers
+  registeredUsers
+  phdStudents
+  hostedObjects
+  hostedDataStreams
+  hostedCollections
+  hostedFiles
+  hostedVocabularies
+  projects
+}
+
+Enum kpiOutreachType {
+  engagement
+  followers
+  reach
+  impressions
+  mention
+  pageViews
+  uniqueVisitors
+  subscribers
+  newContent
+  views
+  watchTime
+  posts
+}
+
 Ref: serviceReports.serviceId > services.id [delete: Cascade]
 
-Ref: socialMediaReports.socialMediaId > socialMedia.id [delete: Cascade]
+Ref: outreachReports.outreachId > outreach.id [delete: Cascade]
 
 Ref: reports.countryId > countries.id [delete: Cascade]
 
