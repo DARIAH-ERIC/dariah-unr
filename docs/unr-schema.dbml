@@ -12,9 +12,9 @@ Table bodies {
 }
 
 Table roles {
-  id String [pk]
-  
+  id String [pk]  
   name String [not null]
+  annualRoleValue Int
   bodies bodies [not null]
   contributors contributors [not null]
   createdAt DateTime [default: `now()`, not null]
@@ -38,6 +38,7 @@ Table persons {
   id String [pk]
   name String [not null]
   email String
+  ORCID String
   contributors contributors [not null]
   institutions institutions [not null]
   createdAt DateTime [default: `now()`, not null]
@@ -77,7 +78,7 @@ Table countries {
   logo String
   institutions institutions [not null]
   users users [not null]
-  outreach social_media [not null]
+  outreach outreach [not null]
   services services [not null]
   software software [not null]
   reports reports [not null]
@@ -89,6 +90,7 @@ Table services {
   id String [pk]
   name String [not null]
   type ServiceType [not null]
+  size String [ref: > serviceSize.size]
   url String[]
   status ServiceStatus
   audience ServiceAudience
@@ -185,18 +187,42 @@ Table serviceReports {
   registeredItems Int */
   serviceId String [not null]
   service services [not null]
+  reportsId String [not null, ref: > reports.id]
   reports reports [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
 
-Table serviceReports2 {
+Table serviceKpis {
   id String [pk]
   value Int
-  unit kpiType [not null]
+  unit serviceKpiType [not null]
   serviceReport String [ref: > serviceReports.id]  
 }
 
+Table serviceSize {
+  size serviceSize [pk]
+  annualValue Int  
+}
+
+Enum serviceSize {
+  small
+  medium
+  large
+  core
+}
+
+Table eventSize {
+  size eventSize [pk]
+  annualValue Int  
+}
+
+Enum eventSize {
+  small
+  medium
+  large
+  commissionedEvent
+}
 
 Table outreachReports {
   id String [pk]
@@ -207,26 +233,30 @@ Table outreachReports {
   uniqueUsers Int
   registeredItems Int */
   outreachId String [not null]
+  reportsId String [ref: > reports.id]
   reports reports [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
 
-Table outreachReports2 {
+Table outreachKpis {
   id String [pk]
+  outreachReport String [ref: > outreachReports.id]    
   value Int
-  unit kpiOutreachType [not null]
-  outreachReport String [ref: > outreachReports.id]  
+  unit outreachKpiType [not null]
+ 
 }
 
 Table reports {
   id String [pk]
   year Int [not null]
-  comments Json
+  comments Json /* why JSON? */
   countryId String [not null]
   countContributors Int [not null]
   country countries [not null]
   events eventReports [not null]
+  operationalCost Int 
+
   projectsFundingLeverage projectsFundingLeverage [not null]
   services serviceReports [not null]
   outreach outreachReports [not null]
@@ -337,15 +367,6 @@ Table projectsFundingLeverageToReport {
   projectsfundingleverageId String [ref: > projectsFundingLeverage.id]
 }
 
-Table reportToServiceReport {
-  reportsId String [ref: > reports.id]
-  servicesId String [ref: > serviceReports.id]
-}
-
-Table reportToOutreachReport {
-  reportsId String [ref: > reports.id]
-  outreachId String [ref: > outreachReports.id]
-}
 
 Enum  actorServiceRole {
   serviceProvider
@@ -391,7 +412,7 @@ Enum serviceAudience {
 
 Enum outreachType {
   nationalWebsite
-  outreach
+  socialMedia
 }
 
 Enum softwareStatus {
@@ -430,11 +451,10 @@ Enum userStatus {
   verified
 }
 
-Enum kpiType {
+Enum serviceKpiType {
   visits
-  pageCiews
+  pageViews
   jobsProcessed
-  uniqueDownloads
   websitesHosted
   downloads
   hits
@@ -442,20 +462,14 @@ Enum kpiType {
   sessions
   uniqueUsers
   registeredUsers
-  phdStudents
-  hostedObjects
-  hostedDataStreams
-  hostedCollections
-  hostedFiles
-  hostedVocabularies
-  projects
+  items  
 }
 
-Enum kpiOutreachType {
+Enum outreachKpiType {
   engagement
-  followers
   reach
   impressions
+  followers
   mention
   pageViews
   uniqueVisitors
@@ -481,7 +495,3 @@ Ref: contributors.role > roles.id
 Ref: contributors.person > persons.id
 
 Ref: contributors.country > countries.id
-
-Ref: "reportToServiceReport"."reportsId" < "reportToServiceReport"."servicesId"
-
-Ref: "projectsFundingLeverageToReport"."reportsId" < "projectsFundingLeverageToReport"."projectsfundingleverageId"
