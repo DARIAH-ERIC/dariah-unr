@@ -1,0 +1,414 @@
+generator client {
+  provider = "prisma-client-js"
+  seed     = "prisma/seed.ts"
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_DIRECT_URL")
+}
+
+model Body {
+  id      String  @id @default(uuid()) @db.Uuid
+  name    String
+  acronym String?
+
+  roles Role[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "bodies")
+}
+
+model Role {
+  id   String @id @default(uuid()) @db.Uuid
+  name String
+
+  bodies       Body[]
+  contributors Contributor[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "roles")
+}
+
+model Contributor {
+  id        String    @id @default(uuid()) @db.Uuid
+  name      String
+  startDate DateTime? @map(name: "start_date")
+  endDate   DateTime? @map(name: "end_date")
+
+  persons       Person[]
+  roles         Role[]
+  workingGroups WorkingGroup[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "contributors")
+}
+
+model Person {
+  id    String  @id @default(uuid()) @db.Uuid
+  name  String
+  // `prisma` currently does not support unique constraints on nullable fields, even though postgres does
+  // @see https://github.com/prisma/prisma/issues/3387
+  email String? // @unique
+
+  contributors Contributor[]
+  institutions Institution[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "persons")
+}
+
+model WorkingGroup {
+  id        String    @id @default(uuid()) @db.Uuid
+  name      String
+  startDate DateTime? @map(name: "start_date")
+  endDate   DateTime? @map(name: "end_date")
+
+  chairs Contributor[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "working_groups")
+}
+
+enum InstitutionType {
+  cooperating_partner
+  national_coordinating_institution
+  national_representative_institution
+  other // e.g. NC institution or WG chair affiliation
+  partner_institution
+}
+
+model Institution {
+  id        String            @id @default(uuid()) @db.Uuid
+  name      String
+  types     InstitutionType[]
+  startDate DateTime?         @map(name: "start_date")
+  endDate   DateTime?         @map(name: "end_date")
+  website   String?
+  ROR       String?
+
+  countries Country[]
+  persons   Person[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "institutions")
+}
+
+enum CountryType {
+  cooperating_partnership
+  member_country
+  other
+}
+
+model Country {
+  id        String      @id @default(uuid()) @db.Uuid
+  name      String
+  type      CountryType
+  startDate DateTime?   @map(name: "start_date")
+  endDate   DateTime?   @map(name: "end_date")
+  logo      String?
+
+  institutions Institution[]
+  users        User[]
+  socialMedia  SocialMedia[]
+  services     Service[]
+  software     Software[]
+  reports      Report[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "countries")
+}
+
+enum ServiceType {
+  community
+  core
+  internal
+}
+
+enum ServiceStatus {
+  discontinued
+  in_preparation
+  live
+  needs_review
+  to_be_discontinued
+}
+
+enum ServiceAudience {
+  dariah_team
+  global
+  national_local
+}
+
+enum ServiceSshocStatus {
+  yes
+  no
+  not_applicable
+}
+
+model Service {
+  id                String              @id @default(uuid()) @db.Uuid
+  name              String
+  type              ServiceType
+  url               String?
+  status            ServiceStatus?
+  audience          ServiceAudience?
+  agreements        String?
+  valueProposition  String?             @map(name: "value_proposition")
+  sshoc             ServiceSshocStatus?
+  service_owner     String?             @map(name: "service_owner") // TODO: why is this a text field
+  serviceProvider   String?             @map(name: "serviceProvider") // TODO: why is this a text field
+  privateSupplier   Boolean?            @map(name: "private_supplier")
+  trl               Int?
+  technical_contact String?
+  content_provider  String?
+  eosc_onboarding   Boolean?
+  monitoring        Boolean?
+  dariah_branding   Boolean?
+
+  countries Country[]
+  reports   ServiceReport[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "services")
+}
+
+model Software {
+  id           String  @id @default(uuid()) @db.Uuid
+  name         String
+  url          String?
+  sshocEntry   String?
+  sshocComment String?
+
+  countries Country[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "software")
+}
+
+enum SocialMediaType {
+  national_website
+  social_media
+}
+
+model SocialMedia {
+  id   String          @id @default(uuid()) @db.Uuid
+  url  String
+  type SocialMediaType
+
+  countries Country[]
+  reports   SocialMediaReport[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "social_media")
+}
+
+enum ResearchPolicyLevel {
+  eu
+  national
+}
+
+model ResearchPolicyDevelopment {
+  id      String              @id @default(uuid()) @db.Uuid
+  name    String // policy organisation or effort
+  level   ResearchPolicyLevel
+  outcome String?
+
+  reports Report[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "research_policy_developments")
+}
+
+model EventReport {
+  id                      String  @id @default(uuid()) @db.Uuid
+  smallMeetings           Int?    @map(name: "small_meetings")
+  mediumMeetings          Int?    @map(name: "medium_meetings")
+  largeMeetings           Int?    @map(name: "large_meetings")
+  dariahCommissionedEvent String? @map(name: "dariah_commissioned_event")
+  reusableOutcomes        String? @map(name: "reusable_outcomes")
+  attendees               Int?
+
+  reports Report[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "event_reports")
+}
+
+enum ProjectScope {
+  eu
+  national
+  regional
+}
+
+model ProjectsFundingLeverage {
+  id            String        @id @default(uuid()) @db.Uuid
+  name          String // project or grant name
+  amount        Int? // amount for reporting year
+  totalAmount   Int?          @map(name: "total_amount")
+  startDate     DateTime?     @map(name: "start_date")
+  projectLength Int?          @map(name: "project_length")
+  funders       String?
+  scope         ProjectScope?
+
+  reports Report[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "projects_funding_leverage")
+}
+
+model ServiceReport {
+  id              String @id @default(uuid()) @db.Uuid
+  interactions    Int?
+  uniqueUsers     Int?   @map(name: "unique_users")
+  registeredItems Int?   @map(name: "registered_items")
+
+  serviceId String   @db.Uuid
+  service   Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  reports   Report[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "service_reports")
+}
+
+model SocialMediaReport {
+  id              String @id @default(uuid()) @db.Uuid
+  users           Int?
+  pageViews       Int?   @map(name: "page_views")
+  sessions        Int?
+  interactions    Int?
+  uniqueUsers     Int?   @map(name: "unique_users")
+  registeredItems Int?   @map(name: "registered_items")
+
+  socialMediaId String      @db.Uuid
+  socialMedia   SocialMedia @relation(fields: [socialMediaId], references: [id], onDelete: Cascade)
+  reports       Report[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "social_media_reports")
+}
+
+model Report {
+  id       String @id @default(uuid()) @db.Uuid
+  year     Int
+  comments Json?
+
+  countryId String  @db.Uuid
+  country   Country @relation(fields: [countryId], references: [id], onDelete: Cascade)
+
+  events                     EventReport[]
+  projectsFundingLeverage    ProjectsFundingLeverage[]
+  services                   ServiceReport[]
+  socialMedia                SocialMediaReport[]
+  researchPolicyDevelopments ResearchPolicyDevelopment[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@unique([year, countryId])
+  @@map(name: "reports")
+}
+
+// ------------------------------------------------------------------------------------------------
+
+model Account {
+  id                String  @id @default(uuid()) @db.Uuid
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map(name: "accounts")
+}
+
+// model Session {
+//   id           String   @id @default(uuid()) @db.Uuid
+//   sessionToken String   @unique @map("session_token")
+//   expires      DateTime
+
+//   userId String @map("user_id") @db.Uuid
+//   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   @@map(name: "sessions")
+// }
+
+enum UserRole {
+  admin
+  contributor
+}
+
+enum UserStatus {
+  unverified
+  verified
+}
+
+model User {
+  id            String     @id @default(uuid()) @db.Uuid
+  name          String?
+  email         String?    @unique
+  emailVerified DateTime?  @map("email_verified")
+  password      String?
+  image         String?
+  role          UserRole   @default(contributor)
+  status        UserStatus @default(unverified)
+
+  accounts  Account[]
+  countryId String?   @map("country_id") @db.Uuid
+  country   Country?  @relation(fields: [countryId], references: [id])
+  // Session   Session[]
+
+  @@map(name: "users")
+}
+
+// model VerificationToken {
+//   identifier String
+//   token      String   @unique
+//   expires    DateTime
+
+//   @@unique([identifier, token])
+//   @@map(name: "verification_tokens")
+// }
