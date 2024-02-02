@@ -29,6 +29,7 @@ model Body {
 model Role {
   id   String @id @default(uuid()) @db.Uuid
   name String
+  annualValue Int
 
   bodies       Body[]
   contributors Contributor[]
@@ -61,7 +62,7 @@ model Person {
   // `prisma` currently does not support unique constraints on nullable fields, even though postgres does
   // @see https://github.com/prisma/prisma/issues/3387
   email String? // @unique
-
+  ORCID String?
   contributors Contributor[]
   institutions Institution[]
 
@@ -104,6 +105,7 @@ model Institution {
 
   countries Country[]
   persons   Person[]
+  services InstitutionToService[]
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
@@ -127,7 +129,7 @@ model Country {
 
   institutions Institution[]
   users        User[]
-  socialMedia  SocialMedia[]
+  outreach     Outreach[]
   services     Service[]
   software     Software[]
   reports      Report[]
@@ -164,6 +166,13 @@ enum ServiceSshocStatus {
   not_applicable
 }
 
+enum ServiceSize {
+  small
+  medium
+  large
+  core
+}
+
 model Service {
   id                String              @id @default(uuid()) @db.Uuid
   name              String
@@ -171,20 +180,19 @@ model Service {
   url               String?
   status            ServiceStatus?
   audience          ServiceAudience?
+  size              ServiceSize?
   agreements        String?
   valueProposition  String?             @map(name: "value_proposition")
   sshoc             ServiceSshocStatus?
-  service_owner     String?             @map(name: "service_owner") // TODO: why is this a text field
-  serviceProvider   String?             @map(name: "serviceProvider") // TODO: why is this a text field
   privateSupplier   Boolean?            @map(name: "private_supplier")
   trl               Int?
   technical_contact String?
-  content_provider  String?
   eosc_onboarding   Boolean?
   monitoring        Boolean?
   dariah_branding   Boolean?
 
   countries Country[]
+  institutions InstitutionToService[]
   reports   ServiceReport[]
 
   createdAt DateTime @default(now()) @map(name: "created_at")
@@ -193,13 +201,45 @@ model Service {
   @@map(name: "services")
 }
 
+enum  ActorServiceRole {
+  service_provider
+  service_owner
+  technical_contact
+  content_provider
+  
+}
+
+model InstitutionToService {
+  id           String  @id @default(uuid()) @db.Uuid
+  serviceId String
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  institutionId String
+  institution Institution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  
+  role ActorServiceRole
+}
+
+ enum MPOnboardingStatus {
+  added_as_item
+  added_as_external_id
+  no
+  not_applicable
+}
+
+enum SoftwareStatus {
+  maintained
+  not_maintained
+  needs_review
+}
+
 model Software {
   id           String  @id @default(uuid()) @db.Uuid
   name         String
   url          String?
-  sshocEntry   String?
-  sshocComment String?
-
+  mpUrl   String?
+  comment String?
+  status SoftwareStatus
+  mpOnboardingStatus MPOnboardingStatus
   countries Country[]
 
   createdAt DateTime @default(now()) @map(name: "created_at")
@@ -208,23 +248,23 @@ model Software {
   @@map(name: "software")
 }
 
-enum SocialMediaType {
+enum OutreachType {
   national_website
   social_media
 }
 
-model SocialMedia {
+model Outreach {
   id   String          @id @default(uuid()) @db.Uuid
   url  String
-  type SocialMediaType
+  type OutreachType
 
   countries Country[]
-  reports   SocialMediaReport[]
-
+  reports   OutreachReport[]
+  
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
-  @@map(name: "social_media")
+  @@map(name: "outreach")
 }
 
 enum ResearchPolicyLevel {
@@ -289,38 +329,81 @@ model ProjectsFundingLeverage {
 
 model ServiceReport {
   id              String @id @default(uuid()) @db.Uuid
-  interactions    Int?
-  uniqueUsers     Int?   @map(name: "unique_users")
-  registeredItems Int?   @map(name: "registered_items")
-
+  
   serviceId String   @db.Uuid
   service   Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
   reports   Report[]
-
+  serviceKpis   ServiceKPI[]
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
   @@map(name: "service_reports")
 }
 
-model SocialMediaReport {
-  id              String @id @default(uuid()) @db.Uuid
-  users           Int?
-  pageViews       Int?   @map(name: "page_views")
-  sessions        Int?
-  interactions    Int?
-  uniqueUsers     Int?   @map(name: "unique_users")
-  registeredItems Int?   @map(name: "registered_items")
+enum ServiceKpiType {
+  visits
+  page_views
+  jobs_processed
+  websites_hosted
+  downloads
+  hits
+  searches
+  sessions
+  unique_users
+  registered_users
+  items  
+}
 
-  socialMediaId String      @db.Uuid
-  socialMedia   SocialMedia @relation(fields: [socialMediaId], references: [id], onDelete: Cascade)
+model ServiceKPI {
+  id String @id @default(uuid()) @db.Uuid
+  value Int
+  unit ServiceKpiType
+  serviceReportId String      @db.Uuid  @map(name: "service_report_id")
+  serviceReport ServiceReport @relation(fields: [serviceReportId], references: [id], onDelete: Cascade)
+
+  @@map(name: "service_kpi")
+}
+
+
+model OutreachReport {
+  id              String @id @default(uuid()) @db.Uuid
+  
+  outreachId String      @db.Uuid
+  outreach   Outreach @relation(fields: [outreachId], references: [id], onDelete: Cascade)
   reports       Report[]
+  outreachKpi   OutreachKPI[]
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
-  @@map(name: "social_media_reports")
+  @@map(name: "outreach_reports")
 }
+
+model OutreachKPI {
+  id    String @id @default(uuid()) @db.Uuid
+  
+  outreachReportId String      @db.Uuid
+  outreachReport OutreachReport @relation(fields: [outreachReportId], references: [id], onDelete: Cascade)
+    
+  @@map(name: "outreach_kpi")
+}
+
+
+enum OutreachKpiType {
+  engagement
+  reach
+  impressions
+  followers
+  mention
+  pageViews
+  unique_visitors
+  subscribers
+  new_content
+  views
+  watch_time
+  posts
+}
+
 
 model Report {
   id       String @id @default(uuid()) @db.Uuid
@@ -333,7 +416,7 @@ model Report {
   events                     EventReport[]
   projectsFundingLeverage    ProjectsFundingLeverage[]
   services                   ServiceReport[]
-  socialMedia                SocialMediaReport[]
+  outreach                OutreachReport[]
   researchPolicyDevelopments ResearchPolicyDevelopment[]
 
   createdAt DateTime @default(now()) @map(name: "created_at")
