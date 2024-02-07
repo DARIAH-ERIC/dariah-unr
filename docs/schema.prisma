@@ -29,10 +29,10 @@ model Body {
 model Role {
   id   String @id @default(uuid()) @db.Uuid
   name String
-  annualValue Int
+  annualValue Int // annual money value for given role used for computing countries contribution 
 
   bodies       Body[]
-  contributors Contributor[]
+  contributions Contributions[]
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
@@ -40,20 +40,21 @@ model Role {
   @@map(name: "roles")
 }
 
-model Contributor {
+/*  contribution by one person in a specific role in given time frame */
+model Contribution {
   id        String    @id @default(uuid()) @db.Uuid
   name      String
   startDate DateTime? @map(name: "start_date")
   endDate   DateTime? @map(name: "end_date")
-
-  persons       Person[]
-  roles         Role[]
-  workingGroups WorkingGroup[]
-
+  person       Person // 1:N
+  role         Role // 1:N
+  workingGroup WorkingGroup? // optional 1:N
+  country Country? // explicit direct connection to country, because derivation via person's affiliation may be ambiguous or change  over time
+  
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
-  @@map(name: "contributors")
+  @@map(name: "contributions")
 }
 
 model Person {
@@ -63,7 +64,8 @@ model Person {
   // @see https://github.com/prisma/prisma/issues/3387
   email String? // @unique
   ORCID String?
-  contributors Contributor[]
+
+  contributions Contribution[]
   institutions Institution[]
 
   createdAt DateTime @default(now()) @map(name: "created_at")
@@ -78,7 +80,7 @@ model WorkingGroup {
   startDate DateTime? @map(name: "start_date")
   endDate   DateTime? @map(name: "end_date")
 
-  chairs Contributor[]
+  chairs Contribution[] // chair persons connected via contribution (to indicate role and time frame)
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
@@ -100,17 +102,36 @@ model Institution {
   types     InstitutionType[]
   startDate DateTime?         @map(name: "start_date")
   endDate   DateTime?         @map(name: "end_date")
-  website   String?
-  ROR       String?
+  url       String[]
+  ROR       String?   // global identifier for organisations https://ror.org/
 
   countries Country[]
   persons   Person[]
-  services InstitutionToService[]
-
+  services InstitutionToService[] // role of institution in providing a service (explicit N:N table)
+ 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
   @@map(name: "institutions")
+}
+
+// role of institution in providing a service (explicit N:N table)
+// unique constraint: service+inst+role
+model InstitutionToService {
+  id           String  @id @default(uuid()) @db.Uuid
+  serviceId String
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  institutionId String
+  institution Institution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  
+  role ActorServiceRole
+}
+
+enum  ActorServiceRole {
+  service_provider
+  service_owner
+  technical_contact
+  content_provider  
 }
 
 enum CountryType {
@@ -128,12 +149,13 @@ model Country {
   logo      String?
 
   institutions Institution[]
-  users        User[]
   outreach     Outreach[]
   services     Service[]
   software     Software[]
   reports      Report[]
-
+  
+  users        User[]
+  
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
@@ -160,30 +182,35 @@ enum ServiceAudience {
   national_local
 }
 
-enum ServiceSshocStatus {
+enum ServiceMarketplaceStatus {
   yes
   no
   not_applicable
 }
 
-enum ServiceSize {
+enum ServiceSizeType {
   small
   medium
   large
   core
 }
 
+model ServiceSize {
+ type ServiceSizeType
+ annualValue Int
+}
+
 model Service {
   id                String              @id @default(uuid()) @db.Uuid
   name              String
-  type              ServiceType
-  url               String?
+  type              ServiceType?
+  url               String[]
   status            ServiceStatus?
   audience          ServiceAudience?
   size              ServiceSize?
   agreements        String?
   valueProposition  String?             @map(name: "value_proposition")
-  sshoc             ServiceSshocStatus?
+  marketplaceStatus ServiceMarketplaceStatus?
   privateSupplier   Boolean?            @map(name: "private_supplier")
   trl               Int?
   technical_contact String?
@@ -191,7 +218,7 @@ model Service {
   monitoring        Boolean?
   dariah_branding   Boolean?
 
-  countries Country[]
+  countries Country[] // explicit direct connection to country, because derivation via institution may be ambiguous or change  over time,
   institutions InstitutionToService[]
   reports   ServiceReport[]
 
@@ -201,25 +228,7 @@ model Service {
   @@map(name: "services")
 }
 
-enum  ActorServiceRole {
-  service_provider
-  service_owner
-  technical_contact
-  content_provider
-  
-}
-
-model InstitutionToService {
-  id           String  @id @default(uuid()) @db.Uuid
-  serviceId String
-  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
-  institutionId String
-  institution Institution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
-  
-  role ActorServiceRole
-}
-
- enum MPOnboardingStatus {
+ enum MarketplaceOnboardingStatus {
   added_as_item
   added_as_external_id
   no
@@ -235,12 +244,19 @@ enum SoftwareStatus {
 model Software {
   id           String  @id @default(uuid()) @db.Uuid
   name         String
-  url          String?
-  mpUrl   String?
-  comment String?
-  status SoftwareStatus
-  mpOnboardingStatus MPOnboardingStatus
-  countries Country[]
+  url          String[]
+  marketplaceUrl   String?
+  comment     String?  // for internal notes
+  status SoftwareStatus?
+  marketplaceOnboardingStatus MarketplaceOnboardingStatus?
+  
+  countries Country[] // explicit direct connection to country
+  //  derivation via institution may be ambiguous or change  over time AND not introduced yet, see below:
+ 
+  // connection to institutions and countries should be the analogous to service
+/*  institutions Institution
+  reports   SoftwareReport[] // ToDo: assess if dedicated SoftwareReport is needed
+*/
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
@@ -258,7 +274,7 @@ model Outreach {
   url  String
   type OutreachType
 
-  countries Country[]
+  country Country  // 1:N
   reports   OutreachReport[]
   
   createdAt DateTime @default(now()) @map(name: "created_at")
@@ -266,6 +282,31 @@ model Outreach {
 
   @@map(name: "outreach")
 }
+
+model OutreachReport {
+  id            String @id @default(uuid()) @db.Uuid
+  
+  outreachId    String      @db.Uuid
+  reportId      String        @db.Uuid
+  outreach      Outreach @relation(fields: [outreachId], references: [id], onDelete: Cascade)
+  reports       Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  outreachKpi   OutreachKPI[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "outreach_reports")
+}
+
+model OutreachKPI {
+  id    String @id @default(uuid()) @db.Uuid
+  
+  outreachReportId String      @db.Uuid
+  outreachReport OutreachReport @relation(fields: [outreachReportId], references: [id], onDelete: Cascade)
+    
+  @@map(name: "outreach_kpi")
+}
+
 
 enum ResearchPolicyLevel {
   eu
@@ -364,29 +405,6 @@ model ServiceKPI {
   @@map(name: "service_kpi")
 }
 
-
-model OutreachReport {
-  id              String @id @default(uuid()) @db.Uuid
-  
-  outreachId String      @db.Uuid
-  outreach   Outreach @relation(fields: [outreachId], references: [id], onDelete: Cascade)
-  reports       Report[]
-  outreachKpi   OutreachKPI[]
-
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @updatedAt @map(name: "updated_at")
-
-  @@map(name: "outreach_reports")
-}
-
-model OutreachKPI {
-  id    String @id @default(uuid()) @db.Uuid
-  
-  outreachReportId String      @db.Uuid
-  outreachReport OutreachReport @relation(fields: [outreachReportId], references: [id], onDelete: Cascade)
-    
-  @@map(name: "outreach_kpi")
-}
 
 
 enum OutreachKpiType {
