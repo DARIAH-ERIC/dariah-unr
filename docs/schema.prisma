@@ -280,6 +280,7 @@ enum OutreachType {
 
 model Outreach {
   id        String       @id @default(uuid()) @db.Uuid
+  name      String
   url       String
   type      OutreachType
   countryId String       @db.Uuid
