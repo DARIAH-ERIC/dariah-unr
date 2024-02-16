@@ -13,6 +13,29 @@
 		"navigation-primary": "Primär",
 		"toggle-navigation-menu": "Navigationsmenü öffnen"
 	},
+	"AuthErrorPage": {
+		"meta": {
+			"title": "Fehler"
+		},
+		"title": "Fehler"
+	},
+	"AuthMenu": {
+		"sign-in": "Anmelden",
+		"sign-out": "Abmelden",
+		"sign-up": "Registrieren"
+	},
+	"AuthSignInPage": {
+		"meta": {
+			"title": "Anmelden"
+		},
+		"title": "Anmelden"
+	},
+	"AuthSignUpPage": {
+		"meta": {
+			"title": "Registrieren"
+		},
+		"title": "Registrieren"
+	},
 	"ColorSchemeSwitcher": {
 		"change-color-scheme": "Farbschema ändern",
 		"color-schemes": {
@@ -20,6 +43,18 @@
 			"light": "Hell",
 			"system": "System"
 		}
+	},
+	"DashboardPage": {
+		"meta": {
+			"title": "Dashboard"
+		},
+		"title": "Dashboard"
+	},
+	"DashboardCountryReportPage": {
+		"meta": {
+			"title": "Bericht"
+		},
+		"title": "Bericht"
 	},
 	"Error": {
 		"something-went-wrong": "Etwas ist schief gelaufen!",
@@ -65,5 +100,34 @@
 			"title": "Seite nicht gefunden"
 		},
 		"title": "Seite nicht gefunden"
+	},
+	"SignInForm": {
+		"email": "Email",
+		"password": "Passwort",
+		"sign-in": "Anmelden"
+	},
+	"SignUpForm": {
+		"email": "Email",
+		"name": "Name",
+		"password": "Passwort",
+		"sign-up": "Registrieren"
+	},
+	"actions": {
+		"signIn": {
+			"errors": {
+				"AuthorizedCallbackError": "Sie haben keine Berechtigung, sich anzumelden",
+				"CredentialsSignInError": "Anmeldeversuch fehlgeschlagen. Überprüfen Sie, ob die von Ihnen angegebenen Daten korrekt sind",
+				"DefaultAuthError": "Anmeldung nicht möglich"
+			},
+			"success": "Erfolgreich angemeldet"
+		},
+		"signUp": {
+			"errors": {
+				"DatabaseError": "Konnte Benutzer*in nicht anlegen",
+				"DatabaseUserExistsError": "Benutzer*in ist bereits in der Datenbank vorhanden",
+				"InvalidInputError": "Ungültige Eingabe"
+			},
+			"success": "Erfolgreich registriert"
+		}
 	}
 }

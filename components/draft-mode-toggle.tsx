@@ -10,7 +10,7 @@ export function DraftModeToggle(): ReactNode {
 		<div>
 			Draft mode ({cookies().get("ks-branch")?.value}){" "}
 			<form action="/api/preview/end" method="POST">
-				<button>End preview</button>
+				<button type="submit">End preview</button>
 			</form>
 		</div>
 	);
