@@ -102,6 +102,7 @@ jobs:
           build-args: |
             NEXT_PUBLIC_APP_BASE_URL="${{ needs.vars.outputs.public_url }}"
             NEXT_PUBLIC_BOTS="${{ vars.NEXT_PUBLIC_BOTS }}"
+            NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION="${{ vars.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }}"
             NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG="${{ vars.NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG }}"
             NEXT_PUBLIC_KEYSTATIC_GITHUB_REPO_NAME="${{ vars.NEXT_PUBLIC_KEYSTATIC_GITHUB_REPO_NAME }}"
             NEXT_PUBLIC_KEYSTATIC_GITHUB_REPO_OWNER="${{ vars.NEXT_PUBLIC_KEYSTATIC_GITHUB_REPO_OWNER }}"
@@ -115,7 +116,7 @@ jobs:
   deploy:
     name: Deploy docker image
     needs: [env, vars, build]
-    uses: acdh-oeaw/gl-autodevops-minimal-port/.github/workflows/deploy-cluster-2.yml@main
+    uses: dariah-eric/gl-autodevops-minimal-port/.github/workflows/deploy-cluster-2.yml@main
     secrets: inherit
     with:
       environment: ${{ needs.env.outputs.environment }}
