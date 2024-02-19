@@ -1,0 +1,59 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table countries {
+  id String [pk]
+  code String [not null]
+  User users [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table accounts {
+  id String [pk]
+  access_token String
+  expires_at Int
+  id_token String
+  provider String [not null]
+  providerAccountId String [not null]
+  refresh_token String
+  scope String
+  session_state String
+  token_type String
+  type String [not null]
+  userId String [not null]
+  user users [not null]
+
+  indexes {
+    (provider, providerAccountId) [unique]
+  }
+}
+
+Table users {
+  id String [pk]
+  countryId String
+  email String [unique]
+  emailVerified DateTime
+  name String
+  image String
+  password String
+  role UserRole [not null, default: 'contributor']
+  status UserStatus [not null, default: 'unverified']
+  accounts accounts [not null]
+  country countries
+}
+
+Enum UserRole {
+  admin
+  contributor
+}
+
+Enum UserStatus {
+  unverified
+  verified
+}
+
+Ref: accounts.userId > users.id [delete: Cascade]
+
+Ref: users.countryId > countries.id

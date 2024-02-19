@@ -27,13 +27,13 @@ export const MenuSection = AriaSection;
 export function MenuPopover({ className, offset = 4, ...props }: AriaPopoverProps) {
 	return (
 		<AriaPopover
-			className={(values) =>
-				{return cn(
+			className={(values) => {
+				return cn(
 					"z-50 min-w-[8rem] overflow-y-auto rounded-md border bg-overlay p-1 text-on-overlay shadow-md",
 					"data-[entering]:animate-in data-[exiting]:animate-out data-[entering]:fade-in-0 data-[exiting]:fade-out-0 data-[exiting]:zoom-out-95 data-[placement=bottom]:slide-in-from-top-2 data-[placement=left]:slide-in-from-right-2 data-[placement=right]:slide-in-from-left-2 data-[placement=top]:slide-in-from-bottom-2",
 					typeof className === "function" ? className(values) : className,
-				)}
-			}
+				);
+			}}
 			offset={offset}
 			{...props}
 		/>
@@ -51,13 +51,13 @@ export interface MenuItemProps extends AriaMenuItemProps {
 export function MenuItem({ className, inset, ...props }: MenuItemProps) {
 	return (
 		<AriaMenuItem
-			className={(values) =>
-				{return cn(
+			className={(values) => {
+				return cn(
 					"relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-on-accent",
 					inset && "pl-8",
 					typeof className === "function" ? className(values) : className,
-				)}
-			}
+				);
+			}}
 			{...props}
 		/>
 	);
@@ -66,23 +66,25 @@ export function MenuItem({ className, inset, ...props }: MenuItemProps) {
 export function MenuCheckboxItem({ className, children, ...props }: MenuItemProps) {
 	return (
 		<AriaMenuItem
-			className={(values) =>
-				{return cn(
+			className={(values) => {
+				return cn(
 					"relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-on-accent",
 					typeof className === "function" ? className(values) : className,
-				)}
-			}
+				);
+			}}
 			{...props}
 		>
-			{(values) => {return (
-				<Fragment>
-					<span className="absolute left-2 flex size-4 items-center justify-center">
-						{values.isSelected ? <CheckIcon className="size-4" /> : null}
-					</span>
+			{(values) => {
+				return (
+					<Fragment>
+						<span className="absolute left-2 flex size-4 items-center justify-center">
+							{values.isSelected ? <CheckIcon className="size-4" /> : null}
+						</span>
 
-					{typeof children === "function" ? children(values) : children}
-				</Fragment>
-			)}}
+						{typeof children === "function" ? children(values) : children}
+					</Fragment>
+				);
+			}}
 		</AriaMenuItem>
 	);
 }
@@ -96,14 +98,16 @@ export function MenuRadioItem({ className, children, ...props }: MenuItemProps) 
 			)}
 			{...props}
 		>
-			{(values) => {return (
-				<Fragment>
-					<span className="absolute left-2 flex size-3.5 items-center justify-center">
-						{values.isSelected ? <DotIcon className="size-4 fill-current" /> : null}
-					</span>
-					{typeof children === "function" ? children(values) : children}
-				</Fragment>
-			)}}
+			{(values) => {
+				return (
+					<Fragment>
+						<span className="absolute left-2 flex size-3.5 items-center justify-center">
+							{values.isSelected ? <DotIcon className="size-4 fill-current" /> : null}
+						</span>
+						{typeof children === "function" ? children(values) : children}
+					</Fragment>
+				);
+			}}
 		</AriaMenuItem>
 	);
 }

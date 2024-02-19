@@ -28,6 +28,7 @@ export default function InternalError(props: InternalErrorProps): ReactNode {
 				onClick={() => {
 					reset();
 				}}
+				type="button"
 			>
 				{t("try-again")}
 			</button>

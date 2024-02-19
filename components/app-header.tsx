@@ -3,6 +3,7 @@ import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 
 import { AppNavLink } from "@/components/app-nav-link";
+import { AuthMenu } from "@/components/auth-menu";
 import { ColorSchemeSwitcher } from "@/components/color-scheme-switcher";
 import type { LinkProps } from "@/components/link";
 import { LocaleSwitcher } from "@/components/locale-switcher";
@@ -34,7 +35,7 @@ export function AppHeader(): ReactNode {
 								<li key={id}>
 									<AppNavLink href={link.href}>
 										{id === "home" ? (
-											<div className="flex items-center gap-2">
+											<div className="flex items-center gap-2.5">
 												<Logo className="size-6 shrink-0 text-brand" />
 												<span className="sr-only sm:not-sr-only">{link.label}</span>
 											</div>
@@ -76,9 +77,12 @@ export function AppHeader(): ReactNode {
 					</div>
 				</nav>
 
-				<div className="flex items-center gap-x-1">
-					<ColorSchemeSwitcher />
-					<LocaleSwitcher />
+				<div className="flex items-center gap-x-4">
+					<div className="flex items-center gap-x-1">
+						<ColorSchemeSwitcher />
+						<LocaleSwitcher />
+					</div>
+					<AuthMenu />
 				</div>
 			</div>
 		</header>

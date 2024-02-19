@@ -43,7 +43,7 @@ export function LocaleSelect(props: LocaleSelectProps): ReactNode {
 				<span aria-hidden={true}>{currentLocale.toUpperCase()}</span>
 				<SelectValue className="sr-only" />
 			</Button>
-			<SelectPopover placement="bottom end">
+			<SelectPopover placement="bottom">
 				<SelectContent>
 					{Object.entries(items).map(([id, label]) => {
 						return (

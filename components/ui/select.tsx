@@ -33,12 +33,12 @@ export const SelectCollection = AriaCollection;
 export function SelectValue<T extends object>({ className, ...props }: AriaSelectValueProps<T>) {
 	return (
 		<AriaSelectValue
-			className={(values) =>
-				{return cn(
+			className={(values) => {
+				return cn(
 					"data-[placeholder]:text-on-muted",
 					typeof className === "function" ? className(values) : className,
-				)}
-			}
+				);
+			}}
 			{...props}
 		/>
 	);
@@ -47,20 +47,22 @@ export function SelectValue<T extends object>({ className, ...props }: AriaSelec
 export function SelectTrigger({ className, children, ...props }: AriaButtonProps) {
 	return (
 		<AriaButton
-			className={(values) =>
-				{return cn(
+			className={(values) => {
+				return cn(
 					"flex h-9 w-full items-center justify-between rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-on-muted focus:outline-none focus:ring-1 focus:ring-focus-ring disabled:cursor-not-allowed disabled:opacity-50",
 					typeof className === "function" ? className(values) : className,
-				)}
-			}
+				);
+			}}
 			{...props}
 		>
-			{(values) => {return (
-				<Fragment>
-					{typeof children === "function" ? children(values) : children}
-					<ChevronsUpDownIcon className="size-4 opacity-50" />
-				</Fragment>
-			)}}
+			{(values) => {
+				return (
+					<Fragment>
+						{typeof children === "function" ? children(values) : children}
+						<ChevronsUpDownIcon className="size-4 opacity-50" />
+					</Fragment>
+				);
+			}}
 		</AriaButton>
 	);
 }
@@ -68,13 +70,13 @@ export function SelectTrigger({ className, children, ...props }: AriaButtonProps
 export function SelectPopover({ className, offset = 0, ...props }: AriaPopoverProps) {
 	return (
 		<AriaPopover
-			className={(values) =>
-				{return cn(
+			className={(values) => {
+				return cn(
 					"relative z-50 w-[--trigger-width] min-w-[8rem] overflow-y-auto rounded-md border bg-overlay text-on-overlay shadow-md data-[entering]:animate-in data-[exiting]:animate-out data-[entering]:fade-in-0 data-[exiting]:fade-out-0 data-[exiting]:zoom-out-95 data-[placement=bottom]:slide-in-from-top-2 data-[placement=left]:slide-in-from-right-2 data-[placement=right]:slide-in-from-left-2 data-[placement=top]:slide-in-from-bottom-2",
 					"data-[placement=bottom]:translate-y-1 data-[placement=left]:-translate-x-1 data-[placement=right]:translate-x-1 data-[placement=top]:-translate-y-1",
 					typeof className === "function" ? className(values) : className,
-				)}
-			}
+				);
+			}}
 			offset={offset}
 			{...props}
 		/>
@@ -92,24 +94,26 @@ export function SelectHeader({ className, ...props }: ComponentPropsWithoutRef<t
 export function SelectItem({ className, children, ...props }: AriaListBoxItemProps) {
 	return (
 		<AriaListBoxItem
-			className={(values) =>
-				{return cn(
+			className={(values) => {
+				return cn(
 					"relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-on-accent",
 					typeof className === "function" ? className(values) : className,
-				)}
-			}
+				);
+			}}
 			{...props}
 		>
-			{(values) => {return (
-				<Fragment>
-					{values.isSelected ? (
-						<span className="absolute right-2 flex size-4 items-center justify-center">
-							<CheckIcon className="size-4" />
-						</span>
-					) : null}
-					{typeof children === "function" ? children(values) : children}
-				</Fragment>
-			)}}
+			{(values) => {
+				return (
+					<Fragment>
+						{values.isSelected ? (
+							<span className="absolute right-2 flex size-4 items-center justify-center">
+								<CheckIcon className="size-4" />
+							</span>
+						) : null}
+						{typeof children === "function" ? children(values) : children}
+					</Fragment>
+				);
+			}}
 		</AriaListBoxItem>
 	);
 }

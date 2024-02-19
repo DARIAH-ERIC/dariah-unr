@@ -54,5 +54,8 @@
 	"workbench.tree.enableStickyScroll": true,
 	"[markdown][mdx]": {
 		"editor.wordWrap": "on"
+	},
+	"[prisma]": {
+		"editor.defaultFormatter": "Prisma.prisma"
 	}
 }

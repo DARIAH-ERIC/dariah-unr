@@ -13,6 +13,29 @@
 		"navigation-primary": "Primary",
 		"toggle-navigation-menu": "Toggle navigation menu"
 	},
+	"AuthErrorPage": {
+		"meta": {
+			"title": "Error"
+		},
+		"title": "Error"
+	},
+	"AuthMenu": {
+		"sign-in": "Sign in",
+		"sign-out": "Sign out",
+		"sign-up": "Sign up"
+	},
+	"AuthSignInPage": {
+		"meta": {
+			"title": "Sign in"
+		},
+		"title": "Sign in"
+	},
+	"AuthSignUpPage": {
+		"meta": {
+			"title": "Sign up"
+		},
+		"title": "Sign up"
+	},
 	"ColorSchemeSwitcher": {
 		"change-color-scheme": "Change color scheme",
 		"color-schemes": {
@@ -20,6 +43,18 @@
 			"light": "Light",
 			"system": "System"
 		}
+	},
+	"DashboardPage": {
+		"meta": {
+			"title": "Dashboard"
+		},
+		"title": "Dashboard"
+	},
+	"DashboardCountryReportPage": {
+		"meta": {
+			"title": "Report"
+		},
+		"title": "Report"
 	},
 	"Error": {
 		"something-went-wrong": "Something went wrong!",
@@ -65,5 +100,34 @@
 			"title": "Page not found"
 		},
 		"title": "Page not found"
+	},
+	"SignInForm": {
+		"email": "Email",
+		"password": "Password",
+		"sign-in": "Sign in"
+	},
+	"SignUpForm": {
+		"email": "Email",
+		"name": "Name",
+		"password": "Password",
+		"sign-up": "Sign up"
+	},
+	"actions": {
+		"signIn": {
+			"errors": {
+				"AuthorizedCallbackError": "You do not have permission to sign in",
+				"CredentialsSignInError": "Sign in failed. Check the details you provided are correct",
+				"DefaultAuthError": "Unable to sign in"
+			},
+			"success": "Successfully signed in"
+		},
+		"signUp": {
+			"errors": {
+				"DatabaseError": "Failed to create user",
+				"DatabaseUserExistsError": "User already exists in the database",
+				"InvalidInputError": "Invalid input"
+			},
+			"success": "Successfully registered"
+		}
 	}
 }

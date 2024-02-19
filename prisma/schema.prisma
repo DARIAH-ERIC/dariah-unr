@@ -1,0 +1,115 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_DIRECT_URL")
+}
+
+// -------------------------------------------------------------------------------------------------
+
+model Country {
+  id   String @id @default(uuid()) @db.Uuid
+  // iso 3166 country code
+  code String
+
+  User User[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "countries")
+}
+
+// -------------------------------------------------------------------------------------------------
+
+model Account {
+  id                String  @id @default(uuid()) @db.Uuid
+  access_token      String?
+  expires_at        Int?
+  id_token          String?
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String?
+  scope             String?
+  session_state     String?
+  token_type        String?
+  type              String
+  userId            String  @map("user_id") @db.Uuid
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map(name: "accounts")
+}
+
+// model Session {
+//   id           String   @id @default(uuid()) @db.Uuid
+//   expires      DateTime
+//   sessionToken String   @unique @map("session_token")
+//   userId       String   @map("user_id") @db.Uuid
+
+//   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   @@map(name: "sessions")
+// }
+
+enum UserRole {
+  admin
+  contributor
+}
+
+enum UserStatus {
+  unverified
+  verified
+}
+
+model User {
+  id            String     @id @default(uuid()) @db.Uuid
+  countryId     String?    @map("country_id") @db.Uuid
+  email         String?    @unique
+  emailVerified DateTime?  @map("email_verified")
+  name          String?
+  image         String?
+  password      String?
+  role          UserRole   @default(contributor)
+  status        UserStatus @default(unverified)
+
+  accounts Account[]
+  // authenticators Authenticator[]
+  country  Country?  @relation(fields: [countryId], references: [id])
+  // sessions       Session[]
+
+  @@map(name: "users")
+}
+
+// model VerificationToken {
+//   identifier String
+//   expires    DateTime
+//   token      String   @unique
+
+//   @@unique([identifier, token])
+//   @@map(name: "verification_tokens")
+// }
+
+// model Authenticator {
+//   id                   String  @id @default(uuid()) @db.Uuid
+//   counter              Int
+//   credentialBackedUp   Boolean @map("credential_backed_up")
+//   credentialDeviceType String  @map("credential_device_type")
+//   credentialID         String  @unique @map("credential_id") @db.Uuid
+//   credentialPublicKey  String  @map("credential_public_key")
+//   providerAccountId    String  @map("provider_account_id")
+//   transports           String?
+//   userId               String  @map("user_id") @db.Uuid
+
+//   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   @@map(name: "authenticators")
+// }
