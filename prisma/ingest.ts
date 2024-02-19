@@ -1,6 +1,7 @@
 import { log } from "@acdh-oeaw/lib";
+import { PrismaClient } from "@prisma/client";
 
-import { db } from "@/lib/db/index";
+const db = new PrismaClient();
 
 async function ingest() {
 	//

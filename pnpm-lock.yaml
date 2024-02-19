@@ -140,8 +140,8 @@ devDependencies:
     specifier: ^20.11.19
     version: 20.11.19
   '@types/react':
-    specifier: ^18.2.56
-    version: 18.2.56
+    specifier: ^18.2.57
+    version: 18.2.57
   '@types/react-dom':
     specifier: ^18.2.19
     version: 18.2.19
@@ -155,8 +155,8 @@ devDependencies:
     specifier: ^4.0.0
     version: 4.0.0
   dotenv:
-    specifier: ^16.4.4
-    version: 16.4.4
+    specifier: ^16.4.5
+    version: 16.4.5
   dotenv-cli:
     specifier: ^7.3.0
     version: 7.3.0
@@ -1489,7 +1489,7 @@ packages:
       '@floating-ui/react': 0.24.8(react-dom@18.2.0)(react@18.2.0)
       '@internationalized/string': 3.2.1
       '@keystar/ui': 0.7.0(next@14.1.1-canary.58)(react-dom@18.2.0)(react@18.2.0)
-      '@markdoc/markdoc': 0.3.5(@types/react@18.2.56)(react@18.2.0)
+      '@markdoc/markdoc': 0.3.5(@types/react@18.2.57)(react@18.2.0)
       '@react-aria/focus': 3.16.2(react@18.2.0)
       '@react-aria/i18n': 3.10.2(react@18.2.0)
       '@react-aria/interactions': 3.21.1(react@18.2.0)
@@ -1507,7 +1507,7 @@ packages:
       '@ts-gql/tag': 0.7.3(graphql@16.8.1)
       '@types/mdast': 4.0.3
       '@types/node': 16.11.13
-      '@types/react': 18.2.56
+      '@types/react': 18.2.57
       '@types/react-dom': 18.2.19
       '@urql/core': 4.2.3(graphql@16.8.1)
       '@urql/exchange-auth': 2.1.6(graphql@16.8.1)
@@ -1575,7 +1575,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.23.9
       '@keystatic/core': 0.3.19(next@14.1.1-canary.58)(react-dom@18.2.0)(react@18.2.0)
-      '@types/react': 18.2.56
+      '@types/react': 18.2.57
       chokidar: 3.6.0
       next: 14.1.1-canary.58(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
@@ -1601,7 +1601,7 @@ packages:
       - supports-color
     dev: false
 
-  /@markdoc/markdoc@0.3.5(@types/react@18.2.56)(react@18.2.0):
+  /@markdoc/markdoc@0.3.5(@types/react@18.2.57)(react@18.2.0):
     resolution: {integrity: sha512-Z3agu2wnodoOYd5kzKbtwZduSfX19Kbsg/FlK0TeMn29cTTEEVPJtjfgKSMTN/Wq+kUQXnPtOEhHRgke5d/Xiw==}
     engines: {node: '>=14.7.0'}
     peerDependencies:
@@ -1613,7 +1613,7 @@ packages:
       react:
         optional: true
     dependencies:
-      '@types/react': 18.2.56
+      '@types/react': 18.2.57
       react: 18.2.0
     optionalDependencies:
       '@types/markdown-it': 12.2.3
@@ -3595,10 +3595,10 @@ packages:
   /@types/react-dom@18.2.19:
     resolution: {integrity: sha512-aZvQL6uUbIJpjZk4U8JZGbau9KDeAwMfmhyWorxgBkqDIEf6ROjRozcmPIicqsUwPUjbkDfHKgGee1Lq65APcA==}
     dependencies:
-      '@types/react': 18.2.56
+      '@types/react': 18.2.57
 
-  /@types/react@18.2.56:
-    resolution: {integrity: sha512-NpwHDMkS/EFZF2dONFQHgkPRwhvgq/OAvIaGQzxGSBmaeR++kTg6njr15Vatz0/2VcCEwJQFi6Jf4Q0qBu0rLA==}
+  /@types/react@18.2.57:
+    resolution: {integrity: sha512-ZvQsktJgSYrQiMirAN60y4O/LRevIV8hUzSOSNB6gfR3/o3wCBFQx3sPwIYtuDMeiVgsSS3UzCV26tEzgnfvQw==}
     dependencies:
       '@types/prop-types': 15.7.11
       '@types/scheduler': 0.16.8
@@ -5006,7 +5006,7 @@ packages:
     hasBin: true
     dependencies:
       cross-spawn: 7.0.3
-      dotenv: 16.4.4
+      dotenv: 16.4.5
       dotenv-expand: 10.0.0
       minimist: 1.2.8
     dev: true
@@ -5020,7 +5020,7 @@ packages:
     resolution: {integrity: sha512-8NHi73otpWsZGBSZwwknTXS5pqMOrk9+Ssrna8xCaxkzEpU9OTf9R5ArQGVw03//Zmk9MOwLPng9WwndvpAJ5g==}
     engines: {node: '>=12'}
     dependencies:
-      dotenv: 16.4.4
+      dotenv: 16.4.5
     dev: true
 
   /dotenv@16.0.3:
@@ -5028,8 +5028,8 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /dotenv@16.4.4:
-    resolution: {integrity: sha512-XvPXc8XAQThSjAbY6cQ/9PcBXmFoWuw1sQ3b8HqUCR6ziGXjkTi//kB9SWa2UwqlgdAIuRqAa/9hVljzPehbYg==}
+  /dotenv@16.4.5:
+    resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
     engines: {node: '>=12'}
     dev: true
 

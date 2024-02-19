@@ -21,6 +21,9 @@ export const env = createEnv({
 		KEYSTATIC_GITHUB_CLIENT_ID: z.string().min(1).optional(),
 		KEYSTATIC_GITHUB_CLIENT_SECRET: z.string().min(1).optional(),
 		KEYSTATIC_SECRET: z.string().min(1).optional(),
+		TEST_DATABASE_USER_EMAIL: z.string().email(),
+		TEST_DATABASE_USER_NAME: z.string().min(1),
+		TEST_DATABASE_USER_PASSWORD: z.string().min(8),
 	},
 	client: {
 		NEXT_PUBLIC_APP_BASE_URL: z.string().url(),
@@ -60,6 +63,9 @@ export const env = createEnv({
 		NEXT_PUBLIC_MATOMO_BASE_URL: process.env.NEXT_PUBLIC_MATOMO_BASE_URL,
 		NEXT_PUBLIC_MATOMO_ID: process.env.NEXT_PUBLIC_MATOMO_ID,
 		NEXT_PUBLIC_REDMINE_ID: process.env.NEXT_PUBLIC_REDMINE_ID,
+		TEST_DATABASE_USER_EMAIL: process.env.TEST_DATABASE_USER_EMAIL,
+		TEST_DATABASE_USER_NAME: process.env.TEST_DATABASE_USER_NAME,
+		TEST_DATABASE_USER_PASSWORD: process.env.TEST_DATABASE_USER_PASSWORD,
 	},
 	skipValidation: process.env.ENV_VALIDATION === "disabled",
 	onValidationError(validationError) {
