@@ -2,6 +2,7 @@ import { pick } from "@acdh-oeaw/lib";
 import { compare } from "bcrypt";
 import type { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GitHubProvider from "next-auth/providers/github";
 
 import { getUserByEmail } from "@/lib/data/user";
 import { signInSchema } from "@/lib/schemas/auth";
@@ -49,5 +50,23 @@ export const providers = [
 			},
 		},
 		name: "DARIAH UNR",
+	}),
+	GitHubProvider({
+		/**
+		 * Used to create an account in the database. Returns nothing, because we don't need to
+		 * save access tokens to the database.
+		 */
+		account() {
+			return undefined;
+		},
+		/** Used to create a user in the database. */
+		// profile(profile) {
+		// 	return {
+		// 		id: profile.id.toString(),
+		// 		name: profile.name ?? profile.login,
+		// 		email: profile.email,
+		// 		image: profile.avatar_url,
+		// 	};
+		// },
 	}),
 ] satisfies NextAuthConfig["providers"];

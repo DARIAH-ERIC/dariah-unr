@@ -7,6 +7,8 @@ export const env = createEnv({
 		NODE_ENV: z.enum(["development", "production", "test"]).default("production"),
 	},
 	server: {
+		AUTH_GITHUB_ID: z.string().min(1),
+		AUTH_GITHUB_SECRET: z.string().min(1),
 		AUTH_SECRET: z.string().min(32),
 		AUTH_URL: z.string().url().optional(),
 		BASEROW_API_BASE_URL: z.string().url().optional(),
@@ -35,6 +37,8 @@ export const env = createEnv({
 		NEXT_PUBLIC_REDMINE_ID: z.coerce.number().int().positive(),
 	},
 	runtimeEnv: {
+		AUTH_GITHUB_ID: process.env.AUTH_GITHUB_ID,
+		AUTH_GITHUB_SECRET: process.env.AUTH_GITHUB_SECRET,
 		AUTH_SECRET: process.env.AUTH_SECRET,
 		AUTH_URL: process.env.AUTH_URL,
 		BASEROW_API_BASE_URL: process.env.BASEROW_API_BASE_URL,
