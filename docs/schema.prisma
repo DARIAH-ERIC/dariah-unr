@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  seed     = "prisma/seed.ts"
 }
 
 generator dbml {
@@ -13,10 +12,13 @@ datasource db {
   directUrl = env("DATABASE_DIRECT_URL")
 }
 
+// -------------------------------------------------------------------------------------------------
+
 model Body {
-  id      String  @id @default(uuid()) @db.Uuid
-  name    String
+  id String @id @default(uuid()) @db.Uuid
+
   acronym String?
+  name    String
 
   roles Role[]
 
@@ -26,35 +28,22 @@ model Body {
   @@map(name: "bodies")
 }
 
-model Role {
-  id          String @id @default(uuid()) @db.Uuid
-  name        String
-  annualValue Int // annual money value for given role used for computing countries contribution
-
-  bodies        Body[]
-  contributions Contribution[]
-
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @updatedAt @map(name: "updated_at")
-
-  @@map(name: "roles")
-}
-
-// contribution by one person in a specific role in given time frame
 model Contribution {
-  id             String    @id @default(uuid()) @db.Uuid
-  name           String
-  startDate      DateTime? @map(name: "start_date")
-  endDate        DateTime? @map(name: "end_date")
-  personId       String    @db.Uuid
-  roleId         String    @db.Uuid
-  workingGroupId String?    @db.Uuid
-  countryId      String?    @db.Uuid
+  id String @id @default(uuid()) @db.Uuid
 
+  endDate   DateTime? @map(name: "end_date")
+  name      String
+  startDate DateTime? @map(name: "start_date")
+
+  countryId      String? @map(name: "country_id") @db.Uuid
+  personId       String  @map(name: "person_id") @db.Uuid
+  roleId         String  @map(name: "role_id") @db.Uuid
+  workingGroupId String? @map(name: "workingGroup_id") @db.Uuid
+
+  country      Country?      @relation(fields: [countryId], references: [id])
   person       Person        @relation(fields: [personId], references: [id], onDelete: Cascade)
   role         Role          @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  workingGroup WorkingGroup? @relation(fields: [workingGroupId], references: [id], onDelete: Cascade)
-  country      Country?      @relation(fields: [countryId], references: [id], onDelete: Cascade) // explicit direct connection to country, because derivation via person's affiliation may be ambiguous or change over time
+  workingGroup WorkingGroup? @relation(fields: [workingGroupId], references: [id])
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
@@ -62,13 +51,183 @@ model Contribution {
   @@map(name: "contributions")
 }
 
+enum CountryType {
+  cooperating_partnership
+  member_country
+  other
+}
+
+model Country {
+  id String @id @default(uuid()) @db.Uuid
+
+  code      String
+  endDate   DateTime?   @map(name: "end_date")
+  logo      String?
+  name      String
+  startDate DateTime?   @map(name: "start_date")
+  type      CountryType
+
+  contributions Contribution[]
+  institutions  Institution[]
+  outreach      Outreach[]
+  reports       Report[]
+  services      Service[]
+  software      Software[]
+  users         User[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@index(fields: [code])
+  @@map(name: "countries")
+}
+
+model EventReport {
+  id String @id @default(uuid()) @db.Uuid
+
+  attendees               Int?
+  dariahCommissionedEvent String? @map(name: "dariah_commissioned_event")
+  largeMeetings           Int?    @map(name: "large_meetings")
+  mediumMeetings          Int?    @map(name: "medium_meetings")
+  reusableOutcomes        String? @map(name: "reusable_outcomes")
+  smallMeetings           Int?    @map(name: "small_meetings")
+
+  reportId String @unique @map(name: "report_id") @db.Uuid
+
+  report Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "event_reports")
+}
+
+enum InstitutionType {
+  cooperating_partner
+  national_coordinating_institution
+  national_representative_institution
+  other
+  partner_institution
+}
+
+model Institution {
+  id String @id @default(uuid()) @db.Uuid
+
+  endDate   DateTime?         @map(name: "end_date")
+  name      String
+  startDate DateTime?         @map(name: "start_date")
+  ROR       String?           @map(name: "ror")
+  types     InstitutionType[]
+  url       String[]
+
+  countries Country[]
+  persons   Person[]
+  services  InstitutionToService[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "institutions")
+}
+
+enum InstitutionServiceRole {
+  content_provider
+  service_owner
+  service_provider
+  technical_contact
+}
+
+model InstitutionToService {
+  role InstitutionServiceRole
+
+  institutionId String @map(name: "institution_id") @db.Uuid
+  serviceId     String @map(name: "service_id") @db.Uuid
+
+  institution Institution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  service     Service     @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@unique([institutionId, role, serviceId])
+  @@map(name: "institution_service")
+}
+
+enum OutreachType {
+  national_website
+  social_media
+}
+
+model Outreach {
+  id String @id @default(uuid()) @db.Uuid
+
+  name String
+  type OutreachType
+  url  String
+
+  countryId String? @map(name: "country_id") @db.Uuid
+
+  country Country?         @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  reports OutreachReport[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "outreach")
+}
+
+model OutreachReport {
+  id String @id @default(uuid()) @db.Uuid
+
+  outreachId String @map(name: "outreach_id") @db.Uuid
+  reportId   String @map(name: "report_id") @db.Uuid
+
+  kpis     OutreachKpi[]
+  outreach Outreach      @relation(fields: [outreachId], references: [id], onDelete: Cascade)
+  report   Report        @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "outreach_reports")
+}
+
+enum OutreachKpiType {
+  engagement
+  followers
+  impressions
+  mention
+  new_content
+  page_views
+  posts
+  reach
+  subscribers
+  unique_visitors
+  views
+  watch_time
+}
+
+model OutreachKpi {
+  id String @id @default(uuid()) @db.Uuid
+
+  unit  OutreachKpiType
+  value Int
+
+  outreachReportId String @map(name: "outreach_report_id") @db.Uuid
+
+  outreachReport OutreachReport @relation(fields: [outreachReportId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "outreach_kpis")
+}
+
 model Person {
-  id    String  @id @default(uuid()) @db.Uuid
-  name  String
+  id String @id @default(uuid()) @db.Uuid
+
   // `prisma` currently does not support unique constraints on nullable fields, even though postgres does
   // @see https://github.com/prisma/prisma/issues/3387
   email String? // @unique
-  ORCID String?
+  name  String
+  ORCID String? @map(name: "orcid")
 
   contributions Contribution[]
   institutions  Institution[]
@@ -79,102 +238,109 @@ model Person {
   @@map(name: "persons")
 }
 
-model WorkingGroup {
-  id        String    @id @default(uuid()) @db.Uuid
-  name      String
-  startDate DateTime? @map(name: "start_date")
-  endDate   DateTime? @map(name: "end_date")
+enum ProjectScope {
+  eu
+  national
+  regional
+}
 
-  chairs Contribution[] // chair persons connected via contribution (to indicate role and time frame)
+model ProjectsFundingLeverage {
+  id String @id @default(uuid()) @db.Uuid
+
+  amount        Int?
+  funders       String?
+  name          String
+  projectLength Int?          @map(name: "project_length")
+  scope         ProjectScope?
+  startDate     DateTime?     @map(name: "start_date")
+  totalAmount   Int?          @map(name: "total_amount")
+
+  reportId String @map(name: "report_id") @db.Uuid
+
+  report Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
-  @@map(name: "working_groups")
+  @@map(name: "projects_funding_leverage")
 }
 
-enum InstitutionType {
-  cooperating_partner
-  national_coordinating_institution
-  national_representative_institution
-  other // e.g. NC institution or WG chair affiliation
-  partner_institution
+enum ReportStatus {
+  draft
+  final
 }
 
-model Institution {
-  id        String            @id @default(uuid()) @db.Uuid
-  name      String
-  types     InstitutionType[]
-  startDate DateTime?         @map(name: "start_date")
-  endDate   DateTime?         @map(name: "end_date")
-  url       String[]
-  ROR       String? // global identifier for organisations https://ror.org/
+model Report {
+  id String @id @default(uuid()) @db.Uuid
 
-  countries Country[]
-  persons   Person[]
-  services  InstitutionToService[] // role of institution in providing a service (explicit N:N table)
+  comments Json?
+  status   ReportStatus @default(draft)
+  year     Int
+
+  countryId String @map(name: "country_id") @db.Uuid
+
+  country                    Country                     @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  eventReport                EventReport?
+  outreachReports            OutreachReport[]
+  projectsFundingLeverages   ProjectsFundingLeverage[]
+  researchPolicyDevelopments ResearchPolicyDevelopment[]
+  serviceReports             ServiceReport[]
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
-  @@map(name: "institutions")
+  @@unique([countryId, year])
+  @@index(fields: [year])
+  @@map(name: "reports")
 }
 
-// role of institution in providing a service (explicit N:N table)
-model InstitutionToService {
-  id            String           @id @default(uuid()) @db.Uuid
-  role          ActorServiceRole
-  institutionId String
-  serviceId     String
-
-  institution Institution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
-  service     Service     @relation(fields: [serviceId], references: [id], onDelete: Cascade)
-
-  @@unique([institutionId, serviceId, role])
-  @@map(name: "institution_service")
+enum ResearchPolicyLevel {
+  eu
+  national
 }
 
-enum ActorServiceRole {
-  service_provider
-  service_owner
-  technical_contact
-  content_provider
+model ResearchPolicyDevelopment {
+  id String @id @default(uuid()) @db.Uuid
+
+  level   ResearchPolicyLevel
+  name    String
+  outcome String?
+
+  reportId String @map(name: "report_id") @db.Uuid
+
+  report Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "research_policy_developments")
 }
 
-enum CountryType {
-  cooperating_partnership
-  member_country
-  other
+model Role {
+  id String @id @default(uuid()) @db.Uuid
+
+  annualValue Int    @map(name: "annual_value")
+  name        String
+
+  bodies        Body[]
+  contributions Contribution[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "roles")
 }
 
-model Country {
-  id        String      @id @default(uuid()) @db.Uuid
-  code      String // iso 3166 country code
-  name      String
-  type      CountryType
-  startDate DateTime?   @map(name: "start_date")
-  endDate   DateTime?   @map(name: "end_date")
-  logo      String?
-
-  institutions Institution[]
-  outreach     Outreach[]
-  services     Service[]
-  software     Software[]
-  reports      Report[]
-
-  users User[]
-
-  createdAt    DateTime       @default(now()) @map(name: "created_at")
-  updatedAt    DateTime       @updatedAt @map(name: "updated_at")
-  Contribution Contribution[]
-
-  @@map(name: "countries")
+enum ServiceAudience {
+  dariah_team
+  global
+  national_local
 }
 
-enum ServiceType {
-  community
-  core
-  internal
+enum ServiceMarketplaceStatus {
+  no
+  not_applicable
+  yes
 }
 
 enum ServiceStatus {
@@ -185,54 +351,36 @@ enum ServiceStatus {
   to_be_discontinued
 }
 
-enum ServiceAudience {
-  dariah_team
-  global
-  national_local
-}
-
-enum ServiceMarketplaceStatus {
-  yes
-  no
-  not_applicable
-}
-
-enum ServiceSizeType {
-  small
-  medium
-  large
+enum ServiceType {
+  community
   core
-}
-
-model ServiceSize {
-  id          String          @id @default(uuid()) @db.Uuid
-  type        ServiceSizeType
-  annualValue Int
-  Service     Service[]
+  internal
 }
 
 model Service {
-  id                String                    @id @default(uuid()) @db.Uuid
-  name              String
-  type              ServiceType?
-  url               String[]
-  status            ServiceStatus?
-  audience          ServiceAudience?
-  agreements        String?
-  valueProposition  String?                   @map(name: "value_proposition")
-  marketplaceStatus ServiceMarketplaceStatus?
-  privateSupplier   Boolean?                  @map(name: "private_supplier")
-  trl               Int?
-  technical_contact String?
-  eosc_onboarding   Boolean?
-  monitoring        Boolean?
-  dariah_branding   Boolean?
-  sizeId            String                    @db.Uuid
+  id String @id @default(uuid()) @db.Uuid
 
-  size         ServiceSize?           @relation(fields: [sizeId], references: [id], onDelete: Cascade)
-  countries    Country[] // explicit direct connection to country, because derivation via institution may be ambiguous or change over time
+  agreements              String?
+  audience                ServiceAudience?
+  dariahBranding          Boolean?                  @map(name: "dariah_branding")
+  eoscOnboarding          Boolean?                  @map(name: "eosc_onboarding")
+  marketplaceStatus       ServiceMarketplaceStatus? @map(name: "marketplace_status")
+  monitoring              Boolean?
+  name                    String
+  privateSupplier         Boolean?                  @map(name: "private_supplier")
+  status                  ServiceStatus?
+  technicalContact        String?                   @map(name: "technical_contact")
+  technicalReadinessLevel Int?                      @map(name: "technical_readiness_level")
+  type                    ServiceType?
+  url                     String[]
+  valueProposition        String?                   @map(name: "value_proposition")
+
+  sizeId String @map(name: "size_id") @db.Uuid
+
+  countries    Country[]
   institutions InstitutionToService[]
   reports      ServiceReport[]
+  size         ServiceSize            @relation(fields: [sizeId], references: [id])
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
@@ -240,160 +388,36 @@ model Service {
   @@map(name: "services")
 }
 
-enum MarketplaceOnboardingStatus {
-  added_as_item
-  added_as_external_id
-  no
-  not_applicable
+enum ServiceSizeType {
+  core
+  large
+  medium
+  small
 }
 
-enum SoftwareStatus {
-  maintained
-  not_maintained
-  needs_review
-}
+model ServiceSize {
+  id String @id @default(uuid()) @db.Uuid
 
-model Software {
-  id                          String                       @id @default(uuid()) @db.Uuid
-  name                        String
-  url                         String[]
-  marketplaceUrl              String?
-  comment                     String? // for internal notes
-  status                      SoftwareStatus?
-  marketplaceOnboardingStatus MarketplaceOnboardingStatus?
+  annualValue Int             @map(name: "annual_value")
+  type        ServiceSizeType
 
-  countries Country[] // explicit direct connection to country, because derivation via institution may be ambiguous or change over time *and* relation to institution not introduced yet
-
-  // connection to institutions and countries should be the analogous to service
-  // institutions InstitutionToSoftware[]
-  // reports   SoftwareReport[] // TODO: assess if dedicated SoftwareReport is needed
+  Service Service[]
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
-  @@map(name: "software")
-}
-
-enum OutreachType {
-  national_website
-  social_media
-}
-
-model Outreach {
-  id        String       @id @default(uuid()) @db.Uuid
-  name      String
-  url       String
-  type      OutreachType
-  countryId String       @db.Uuid
-
-  country Country          @relation(fields: [countryId], references: [id], onDelete: Cascade)
-  reports OutreachReport[]
-
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @updatedAt @map(name: "updated_at")
-
-  @@map(name: "outreach")
-}
-
-model OutreachReport {
-  id         String @id @default(uuid()) @db.Uuid
-  outreachId String @db.Uuid
-  reportId   String @db.Uuid
-
-  outreach    Outreach      @relation(fields: [outreachId], references: [id], onDelete: Cascade)
-  reports     Report
-  outreachKpi OutreachKPI[]
-
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @updatedAt @map(name: "updated_at")
-
-  @@map(name: "outreach_reports")
-}
-
-model OutreachKPI {
-  id               String @id @default(uuid()) @db.Uuid
-  value           Int
-  unit            OutreachKpiType
-  outreachReportId String @db.Uuid
-
-  outreachReport OutreachReport @relation(fields: [outreachReportId], references: [id], onDelete: Cascade)
-
-  @@map(name: "outreach_kpi")
-}
-
-enum ResearchPolicyLevel {
-  eu
-  national
-}
-
-model ResearchPolicyDevelopment {
-  id      String              @id @default(uuid()) @db.Uuid
-  name    String // policy organisation or effort
-  level   ResearchPolicyLevel
-  outcome String?
-
-  reportId String @db.Uuid
-  report Report  @relation(fields: [reportId], references: [id], onDelete: Cascade)
-
-
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @updatedAt @map(name: "updated_at")
-
-  @@map(name: "research_policy_developments")
-}
-
-model EventReport {
-  id                      String  @id @default(uuid()) @db.Uuid
-  smallMeetings           Int?    @map(name: "small_meetings")
-  mediumMeetings          Int?    @map(name: "medium_meetings")
-  largeMeetings           Int?    @map(name: "large_meetings")
-  dariahCommissionedEvent String? @map(name: "dariah_commissioned_event")
-  reusableOutcomes        String? @map(name: "reusable_outcomes")
-  attendees               Int?
-
-  reportId String @db.Uuid
-  report Report  @relation(fields: [reportId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @updatedAt @map(name: "updated_at")
-
-  @@map(name: "event_reports")
-}
-
-enum ProjectScope {
-  eu
-  national
-  regional
-}
-
-model ProjectsFundingLeverage {
-  id            String        @id @default(uuid()) @db.Uuid
-  name          String // project or grant name
-  amount        Int? // amount for reporting year
-  totalAmount   Int?          @map(name: "total_amount")
-  startDate     DateTime?     @map(name: "start_date")
-  projectLength Int?          @map(name: "project_length")
-  funders       String?
-  scope         ProjectScope?
-
-  reportId String @db.Uuid
-  report Report  @relation(fields: [reportId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @updatedAt @map(name: "updated_at")
-
-  @@map(name: "projects_funding_leverage")
+  @@map(name: "service_sizes")
 }
 
 model ServiceReport {
-  id        String @id @default(uuid()) @db.Uuid
-  serviceId String @db.Uuid
-  reportId String @db.Uuid
+  id String @id @default(uuid()) @db.Uuid
 
-  service     Service      @relation(fields: [serviceId], references: [id], onDelete: Cascade)
-  report Report  @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  reportId  String @map(name: "report_id") @db.Uuid
+  serviceId String @map(name: "service_id") @db.Uuid
 
-  serviceKpis ServiceKPI[]
+  kpis    ServiceKpi[]
+  report  Report       @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  service Service      @relation(fields: [serviceId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
@@ -402,94 +426,132 @@ model ServiceReport {
 }
 
 enum ServiceKpiType {
-  visits
-  page_views
-  jobs_processed
-  websites_hosted
   downloads
   hits
+  items
+  jobs_processed
+  page_views
+  registered_users
   searches
   sessions
   unique_users
-  registered_users
-  items
+  visits
+  websites_hosted
 }
 
-model ServiceKPI {
-  id              String         @id @default(uuid()) @db.Uuid
-  value           Int
-  unit            ServiceKpiType
-  serviceReportId String         @map(name: "service_report_id") @db.Uuid
+model ServiceKpi {
+  id String @id @default(uuid()) @db.Uuid
 
-  serviceReport ServiceReport @relation(fields: [serviceReportId], references: [id], onDelete: Cascade)
+  unit  ServiceKpiType
+  value Int
 
-  @@map(name: "service_kpi")
-}
+  serviceReportId String @map(name: "service_report_id") @db.Uuid
 
-enum OutreachKpiType {
-  engagement
-  reach
-  impressions
-  followers
-  mention
-  pageViews
-  unique_visitors
-  subscribers
-  new_content
-  views
-  watch_time
-  posts
-}
-
-model Report {
-  id        String @id @default(uuid()) @db.Uuid
-  year      Int
-  comments  Json?  // allows for multiple comments per report (keyed by step)
-  countryId String @db.Uuid
-
-  country                    Country                     @relation(fields: [countryId], references: [id], onDelete: Cascade)
-  events                     EventReport[]
-  projectsFundingLeverage    ProjectsFundingLeverage[]
-  services                   ServiceReport[]
-  outreach                   OutreachReport[]
-  researchPolicyDevelopments ResearchPolicyDevelopment[]
+  ServiceReport ServiceReport @relation(fields: [serviceReportId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
-  @@unique([year, countryId])
-  @@map(name: "reports")
+  @@map(name: "service_kpis")
 }
 
-// ------------------------------------------------------------------------------------------------
+enum SoftwareMarketplaceOnboardingStatus {
+  added_as_external_id
+  added_as_item
+  no
+  not_applicable
+}
+
+enum SoftwareStatus {
+  maintained
+  needs_review
+  not_maintained
+}
+
+model Software {
+  id String @id @default(uuid()) @db.Uuid
+
+  comment                     String?
+  name                        String
+  marketplaceUrl              String?                              @map(name: "marketplace_url")
+  marketplaceOnboardingStatus SoftwareMarketplaceOnboardingStatus? @map(name: "marketplace_onboarding_status")
+  status                      SoftwareStatus?
+  url                         String[]
+
+  countries Country[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "software")
+}
+
+model WorkingGroup {
+  id String @id @default(uuid()) @db.Uuid
+
+  endDate   DateTime? @map(name: "end_date")
+  name      String
+  startDate DateTime? @map(name: "start_date")
+
+  chairs Contribution[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "working_groups")
+}
+
+// -------------------------------------------------------------------------------------------------
 
 model Account {
-  id                String  @id @default(uuid()) @db.Uuid
-  type              String
+  id String @id @default(uuid()) @db.Uuid
+
+  access_token      String?
+  expires_at        Int?
+  id_token          String?
   provider          String
   providerAccountId String  @map("provider_account_id")
   refresh_token     String?
-  access_token      String?
-  expires_at        Int?
-  token_type        String?
   scope             String?
-  id_token          String?
   session_state     String?
+  token_type        String?
+  type              String
 
   userId String @map("user_id") @db.Uuid
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@map(name: "accounts")
 }
 
+// model Authenticator {
+//   id                   String  @id @default(uuid()) @db.Uuid
+
+//   counter              Int
+//   credentialBackedUp   Boolean @map("credential_backed_up")
+//   credentialDeviceType String  @map("credential_device_type")
+//   credentialID         String  @unique @map("credential_id") @db.Uuid
+//   credentialPublicKey  String  @map("credential_public_key")
+//   providerAccountId    String  @map("provider_account_id")
+//   transports           String?
+
+//   userId               String  @map("user_id") @db.Uuid
+
+//   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   @@map(name: "authenticators")
+// }
+
 // model Session {
 //   id           String   @id @default(uuid()) @db.Uuid
-//   sessionToken String   @unique @map("session_token")
-//   expires      DateTime
 
-//   userId String @map("user_id") @db.Uuid
-//   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   expires      DateTime
+//   sessionToken String   @unique @map("session_token")
+
+//   userId       String   @map("user_id") @db.Uuid
+
+//   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
 //   @@map(name: "sessions")
 // }
@@ -505,27 +567,31 @@ enum UserStatus {
 }
 
 model User {
-  id            String     @id @default(uuid()) @db.Uuid
-  name          String?
+  id String @id @default(uuid()) @db.Uuid
+
   email         String?    @unique
   emailVerified DateTime?  @map("email_verified")
-  password      String?
+  name          String?
   image         String?
+  password      String?
   role          UserRole   @default(contributor)
   status        UserStatus @default(unverified)
 
-  accounts  Account[]
-  countryId String?   @map("country_id") @db.Uuid
-  country   Country?  @relation(fields: [countryId], references: [id])
-  // Session   Session[]
+  countryId String? @map("country_id") @db.Uuid
+
+  accounts Account[]
+  // authenticators Authenticator[]
+  country  Country?  @relation(fields: [countryId], references: [id])
+  // sessions       Session[]
 
   @@map(name: "users")
 }
 
 // model VerificationToken {
 //   identifier String
-//   token      String   @unique
+
 //   expires    DateTime
+//   token      String   @unique
 
 //   @@unique([identifier, token])
 //   @@map(name: "verification_tokens")
