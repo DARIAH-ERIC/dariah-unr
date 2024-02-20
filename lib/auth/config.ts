@@ -88,7 +88,7 @@ export const config = {
 
 			return NextResponse.redirect(signInUrl);
 		},
-		signIn({ user }) {
+		signIn() {
 			/**
 			 * FIXME: With the credentials provider, `user` is the database user object.
 			 * However, when initially signing in with oauth providers, this runs before the user
@@ -96,7 +96,7 @@ export const config = {
 			 * `profile` callback (only on subsequent sign-ins, or when the user already exists in
 			 * the database, the database `user` is passed).
 			 */
-			if (user.status !== "verified") return false;
+			// if (user.status !== "verified") return false;
 
 			return true;
 		},
