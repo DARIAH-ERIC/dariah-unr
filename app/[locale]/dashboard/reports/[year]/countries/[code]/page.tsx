@@ -1,14 +1,18 @@
+import { assert } from "@acdh-oeaw/lib";
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
-import { z } from "zod";
 
 import { MainContent } from "@/components/main-content";
+import { PageTitle } from "@/components/page-title";
 import type { Locale } from "@/config/i18n.config";
-import { getReportByCountryCodeAndYear } from "@/lib/data/report";
-import { db } from "@/lib/db";
+import { getCurrentUser } from "@/lib/auth/session";
+import { getCountryCodes } from "@/lib/data/country";
+import { getReportByCountryCode } from "@/lib/data/report";
+import { redirect } from "@/lib/navigation";
+import { dashboardCountryReportPageParams } from "@/lib/schemas/dashboard";
 
 interface DashboardCountryReportPageProps {
 	params: {
@@ -26,11 +30,7 @@ export async function generateStaticParams(props: {
 	const { params } = props;
 
 	const { locale } = params;
-	const countries = await db.country.findMany({
-		select: {
-			code: true,
-		},
-	});
+	const countries = await getCountryCodes();
 
 	return countries;
 }
@@ -41,7 +41,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
 	const { params } = props;
 
-	const { code, locale, year } = params;
+	const { locale } = params;
 	const t = await getTranslations({ locale, namespace: "DashboardCountryReportPage" });
 
 	const metadata: Metadata = {
@@ -56,21 +56,20 @@ export default function DashboardCountryReportPage(
 ): ReactNode {
 	const { params } = props;
 
-	const { code, locale, year } = params;
+	const { locale } = params;
 	setRequestLocale(locale);
 
 	const t = useTranslations("DashboardCountryReportPage");
 
-	// FIXME: move somewhere else
-	const result = z.coerce.number().int().positive().safeParse(year);
+	const result = dashboardCountryReportPageParams.safeParse(params);
 	if (!result.success) notFound();
-	const _year = result.data;
+	const { code, year } = result.data;
 
 	return (
-		<MainContent className="container py-8">
-			<h1>{t("title")}</h1>
+		<MainContent className="container grid content-start gap-8 py-8">
+			<PageTitle>{t("title")}</PageTitle>
 
-			<DashboardCountryReportPageContent code={code} year={_year} />
+			<DashboardCountryReportPageContent code={code} year={year} />
 		</MainContent>
 	);
 }
@@ -86,13 +85,15 @@ async function DashboardCountryReportPageContent(
 ): Promise<ReactNode> {
 	const { code, year } = props;
 
-	const report = await getReportByCountryCodeAndYear({ code, year });
+	const user = await getCurrentUser();
 
+	if (user == null) {
+		redirect("/");
+		assert(false);
+	}
+
+	const report = await getReportByCountryCode({ countryCode: code, year });
 	if (report == null) notFound();
 
-	return (
-		<div>
-			<pre>{JSON.stringify(report, null, 2)}</pre>
-		</div>
-	);
+	return <pre>{JSON.stringify(report, null, 2)}</pre>;
 }

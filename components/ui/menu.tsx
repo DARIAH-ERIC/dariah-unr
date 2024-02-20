@@ -1,145 +1,129 @@
 "use client";
 
-import { CheckIcon, DotIcon } from "lucide-react";
-import { type ComponentPropsWithoutRef, Fragment, type HTMLAttributes } from "react";
+import type { ElementRef } from "react";
 import {
-	Header as AriaHeader,
-	Keyboard as AriaKeyboard,
 	Menu as AriaMenu,
 	MenuItem as AriaMenuItem,
 	type MenuItemProps as AriaMenuItemProps,
 	type MenuProps as AriaMenuProps,
 	MenuTrigger as AriaMenuTrigger,
-	Popover as AriaPopover,
-	type PopoverProps as AriaPopoverProps,
-	Section as AriaSection,
-	Separator as AriaSeparator,
-	type SeparatorProps as AriaSeparatorProps,
+	type MenuTriggerProps as AriaMenuTriggerProps,
+	Popover as AriaMenuPopover,
+	type PopoverProps as AriaMenuPopoverProps,
+	Separator as AriaMenuSeparator,
+	type SeparatorProps as AriaMenuSeparatorProps,
+	SubmenuTrigger as AriaSubMenuTrigger,
+	type SubmenuTriggerProps as AriaSubMenuTriggerProps,
 } from "react-aria-components";
 
-// import { forwardRef } from "@/lib/forward-ref";
-import { cn } from "@/lib/styles";
+import { type ForwardedRef, forwardRef } from "@/lib/forward-ref";
+import { type VariantProps, variants } from "@/lib/styles";
 
-export const MenuTrigger = AriaMenuTrigger;
+export {
+	AriaMenuTrigger as MenuTrigger,
+	type AriaMenuTriggerProps as MenuTriggerProps,
+	AriaSubMenuTrigger as SubMenuTrigger,
+	type AriaSubMenuTriggerProps as SubMenuTriggerProps,
+};
 
-export const MenuSection = AriaSection;
+export const menuPopoverStyles = variants({
+	base: ["w-max min-w-[--trigger-width]"],
+});
 
-export function MenuPopover({ className, offset = 4, ...props }: AriaPopoverProps) {
+export type MenuPopoverStyles = VariantProps<typeof menuPopoverStyles>;
+
+export interface MenuPopoverProps extends AriaMenuPopoverProps, MenuPopoverStyles {}
+
+export const MenuPopover = forwardRef(function MenuPopover(
+	props: MenuPopoverProps,
+	forwardedRef: ForwardedRef<ElementRef<typeof AriaMenuPopover>>,
+) {
+	const { children, className, ...rest } = props;
+
 	return (
-		<AriaPopover
-			className={(values) => {
-				return cn(
-					"z-50 min-w-[8rem] overflow-y-auto rounded-md border bg-overlay p-1 text-on-overlay shadow-md",
-					"data-[entering]:animate-in data-[exiting]:animate-out data-[entering]:fade-in-0 data-[exiting]:fade-out-0 data-[exiting]:zoom-out-95 data-[placement=bottom]:slide-in-from-top-2 data-[placement=left]:slide-in-from-right-2 data-[placement=right]:slide-in-from-left-2 data-[placement=top]:slide-in-from-bottom-2",
-					typeof className === "function" ? className(values) : className,
-				);
-			}}
-			offset={offset}
-			{...props}
-		/>
+		<AriaMenuPopover ref={forwardedRef} {...rest} className={menuPopoverStyles({ className })}>
+			{children}
+		</AriaMenuPopover>
 	);
-}
+});
 
-export function Menu<T extends object>({ className, ...props }: AriaMenuProps<T>) {
-	return <AriaMenu className={cn("outline-none", className)} {...props} />;
-}
+export const menuStyles = variants({
+	base: [
+		"outline outline-1 outline-transparent transition",
+		// "overflow-y-scroll overscroll-contain",
+		"select-none",
+		"rounded-md p-1",
+		"bg-neutral-0 dark:bg-neutral-800",
+		"shadow-lg",
+		// "backdrop-blur-xl",
+		"border border-neutral-950/10 dark:border-neutral-0/10",
+		"text-sm text-neutral-950 dark:text-neutral-0",
+	],
+});
 
-export interface MenuItemProps extends AriaMenuItemProps {
-	inset?: boolean;
-}
+export type MenuStyles = VariantProps<typeof menuStyles>;
 
-export function MenuItem({ className, inset, ...props }: MenuItemProps) {
+export interface MenuProps<T extends object> extends AriaMenuProps<T>, MenuStyles {}
+
+export const Menu = forwardRef(function Menu<T extends object>(
+	props: MenuProps<T>,
+	forwardedRef: ForwardedRef<ElementRef<typeof AriaMenu>>,
+) {
+	const { children, className, ...rest } = props;
+
 	return (
-		<AriaMenuItem
-			className={(values) => {
-				return cn(
-					"relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-on-accent",
-					inset && "pl-8",
-					typeof className === "function" ? className(values) : className,
-				);
-			}}
-			{...props}
-		/>
+		<AriaMenu<T> ref={forwardedRef} {...rest} className={menuStyles({ className })}>
+			{children}
+		</AriaMenu>
 	);
-}
+});
 
-export function MenuCheckboxItem({ className, children, ...props }: MenuItemProps) {
+export const menuItemStyles = variants({
+	base: [
+		"outline-transparent",
+		"flex items-center justify-between gap-x-4",
+		"transition",
+		"rounded-sm py-1.5 pl-3 pr-2",
+		"focus:bg-neutral-950/5 dark:focus:bg-neutral-0/5",
+	],
+});
+
+export type MenuItemStyles = VariantProps<typeof menuItemStyles>;
+
+export interface MenuItemProps<T extends object> extends AriaMenuItemProps<T>, MenuItemStyles {}
+
+export const MenuItem = forwardRef(function MenuItem<T extends object>(
+	props: MenuItemProps<T>,
+	forwardedRef: ForwardedRef<ElementRef<typeof AriaMenuItem>>,
+) {
+	const { children, className, ...rest } = props;
+
 	return (
-		<AriaMenuItem
-			className={(values) => {
-				return cn(
-					"relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-on-accent",
-					typeof className === "function" ? className(values) : className,
-				);
-			}}
-			{...props}
-		>
-			{(values) => {
-				return (
-					<Fragment>
-						<span className="absolute left-2 flex size-4 items-center justify-center">
-							{values.isSelected ? <CheckIcon className="size-4" /> : null}
-						</span>
-
-						{typeof children === "function" ? children(values) : children}
-					</Fragment>
-				);
-			}}
+		<AriaMenuItem<T> ref={forwardedRef} {...rest} className={menuItemStyles({ className })}>
+			{children}
 		</AriaMenuItem>
 	);
-}
+});
 
-export function MenuRadioItem({ className, children, ...props }: MenuItemProps) {
+export const MenuSeparatorStyles = variants({
+	base: ["my-2 h-px w-full bg-neutral-200 dark:bg-neutral-700"],
+});
+
+export type menuSeparatorStyles = VariantProps<typeof MenuSeparatorStyles>;
+
+export interface MenuSeparatorProps extends AriaMenuSeparatorProps, menuSeparatorStyles {}
+
+export const MenuSeparator = forwardRef(function MenuSeparator(
+	props: MenuSeparatorProps,
+	forwardedRef: ForwardedRef<ElementRef<typeof AriaMenuSeparator>>,
+) {
+	const { className, ...rest } = props;
+
 	return (
-		<AriaMenuItem
-			className={cn(
-				"relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-on-accent",
-				className,
-			)}
-			{...props}
-		>
-			{(values) => {
-				return (
-					<Fragment>
-						<span className="absolute left-2 flex size-3.5 items-center justify-center">
-							{values.isSelected ? <DotIcon className="size-4 fill-current" /> : null}
-						</span>
-						{typeof children === "function" ? children(values) : children}
-					</Fragment>
-				);
-			}}
-		</AriaMenuItem>
-	);
-}
-
-export interface MenuHeaderProps extends ComponentPropsWithoutRef<typeof AriaHeader> {
-	inset?: boolean;
-	separator?: boolean;
-}
-
-export function AriaMenuHeader({ className, inset, separator = false, ...props }: MenuHeaderProps) {
-	return (
-		<AriaHeader
-			className={cn(
-				"py-1.5 text-sm font-semibold",
-				inset && "pl-8",
-				separator ? "-mx-1 mb-1 border-b border-b-border px-3 pb-[0.625rem]" : "px-2",
-				className,
-			)}
-			{...props}
+		<AriaMenuSeparator
+			ref={forwardedRef}
+			{...rest}
+			className={MenuSeparatorStyles({ className })}
 		/>
 	);
-}
-
-export function MenuSeparator({ className, ...props }: AriaSeparatorProps) {
-	return <AriaSeparator className={cn("-mx-1 my-1 h-px bg-muted", className)} {...props} />;
-}
-
-export function MenuKeyboard({ className, ...props }: HTMLAttributes<HTMLSpanElement>) {
-	return (
-		<AriaKeyboard
-			className={cn("ml-auto text-xs tracking-widest opacity-60", className)}
-			{...props}
-		/>
-	);
-}
+});

@@ -85,7 +85,6 @@ model Country {
 model EventReport {
   id String @id @default(uuid()) @db.Uuid
 
-  attendees               Int?
   dariahCommissionedEvent String? @map(name: "dariah_commissioned_event")
   largeMeetings           Int?    @map(name: "large_meetings")
   mediumMeetings          Int?    @map(name: "medium_meetings")
@@ -274,10 +273,10 @@ model Report {
   id String @id @default(uuid()) @db.Uuid
 
   comments                 Json?
-  contributionsCount       Int
-  operationalCost          Int
-  operationalCostDetail    String
-  operationalCostThreshold Int
+  contributionsCount       Int?
+  operationalCost          Int?
+  operationalCostDetail    String?
+  operationalCostThreshold Int?
   status                   ReportStatus @default(draft)
   year                     Int
 

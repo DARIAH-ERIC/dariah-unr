@@ -4,13 +4,12 @@ import {
 	createUrlSearchParams,
 	type CreateUrlSearchParamsParams,
 } from "@acdh-oeaw/lib";
-import { ReadonlyURLSearchParams } from "next/navigation";
 
 import { env } from "@/config/env.config";
 
 export interface CreateFullUrlParams extends Omit<CreateUrlParams, "baseUrl" | "searchParams"> {
 	baseUrl?: CreateUrlParams["baseUrl"];
-	searchParams?: CreateUrlSearchParamsParams | ReadonlyURLSearchParams;
+	searchParams?: CreateUrlSearchParamsParams;
 }
 
 export function createFullUrl(params: CreateFullUrlParams): URL {
@@ -21,7 +20,7 @@ export function createFullUrl(params: CreateFullUrlParams): URL {
 		pathname,
 		searchParams:
 			searchParams != null
-				? searchParams instanceof URLSearchParams || searchParams instanceof ReadonlyURLSearchParams
+				? searchParams instanceof URLSearchParams
 					? searchParams
 					: createUrlSearchParams(searchParams)
 				: undefined,

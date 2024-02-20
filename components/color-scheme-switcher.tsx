@@ -6,7 +6,9 @@ import type { ColorScheme } from "@/lib/color-scheme-script";
 
 const ColorSchemeSelect = dynamic(
 	() => {
-		return import("@/components/color-scheme-select");
+		return import("@/components/color-scheme-select").then((module) => {
+			return module.ColorSchemeSelect;
+		});
 	},
 	{
 		// @ts-expect-error `ReactNode` is a valid return type.

@@ -30,6 +30,8 @@ export const config = {
 		 * @see https://github.com/nextauthjs/next-auth/blob/main/packages/next-auth/src/lib/index.ts#L171-L201
 		 */
 		authorized({ auth, request }) {
+			// TODO: can we use locale prefix here when redirecting, to avoid running middleware twice?
+
 			const isSignedIn = auth != null;
 			const isVerified = auth?.user.status === "verified";
 			const pathname = getNormalizedPathname(request.nextUrl.pathname);

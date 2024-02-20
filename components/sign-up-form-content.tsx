@@ -1,13 +1,14 @@
 "use client";
 
 import { isNonEmptyString } from "@acdh-oeaw/lib";
-import { AlertCircleIcon, CheckIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { useFormState } from "react-dom";
 
-import { FormErrorMessage } from "@/components/form-error-message";
-import { FormSuccessMessage } from "@/components/form-success-message";
 import { SubmitButton } from "@/components/submit-button";
+import { TextInputField } from "@/components/ui/blocks/text-input-field";
+import { Form } from "@/components/ui/form";
+import { FormError as FormErrorMessage } from "@/components/ui/form-error";
+import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
 import { signUp } from "@/lib/actions/auth";
 
 interface SignUpFormContentProps {
@@ -21,30 +22,25 @@ interface SignUpFormContentProps {
 export function SignUpFormContent(props: SignUpFormContentProps): ReactNode {
 	const { callbackUrl, emailLabel, nameLabel, passwordLabel, signUpLabel } = props;
 
-	const [formState, formAction] = useFormState(signUp, { status: "initial" });
+	const [formState, formAction] = useFormState(signUp, undefined);
 
 	return (
-		<form action={formAction} className="grid min-w-80 gap-4">
-			<label className="grid gap-1">
-				<span className="text-sm font-medium">{nameLabel}</span>
-				<input name="name" placeholder={nameLabel} required={true} />
-			</label>
+		<Form
+			action={formAction}
+			className="grid min-w-80 gap-4"
+			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
+		>
+			<TextInputField isRequired={true} label={nameLabel} name="name" />
 
-			<label className="grid gap-1">
-				<span className="text-sm font-medium">{emailLabel}</span>
-				<input name="email" placeholder={emailLabel} required={true} type="email" />
-			</label>
+			<TextInputField isRequired={true} label={emailLabel} name="email" type="email" />
 
-			<label className="grid gap-1">
-				<span className="text-sm font-medium">{passwordLabel}</span>
-				<input
-					minLength={8}
-					name="password"
-					placeholder={passwordLabel}
-					required={true}
-					type="password"
-				/>
-			</label>
+			<TextInputField
+				isRequired={true}
+				label={passwordLabel}
+				minLength={8}
+				name="password"
+				type="password"
+			/>
 
 			{isNonEmptyString(callbackUrl) ? (
 				<input name="redirectTo" type="hidden" value={callbackUrl} />
@@ -53,22 +49,12 @@ export function SignUpFormContent(props: SignUpFormContentProps): ReactNode {
 			<SubmitButton>{signUpLabel}</SubmitButton>
 
 			<FormSuccessMessage>
-				{formState.status === "success" ? (
-					<div className="flex items-center gap-1.5">
-						<CheckIcon aria-hidden={true} className="size-4 shrink-0" />
-						{formState.message}
-					</div>
-				) : null}
+				{formState?.status === "success" ? formState.message : null}
 			</FormSuccessMessage>
 
 			<FormErrorMessage>
-				{formState.status === "error" ? (
-					<div className="flex items-center gap-1.5">
-						<AlertCircleIcon aria-hidden={true} className="size-4 shrink-0" />
-						{formState.message}
-					</div>
-				) : null}
+				{formState?.status === "error" ? formState.formErrors : null}
 			</FormErrorMessage>
-		</form>
+		</Form>
 	);
 }

@@ -7,42 +7,45 @@ import {
 	composeRenderProps,
 } from "react-aria-components";
 
+import { TouchTarget } from "@/components/ui/touch-target";
 import { type ForwardedRef, forwardRef } from "@/lib/forward-ref";
-import { compose, type VariantProps, variants } from "@/lib/styles";
-import { focusRing } from "@/styles/focus-ring";
+import { type VariantProps, variants } from "@/lib/styles";
 
-export const buttonStyles = compose(
-	focusRing,
-	variants({
-		base: "inline-flex cursor-default items-center justify-center whitespace-nowrap rounded-md font-medium transition",
-		variants: {
-			size: {
-				sm: "h-8 rounded-md px-3 text-xs",
-				md: "h-9 px-4 py-2 text-sm",
-				lg: "h-10 rounded-md px-8 text-sm",
-				icon: "size-9",
-			},
-			variant: {
-				primary: "bg-primary text-on-primary shadow-sm hover:bg-primary/90 pressed:bg-primary/80",
-				secondary:
-					"bg-secondary text-on-secondary shadow-sm hover:bg-secondary/80 pressed:bg-secondary/70",
-				negative:
-					"bg-negative text-on-negative shadow-sm hover:bg-negative/90 pressed:bg-negative/80",
-				outline:
-					"border border-input bg-background shadow-sm hover:bg-accent hover:text-on-accent pressed:bg-accent/90",
-				ghost: "hover:bg-accent hover:text-on-accent pressed:bg-accent/90",
-				// link: "text-primary underline-offset-4 hover:underline",
-			},
-			isDisabled: {
-				true: "pointer-events-none opacity-50 forced-colors:text-[GrayText]",
-			},
+export const buttonStyles = variants({
+	base: [
+		"inline-flex cursor-default items-center justify-center gap-x-2 whitespace-nowrap transition",
+		"rounded-md px-3 py-1.5",
+		"text-sm font-medium leading-normal",
+		"border",
+
+		"disabled:opacity-50",
+	],
+	variants: {
+		variant: {
+			solid: [
+				"border-neutral-950/90 dark:border-neutral-0/5",
+				"bg-neutral-900 text-neutral-0 dark:bg-neutral-600",
+				"hover:bg-neutral-900/90 dark:hover:bg-neutral-600/90",
+				"shadow-sm dark:shadow-none",
+				"disabled:shadow-none",
+			],
+			outline: [
+				"border-neutral-950/10 dark:border-neutral-0/15",
+				"bg-transparent hover:bg-neutral-950/[2.5%] pressed:bg-neutral-950/[2.5%] dark:hover:bg-neutral-0/[2.5%] dark:pressed:bg-neutral-950/[2.5%]",
+				"text-neutral-950 dark:text-neutral-0",
+			],
+			plain: [
+				"border-transparent",
+				"hover:bg-neutral-950/5 pressed:bg-neutral-950/5",
+				"text-neutral-950 dark:text-neutral-0",
+				"dark:hover:bg-neutral-0/10 dark:pressed:bg-neutral-0/10",
+			],
 		},
-		defaultVariants: {
-			size: "md",
-			variant: "primary",
-		},
-	}),
-);
+	},
+	defaultVariants: {
+		variant: "solid",
+	},
+});
 
 export type ButtonStyles = VariantProps<typeof buttonStyles>;
 
@@ -52,17 +55,19 @@ export const Button = forwardRef(function Button(
 	props: ButtonProps,
 	forwardedRef: ForwardedRef<ElementRef<typeof AriaButton>>,
 ) {
-	const { children, className, size, variant, ...rest } = props;
+	const { children, className, variant, ...rest } = props;
 
 	return (
 		<AriaButton
 			ref={forwardedRef}
 			{...rest}
 			className={composeRenderProps(className, (className, renderProps) => {
-				return buttonStyles({ ...renderProps, className, size, variant });
+				return buttonStyles({ ...renderProps, className, variant });
 			})}
 		>
-			{children}
+			{composeRenderProps(children, (children, _renderProps) => {
+				return <TouchTarget>{children}</TouchTarget>;
+			})}
 		</AriaButton>
 	);
 });

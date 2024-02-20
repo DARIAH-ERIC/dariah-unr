@@ -6,6 +6,7 @@ import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "
 import type { ReactNode } from "react";
 
 import { MainContent } from "@/components/main-content";
+import { PageTitle } from "@/components/page-title";
 import type { Locale } from "@/config/i18n.config";
 import { createImprintUrl } from "@/config/imprint.config";
 
@@ -40,26 +41,26 @@ export default function ImprintPage(props: ImprintPageProps): ReactNode {
 	const t = useTranslations("ImprintPage");
 
 	return (
-		<MainContent className="prose container mx-auto w-full max-w-screen-md py-8">
-			<ImprintPageContent locale={locale} title={t("title")} />
+		<MainContent className="container grid content-start gap-8 py-8">
+			<PageTitle>{t("title")}</PageTitle>
+
+			<ImprintPageContent locale={locale} />
 		</MainContent>
 	);
 }
 
 interface ImprintPageContentProps {
 	locale: Locale;
-	title: string;
 }
 
 // @ts-expect-error Upstream type issue.
 async function ImprintPageContent(props: ImprintPageContentProps): Promise<ReactNode> {
-	const { locale, title } = props;
+	const { locale } = props;
 
 	const html = await getImprintHtml(locale);
 
 	return (
-		<div className="prose mx-auto w-full max-w-screen-md">
-			<h1>{title}</h1>
+		<div className="prose prose-sm mx-auto w-full max-w-screen-md">
 			<div dangerouslySetInnerHTML={{ __html: html }} />
 		</div>
 	);

@@ -1,4 +1,4 @@
-import { log } from "@acdh-oeaw/lib";
+import { assert, log } from "@acdh-oeaw/lib";
 import { PrismaClient } from "@prisma/client";
 import { hash } from "bcrypt";
 
@@ -15,16 +15,18 @@ async function seed() {
 		},
 	});
 
-	const user = await db.user.create({
+	const testUser = getTestUser();
+
+	const _user = await db.user.create({
 		data: {
 			country: {
 				connect: {
 					id: country.id,
 				},
 			},
-			email: env.TEST_DATABASE_USER_EMAIL,
-			name: env.TEST_DATABASE_USER_NAME,
-			password: await hash(env.TEST_DATABASE_USER_PASSWORD, 10),
+			email: testUser.email,
+			name: testUser.name,
+			password: await hash(testUser.password, 10),
 			status: "verified",
 		},
 	});
@@ -78,7 +80,7 @@ async function seed() {
 		},
 	});
 
-	const contribution = await db.contribution.create({
+	const _contribution = await db.contribution.create({
 		data: {
 			country: {
 				connect: {
@@ -122,7 +124,7 @@ async function seed() {
 		},
 	});
 
-	const software = await db.software.create({
+	const _software = await db.software.create({
 		data: {
 			name: "DARIAH UNR",
 			countries: {
@@ -145,7 +147,7 @@ async function seed() {
 		},
 	});
 
-	const eventReport = await db.eventReport.create({
+	const _eventReport = await db.eventReport.create({
 		data: {
 			attendees: 1,
 			report: {
@@ -156,7 +158,7 @@ async function seed() {
 		},
 	});
 
-	const outreachReport = await db.outreachReport.create({
+	const _outreachReport = await db.outreachReport.create({
 		data: {
 			kpis: {
 				create: {
@@ -177,7 +179,7 @@ async function seed() {
 		},
 	});
 
-	const projectsFundingLeverage = await db.projectsFundingLeverage.create({
+	const _projectsFundingLeverage = await db.projectsFundingLeverage.create({
 		data: {
 			name: "DARIAH UNR project",
 			report: {
@@ -188,7 +190,7 @@ async function seed() {
 		},
 	});
 
-	const researchPolicyDevelopment = await db.researchPolicyDevelopment.create({
+	const _researchPolicyDevelopment = await db.researchPolicyDevelopment.create({
 		data: {
 			level: "national",
 			name: "DARIAH UNR development",
@@ -200,7 +202,7 @@ async function seed() {
 		},
 	});
 
-	const serviceReport = await db.serviceReport.create({
+	const _serviceReport = await db.serviceReport.create({
 		data: {
 			kpis: {
 				create: {
@@ -233,3 +235,17 @@ seed()
 	.finally(() => {
 		return db.$disconnect();
 	});
+
+// ------------------------------------------------------------------------------------------------
+
+function getTestUser() {
+	assert(env.DATABASE_TEST_USER_EMAIL);
+	assert(env.DATABASE_TEST_USER_NAME);
+	assert(env.DATABASE_TEST_USER_PASSWORD);
+
+	return {
+		name: env.DATABASE_TEST_USER_NAME,
+		email: env.DATABASE_TEST_USER_EMAIL,
+		password: env.DATABASE_TEST_USER_PASSWORD,
+	};
+}

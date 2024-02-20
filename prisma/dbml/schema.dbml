@@ -49,7 +49,6 @@ Table countries {
 
 Table event_reports {
   id String [pk]
-  attendees Int
   dariahCommissionedEvent String
   largeMeetings Int
   mediumMeetings Int
@@ -150,10 +149,10 @@ Table projects_funding_leverage {
 Table reports {
   id String [pk]
   comments Json
-  contributionsCount Int [not null]
-  operationalCost Int [not null]
-  operationalCostDetail String [not null]
-  operationalCostThreshold Int [not null]
+  contributionsCount Int
+  operationalCost Int
+  operationalCostDetail String
+  operationalCostThreshold Int
   status ReportStatus [not null, default: 'draft']
   year Int [not null]
   countryId String [not null]
