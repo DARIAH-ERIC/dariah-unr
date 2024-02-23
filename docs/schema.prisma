@@ -38,7 +38,7 @@ model Contribution {
   countryId      String? @map(name: "country_id") @db.Uuid
   personId       String  @map(name: "person_id") @db.Uuid
   roleId         String  @map(name: "role_id") @db.Uuid
-  workingGroupId String? @map(name: "workingGroup_id") @db.Uuid
+  workingGroupId String? @map(name: "working_group_id") @db.Uuid
 
   country      Country?      @relation(fields: [countryId], references: [id])
   person       Person        @relation(fields: [personId], references: [id], onDelete: Cascade)
@@ -115,8 +115,8 @@ model Institution {
 
   endDate   DateTime?         @map(name: "end_date")
   name      String
-  startDate DateTime?         @map(name: "start_date")
   ROR       String?           @map(name: "ror")
+  startDate DateTime?         @map(name: "start_date")
   types     InstitutionType[]
   url       String[]
 
@@ -250,7 +250,7 @@ model ProjectsFundingLeverage {
   amount        Int?
   funders       String?
   name          String
-  projectLength Int?          @map(name: "project_length")
+  projectMonths Int?          @map(name: "project_months")
   scope         ProjectScope?
   startDate     DateTime?     @map(name: "start_date")
   totalAmount   Int?          @map(name: "total_amount")
@@ -296,7 +296,10 @@ model Report {
 
 enum ResearchPolicyLevel {
   eu
+  international
+  institutional
   national
+  regional
 }
 
 model ResearchPolicyDevelopment {
@@ -447,7 +450,7 @@ model ServiceKpi {
 
   serviceReportId String @map(name: "service_report_id") @db.Uuid
 
-  ServiceReport ServiceReport @relation(fields: [serviceReportId], references: [id], onDelete: Cascade)
+  serviceReport ServiceReport @relation(fields: [serviceReportId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
