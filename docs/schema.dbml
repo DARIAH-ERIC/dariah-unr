@@ -150,6 +150,10 @@ Table projects_funding_leverage {
 Table reports {
   id String [pk]
   comments Json
+  contributionsCount Int [not null]
+  operationalCost Int [not null]
+  operationalCostDetail String [not null]
+  operationalCostThreshold Int [not null]
   status ReportStatus [not null, default: 'draft']
   year Int [not null]
   countryId String [not null]

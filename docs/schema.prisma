@@ -273,13 +273,13 @@ enum ReportStatus {
 model Report {
   id String @id @default(uuid()) @db.Uuid
 
-  comments Json?
-  status   ReportStatus @default(draft)
-  year     Int
-  countContributors Int
-  operationalCost Int  // overall cost for given country - either added manually, or as a result of the formula
-  operationalCostDetail String  // verbose explanation of the calculation of operationalCost (string representation of the formula used)
-  operationalCostThreshold Int // annual value for each country to reach in operationalCost
+  comments                 Json?
+  contributionsCount       Int
+  operationalCost          Int
+  operationalCostDetail    String
+  operationalCostThreshold Int
+  status                   ReportStatus @default(draft)
+  year                     Int
 
   countryId String @map(name: "country_id") @db.Uuid
 
