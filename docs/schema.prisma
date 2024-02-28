@@ -279,6 +279,7 @@ model Report {
   countContributors Int
   operationalCost Int  // overall cost for given country - either added manually, or as a result of the formula
   operationalCostDetail String  // verbose explanation of the calculation of operationalCost (string representation of the formula used)
+  operationalCostThreshold Int // annual value for each country to reach in operationalCost
 
   countryId String @map(name: "country_id") @db.Uuid
 
