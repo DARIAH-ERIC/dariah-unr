@@ -276,6 +276,9 @@ model Report {
   comments Json?
   status   ReportStatus @default(draft)
   year     Int
+  countContributors Int
+  operationalCost Int  // overall cost for given country - either added manually, or as a result of the formula
+  operationalCostDetail String  // verbose explanation of the calculation of operationalCost (string representation of the formula used)
 
   countryId String @map(name: "country_id") @db.Uuid
 
