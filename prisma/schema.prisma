@@ -273,9 +273,13 @@ enum ReportStatus {
 model Report {
   id String @id @default(uuid()) @db.Uuid
 
-  comments Json?
-  status   ReportStatus @default(draft)
-  year     Int
+  comments                 Json?
+  contributionsCount       Int
+  operationalCost          Int
+  operationalCostDetail    String
+  operationalCostThreshold Int
+  status                   ReportStatus @default(draft)
+  year                     Int
 
   countryId String @map(name: "country_id") @db.Uuid
 
