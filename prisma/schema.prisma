@@ -85,7 +85,6 @@ model Country {
 model EventReport {
   id String @id @default(uuid()) @db.Uuid
 
-  attendees               Int?
   dariahCommissionedEvent String? @map(name: "dariah_commissioned_event")
   largeMeetings           Int?    @map(name: "large_meetings")
   mediumMeetings          Int?    @map(name: "medium_meetings")
