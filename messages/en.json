@@ -1,6 +1,7 @@
 {
 	"AppFooter": {
 		"links": {
+			"contact": "Contact",
 			"imprint": "Imprint"
 		},
 		"navigation-secondary": "Secondary"
@@ -43,6 +44,18 @@
 			"light": "Light",
 			"system": "System"
 		}
+	},
+	"ContactForm": {
+		"email": "Email",
+		"message": "Message",
+		"send": "Send",
+		"subject": "Subject"
+	},
+	"ContactPage": {
+		"meta": {
+			"title": "Contact"
+		},
+		"title": "Contact"
 	},
 	"DashboardPage": {
 		"meta": {
@@ -113,6 +126,9 @@
 		"sign-up": "Sign up"
 	},
 	"actions": {
+		"sendEmail": {
+			"success": "Successfully sent email."
+		},
 		"signIn": {
 			"errors": {
 				"AuthorizedCallbackError": "You do not have permission to sign in",

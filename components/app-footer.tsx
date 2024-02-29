@@ -10,6 +10,7 @@ export function AppFooter(): ReactNode {
 
 	const links = {
 		imprint: { href: createHref({ pathname: "/imprint" }), label: t("links.imprint") },
+		contact: { href: createHref({ pathname: "/contact" }), label: t("links.contact") },
 	} satisfies Record<string, { href: LinkProps["href"]; label: string }>;
 
 	return (
