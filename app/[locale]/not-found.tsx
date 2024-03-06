@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { MainContent } from "@/components/main-content";
+import { PageTitle } from "@/components/page-title";
 import type { Locale } from "@/config/i18n.config";
 
 interface NotFoundPageProps {
@@ -35,8 +36,8 @@ export default function NotFoundPage(_props: NotFoundPageProps): ReactNode {
 	const t = useTranslations("NotFoundPage");
 
 	return (
-		<MainContent className="container py-8">
-			<h1>{t("title")}</h1>
+		<MainContent className="container grid place-content-center py-8">
+			<PageTitle>{t("title")}</PageTitle>
 		</MainContent>
 	);
 }

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { useLocale as _useLocale } from "next-intl";
 import { createSharedPathnamesNavigation } from "next-intl/navigation";
-import type { ComponentPropsWithoutRef, FC } from "react";
+import type { ComponentPropsWithRef, FC } from "react";
 
 import { isValidLocale, type Locale, locales } from "@/config/i18n.config";
 
@@ -11,7 +11,7 @@ const { Link, redirect, usePathname, useRouter } = createSharedPathnamesNavigati
 
 export { redirect, usePathname, useRouter };
 
-export type LocaleLinkProps = Omit<ComponentPropsWithoutRef<typeof Link>, "href"> & {
+export type LocaleLinkProps = Omit<ComponentPropsWithRef<typeof Link>, "href"> & {
 	href?: string | undefined;
 };
 

@@ -164,7 +164,7 @@ async function ingest() {
 		const type = getEnumValue<any>(row["channel type"]?.value);
 		const record = await db.outreach.create({
 			data: {
-				// FIXME: There is no name in the baserow database.
+				/** There is no `name` field in the baserow database, so we duplicate `url`. */
 				name: row["Website or channel"],
 				type: type,
 				url: row["Website or channel"],
@@ -240,7 +240,7 @@ async function ingest() {
 				countries,
 				size: {
 					connect: {
-						// FIXME: This is a required field, but not preset in the baserow database.
+						/** This is a required field, but not present in the baserow database. */
 						id: ids.serviceSizes.get("small"),
 					},
 				},
@@ -248,20 +248,14 @@ async function ingest() {
 		});
 		ids.services.set(row.id, record.id);
 
-		// FIXME: We don't get institution ids from the baserow database.
-		// row["Contact person for the service"]
-		// row["Service owner"]
-		// row["Service provider"]
-		// if (row["Content provider/Curators"]) {
-		// 	await db.institutionToService.create({
-		// 		data: {
-		// 			role: "content_provider",
-		// 			serviceId: record.id,
-		// 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		// 			institutionId: ids.institutions.get(row["Content provider/Curators"])!,
-		// 		},
-		// 	});
-		// }
+		/**
+		 * We don't get institution ids from the baserow database for these fields, so we cannot
+		 * populate the `InstitutionToService table:
+		 * - row["Content provider/Curators"]
+		 * - row["Contact person for the service"]
+		 * - row["Service owner"]
+		 * - row["Service provider"]
+		 */
 	}
 
 	/** Contributions. */
@@ -487,10 +481,14 @@ ingest()
 // ------------------------------------------------------------------------------------------------
 
 function getBaserowConfig() {
-	assert(env.BASEROW_API_BASE_URL);
-	assert(env.BASEROW_DATABASE_ID);
-	assert(env.BASEROW_EMAIL);
-	assert(env.BASEROW_PASSWORD);
+	try {
+		assert(env.BASEROW_API_BASE_URL);
+		assert(env.BASEROW_DATABASE_ID);
+		assert(env.BASEROW_EMAIL);
+		assert(env.BASEROW_PASSWORD);
+	} catch {
+		throw new Error("Missing environment variables.");
+	}
 
 	return {
 		baseUrl: env.BASEROW_API_BASE_URL,

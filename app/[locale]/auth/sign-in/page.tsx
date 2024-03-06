@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 
 import { MainContent } from "@/components/main-content";
 import { SignInForm } from "@/components/sign-in-form";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Locale } from "@/config/i18n.config";
 import { authSignInPageSearchParams } from "@/lib/schemas/auth";
 
@@ -43,10 +44,13 @@ export default function AuthSignInPage(props: AuthSignInPageProps): ReactNode {
 
 	return (
 		<MainContent className="container grid place-content-center py-8">
-			<div className="grid gap-8 rounded-md border bg-surface p-8 text-on-surface shadow-lg">
-				<h1>{t("title")}</h1>
+			<Card>
+				<CardHeader>
+					<CardTitle>{t("title")}</CardTitle>
+				</CardHeader>
+				{/* TODO: CardForm, which puts submit button in footer, connected to form via attribute */}
 				<SignInForm callbackUrl={callbackUrl} />
-			</div>
+			</Card>
 		</MainContent>
 	);
 }

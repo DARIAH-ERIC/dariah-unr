@@ -120,8 +120,8 @@ test.describe("should add json+ld metadata", () => {
 	test("with en locale", async ({ page }) => {
 		await page.goto("/en");
 
-		const metadata = await page.locator('script[type="application/ld+json"]').textContent();
-		expect(metadata).toBe(
+		const metadata = page.locator('script[type="application/ld+json"]');
+		await expect(metadata).toHaveText(
 			JSON.stringify({
 				"@context": "https://schema.org",
 				"@type": "WebSite",
@@ -134,8 +134,8 @@ test.describe("should add json+ld metadata", () => {
 	test("with de locale", async ({ page }) => {
 		await page.goto("/de");
 
-		const metadata = await page.locator('script[type="application/ld+json"]').textContent();
-		expect(metadata).toBe(
+		const metadata = page.locator('script[type="application/ld+json"]');
+		await expect(metadata).toHaveText(
 			JSON.stringify({
 				"@context": "https://schema.org",
 				"@type": "WebSite",

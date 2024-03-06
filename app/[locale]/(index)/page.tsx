@@ -5,7 +5,9 @@ import type { ReactNode } from "react";
 
 import { Logo } from "@/components/logo";
 import { MainContent } from "@/components/main-content";
+import { LinkButton } from "@/components/ui/link-button";
 import type { Locale } from "@/config/i18n.config";
+import { createHref } from "@/lib/create-href";
 
 interface IndexPageProps {
 	params: {
@@ -40,20 +42,36 @@ export default function IndexPage(props: IndexPageProps): ReactNode {
 	const { locale } = params;
 	setRequestLocale(locale);
 
-	const t = useTranslations("IndexPage");
-
 	return (
 		<MainContent className="container py-8">
-			<section className="grid max-w-screen-md items-start justify-items-start gap-3 px-4 py-8 md:py-12">
-				<div className="flex items-center gap-2 rounded-lg bg-muted px-3 py-1 text-sm font-medium leading-tight">
-					<Logo className="size-4 shrink-0 text-brand" />
-					<span>{t("badge")}</span>
-				</div>
-				<h1 className="text-3xl font-bold leading-tight tracking-tighter md:text-5xl">
-					{t("title")}
-				</h1>
-				<p className="text-lg text-on-muted sm:text-xl">{t("lead-in")}</p>
-			</section>
+			<IndexPageHeroSection />
 		</MainContent>
+	);
+}
+
+function IndexPageHeroSection(): ReactNode {
+	const t = useTranslations("IndexPageHeroSection");
+
+	return (
+		<section className="mx-auto grid w-full max-w-screen-lg content-start justify-items-center gap-y-3 px-4 py-8 text-center md:py-12">
+			<div className="flex items-center gap-2 rounded-lg bg-neutral-100 px-3 py-1 text-sm font-medium leading-tight dark:bg-neutral-800">
+				<Logo className="size-4 shrink-0 text-brand" />
+				<span>{t("badge")}</span>
+			</div>
+			<h1 className="text-balance text-3xl font-bold leading-tight tracking-tighter text-neutral-950 md:text-5xl lg:text-6xl dark:text-neutral-0">
+				{t("title")}
+			</h1>
+			<div className="mx-auto w-full max-w-screen-md text-pretty text-md text-neutral-500 sm:text-lg dark:text-neutral-400">
+				{t("lead-in")}
+			</div>
+			<div className="my-3 flex items-center gap-x-4">
+				<LinkButton href={createHref({ pathname: "/dashboard" })}>
+					{t("go-to-dashboard")}
+				</LinkButton>
+				<LinkButton href={createHref({ pathname: "/documentation" })} variant="outline">
+					{t("read-documentation")}
+				</LinkButton>
+			</div>
+		</section>
 	);
 }

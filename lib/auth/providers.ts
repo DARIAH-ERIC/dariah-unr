@@ -4,12 +4,12 @@ import type { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 import { getUserByEmail } from "@/lib/data/user";
-import { signInSchema } from "@/lib/schemas/auth";
+import { signInFormSchema } from "@/lib/schemas/auth";
 
 export const providers = [
 	CredentialsProvider({
 		async authorize(credentials, _request) {
-			const result = signInSchema.safeParse(credentials);
+			const result = signInFormSchema.safeParse(credentials);
 			if (!result.success) return null;
 
 			const { email, password } = result.data;
@@ -21,7 +21,7 @@ export const providers = [
 			if (dbUser.password == null) return null;
 			/**
 			 * Checking user status is deferred to the `signIn` callback to return
-			 * a `AuthorizedCallbackError` instead of a `CredentialsSignin` error.
+			 * a `AccessDenied` instead of a `CredentialsSignin` error.
 			 */
 			// if (dbUser.status !== "verified") return null;
 

@@ -1,0 +1,107 @@
+diff --git a/dist/import.mjs b/dist/import.mjs
+index a344b5f59cddd684de27e4c1a386c19612abdb8f..a3cdab685bca57feece851eb0fcbf45a32a55980 100644
+--- a/dist/import.mjs
++++ b/dist/import.mjs
+@@ -181,6 +181,15 @@ function $0d86e9c8f07f9a7b$export$79c0c687a5963b0a(opts, dispatch) {
+                     ]
+                 };
+             });
++        },
++        clear() {
++            dispatch(state => {
++                return {
++                    ...state,
++                    items: [],
++                    selectedKeys: new Set()
++                };
++            });
+         }
+     };
+ }
+diff --git a/dist/main.js b/dist/main.js
+index 882f93a5dace4d3df7cb3010d01c1a8d4b553b45..cfb8d81c164bd7a6ff3601cae6fc9b42eb163f37 100644
+--- a/dist/main.js
++++ b/dist/main.js
+@@ -189,6 +189,15 @@ function $fbc1d750f520c94e$export$79c0c687a5963b0a(opts, dispatch) {
+                     ]
+                 };
+             });
++        },
++        clear() {
++            dispatch(state => {
++                return {
++                    ...state,
++                    items: [],
++                    selectedKeys: new Set()
++                };
++            });
+         }
+     };
+ }
+diff --git a/dist/module.js b/dist/module.js
+index a344b5f59cddd684de27e4c1a386c19612abdb8f..a3cdab685bca57feece851eb0fcbf45a32a55980 100644
+--- a/dist/module.js
++++ b/dist/module.js
+@@ -181,6 +181,15 @@ function $0d86e9c8f07f9a7b$export$79c0c687a5963b0a(opts, dispatch) {
+                     ]
+                 };
+             });
++        },
++        clear() {
++            dispatch(state => {
++                return {
++                    ...state,
++                    items: [],
++                    selectedKeys: new Set()
++                };
++            });
+         }
+     };
+ }
+diff --git a/dist/types.d.ts b/dist/types.d.ts
+index ec90f2371ac874e53804d185d8a7a4d3fd245cc3..ec5bdadc25751810e2c69d12b23e470e9cb632b0 100644
+--- a/dist/types.d.ts
++++ b/dist/types.d.ts
+@@ -89,6 +89,10 @@ export interface ListData<T> {
+      * @param newValue - The new value for the item.
+      */
+     update(key: Key, newValue: T): void;
++    /**
++     * Remove all items from the list.
++     */
++    clear(): void
+ }
+ /**
+  * Manages state for an immutable list data structure, and provides convenience methods to
+diff --git a/src/useListData.ts b/src/useListData.ts
+index 4dbf5211272c67213a524294377fc5a22579391e..217d8ec7a1fdd79d5dc31f007b5f1128b935a628 100644
+--- a/src/useListData.ts
++++ b/src/useListData.ts
+@@ -120,6 +120,11 @@ export interface ListData<T> {
+    * @param newValue - The new value for the item.
+    */
+   update(key: Key, newValue: T): void
++
++  /**
++   * Remove all items from the list.
++   */
++  clear(): void
+ }
+ 
+ export interface ListState<T> {
+@@ -317,6 +322,15 @@ export function createListActions<T, C>(opts: CreateListOptions<T, C>, dispatch:
+           ]
+         };
+       });
++    },
++    clear() {
++      dispatch(state => {
++        return {
++          ...state,
++          items: [],
++          selectedKeys: new Set()
++        };
++      });
+     }
+   };
+ }

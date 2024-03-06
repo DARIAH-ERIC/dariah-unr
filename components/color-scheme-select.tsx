@@ -3,11 +3,11 @@
 import { MoonIcon, SunIcon } from "lucide-react";
 import type { Key, ReactNode } from "react";
 
-import { Button } from "@/components/ui/button";
+import { IconButton } from "@/components/ui/icon-button";
 import {
 	Select,
-	SelectContent,
-	SelectItem,
+	SelectListBox,
+	SelectListBoxItem,
 	SelectPopover,
 	SelectValue,
 } from "@/components/ui/select";
@@ -19,10 +19,7 @@ interface ColorSchemeSelectProps {
 	label: string;
 }
 
-/** `next/dynamic`/`React.lazy` require default exports. */
-// TODO: this should be fixed in https://github.com/vercel/next.js/pull/61378
-// eslint-disable-next-line import/no-default-export
-export default function ColorSchemeSelect(props: ColorSchemeSelectProps): ReactNode {
+export function ColorSchemeSelect(props: ColorSchemeSelectProps): ReactNode {
 	const { items, label } = props;
 
 	const { colorSchemeState, setColorScheme } = useColorScheme();
@@ -44,20 +41,20 @@ export default function ColorSchemeSelect(props: ColorSchemeSelectProps): ReactN
 			onSelectionChange={onSelectionChange}
 			selectedKey={selectedKey}
 		>
-			<Button size="icon" variant="ghost">
+			<IconButton variant="plain">
 				<Icon aria-hidden={true} className="size-5 shrink-0" />
 				<SelectValue className="sr-only" />
-			</Button>
+			</IconButton>
 			<SelectPopover placement="bottom">
-				<SelectContent>
+				<SelectListBox>
 					{Object.entries(items).map(([id, label]) => {
 						return (
-							<SelectItem key={id} id={id} textValue={label}>
+							<SelectListBoxItem key={id} id={id} textValue={label}>
 								{label}
-							</SelectItem>
+							</SelectListBoxItem>
 						);
 					})}
-				</SelectContent>
+				</SelectListBox>
 			</SelectPopover>
 		</Select>
 	);
