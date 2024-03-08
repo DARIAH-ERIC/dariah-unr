@@ -82,6 +82,24 @@ model Country {
   @@map(name: "countries")
 }
 
+enum EventSizeType {
+  large
+  medium
+  small
+}
+
+model EventSize {
+  id String @id @default(uuid()) @db.Uuid
+
+  annualValue Int           @map(name: "annual_value")
+  type        EventSizeType
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "event_sizes")
+}
+
 model EventReport {
   id String @id @default(uuid()) @db.Uuid
 
