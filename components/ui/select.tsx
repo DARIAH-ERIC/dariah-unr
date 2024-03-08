@@ -190,7 +190,7 @@ export const selectListBoxItemStyles = variants({
 		"outline-transparent",
 		"relative flex items-center justify-between gap-x-4",
 		"transition",
-		"rounded-sm py-1.5 pl-3 pr-8",
+		"rounded-sm py-1.5 pl-3 pr-9",
 		"focus:bg-neutral-950/5 dark:focus:bg-neutral-0/5",
 	],
 });

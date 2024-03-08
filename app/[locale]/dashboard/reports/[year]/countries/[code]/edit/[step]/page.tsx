@@ -102,6 +102,7 @@ async function DashboardCountryReportEditStepPageContent(
 
 	if (user == null) {
 		redirect("/");
+		/** FIXME: @see https://github.com/amannn/next-intl/issues/823 */
 		assert(false);
 	}
 
