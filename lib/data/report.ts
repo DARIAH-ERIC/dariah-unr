@@ -4,6 +4,7 @@ import type {
 	Outreach,
 	OutreachKpi,
 	OutreachReport,
+	Prisma,
 	ProjectsFundingLeverage,
 	Report,
 	Service,
@@ -347,6 +348,7 @@ export function upsertServiceKpi(params: UpsertServiceKpiParams) {
 	});
 }
 
+// TODO: use Prisma.ProjectsFundingLeverageCreateInput
 interface CreateProjectFundingLeverageParams {
 	amount: ProjectsFundingLeverage["amount"];
 	funders: ProjectsFundingLeverage["funders"];
@@ -368,6 +370,41 @@ export function createProjectFundingLeverage(params: CreateProjectFundingLeverag
 					id: reportId,
 				},
 			},
+		},
+	});
+}
+
+interface GetReportCommentsParams {
+	reportId: Report["id"];
+}
+
+export function getReportComments(params: GetReportCommentsParams) {
+	const { reportId } = params;
+
+	return db.report.findUnique({
+		where: {
+			id: reportId,
+		},
+		select: {
+			comments: true,
+		},
+	});
+}
+
+interface UpdateReportCommentsParams {
+	comments: Prisma.ReportUpdateInput["comments"];
+	reportId: Report["id"];
+}
+
+export function updateReportComments(params: UpdateReportCommentsParams) {
+	const { comments, reportId } = params;
+
+	return db.report.update({
+		where: {
+			id: reportId,
+		},
+		data: {
+			comments,
 		},
 	});
 }

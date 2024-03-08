@@ -4,12 +4,14 @@ import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
+import { getReportComments, updateReportComments } from "@/lib/data/report";
 import { getFormData } from "@/lib/get-form-data";
 import { nonEmptyString } from "@/lib/schemas/utils";
 
 const formSchema = z.object({
+	comment: z.string().optional(),
 	contributionsCount: nonEmptyString(z.coerce.number().int().nonnegative().optional()),
-	//
+	reportId: z.string(),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -41,11 +43,14 @@ export async function updateContributions(
 		};
 	}
 
-	const { reportId } = result.data;
+	const { comment, reportId } = result.data;
 
 	// TODO:
 
-	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit", "page");
+	const comments = await getReportComments({ reportId });
+	await updateReportComments({ reportId, comments: { ...comments, contributions: comment } });
+
+	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/contributions", "page");
 
 	return {
 		status: "success" as const,

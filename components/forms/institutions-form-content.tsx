@@ -1,6 +1,6 @@
 "use client";
 
-import type { Country, Institution } from "@prisma/client";
+import type { Country, Institution, Report } from "@prisma/client";
 import { type ListData, useListData } from "@react-stately/data";
 import { PlusIcon } from "lucide-react";
 import { Fragment, type ReactNode, useId, useOptimistic } from "react";
@@ -38,11 +38,12 @@ interface InstitutionsFormContentProps {
 	comments: ReportCommentsSchema | null;
 	countryId: Country["id"];
 	institutions: Array<Institution>;
+	reportId: Report["id"];
 	year: number;
 }
 
 export function InstitutionsFormContent(props: InstitutionsFormContentProps): ReactNode {
-	const { comments, countryId, institutions, year } = props;
+	const { comments, countryId, institutions, reportId, year } = props;
 
 	const [formState, formAction] = useFormState(updateInstitutions, undefined);
 
@@ -74,6 +75,8 @@ export function InstitutionsFormContent(props: InstitutionsFormContentProps): Re
 			onSubmit={onSubmit}
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
+			<input name="reportId" type="hidden" value={reportId} />
+
 			<input name="countryId" type="hidden" value={countryId} />
 
 			<input name="year" type="hidden" value={year} />

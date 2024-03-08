@@ -1,5 +1,6 @@
 "use client";
 
+import type { Report } from "@prisma/client";
 import type { ReactNode } from "react";
 import { useFormState } from "react-dom";
 
@@ -21,10 +22,11 @@ interface PublicationsFormContentProps {
 		// creators: string;
 		citation: string;
 	}>;
+	reportId: Report["id"];
 }
 
 export function PublicationsFormContent(props: PublicationsFormContentProps): ReactNode {
-	const { comments, publications } = props;
+	const { comments, publications, reportId } = props;
 
 	const [formState, formAction] = useFormState(updatePublications, undefined);
 
@@ -34,6 +36,8 @@ export function PublicationsFormContent(props: PublicationsFormContentProps): Re
 			className="grid gap-y-6"
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
+			<input name="reportId" type="hidden" value={reportId} />
+
 			{publications.length > 0 ? (
 				<ul
 					className="grid max-w-screen-md gap-y-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300"

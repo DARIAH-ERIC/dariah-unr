@@ -5,7 +5,11 @@ import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
-import { createProjectFundingLeverage } from "@/lib/data/report";
+import {
+	createProjectFundingLeverage,
+	getReportComments,
+	updateReportComments,
+} from "@/lib/data/report";
 import { getFormData } from "@/lib/get-form-data";
 
 const formSchema = z.object({
@@ -68,7 +72,16 @@ export async function updateProjectsFundingLeverages(
 		await createProjectFundingLeverage({ ...projectsFundingLeverage, reportId });
 	}
 
-	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit", "page");
+	const comments = await getReportComments({ reportId });
+	await updateReportComments({
+		reportId,
+		comments: { ...comments, projectFundingLeverages: comment },
+	});
+
+	revalidatePath(
+		"/[locale]/dashboard/reports/[year]/countries/[code]/edit/project-funding-leverage",
+		"page",
+	);
 
 	return {
 		status: "success" as const,

@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
 import { createPartnerInstitution, updateInstitutionEndDate } from "@/lib/data/institution";
+import { getReportComments, updateReportComments } from "@/lib/data/report";
 import { getFormData } from "@/lib/get-form-data";
 import { institutionStatusSchema, partnerInstitutionSchema } from "@/lib/schemas/report";
 import { nonEmptyString } from "@/lib/schemas/utils";
@@ -14,6 +15,7 @@ const formSchema = z.object({
 	comment: z.string().optional(),
 	countryId: z.string(),
 	institutions: z.array(institutionStatusSchema),
+	reportId: z.string(),
 	year: nonEmptyString(z.coerce.number().int().positive()),
 });
 
@@ -46,7 +48,7 @@ export async function updateInstitutions(
 		};
 	}
 
-	const { addedInstitutions, comment, countryId, institutions, year } = result.data;
+	const { addedInstitutions, comment, countryId, institutions, reportId, year } = result.data;
 
 	for (const institution of institutions) {
 		if (institution.status === "inactive") {
@@ -61,7 +63,10 @@ export async function updateInstitutions(
 		await createPartnerInstitution({ ...institution, countryId });
 	}
 
-	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit", "page");
+	const comments = await getReportComments({ reportId });
+	await updateReportComments({ reportId, comments: { ...comments, institutions: comment } });
+
+	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/institutions", "page");
 
 	return {
 		status: "success" as const,

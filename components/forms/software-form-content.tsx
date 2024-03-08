@@ -1,6 +1,6 @@
 "use client";
 
-import { type Country, type Software, SoftwareStatus } from "@prisma/client";
+import { type Country, type Report, type Software, SoftwareStatus } from "@prisma/client";
 import { type ListData, useListData } from "@react-stately/data";
 import { PlusIcon } from "lucide-react";
 import { Fragment, type ReactNode, useId, useOptimistic } from "react";
@@ -38,11 +38,12 @@ interface AddedSoftware {
 interface SoftwareFormContentProps {
 	comments: ReportCommentsSchema | null;
 	countryId: Country["id"];
+	reportId: Report["id"];
 	softwares: Array<Software>;
 }
 
 export function SoftwareFormContent(props: SoftwareFormContentProps): ReactNode {
-	const { comments, countryId, softwares } = props;
+	const { comments, countryId, reportId, softwares } = props;
 
 	const softwareStatuses = Object.values(SoftwareStatus);
 
@@ -74,6 +75,8 @@ export function SoftwareFormContent(props: SoftwareFormContentProps): ReactNode 
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
 			<input name="countryId" type="hidden" value={countryId} />
+
+			<input name="reportId" type="hidden" value={reportId} />
 
 			<section className="grid gap-y-6">
 				{softwares.map((software, index) => {

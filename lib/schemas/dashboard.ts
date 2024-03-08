@@ -21,7 +21,7 @@ export const dashboardCountryReportEditStepPageParams = z.object({
 	year: z.coerce.number().int().positive().min(2020),
 	step: z.enum([
 		"confirm",
-		"contributors",
+		"contributions",
 		"events",
 		"institutions",
 		"outreach",
