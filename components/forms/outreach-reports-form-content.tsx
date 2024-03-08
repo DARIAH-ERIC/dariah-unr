@@ -6,6 +6,7 @@ import {
 	type Outreach,
 	type OutreachKpi,
 	OutreachKpiType,
+	type OutreachType,
 	type Prisma,
 	type Report,
 } from "@prisma/client";
@@ -68,7 +69,7 @@ export function OutreachReportsFormContent(props: OutreachReportsFormContentProp
 			<section className="grid gap-y-6">
 				{outreachs.map((outreach, index) => {
 					const outreachReport = outreachReportsByOutreachId.get(outreach.id);
-					const kpis = outreachReport?.kpis ?? [];
+					const kpis = outreachReport?.kpis;
 
 					return (
 						<Group key={outreach.id} className="grid content-start gap-y-6">
@@ -102,7 +103,7 @@ export function OutreachReportsFormContent(props: OutreachReportsFormContentProp
 								/>
 							</div>
 
-							<OutreachKpiList kpis={kpis} name={`outreachReports.${index}`} />
+							<OutreachKpiList kpis={kpis} name={`outreachReports.${index}`} outreachType={outreach.type} />
 
 							<hr />
 						</Group>
@@ -128,16 +129,17 @@ export function OutreachReportsFormContent(props: OutreachReportsFormContentProp
 }
 
 interface OutreachKpiListProps {
-	kpis: Array<OutreachKpi>;
+	kpis: Array<OutreachKpi> | undefined;
 	name: string;
+	outreachType: OutreachType
 }
 
 function OutreachKpiList(props: OutreachKpiListProps): ReactNode {
-	const { kpis: initialKpis, name: prefix } = props;
+	const { kpis: initialKpis, name: prefix, outreachType } = props;
 
 	const outreachKpiTypes = Object.values(OutreachKpiType);
 
-	const kpis = useListData<Partial<OutreachKpi> & { _id?: string }>({ initialItems: initialKpis });
+	const kpis = useListData<Partial<OutreachKpi> & { _id?: string }>({ initialItems: initialKpis ?? (outreachType === "national_website" ? defaultWebsiteOutreachKpis : defaultSocialMediaOutreachKpis ) });
 
 	return (
 		<div className="grid gap-y-6">
@@ -196,3 +198,16 @@ function OutreachKpiList(props: OutreachKpiListProps): ReactNode {
 		</div>
 	);
 }
+
+/** Pre-selected outreach kpis for "national_website" outreach type. */
+const defaultWebsiteOutreachKpis: Array<{ _id: string; unit: OutreachKpi["unit"] }> = [
+	{ _id: crypto.randomUUID(), unit: "page_views" },
+	{ _id: crypto.randomUUID(), unit: "unique_visitors" },
+];
+
+/** Pre-selected outreach kpis for "social_media" outreach type. */
+const defaultSocialMediaOutreachKpis: Array<{ _id: string; unit: OutreachKpi["unit"] }> = [
+	{ _id: crypto.randomUUID(), unit: "engagement" },
+	{ _id: crypto.randomUUID(), unit: "followers" },
+	{ _id: crypto.randomUUID(), unit: "impressions" },
+];

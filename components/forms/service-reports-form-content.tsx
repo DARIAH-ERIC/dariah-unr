@@ -8,7 +8,7 @@ import {
 	type Service,
 	type ServiceKpi,
 	ServiceKpiType,
-	ServiceStatus,
+	// ServiceStatus,
 } from "@prisma/client";
 import { useListData } from "@react-stately/data";
 import type { ReactNode } from "react";
@@ -56,7 +56,7 @@ export function ServiceReportsFormContent(props: ServiceReportsFormContentProps)
 		year,
 	} = props;
 
-	const serviceStatuses = Object.values(ServiceStatus);
+	// const serviceStatuses = Object.values(ServiceStatus);
 
 	const [formState, formAction] = useFormState(updateServiceReports, undefined);
 
@@ -77,7 +77,7 @@ export function ServiceReportsFormContent(props: ServiceReportsFormContentProps)
 			<section className="grid gap-y-6">
 				{services.map((service, index) => {
 					const serviceReport = serviceReportsByServiceId.get(service.id);
-					const kpis = serviceReport?.kpis ?? [];
+					const kpis = serviceReport?.kpis;
 
 					return (
 						<Group key={service.id} className="grid content-start gap-y-6">
@@ -146,7 +146,7 @@ export function ServiceReportsFormContent(props: ServiceReportsFormContentProps)
 }
 
 interface ServiceKpiListProps {
-	kpis: Array<ServiceKpi>;
+	kpis: Array<ServiceKpi> | undefined;
 	name: string;
 }
 
@@ -155,7 +155,9 @@ function ServiceKpiList(props: ServiceKpiListProps): ReactNode {
 
 	const serviceKpiTypes = Object.values(ServiceKpiType);
 
-	const kpis = useListData<Partial<ServiceKpi> & { _id?: string }>({ initialItems: initialKpis });
+	const kpis = useListData<Partial<ServiceKpi> & { _id?: string }>({
+		initialItems: initialKpis ?? defaultServiceKpis,
+	});
 
 	return (
 		<div className="grid gap-y-6">
@@ -214,3 +216,8 @@ function ServiceKpiList(props: ServiceKpiListProps): ReactNode {
 		</div>
 	);
 }
+
+/** Pre-selected service kpis. */
+const defaultServiceKpis: Array<{ _id: string; unit: ServiceKpi["unit"] }> = [
+	{ _id: crypto.randomUUID(), unit: "visits" },
+];
