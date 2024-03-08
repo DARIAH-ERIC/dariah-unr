@@ -56,7 +56,7 @@ export function SoftwareFormContent(props: SoftwareFormContentProps): ReactNode 
 		},
 	});
 
-	// TODO: should we instead append all addedInstitutions via useOptimistic, which will get syned
+	// TODO: should we instead append all addedInstitutions via useOptimistic, which will get synced
 	// with the db on submit
 	const [optimisticAddedSoftware, clearAddedSoftware] = useOptimistic(addedSoftware, (state) => {
 		state.clear();
@@ -132,7 +132,9 @@ export function SoftwareFormContent(props: SoftwareFormContentProps): ReactNode 
 			</FormSuccessMessage>
 
 			<FormErrorMessage>
-				{formState?.status === "error" ? formState.formErrors : null}
+				{formState?.status === "error" && formState.formErrors.length > 0
+					? formState.formErrors
+					: null}
 			</FormErrorMessage>
 		</Form>
 	);

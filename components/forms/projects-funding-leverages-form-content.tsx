@@ -70,7 +70,7 @@ export function ProjectsFundingLeveragesFormContent(
 		},
 	});
 
-	// TODO: should we instead append all addedInstitutions via useOptimistic, which will get syned
+	// TODO: should we instead append all addedInstitutions via useOptimistic, which will get synced
 	// with the db on submit
 	const [optimisticAddedProjectsFundingLeverages, clearProjectsFundingLeverages] = useOptimistic(
 		addedProjectsFundingLeverages,
@@ -171,11 +171,13 @@ export function ProjectsFundingLeveragesFormContent(
 			<SubmitButton>Submit</SubmitButton>
 
 			<FormSuccessMessage>
-				{formState?.status === "success" ? formState.message : null}
+				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}
 			</FormSuccessMessage>
 
 			<FormErrorMessage>
-				{formState?.status === "error" ? formState.formErrors : null}
+				{formState?.status === "error" && formState.formErrors.length > 0
+					? formState.formErrors
+					: null}
 			</FormErrorMessage>
 		</Form>
 	);

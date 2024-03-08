@@ -153,6 +153,7 @@ async function DashboardCountryReportEditStepPageContent(
 						comments={comments}
 						contributionsCount={report.contributionsCount}
 						countryId={country.id}
+						reportId={report.id}
 					/>
 
 					<Navigation code={code} next="events" previous="institutions" year={year} />
@@ -195,7 +196,12 @@ async function DashboardCountryReportEditStepPageContent(
 						tempor labore.
 					</FormDescription>
 
-					<InstitutionsForm comments={comments} countryId={country.id} year={year} />
+					<InstitutionsForm
+						comments={comments}
+						countryId={country.id}
+						reportId={report.id}
+						year={year}
+					/>
 
 					<Navigation code={code} next="contributions" previous="welcome" year={year} />
 				</section>
@@ -261,7 +267,12 @@ async function DashboardCountryReportEditStepPageContent(
 						tempor labore.
 					</FormDescription>
 
-					<PublicationsForm comments={comments} countryCode={code} year={year} />
+					<PublicationsForm
+						comments={comments}
+						countryCode={code}
+						reportId={report.id}
+						year={year}
+					/>
 
 					<Navigation code={code} next="project-funding-leverage" previous="software" year={year} />
 				</section>
@@ -326,7 +337,7 @@ async function DashboardCountryReportEditStepPageContent(
 						tempor labore.
 					</FormDescription>
 
-					<SoftwareForm comments={comments} countryId={country.id} />
+					<SoftwareForm comments={comments} countryId={country.id} reportId={report.id} />
 
 					<Navigation code={code} next="publications" previous="services" year={year} />
 				</section>

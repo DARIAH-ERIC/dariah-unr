@@ -11,7 +11,7 @@ import { institutionStatusSchema, partnerInstitutionSchema } from "@/lib/schemas
 import { nonEmptyString } from "@/lib/schemas/utils";
 
 const formSchema = z.object({
-	addedInstitutions: z.array(partnerInstitutionSchema),
+	addedInstitutions: z.array(partnerInstitutionSchema).optional().default([]),
 	comment: z.string().optional(),
 	countryId: z.string(),
 	institutions: z.array(institutionStatusSchema),

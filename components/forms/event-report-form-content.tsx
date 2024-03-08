@@ -74,11 +74,13 @@ export function EventReportFormContent(props: EventReportFormContentProps): Reac
 			<SubmitButton>Submit</SubmitButton>
 
 			<FormSuccessMessage>
-				{formState?.status === "success" ? formState.message : null}
+				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}
 			</FormSuccessMessage>
 
 			<FormErrorMessage>
-				{formState?.status === "error" ? formState.formErrors : null}
+				{formState?.status === "error" && formState.formErrors.length > 0
+					? formState.formErrors
+					: null}
 			</FormErrorMessage>
 		</Form>
 	);

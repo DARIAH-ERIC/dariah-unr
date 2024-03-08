@@ -10,7 +10,7 @@ import { getFormData } from "@/lib/get-form-data";
 import { softwareSchema, softwareStatusSchema } from "@/lib/schemas/report";
 
 const formSchema = z.object({
-	addedSoftware: z.array(softwareSchema),
+	addedSoftware: z.array(softwareSchema).optional().default([]),
 	comment: z.string().optional(),
 	countryId: z.string(),
 	reportId: z.string(),

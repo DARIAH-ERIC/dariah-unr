@@ -13,16 +13,19 @@ import {
 import { getFormData } from "@/lib/get-form-data";
 
 const formSchema = z.object({
-	addedProjectsFundingLeverages: z.array(
-		z.object({
-			name: z.string(),
-			amount: z.coerce.number(),
-			funders: z.string().optional(),
-			projectMonths: z.coerce.number(),
-			scope: z.enum(Object.values(ProjectScope) as [ProjectScope, ...Array<ProjectScope>]),
-			startDate: z.coerce.date(),
-		}),
-	),
+	addedProjectsFundingLeverages: z
+		.array(
+			z.object({
+				name: z.string(),
+				amount: z.coerce.number(),
+				funders: z.string().optional(),
+				projectMonths: z.coerce.number(),
+				scope: z.enum(Object.values(ProjectScope) as [ProjectScope, ...Array<ProjectScope>]),
+				startDate: z.coerce.date(),
+			}),
+		)
+		.optional()
+		.default([]),
 	comment: z.string().optional(),
 	projectsFundingLeverages: z.array(
 		z.object({

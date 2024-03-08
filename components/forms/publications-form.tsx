@@ -1,5 +1,5 @@
 import { isNonEmptyString } from "@acdh-oeaw/lib";
-import type { Country } from "@prisma/client";
+import type { Country, Report } from "@prisma/client";
 import { useFormatter } from "next-intl";
 import type { ReactNode } from "react";
 
@@ -10,12 +10,13 @@ import { getCollectionItems, getCollectionsByCountryCode } from "@/lib/zotero";
 interface PublicationsFormProps {
 	comments: ReportCommentsSchema | null;
 	countryCode: Country["code"];
+	reportId: Report["id"];
 	year: number;
 }
 
 // @ts-expect-error Upstream type issue.
 export async function PublicationsForm(props: PublicationsFormProps): Promise<ReactNode> {
-	const { comments, countryCode, year } = props;
+	const { comments, countryCode, reportId, year } = props;
 
 	const { list } = useFormatter();
 
@@ -60,5 +61,7 @@ export async function PublicationsForm(props: PublicationsFormProps): Promise<Re
 			return a.citation.localeCompare(z.citation);
 		});
 
-	return <PublicationsFormContent comments={comments} publications={publications} />;
+	return (
+		<PublicationsFormContent comments={comments} publications={publications} reportId={reportId} />
+	);
 }
