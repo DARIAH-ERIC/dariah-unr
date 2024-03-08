@@ -407,3 +407,21 @@ export function updateReportComments(params: UpdateReportCommentsParams) {
 		},
 	});
 }
+
+interface UpdateReportContributionsCountParams {
+	contributionsCount: Report["contributionsCount"];
+	id: Report["id"];
+}
+
+export function updateReportContributionsCount(params: UpdateReportContributionsCountParams) {
+	const { contributionsCount, id } = params;
+
+	return db.report.update({
+		where: {
+			id,
+		},
+		data: {
+			contributionsCount,
+		},
+	});
+}

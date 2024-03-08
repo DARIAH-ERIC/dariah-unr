@@ -48,7 +48,8 @@ export async function updateEventReport(
 
 	await upsertEventReport({ ...eventReport, reportId, eventReportId });
 
-	const comments = await getReportComments({ id: reportId });
+	const report = await getReportComments({ id: reportId });
+	const comments = report?.comments;
 	await updateReportComments({ id: reportId, comments: { ...comments, eventReports: comment } });
 
 	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/events", "page");

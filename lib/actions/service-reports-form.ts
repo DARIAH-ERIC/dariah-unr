@@ -91,7 +91,8 @@ export async function updateServiceReports(
 		}
 	}
 
-	const comments = await getReportComments({ id: reportId });
+	const report = await getReportComments({ id: reportId });
+	const comments = report?.comments;
 	await updateReportComments({ id: reportId, comments: { ...comments, serviceReports: comment } });
 
 	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/services", "page");

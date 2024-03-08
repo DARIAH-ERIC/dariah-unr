@@ -14,7 +14,6 @@ Table bodies {
 Table contributions {
   id String [pk]
   endDate DateTime
-  name String [not null]
   startDate DateTime
   countryId String
   personId String [not null]

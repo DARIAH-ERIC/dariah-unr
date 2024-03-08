@@ -43,7 +43,8 @@ export async function updatePublications(
 
 	const { comment, reportId } = result.data;
 
-	const comments = await getReportComments({ id: reportId });
+	const report = await getReportComments({ id: reportId });
+	const comments = report?.comments;
 	await updateReportComments({ id: reportId, comments: { ...comments, publications: comment } });
 
 	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/publications", "page");

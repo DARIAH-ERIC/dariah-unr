@@ -103,7 +103,11 @@ export function OutreachReportsFormContent(props: OutreachReportsFormContentProp
 								/>
 							</div>
 
-							<OutreachKpiList kpis={kpis} name={`outreachReports.${index}`} outreachType={outreach.type} />
+							<OutreachKpiList
+								kpis={kpis}
+								name={`outreachReports.${index}`}
+								outreachType={outreach.type}
+							/>
 
 							<hr />
 						</Group>
@@ -131,7 +135,7 @@ export function OutreachReportsFormContent(props: OutreachReportsFormContentProp
 interface OutreachKpiListProps {
 	kpis: Array<OutreachKpi> | undefined;
 	name: string;
-	outreachType: OutreachType
+	outreachType: OutreachType;
 }
 
 function OutreachKpiList(props: OutreachKpiListProps): ReactNode {
@@ -139,7 +143,13 @@ function OutreachKpiList(props: OutreachKpiListProps): ReactNode {
 
 	const outreachKpiTypes = Object.values(OutreachKpiType);
 
-	const kpis = useListData<Partial<OutreachKpi> & { _id?: string }>({ initialItems: initialKpis ?? (outreachType === "national_website" ? defaultWebsiteOutreachKpis : defaultSocialMediaOutreachKpis ) });
+	const kpis = useListData<Partial<OutreachKpi> & { _id?: string }>({
+		initialItems:
+			initialKpis ??
+			(outreachType === "national_website"
+				? defaultWebsiteOutreachKpis
+				: defaultSocialMediaOutreachKpis),
+	});
 
 	return (
 		<div className="grid gap-y-6">

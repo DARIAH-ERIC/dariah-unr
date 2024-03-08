@@ -75,7 +75,8 @@ export async function updateProjectsFundingLeverages(
 		await createProjectFundingLeverage({ ...projectsFundingLeverage, reportId });
 	}
 
-	const comments = await getReportComments({ id: reportId });
+	const report = await getReportComments({ id: reportId });
+	const comments = report?.comments;
 	await updateReportComments({
 		id: reportId,
 		comments: { ...comments, projectFundingLeverages: comment },

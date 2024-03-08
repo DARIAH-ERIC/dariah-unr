@@ -32,7 +32,6 @@ model Contribution {
   id String @id @default(uuid()) @db.Uuid
 
   endDate   DateTime? @map(name: "end_date")
-  name      String
   startDate DateTime? @map(name: "start_date")
 
   countryId      String? @map(name: "country_id") @db.Uuid

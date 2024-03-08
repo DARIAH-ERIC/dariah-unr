@@ -269,7 +269,6 @@ async function ingest() {
 		const record = await db.contribution.create({
 			data: {
 				endDate: getIsoDate(row["end date"]),
-				name: row.contributor[0]?.value,
 				startDate: getIsoDate(row["start date"]),
 				country: country ? { connect: { id: country } } : undefined,
 				person: { connect: { id: person } },

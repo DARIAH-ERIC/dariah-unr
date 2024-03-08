@@ -1,3 +1,4 @@
+import { pick } from "@acdh-oeaw/lib";
 import { collection, config, fields } from "@keystatic/core";
 import { wrapper } from "@keystatic/core/content-components";
 import { InfoIcon } from "lucide-react";
@@ -6,33 +7,39 @@ import { Logo } from "@/components/logo";
 import { createAssetPaths, createPreviewUrl } from "@/config/content.config";
 import { env } from "@/config/env.config";
 
-const components = {
-	Callout: wrapper({
-		label: "Callout",
-		description: "Additional information.",
-		icon: <InfoIcon />,
-		schema: {
-			kind: fields.select({
-				label: "Kind",
-				/** @see https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts */
-				options: [
-					{ label: "Caution", value: "caution" },
-					{ label: "Important", value: "important" },
-					{ label: "Note", value: "note" },
-					{ label: "Tip", value: "tip" },
-					{ label: "Warning", value: "warning" },
-				],
-				defaultValue: "note",
-			}),
-		},
-	}),
-};
+function createComponents(assetPath: `/${string}/`, components?: Array<"Callout">) {
+	const allComponents = {
+		Callout: wrapper({
+			label: "Callout",
+			description: "Additional information.",
+			icon: <InfoIcon />,
+			schema: {
+				kind: fields.select({
+					label: "Kind",
+					/** @see https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts */
+					options: [
+						{ label: "Caution", value: "caution" },
+						{ label: "Important", value: "important" },
+						{ label: "Note", value: "note" },
+						{ label: "Tip", value: "tip" },
+						{ label: "Warning", value: "warning" },
+					],
+					defaultValue: "note",
+				}),
+			},
+		}),
+	};
+
+	if (components == null) return allComponents;
+
+	return pick(allComponents, components);
+}
 
 // eslint-disable-next-line import/no-default-export
 export default config({
 	ui: {
 		brand: {
-			name: "DARIAH",
+			name: "ACDH-CH",
 			// @ts-expect-error `ReactNode` is a valid return type.
 			mark: Logo,
 		},
@@ -72,15 +79,15 @@ export default config({
 				title: fields.slug({
 					name: {
 						label: "Title",
-						validation: { length: { min: 1 } },
+						validation: { isRequired: true },
 					},
 				}),
 				content: fields.mdx({
 					label: "Content",
 					options: {
-						image: createAssetPaths("/images/content/documentation/"),
+						image: createAssetPaths("/content/documentation/"),
 					},
-					components,
+					components: createComponents("/content/documentation/"),
 				}),
 			},
 		}),
