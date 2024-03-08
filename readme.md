@@ -29,3 +29,8 @@ run a development server on [http://localhost:3000](http://localhost:3000):
 ```bash
 pnpm run dev
 ```
+
+## data model
+
+inspect the data model as [prisma schema](./prisma/schema.prisma) or
+[svg diagram](./public/assets/images/content/documentation/data-model/data-model.svg).
