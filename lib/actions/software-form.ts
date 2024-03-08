@@ -54,8 +54,8 @@ export async function updateSoftware(previousFormState: FormState | undefined, f
 		await createSoftware({ ...software, countryId });
 	}
 
-	const comments = await getReportComments({ reportId });
-	await updateReportComments({ reportId, comments: { ...comments, software: comment } });
+	const comments = await getReportComments({ id: reportId });
+	await updateReportComments({ id: reportId, comments: { ...comments, software: comment } });
 
 	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/software", "page");
 

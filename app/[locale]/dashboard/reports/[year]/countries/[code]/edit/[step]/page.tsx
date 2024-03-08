@@ -154,6 +154,7 @@ async function DashboardCountryReportEditStepPageContent(
 						contributionsCount={report.contributionsCount}
 						countryId={country.id}
 						reportId={report.id}
+						year={year}
 					/>
 
 					<Navigation code={code} next="events" previous="institutions" year={year} />

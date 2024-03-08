@@ -43,9 +43,9 @@ export async function updateResearchPolicyDevelopments(
 
 	const { comment, reportId } = result.data;
 
-	const comments = await getReportComments({ reportId });
+	const comments = await getReportComments({ id: reportId });
 	await updateReportComments({
-		reportId,
+		id: reportId,
 		comments: { ...comments, researchPolicyDevelopments: comment },
 	});
 

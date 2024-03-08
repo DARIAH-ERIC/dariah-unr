@@ -9,7 +9,7 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { IconButton } from "@/components/ui/icon-button";
-import { Popover, PopoverArrow } from "@/components/ui/popover";
+import { Popover } from "@/components/ui/popover";
 
 interface ContextualHelpProps {
 	description: string;

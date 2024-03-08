@@ -13,11 +13,12 @@ interface ContributionsFormProps {
 	contributionsCount: Report["contributionsCount"];
 	countryId: Country["id"];
 	reportId: Report["id"];
+	year: number;
 }
 
 // @ts-expect-error Upstream type issue.
 export async function ContributionsForm(props: ContributionsFormProps): Promise<ReactNode> {
-	const { comments, contributionsCount, countryId, reportId } = props;
+	const { comments, contributionsCount, countryId, reportId, year } = props;
 
 	const contributions = await getContributionsByCountry({ countryId });
 	const persons = await getPersonsByCountry({ countryId });
@@ -34,6 +35,7 @@ export async function ContributionsForm(props: ContributionsFormProps): Promise<
 			reportId={reportId}
 			roles={roles}
 			workingGroups={workingGroups}
+			year={year}
 		/>
 	);
 }

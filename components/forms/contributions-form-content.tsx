@@ -45,6 +45,7 @@ interface ContributionsFormContentProps {
 	reportId: Report["id"];
 	roles: Array<Pick<Role, "id" | "name">>;
 	workingGroups: Array<Pick<Role, "id" | "name">>;
+	year: number;
 }
 
 export function ContributionsFormContent(props: ContributionsFormContentProps): ReactNode {
@@ -57,6 +58,7 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 		reportId,
 		roles,
 		workingGroups,
+		year,
 	} = props;
 
 	const [formState, formAction] = useFormState(updateContributions, undefined);
@@ -159,7 +161,7 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 interface AddContributionFormDialogProps {
 	action: (formData: FormData, close: () => void) => void;
 	persons: Array<Pick<Person, "id" | "name">>;
-	role: Role;
+	role: Pick<Role, "id" | "name">;
 	workingGroups: Array<Pick<Role, "id" | "name">>;
 }
 

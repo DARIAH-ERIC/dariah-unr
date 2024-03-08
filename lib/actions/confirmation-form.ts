@@ -40,8 +40,8 @@ export async function updateReport(previousFormState: FormState | undefined, for
 
 	const { comment, reportId } = result.data;
 
-	const comments = await getReportComments({ reportId });
-	await updateReportComments({ reportId, comments: { ...comments, confirmation: comment } });
+	const comments = await getReportComments({ id: reportId });
+	await updateReportComments({ id: reportId, comments: { ...comments, confirmation: comment } });
 
 	await updateReportStatus({ id: reportId });
 

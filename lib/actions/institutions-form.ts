@@ -63,8 +63,8 @@ export async function updateInstitutions(
 		await createPartnerInstitution({ ...institution, countryId });
 	}
 
-	const comments = await getReportComments({ reportId });
-	await updateReportComments({ reportId, comments: { ...comments, institutions: comment } });
+	const comments = await getReportComments({ id: reportId });
+	await updateReportComments({ id: reportId, comments: { ...comments, institutions: comment } });
 
 	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/institutions", "page");
 

@@ -56,7 +56,9 @@ export function PublicationsFormContent(props: PublicationsFormContentProps): Re
 					})}
 				</ul>
 			) : (
-				<div>Empty zotero collection.</div>
+				<div className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
+					Empty zotero collection.
+				</div>
 			)}
 
 			<TextAreaField defaultValue={comments?.publications} label="Comment" name="comment" />
