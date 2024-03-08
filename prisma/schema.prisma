@@ -190,6 +190,18 @@ model Outreach {
   @@map(name: "outreach")
 }
 
+model OutreachTypeValue {
+  id String @id @default(uuid()) @db.Uuid
+
+  annualValue Int          @map(name: "annual_value")
+  type        OutreachType
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "outreach_type_values")
+}
+
 model OutreachReport {
   id String @id @default(uuid()) @db.Uuid
 
