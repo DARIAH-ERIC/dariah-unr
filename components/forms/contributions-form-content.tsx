@@ -42,13 +42,22 @@ interface ContributionsFormContentProps {
 	>;
 	contributionsCount: Report["contributionsCount"];
 	persons: Array<Pick<Person, "id" | "name">>;
+	reportId: Report["id"];
 	roles: Array<Pick<Role, "id" | "name">>;
 	workingGroups: Array<Pick<Role, "id" | "name">>;
 }
 
 export function ContributionsFormContent(props: ContributionsFormContentProps): ReactNode {
-	const { comments, countryId, contributions, contributionsCount, persons, roles, workingGroups } =
-		props;
+	const {
+		comments,
+		countryId,
+		contributions,
+		contributionsCount,
+		persons,
+		reportId,
+		roles,
+		workingGroups,
+	} = props;
 
 	const [formState, formAction] = useFormState(updateContributions, undefined);
 
@@ -67,6 +76,8 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
 			<input name="countryId" type="hidden" value={countryId} />
+
+			<input name="reportId" type="hidden" value={reportId} />
 
 			<section className="grid content-start items-start gap-x-4 gap-y-6 xs:grid-cols-2 md:grid-cols-4">
 				{Object.entries(contributionsByRoleId).map(([roleId, contributions]) => {
@@ -133,11 +144,13 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 			<SubmitButton>Submit</SubmitButton>
 
 			<FormSuccessMessage>
-				{formState?.status === "success" ? formState.message : null}
+				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}
 			</FormSuccessMessage>
 
 			<FormErrorMessage>
-				{formState?.status === "error" ? formState.formErrors : null}
+				{formState?.status === "error" && formState.formErrors.length > 0
+					? formState.formErrors
+					: null}
 			</FormErrorMessage>
 		</Form>
 	);

@@ -5,20 +5,27 @@ import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
-import { createProjectFundingLeverage } from "@/lib/data/report";
+import {
+	createProjectFundingLeverage,
+	getReportComments,
+	updateReportComments,
+} from "@/lib/data/report";
 import { getFormData } from "@/lib/get-form-data";
 
 const formSchema = z.object({
-	addedProjectsFundingLeverages: z.array(
-		z.object({
-			name: z.string(),
-			amount: z.coerce.number(),
-			funders: z.string().optional(),
-			projectMonths: z.coerce.number(),
-			scope: z.enum(Object.values(ProjectScope) as [ProjectScope, ...Array<ProjectScope>]),
-			startDate: z.coerce.date(),
-		}),
-	),
+	addedProjectsFundingLeverages: z
+		.array(
+			z.object({
+				name: z.string(),
+				amount: z.coerce.number(),
+				funders: z.string().optional(),
+				projectMonths: z.coerce.number(),
+				scope: z.enum(Object.values(ProjectScope) as [ProjectScope, ...Array<ProjectScope>]),
+				startDate: z.coerce.date(),
+			}),
+		)
+		.optional()
+		.default([]),
 	comment: z.string().optional(),
 	projectsFundingLeverages: z.array(
 		z.object({
@@ -68,7 +75,16 @@ export async function updateProjectsFundingLeverages(
 		await createProjectFundingLeverage({ ...projectsFundingLeverage, reportId });
 	}
 
-	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit", "page");
+	const comments = await getReportComments({ reportId });
+	await updateReportComments({
+		reportId,
+		comments: { ...comments, projectFundingLeverages: comment },
+	});
+
+	revalidatePath(
+		"/[locale]/dashboard/reports/[year]/countries/[code]/edit/project-funding-leverage",
+		"page",
+	);
 
 	return {
 		status: "success" as const,

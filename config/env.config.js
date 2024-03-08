@@ -29,6 +29,8 @@ export const env = createEnv({
 		KEYSTATIC_GITHUB_CLIENT_ID: z.string().min(1).optional(),
 		KEYSTATIC_GITHUB_CLIENT_SECRET: z.string().min(1).optional(),
 		KEYSTATIC_SECRET: z.string().min(1).optional(),
+		SSHOC_MARKETPLACE_PASSWORD: z.string().min(1),
+		SSHOC_MARKETPLACE_USER_NAME: z.string().min(1),
 	},
 	client: {
 		NEXT_PUBLIC_APP_BASE_URL: z.string().url(),
@@ -75,6 +77,8 @@ export const env = createEnv({
 		NEXT_PUBLIC_MATOMO_BASE_URL: process.env.NEXT_PUBLIC_MATOMO_BASE_URL,
 		NEXT_PUBLIC_MATOMO_ID: process.env.NEXT_PUBLIC_MATOMO_ID,
 		NEXT_PUBLIC_REDMINE_ID: process.env.NEXT_PUBLIC_REDMINE_ID,
+		SSHOC_MARKETPLACE_PASSWORD: process.env.SSHOC_MARKETPLACE_PASSWORD,
+		SSHOC_MARKETPLACE_USER_NAME: process.env.SSHOC_MARKETPLACE_USER_NAME,
 	},
 	skipValidation: process.env.ENV_VALIDATION === "disabled",
 	onValidationError(validationError) {

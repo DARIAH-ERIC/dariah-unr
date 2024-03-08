@@ -102,6 +102,7 @@ async function DashboardCountryReportEditStepPageContent(
 
 	if (user == null) {
 		redirect("/");
+		/** FIXME: @see https://github.com/amannn/next-intl/issues/823 */
 		assert(false);
 	}
 
@@ -136,10 +137,10 @@ async function DashboardCountryReportEditStepPageContent(
 			);
 		}
 
-		case "contributors": {
+		case "contributions": {
 			return (
 				<section className="grid gap-6">
-					<FormTitle>{t("contributors")}</FormTitle>
+					<FormTitle>{t("contributions")}</FormTitle>
 					<FormDescription>
 						Tempor aliqua non ad sint sint officia Lorem cupidatat cillum sint non tempor quis qui.
 						Voluptate sunt cillum et do cillum ut deserunt aliqua nisi pariatur velit adipisicing
@@ -152,6 +153,7 @@ async function DashboardCountryReportEditStepPageContent(
 						comments={comments}
 						contributionsCount={report.contributionsCount}
 						countryId={country.id}
+						reportId={report.id}
 					/>
 
 					<Navigation code={code} next="events" previous="institutions" year={year} />
@@ -177,7 +179,7 @@ async function DashboardCountryReportEditStepPageContent(
 						reportId={report.id}
 					/>
 
-					<Navigation code={code} next="outreach" previous="contributors" year={year} />
+					<Navigation code={code} next="outreach" previous="contributions" year={year} />
 				</section>
 			);
 		}
@@ -194,9 +196,14 @@ async function DashboardCountryReportEditStepPageContent(
 						tempor labore.
 					</FormDescription>
 
-					<InstitutionsForm comments={comments} countryId={country.id} year={year} />
+					<InstitutionsForm
+						comments={comments}
+						countryId={country.id}
+						reportId={report.id}
+						year={year}
+					/>
 
-					<Navigation code={code} next="contributors" previous="welcome" year={year} />
+					<Navigation code={code} next="contributions" previous="welcome" year={year} />
 				</section>
 			);
 		}
@@ -260,7 +267,12 @@ async function DashboardCountryReportEditStepPageContent(
 						tempor labore.
 					</FormDescription>
 
-					<PublicationsForm comments={comments} countryCode={code} year={year} />
+					<PublicationsForm
+						comments={comments}
+						countryCode={code}
+						reportId={report.id}
+						year={year}
+					/>
 
 					<Navigation code={code} next="project-funding-leverage" previous="software" year={year} />
 				</section>
@@ -325,7 +337,7 @@ async function DashboardCountryReportEditStepPageContent(
 						tempor labore.
 					</FormDescription>
 
-					<SoftwareForm comments={comments} countryId={country.id} />
+					<SoftwareForm comments={comments} countryId={country.id} reportId={report.id} />
 
 					<Navigation code={code} next="publications" previous="services" year={year} />
 				</section>

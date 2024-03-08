@@ -302,7 +302,6 @@ async function ingest() {
 		const report = ids.reports[year].get(row.Country[0].id);
 		await db.eventReport.create({
 			data: {
-				attendees: getNumberValue(row["Total number of attendees"]),
 				dariahCommissionedEvent: row["DARIAH Commissioned Event"],
 				largeMeetings: getNumberValue(row["Number of Large Meetings"]),
 				mediumMeetings: getNumberValue(row["Number of Medium Size Meetings"]),
@@ -316,6 +315,8 @@ async function ingest() {
 	const outreachReports = baserow.get("WebsiteSocialYearKPI");
 	for (const _row of outreachReports?.rows ?? []) {
 		const row = _row as any;
+		// TODO: discuss what to do with report data without year
+		if (row.Year == null) continue;
 		const year = Number(row.Year.value) as 2022 | 2023;
 		const report = ids.reports[year].get(row.Country[0].ids.database_table_2607);
 		const outreach = ids.outreach.get(row["Website or Media"][0].id);

@@ -46,7 +46,7 @@ export function ResearchPolicyDevelopmentsFormContent(
 		},
 	});
 
-	// TODO: should we instead append all addedInstitutions via useOptimistic, which will get syned
+	// TODO: should we instead append all addedInstitutions via useOptimistic, which will get synced
 	// with the db on submit
 	const [optimisticAddedResearchPolicyDevelopments, clearAddedResearchPolicyDevelopments] =
 		useOptimistic(addedResearchPolicyDevelopments, (state) => {
@@ -80,11 +80,13 @@ export function ResearchPolicyDevelopmentsFormContent(
 			<SubmitButton>Submit</SubmitButton>
 
 			<FormSuccessMessage>
-				{formState?.status === "success" ? formState.message : null}
+				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}
 			</FormSuccessMessage>
 
 			<FormErrorMessage>
-				{formState?.status === "error" ? formState.formErrors : null}
+				{formState?.status === "error" && formState.formErrors.length > 0
+					? formState.formErrors
+					: null}
 			</FormErrorMessage>
 		</Form>
 	);

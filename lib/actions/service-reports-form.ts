@@ -5,7 +5,12 @@ import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
-import { createServiceReport, upsertServiceKpi } from "@/lib/data/report";
+import {
+	createServiceReport,
+	getReportComments,
+	updateReportComments,
+	upsertServiceKpi,
+} from "@/lib/data/report";
 import { getFormData } from "@/lib/get-form-data";
 import { nonEmptyString } from "@/lib/schemas/utils";
 
@@ -86,7 +91,10 @@ export async function updateServiceReports(
 		}
 	}
 
-	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit", "page");
+	const comments = await getReportComments({ reportId });
+	await updateReportComments({ reportId, comments: { ...comments, serviceReports: comment } });
+
+	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/services", "page");
 
 	return {
 		status: "success" as const,

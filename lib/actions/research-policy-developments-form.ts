@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
+import { getReportComments, updateReportComments } from "@/lib/data/report";
 import { getFormData } from "@/lib/get-form-data";
 
 const formSchema = z.object({
@@ -40,9 +41,18 @@ export async function updateResearchPolicyDevelopments(
 		};
 	}
 
-	const { comment } = result.data;
+	const { comment, reportId } = result.data;
 
-	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit", "page");
+	const comments = await getReportComments({ reportId });
+	await updateReportComments({
+		reportId,
+		comments: { ...comments, researchPolicyDevelopments: comment },
+	});
+
+	revalidatePath(
+		"/[locale]/dashboard/reports/[year]/countries/[code]/edit/research-policy-developments",
+		"page",
+	);
 
 	return {
 		status: "success" as const,

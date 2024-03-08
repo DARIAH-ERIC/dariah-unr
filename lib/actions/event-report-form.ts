@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
-import { upsertEventReport } from "@/lib/data/report";
+import { getReportComments, updateReportComments, upsertEventReport } from "@/lib/data/report";
 import { getFormData } from "@/lib/get-form-data";
 import { eventReportSchema } from "@/lib/schemas/report";
 
@@ -48,7 +48,10 @@ export async function updateEventReport(
 
 	await upsertEventReport({ ...eventReport, reportId, eventReportId });
 
-	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit", "page");
+	const comments = await getReportComments({ reportId });
+	await updateReportComments({ reportId, comments: { ...comments, eventReports: comment } });
+
+	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/events", "page");
 
 	return {
 		status: "success" as const,
