@@ -12,6 +12,9 @@ for (const envFilePath of [".env.test.local", ".env.local", ".env.test", ".env"]
 const port = 3000;
 const baseUrl = `http://localhost:${port}`;
 
+const dbPort = 5432;
+const dbUrl = `http://localhost:${dbPort}`;
+
 export default defineConfig({
 	testDir: "./e2e",
 	snapshotDir: "./e2e/snapshots",
@@ -68,9 +71,16 @@ export default defineConfig({
 		// 	dependencies: ["setup"],
 		// },
 	],
-	webServer: {
-		command: "pnpm run start",
-		url: baseUrl,
-		reuseExistingServer: !isCI,
-	},
+	webServer: [
+		{
+			command: "pnpm run test:db",
+			url: dbUrl,
+			reuseExistingServer: !isCI,
+		},
+		{
+			command: "pnpm run start",
+			url: baseUrl,
+			reuseExistingServer: !isCI,
+		},
+	],
 });
