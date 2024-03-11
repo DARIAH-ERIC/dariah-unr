@@ -14,7 +14,6 @@
 		"db:create-admin-user": "dotenv -c development -- tsx ./prisma/create-admin-user.ts",
 		"db:create-test-user": "dotenv -c development -- tsx ./prisma/create-test-user.ts",
 		"db:create-report-year": "dotenv -c development -- tsx ./prisma/create-report-year.ts",
-		"db:dev": "docker run -d -e POSTGRES_DB=dariah-unr -e POSTGRES_USER=dariah-unr -e POSTGRES_PASSWORD=dariah-unr --name dariah-unr -p 5432:5432 --rm postgres",
 		"db:ingest": "dotenv -c development -- tsx ./prisma/ingest.ts",
 		"db:generate": "dotenv -c development -- prisma generate",
 		"db:migrate": "dotenv -c development -- prisma migrate dev",
@@ -23,6 +22,7 @@
 		"db:seed": "dotenv -c development -- prisma db seed",
 		"db:ui": "dotenv -c development -- prisma studio",
 		"dev": "next dev",
+		"dev:db": "docker run -d -e POSTGRES_DB=dariah-unr -e POSTGRES_USER=dariah-unr -e POSTGRES_PASSWORD=dariah-unr --name dariah-unr -p 5432:5432 --rm postgres",
 		"format:check": "prettier . \"!./content/**\" --cache --check --ignore-path ./.gitignore",
 		"format:fix": "pnpm run format:check --write",
 		"lint:check": "run-p --continue-on-error \"lint:*:check\"",
@@ -35,13 +35,16 @@
 		"prepare": "run-s setup",
 		"setup": "is-ci || simple-git-hooks",
 		"start": "next start",
-		"test": "exit 0",
-		"test:e2e": "playwright test",
-		"test:e2e:codegen": "playwright codegen",
+		"test:db": "docker run -d -e POSTGRES_DB=dariah-unr-test -e POSTGRES_USER=dariah-unr-test -e POSTGRES_PASSWORD=dariah-unr-test --name dariah-unr-test -p 5432:5432 --rm postgres",
+		"test:db:push": "dotenv -c test -- prisma db push --force-reset",
+		"test:unit": "vitest run --config ./vitest.config.unit.ts",
+		"test:unit:ui": "vitest run --config ./vitest.config.unit.ts --ui",
+		"test:e2e": "run -s test:db:push playwright test",
+		"test:e2e:codegen": "run -s test:db:push playwright codegen",
 		"test:e2e:install": "playwright install --with-deps",
-		"test:e2e:ui": "playwright test --ui",
+		"test:e2e:ui": "run -s test:db:push playwright test --ui",
 		"types:check": "tsc --noEmit",
-		"validate": "run-p format:check lint:check types:check test test:e2e"
+		"validate": "run-p format:check lint:check types:check test:unit test:e2e"
 	},
 	"dependencies": {
 		"@acdh-oeaw/lib": "^0.1.7",
@@ -66,6 +69,7 @@
 		"react-aria-components": "^1.1.1",
 		"react-dom": "^18.2.0",
 		"react-schemaorg": "^2.0.0",
+		"remark-smartypants": "^2.1.0",
 		"server-only": "^0.0.1",
 		"sharp": "^0.33.2",
 		"shiki": "^1.1.7",
@@ -97,6 +101,7 @@
 		"@types/node": "^20.11.25",
 		"@types/react": "^18.2.64",
 		"@types/react-dom": "^18.2.21",
+		"@vitest/ui": "^1.3.1",
 		"axe-core": "^4.8.4",
 		"axe-playwright": "^2.0.1",
 		"ci-info": "^4.0.0",
@@ -122,7 +127,10 @@
 		"tailwindcss": "^3.4.1",
 		"tailwindcss-react-aria-components": "^1.1.1",
 		"tsx": "^4.7.1",
-		"typescript": "^5.4.2"
+		"typescript": "^5.4.2",
+		"vite-tsconfig-paths": "^4.3.1",
+		"vitest": "^1.3.1",
+		"vitest-mock-extended": "^1.3.1"
 	},
 	"pnpm": {
 		"overrides": {
