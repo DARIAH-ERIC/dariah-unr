@@ -1,9 +1,13 @@
 import type { ReactNode } from "react";
+import { useFormState } from "react-dom";
 
 import { SubmitButton } from "@/components/submit-button";
-import { sendEmail } from "@/lib/email";
-import { getFormData } from "@/lib/get-form-data";
-import { contactFormSchema } from "@/lib/schemas/email";
+import { TextInputField } from "@/components/ui/blocks/text-input-field";
+import { TextAreaField } from "@/components/ui/blocks/text-area-field";
+import { Form } from "@/components/ui/form";
+import { FormError as FormErrorMessage } from "@/components/ui/form-error";
+import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
+import { sendContactEmail } from "@/lib/actions/contact";
 
 interface ContactFormContentProps {
 	emailLabel: string;
@@ -15,35 +19,29 @@ interface ContactFormContentProps {
 export function ContactFormContent(props: ContactFormContentProps): ReactNode {
 	const { emailLabel, messageLabel, sendLabel, subjectLabel } = props;
 
-	async function formAction(formData: FormData) {
-		"use server";
-
-		const input = getFormData(formData);
-		const result = contactFormSchema.safeParse(input);
-
-		if (!result.success) {
-			return {
-				kind: "error" as const,
-				...result.error.flatten(),
-			};
-		}
-
-		const { email, message, subject } = result.data;
-
-		await sendEmail({ from: email, subject, text: message });
-
-		return {
-			kind: "success" as const,
-			message: "Succesfully sent email.",
-		};
-	}
+	const [formState, formAction] = useFormState(sendContactEmail, undefined);
 
 	return (
-		<form action={formAction}>
-			<input name="email" type="email" />
-			<input name="subject" />
-			<textarea name="message" />
+		<Form
+			action={formAction}
+			className="grid gap-y-6"
+			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
+		>
+			<TextInputField label={emailLabel} name="email" type="email" />
+			<TextInputField label={subjectLabel} name="subject" />
+			<TextAreaField label={messageLabel} name="message" />
+
 			<SubmitButton>{sendLabel}</SubmitButton>
-		</form>
+
+			<FormSuccessMessage>
+				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}
+			</FormSuccessMessage>
+
+			<FormErrorMessage>
+				{formState?.status === "error" && formState.formErrors.length > 0
+					? formState.formErrors
+					: null}
+			</FormErrorMessage>
+		</Form>
 	);
 }
