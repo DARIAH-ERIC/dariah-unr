@@ -6,7 +6,7 @@ import type { z } from "zod";
 
 import { sendEmail } from "@/lib/email";
 import { getFormData } from "@/lib/get-form-data";
-import { type ContactFormSchema,contactFormSchema } from "@/lib/schemas/email";
+import { type ContactFormSchema, contactFormSchema } from "@/lib/schemas/email";
 
 type FormSchema = ContactFormSchema;
 
