@@ -2,11 +2,11 @@ import { type Country, type Institution, InstitutionType } from "@prisma/client"
 
 import { db } from "@/lib/db";
 
-interface GetActivePartnerInstitutionsByCountryParams {
+interface GetPartnerInstitutionsByCountryParams {
 	countryId: Country["id"];
 }
 
-export function getInstitutionsByCountry(params: GetActivePartnerInstitutionsByCountryParams) {
+export function getInstitutionsByCountry(params: GetPartnerInstitutionsByCountryParams) {
 	const { countryId } = params;
 
 	return db.institution.findMany({
@@ -16,17 +16,16 @@ export function getInstitutionsByCountry(params: GetActivePartnerInstitutionsByC
 					id: countryId,
 				},
 			},
+			endDate: null,
 		},
 	});
 }
 
-interface GetActivePartnerInstitutionsByCountryParams {
+interface GetPartnerInstitutionsByCountryParams {
 	countryId: Country["id"];
 }
 
-export function getActivePartnerInstitutionsByCountry(
-	params: GetActivePartnerInstitutionsByCountryParams,
-) {
+export function getPartnerInstitutionsByCountry(params: GetPartnerInstitutionsByCountryParams) {
 	const { countryId } = params;
 
 	return db.institution.findMany({
@@ -40,6 +39,33 @@ export function getActivePartnerInstitutionsByCountry(
 			types: {
 				has: InstitutionType.partner_institution,
 			},
+		},
+	});
+}
+
+interface GetPartnerInstitutionsCountByCountryParams {
+	countryId: Country["id"];
+}
+
+export function getPartnerInstitutionsCountByCountry(
+	params: GetPartnerInstitutionsCountByCountryParams,
+) {
+	const { countryId } = params;
+
+	return db.institution.aggregate({
+		where: {
+			countries: {
+				some: {
+					id: countryId,
+				},
+			},
+			endDate: null,
+			types: {
+				has: InstitutionType.partner_institution,
+			},
+		},
+		_count: {
+			id: true,
 		},
 	});
 }

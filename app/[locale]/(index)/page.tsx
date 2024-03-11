@@ -61,7 +61,7 @@ function IndexPageHeroSection(): ReactNode {
 			<h1 className="text-balance text-3xl font-bold leading-tight tracking-tighter text-neutral-950 md:text-5xl lg:text-6xl dark:text-neutral-0">
 				{t("title")}
 			</h1>
-			<div className="mx-auto w-full max-w-screen-md text-pretty text-md text-neutral-500 sm:text-lg dark:text-neutral-400">
+			<div className="mx-auto w-full max-w-screen-md text-pretty text-md text-neutral-600 sm:text-lg dark:text-neutral-400">
 				{t("lead-in")}
 			</div>
 			<div className="my-3 flex items-center gap-x-4">

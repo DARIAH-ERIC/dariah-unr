@@ -16,6 +16,7 @@ import { InstitutionsForm } from "@/components/forms/institutions-form";
 import { OutreachReportsForm } from "@/components/forms/outreach-reports-form";
 import { ProjectsFundingLeveragesForm } from "@/components/forms/projects-funding-leverages-form";
 import { PublicationsForm } from "@/components/forms/publications-form";
+import { ReportSummary } from "@/components/forms/report-summary";
 import { ServiceReportsForm } from "@/components/forms/service-reports-form";
 import { SoftwareForm } from "@/components/forms/software-form";
 import { MainContent } from "@/components/main-content";
@@ -36,6 +37,7 @@ interface DashboardCountryReportEditStepPageProps {
 	params: {
 		code: string;
 		locale: Locale;
+		step: string;
 	};
 }
 
@@ -45,6 +47,8 @@ export async function generateStaticParams(_props: {
 	params: Pick<DashboardCountryReportEditStepPageProps["params"], "locale">;
 }): Promise<Array<Pick<DashboardCountryReportEditStepPageProps["params"], "code">>> {
 	const countries = await getCountryCodes();
+
+	// FIXME: step
 
 	return countries;
 }
@@ -356,6 +360,8 @@ async function DashboardCountryReportEditStepPageContent(
 						exercitation tempor veniam ullamco ullamco commodo. Nulla commodo ad dolor laboris nulla
 						tempor labore.
 					</FormDescription>
+
+					<ReportSummary countryId={country.id} reportId={report.id} />
 
 					<div>
 						<span className="text-sm">Congrats, you will receive: </span>

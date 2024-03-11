@@ -96,7 +96,9 @@ Table institution_service {
 
 Table outreach {
   id String [pk]
+  endDate DateTime
   name String [not null]
+  startDate DateTime
   type OutreachType [not null]
   url String [not null]
   countryId String

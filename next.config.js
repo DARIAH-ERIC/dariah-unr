@@ -28,6 +28,17 @@ const config = {
 	},
 	output: env.BUILD_MODE,
 	pageExtensions: ["ts", "tsx", "md", "mdx"],
+	rewrites() {
+		/** @type {Awaited<ReturnType<NonNullable<NextConfig["rewrites"]>>>} */
+		const rewrites = [
+			{
+				source: "/admin",
+				destination: "/keystatic",
+			},
+		];
+
+		return Promise.resolve(rewrites);
+	},
 	typescript: {
 		ignoreBuildErrors: true,
 	},

@@ -5,6 +5,8 @@ import type { ReactNode } from "react";
 
 import { ContactForm } from "@/components/contact-form";
 import { MainContent } from "@/components/main-content";
+import { PageLeadIn } from "@/components/page-lead-in";
+import { PageTitle } from "@/components/page-title";
 import type { Locale } from "@/config/i18n.config";
 
 interface ContactPageProps {
@@ -38,8 +40,13 @@ export default function ContactPage(props: ContactPageProps): ReactNode {
 	const t = useTranslations("ContactPage");
 
 	return (
-		<MainContent className="container py-8">
-			<h1>{t("title")}</h1>
+		<MainContent className="container grid content-start gap-y-8 py-8">
+			<PageTitle>{t("title")}</PageTitle>
+			<PageLeadIn>
+				Velit dolor elit aliqua veniam eu duis. Nulla occaecat sit ullamco velit id occaecat
+				consequat elit adipisicing anim do. Elit ipsum culpa deserunt nostrud labore culpa esse
+				veniam amet velit labore.
+			</PageLeadIn>
 
 			<ContactForm />
 		</MainContent>

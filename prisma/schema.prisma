@@ -174,9 +174,11 @@ enum OutreachType {
 model Outreach {
   id String @id @default(uuid()) @db.Uuid
 
-  name String
-  type OutreachType
-  url  String
+  endDate   DateTime?    @map(name: "end_date")
+  name      String
+  startDate DateTime?    @map(name: "start_date")
+  type      OutreachType
+  url       String
 
   countryId String? @map(name: "country_id") @db.Uuid
 

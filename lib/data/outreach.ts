@@ -14,6 +14,49 @@ export function getOutreachByCountry(params: GetOutreachByCountryParams) {
 			country: {
 				id: countryId,
 			},
+			endDate: null,
+		},
+	});
+}
+
+interface GetOutreachUrlsByCountryParams {
+	countryId: Country["id"];
+}
+
+export function getOutreachUrlsByCountry(params: GetOutreachUrlsByCountryParams) {
+	const { countryId } = params;
+
+	return db.outreach.findMany({
+		where: {
+			country: {
+				id: countryId,
+			},
+			endDate: null,
+		},
+		select: {
+			type: true,
+			url: true,
+		},
+	});
+}
+
+interface GetSocialMediaByCountryParams {
+	countryId: Country["id"];
+}
+
+export function getSocialMediaByCountry(params: GetSocialMediaByCountryParams) {
+	const { countryId } = params;
+
+	return db.outreach.findMany({
+		where: {
+			country: {
+				id: countryId,
+			},
+			endDate: null,
+			type: "social_media",
+		},
+		select: {
+			url: true,
 		},
 	});
 }

@@ -88,7 +88,7 @@ export const CardTitle = forwardRef(function CardTitle(
 });
 
 export const cardDescriptionStyles = variants({
-	base: ["text-pretty text-sm leading-normal text-neutral-500 dark:text-neutral-400"],
+	base: ["text-pretty text-sm leading-normal text-neutral-600 dark:text-neutral-400"],
 });
 
 export type CardDescriptionStyles = VariantProps<typeof cardDescriptionStyles>;

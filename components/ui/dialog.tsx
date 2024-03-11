@@ -108,7 +108,7 @@ export const DialogTitle = forwardRef(function DialogTitle(
 });
 
 export const dialogDescriptionStyles = variants({
-	base: ["text-pretty text-sm leading-normal text-neutral-500 dark:text-neutral-400"],
+	base: ["text-pretty text-sm leading-normal text-neutral-600 dark:text-neutral-400"],
 });
 
 export type DialogDescriptionStyles = VariantProps<typeof dialogDescriptionStyles>;

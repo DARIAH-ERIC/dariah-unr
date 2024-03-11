@@ -7,7 +7,7 @@ import { type ForwardedRef, forwardRef } from "@/lib/forward-ref";
 import { type VariantProps, variants } from "@/lib/styles";
 
 export const textStyles = variants({
-	base: ["text-sm leading-normal text-neutral-500 dark:text-neutral-400"],
+	base: ["text-sm leading-normal text-neutral-600 dark:text-neutral-400"],
 });
 
 export type TextStyles = VariantProps<typeof textStyles>;
