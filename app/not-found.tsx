@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { MainContent } from "@/components/main-content";
+import { PageTitle } from "@/components/page-title";
 import { defaultLocale } from "@/config/i18n.config";
 import { ColorSchemeScript } from "@/lib/color-scheme-script";
 import * as fonts from "@/lib/fonts";
@@ -40,8 +41,8 @@ export default async function NotFoundPage(): Promise<ReactNode> {
 			<body>
 				<ColorSchemeScript />
 
-				<MainContent className="container py-8">
-					<h1>{t("title")}</h1>
+				<MainContent className="container place-content-center py-8">
+					<PageTitle>{t("title")}</PageTitle>
 				</MainContent>
 			</body>
 		</html>

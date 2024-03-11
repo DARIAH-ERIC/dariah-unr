@@ -4,6 +4,7 @@ import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "
 import type { ReactNode } from "react";
 
 import { MainContent } from "@/components/main-content";
+import { PageTitle } from "@/components/page-title";
 import type { Locale } from "@/config/i18n.config";
 import { authErrorPageSearchParams } from "@/lib/schemas/auth";
 
@@ -43,8 +44,9 @@ export default function AuthErrorPage(props: AuthErrorPageProps): ReactNode {
 	const { error } = authErrorPageSearchParams.parse(searchParams);
 
 	return (
-		<MainContent className="container py-8">
-			<h1>{t("title")}</h1>
+		<MainContent className="container grid place-content-center place-items-center gap-y-8 py-8">
+			<PageTitle>{t("title")}</PageTitle>
+
 			<div>{error}</div>
 		</MainContent>
 	);

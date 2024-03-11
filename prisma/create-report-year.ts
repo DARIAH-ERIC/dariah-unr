@@ -1,0 +1,35 @@
+import { log } from "@acdh-oeaw/lib";
+import { PrismaClient } from "@prisma/client";
+
+const db = new PrismaClient();
+
+const year = new Date().getUTCFullYear() - 1;
+
+async function createReportYear() {
+	const countries = await db.country.findMany();
+
+	for (const country of countries) {
+		await db.report.create({
+			data: {
+				year,
+				country: {
+					connect: {
+						id: country.id,
+					},
+				},
+			},
+		});
+	}
+}
+
+createReportYear()
+	.then(() => {
+		log.success(`Successfully created reports for ${year} in the database.`);
+	})
+	.catch((error) => {
+		log.error(`Failed to create reports for ${year} in the database.\n`, error);
+		process.exitCode = 1;
+	})
+	.finally(() => {
+		return db.$disconnect();
+	});

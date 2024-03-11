@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 
 import { DraftModeToggle } from "@/components/draft-mode-toggle";
 import { MainContent } from "@/components/main-content";
+import { PageTitle } from "@/components/page-title";
 import type { Locale } from "@/config/i18n.config";
 import { reader } from "@/lib/content/reader";
 
@@ -81,8 +82,9 @@ async function DocumentationPageContent(props: DocumentationPageContentProps): P
 	const { default: Content } = await import(`@/content/documentation/${id}.mdx`);
 
 	return (
-		<div className="prose mx-auto w-full max-w-screen-md">
-			<h1>{document.title}</h1>
+		<div className="prose prose-sm mx-auto w-full">
+			<PageTitle>{document.title}</PageTitle>
+
 			<Content />
 		</div>
 	);

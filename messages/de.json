@@ -8,22 +8,24 @@
 	},
 	"AppHeader": {
 		"links": {
+			"dashboard": "Dashboard",
+			"documentation": "Dokumentation",
 			"home": "Startseite"
 		},
 		"navigation-menu": "Navigationsmenü",
 		"navigation-primary": "Primär",
 		"toggle-navigation-menu": "Navigationsmenü öffnen"
 	},
+	"AuthControls": {
+		"sign-in": "Anmelden",
+		"sign-out": "Abmelden",
+		"toggle-user-menu": "User-Menü öffnen"
+	},
 	"AuthErrorPage": {
 		"meta": {
 			"title": "Fehler"
 		},
 		"title": "Fehler"
-	},
-	"AuthMenu": {
-		"sign-in": "Anmelden",
-		"sign-out": "Abmelden",
-		"sign-up": "Registrieren"
 	},
 	"AuthSignInPage": {
 		"meta": {
@@ -57,17 +59,45 @@
 		},
 		"title": "Kontakt"
 	},
-	"DashboardPage": {
+	"DashboardCountryReportEditStepPage": {
 		"meta": {
-			"title": "Dashboard"
+			"title": "Bericht bearbeiten"
 		},
-		"title": "Dashboard"
+		"title": "Bericht bearbeiten"
+	},
+	"DashboardCountryReportEditStepNavigation": {
+		"next": "Nächste",
+		"previous": "Vorherige"
+	},
+	"DashboardCountryReportEditStepPageContent": {
+		"confirm-information": "Angaben bestätigen",
+		"contributions": "Contributors",
+		"events": "Events",
+		"institutions": "Institutionen",
+		"outreach": "Outreach",
+		"project-funding-leverage": "Projektfinanzierung",
+		"publications": "Publikationen",
+		"research-policy-developments": "Research policy developments",
+		"services": "Services",
+		"software": "Software",
+		"summary": "Zusammenfassung",
+		"welcome": "Willkommen"
 	},
 	"DashboardCountryReportPage": {
 		"meta": {
 			"title": "Bericht"
 		},
 		"title": "Bericht"
+	},
+	"DashboardPage": {
+		"meta": {
+			"title": "Dashboard"
+		},
+		"title": "Dashboard"
+	},
+	"DashboardPageContent": {
+		"create-page-for-year": "Bericht für {year} erstellen",
+		"edit-page-for-year": "Bericht für {year} bearbeiten"
 	},
 	"Error": {
 		"something-went-wrong": "Etwas ist schief gelaufen!",
@@ -79,9 +109,12 @@
 		},
 		"title": "Impressum"
 	},
-	"IndexPage": {
+	"IndexPage": {},
+	"IndexPageHeroSection": {
 		"badge": "DARIAH Unified National Reporting",
+		"go-to-dashboard": "Zum Dashboard",
 		"lead-in": "Do do et ullamco proident. Duis commodo culpa in sit Lorem cupidatat ea anim sit tempor esse. Adipisicing anim deserunt voluptate aliquip. Aliquip eu amet commodo ad enim Lorem. Laboris ex non ullamco enim adipisicing.",
+		"read-documentation": "Dokumentation lesen",
 		"title": "Wir wollen Leistungsindikatoren sehen!"
 	},
 	"Loading": {
@@ -131,19 +164,54 @@
 		},
 		"signIn": {
 			"errors": {
-				"AuthorizedCallbackError": "Sie haben keine Berechtigung, sich anzumelden",
-				"CredentialsSignInError": "Anmeldeversuch fehlgeschlagen. Überprüfen Sie, ob die von Ihnen angegebenen Daten korrekt sind",
-				"DefaultAuthError": "Anmeldung nicht möglich"
+				"AccessDeniedError": "Sie haben keine Berechtigung, sich anzumelden.",
+				"CredentialsSignInError": "Anmeldeversuch fehlgeschlagen. Überprüfen Sie, ob die von Ihnen angegebenen Daten korrekt sind.",
+				"DefaultAuthError": "Anmeldung nicht möglich."
 			},
-			"success": "Erfolgreich angemeldet"
+			"success": "Erfolgreich angemeldet."
 		},
 		"signUp": {
 			"errors": {
-				"DatabaseError": "Konnte Benutzer*in nicht anlegen",
-				"DatabaseUserExistsError": "Benutzer*in ist bereits in der Datenbank vorhanden",
-				"InvalidInputError": "Ungültige Eingabe"
+				"DatabaseError": "Konnte Benutzer*in nicht anlegen.",
+				"DatabaseUserExistsError": "Benutzer*in ist bereits in der Datenbank vorhanden.",
+				"InvalidInputError": "Ungültige Eingabe."
 			},
-			"success": "Erfolgreich registriert"
+			"success": "Erfolgreich registriert."
+		},
+		"updateContributions": {
+			"success": "Contributions erfolgreich aktualisiert."
+		},
+		"updateEventReport": {
+			"success": "Events erfolgreich aktualisiert."
+		},
+		"updateInstitutions": {
+			"success": "Institutionen erfolgreich aktualisiert."
+		},
+		"updateOutreachReports": {
+			"success": "Outreach erfolgreich aktualisiert."
+		},
+		"updateProjectsFundingLeverages": {
+			"success": "Projektfinanzierungen erfolgreich aktualisiert."
+		},
+		"updatePublications": {
+			"success": "Publikationen erfolgreich aktualisiert."
+		},
+		"updateReport": {
+			"success": "Bericht erfolgreich aktualisiert."
+		},
+		"updateResearchPolicyDevelopments": {
+			"success": "Research policy developments erfolgreich aktualisiert."
+		},
+		"updateServiceReports": {
+			"success": "Services erfolgreich aktualisiert."
+		},
+		"updateSoftware": {
+			"success": "Software erfolgreich aktualisiert."
+		}
+	},
+	"ui": {
+		"Dialog": {
+			"close": "Schliessen"
 		}
 	}
 }

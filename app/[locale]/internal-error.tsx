@@ -4,6 +4,8 @@ import { useTranslations } from "next-intl";
 import { type ReactNode, useEffect } from "react";
 
 import { MainContent } from "@/components/main-content";
+import { PageTitle } from "@/components/page-title";
+import { Button } from "@/components/ui/button";
 
 interface InternalErrorProps {
 	error: Error & { digest?: string };
@@ -22,16 +24,18 @@ export default function InternalError(props: InternalErrorProps): ReactNode {
 	}, [error]);
 
 	return (
-		<MainContent className="container py-8">
-			<h1>{t("something-went-wrong")}</h1>
-			<button
-				onClick={() => {
-					reset();
-				}}
-				type="button"
-			>
-				{t("try-again")}
-			</button>
+		<MainContent className="container grid place-content-center place-items-center gap-y-8 py-8">
+			<PageTitle>{t("something-went-wrong")}</PageTitle>
+
+			<div>
+				<Button
+					onPress={() => {
+						reset();
+					}}
+				>
+					{t("try-again")}
+				</Button>
+			</div>
 		</MainContent>
 	);
 }

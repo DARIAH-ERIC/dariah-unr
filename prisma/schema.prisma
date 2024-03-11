@@ -82,10 +82,27 @@ model Country {
   @@map(name: "countries")
 }
 
+enum EventSizeType {
+  large
+  medium
+  small
+}
+
+model EventSize {
+  id String @id @default(uuid()) @db.Uuid
+
+  annualValue Int           @map(name: "annual_value")
+  type        EventSizeType
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "event_sizes")
+}
+
 model EventReport {
   id String @id @default(uuid()) @db.Uuid
 
-  attendees               Int?
   dariahCommissionedEvent String? @map(name: "dariah_commissioned_event")
   largeMeetings           Int?    @map(name: "large_meetings")
   mediumMeetings          Int?    @map(name: "medium_meetings")
@@ -171,6 +188,18 @@ model Outreach {
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
   @@map(name: "outreach")
+}
+
+model OutreachTypeValue {
+  id String @id @default(uuid()) @db.Uuid
+
+  annualValue Int          @map(name: "annual_value")
+  type        OutreachType
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "outreach_type_values")
 }
 
 model OutreachReport {

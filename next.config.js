@@ -18,6 +18,9 @@ const config = {
 		dirs: [process.cwd()],
 		ignoreDuringBuilds: true,
 	},
+	experimental: {
+		taint: true,
+	},
 	logging: {
 		fetches: {
 			fullUrl: true,

@@ -1,11 +1,32 @@
 import { collection, config, fields } from "@keystatic/core";
 import { wrapper } from "@keystatic/core/content-components";
-import { __experimental_mdx_field } from "@keystatic/core/form/fields/markdoc";
 import { InfoIcon } from "lucide-react";
 
 import { Logo } from "@/components/logo";
 import { createAssetPaths, createPreviewUrl } from "@/config/content.config";
 import { env } from "@/config/env.config";
+
+const components = {
+	Callout: wrapper({
+		label: "Callout",
+		description: "Additional information.",
+		icon: <InfoIcon />,
+		schema: {
+			kind: fields.select({
+				label: "Kind",
+				/** @see https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts */
+				options: [
+					{ label: "Caution", value: "caution" },
+					{ label: "Important", value: "important" },
+					{ label: "Note", value: "note" },
+					{ label: "Tip", value: "tip" },
+					{ label: "Warning", value: "warning" },
+				],
+				defaultValue: "note",
+			}),
+		},
+	}),
+};
 
 // eslint-disable-next-line import/no-default-export
 export default config({
@@ -16,7 +37,7 @@ export default config({
 			mark: Logo,
 		},
 		// navigation: {
-		// 	Pages: ["home"],
+		// 	Pages: ["homePage"],
 		// 	Content: ["documentation"],
 		// 	Settings: [],
 		// },
@@ -54,32 +75,12 @@ export default config({
 						validation: { length: { min: 1 } },
 					},
 				}),
-				content: __experimental_mdx_field({
+				content: fields.mdx({
 					label: "Content",
 					options: {
 						image: createAssetPaths("/images/content/documentation/"),
 					},
-					components: {
-						Callout: wrapper({
-							label: "Callout",
-							description: "Additional information.",
-							icon: <InfoIcon />,
-							schema: {
-								kind: fields.select({
-									label: "Kind",
-									/** @see https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts */
-									options: [
-										{ label: "Caution", value: "caution" },
-										{ label: "Important", value: "important" },
-										{ label: "Note", value: "note" },
-										{ label: "Tip", value: "tip" },
-										{ label: "Warning", value: "warning" },
-									],
-									defaultValue: "note",
-								}),
-							},
-						}),
-					},
+					components,
 				}),
 			},
 		}),

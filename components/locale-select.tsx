@@ -1,13 +1,12 @@
 "use client";
 
-// TODO: import { useSearchParams } from "next/navigation";
 import type { Key, ReactNode } from "react";
 
-import { Button } from "@/components/ui/button";
+import { IconButton } from "@/components/ui/icon-button";
 import {
 	Select,
-	SelectContent,
-	SelectItem,
+	SelectListBox,
+	SelectListBoxItem,
 	SelectPopover,
 	SelectValue,
 } from "@/components/ui/select";
@@ -39,20 +38,20 @@ export function LocaleSelect(props: LocaleSelectProps): ReactNode {
 			onSelectionChange={onSelectionChange}
 			selectedKey={currentLocale}
 		>
-			<Button size="icon" variant="ghost">
+			<IconButton variant="plain">
 				<span aria-hidden={true}>{currentLocale.toUpperCase()}</span>
 				<SelectValue className="sr-only" />
-			</Button>
+			</IconButton>
 			<SelectPopover placement="bottom">
-				<SelectContent>
+				<SelectListBox>
 					{Object.entries(items).map(([id, label]) => {
 						return (
-							<SelectItem key={id} id={id} textValue={label}>
+							<SelectListBoxItem key={id} id={id} textValue={label}>
 								{label}
-							</SelectItem>
+							</SelectListBoxItem>
 						);
 					})}
-				</SelectContent>
+				</SelectListBox>
 			</SelectPopover>
 		</Select>
 	);

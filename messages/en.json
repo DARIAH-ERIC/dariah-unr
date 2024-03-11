@@ -8,22 +8,24 @@
 	},
 	"AppHeader": {
 		"links": {
+			"dashboard": "Dashboard",
+			"documentation": "Documentation",
 			"home": "Home"
 		},
 		"navigation-menu": "Navigation menu",
 		"navigation-primary": "Primary",
 		"toggle-navigation-menu": "Toggle navigation menu"
 	},
+	"AuthControls": {
+		"sign-in": "Sign in",
+		"sign-out": "Sign out",
+		"toggle-user-menu": "Toggle user menu"
+	},
 	"AuthErrorPage": {
 		"meta": {
 			"title": "Error"
 		},
 		"title": "Error"
-	},
-	"AuthMenu": {
-		"sign-in": "Sign in",
-		"sign-out": "Sign out",
-		"sign-up": "Sign up"
 	},
 	"AuthSignInPage": {
 		"meta": {
@@ -57,17 +59,45 @@
 		},
 		"title": "Contact"
 	},
-	"DashboardPage": {
+	"DashboardCountryReportEditStepPage": {
 		"meta": {
-			"title": "Dashboard"
+			"title": "Edit report"
 		},
-		"title": "Dashboard"
+		"title": "Edit report"
+	},
+	"DashboardCountryReportEditStepNavigation": {
+		"next": "Next",
+		"previous": "Previous"
+	},
+	"DashboardCountryReportEditStepPageContent": {
+		"confirm-information": "Confirm information",
+		"contributions": "Contributors",
+		"events": "Events",
+		"institutions": "Institutions",
+		"outreach": "Outreach",
+		"project-funding-leverage": "Project funding leverage",
+		"publications": "Publications",
+		"research-policy-developments": "Research policy developments",
+		"services": "Services",
+		"software": "Software",
+		"summary": "Summary",
+		"welcome": "Welcome"
 	},
 	"DashboardCountryReportPage": {
 		"meta": {
 			"title": "Report"
 		},
 		"title": "Report"
+	},
+	"DashboardPage": {
+		"meta": {
+			"title": "Dashboard"
+		},
+		"title": "Dashboard"
+	},
+	"DashboardPageContent": {
+		"create-page-for-year": "Create report for {year}",
+		"edit-page-for-year": "Edit report for {year}"
 	},
 	"Error": {
 		"something-went-wrong": "Something went wrong!",
@@ -79,9 +109,12 @@
 		},
 		"title": "Imprint"
 	},
-	"IndexPage": {
+	"IndexPage": {},
+	"IndexPageHeroSection": {
 		"badge": "DARIAH Unified National Reporting",
+		"go-to-dashboard": "Go to dashboard",
 		"lead-in": "Pariatur sunt dolore mollit occaecat laborum sit. Nulla est laboris labore et aliquip proident eu aliquip ullamco aute. Ut ad sunt pariatur irure commodo enim est non officia.",
+		"read-documentation": "Read documentation",
 		"title": "We want to see performance indicators!"
 	},
 	"Loading": {
@@ -131,19 +164,54 @@
 		},
 		"signIn": {
 			"errors": {
-				"AuthorizedCallbackError": "You do not have permission to sign in",
-				"CredentialsSignInError": "Sign in failed. Check the details you provided are correct",
-				"DefaultAuthError": "Unable to sign in"
+				"AccessDeniedError": "You do not have permission to sign in.",
+				"CredentialsSignInError": "Sign in failed. Check if the details you provided are correct.",
+				"DefaultAuthError": "Unable to sign in."
 			},
-			"success": "Successfully signed in"
+			"success": "Successfully signed in."
 		},
 		"signUp": {
 			"errors": {
-				"DatabaseError": "Failed to create user",
-				"DatabaseUserExistsError": "User already exists in the database",
-				"InvalidInputError": "Invalid input"
+				"DatabaseError": "Failed to create user.",
+				"DatabaseUserExistsError": "User already exists in the database.",
+				"InvalidInputError": "Invalid input."
 			},
-			"success": "Successfully registered"
+			"success": "Successfully registered."
+		},
+		"updateContributions": {
+			"success": "Successfully updated contributions."
+		},
+		"updateEventReport": {
+			"success": "Successfully updated events."
+		},
+		"updateInstitutions": {
+			"success": "Successfully updated institutions."
+		},
+		"updateOutreachReports": {
+			"success": "Successfully updated outreach."
+		},
+		"updateProjectsFundingLeverages": {
+			"success": "Successfully updated project fundings."
+		},
+		"updatePublications": {
+			"success": "Successfully updated publications."
+		},
+		"updateReport": {
+			"success": "Successfully updated report."
+		},
+		"updateResearchPolicyDevelopments": {
+			"success": "Successfully updated research policy developments."
+		},
+		"updateServiceReports": {
+			"success": "Successfully updated services."
+		},
+		"updateSoftware": {
+			"success": "Successfully updated software."
+		}
+	},
+	"ui": {
+		"Dialog": {
+			"close": "Close"
 		}
 	}
 }

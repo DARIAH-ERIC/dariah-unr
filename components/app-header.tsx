@@ -2,41 +2,47 @@ import { MenuIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 
+import { AppMobileNavLink } from "@/components/app-mobile-nav-link";
 import { AppNavLink } from "@/components/app-nav-link";
-import { AuthMenu } from "@/components/auth-menu";
+import { AuthControls } from "@/components/auth-controls";
 import { ColorSchemeSwitcher } from "@/components/color-scheme-switcher";
 import type { LinkProps } from "@/components/link";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { Logo } from "@/components/logo";
-import { Button } from "@/components/ui/button";
-import {
-	DialogContent,
-	DialogHeader,
-	DialogOverlay,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
+import { Drawer, DrawerTrigger } from "@/components/ui/blocks/drawer";
+import { IconButton } from "@/components/ui/icon-button";
 import { createHref } from "@/lib/create-href";
 
 export function AppHeader(): ReactNode {
 	const t = useTranslations("AppHeader");
 
 	const links = {
-		home: { href: createHref({ pathname: "/" }), label: t("links.home") },
+		home: {
+			href: createHref({ pathname: "/" }),
+			label: t("links.home"),
+		},
+		dashboard: {
+			href: createHref({ pathname: "/dashboard" }),
+			label: t("links.dashboard"),
+		},
+		documentation: {
+			href: createHref({ pathname: "/documentation" }),
+			label: t("links.documentation"),
+		},
 	} satisfies Record<string, { href: LinkProps["href"]; label: string }>;
 
 	return (
 		<header className="border-b">
 			<div className="container flex items-center justify-between gap-4 py-4">
-				<nav aria-label={t("navigation-primary")}>
-					<ul className="hidden items-center gap-4 sm:flex" role="list">
+				<nav aria-label={t("navigation-primary")} className="-mx-3">
+					<ul className="hidden items-center gap-4 text-sm sm:flex" role="list">
 						{Object.entries(links).map(([id, link]) => {
 							return (
 								<li key={id}>
 									<AppNavLink href={link.href}>
 										{id === "home" ? (
-											<div className="flex items-center gap-2.5">
-												<Logo className="size-6 shrink-0 text-brand" />
+											<div className="inline-flex items-center gap-2.5">
+												<Logo className="size-6 shrink-0 " />
 												<span className="sr-only sm:not-sr-only">{link.label}</span>
 											</div>
 										) : (
@@ -49,31 +55,22 @@ export function AppHeader(): ReactNode {
 					</ul>
 
 					<div className="flex sm:hidden">
-						<DialogTrigger>
-							<Button aria-label={"toggle-navigation-menu"} size="icon" variant="ghost">
+						<DrawerTrigger>
+							<IconButton aria-label={"toggle-navigation-menu"} variant="plain">
 								<MenuIcon aria-hidden={true} className="size-5 shrink-0" />
-							</Button>
-							<DialogOverlay>
-								<DialogContent side="left">
-									<DialogHeader>
-										<DialogTitle>{t("navigation-menu")}</DialogTitle>
-									</DialogHeader>
-									<div className="grid gap-4 py-4">
-										<ul className="grid gap-4" role="list">
-											{Object.entries(links).map(([id, link]) => {
-												return (
-													<li key={id}>
-														<AppNavLink className="py-2" href={link.href}>
-															{link.label}
-														</AppNavLink>
-													</li>
-												);
-											})}
-										</ul>
-									</div>
-								</DialogContent>
-							</DialogOverlay>
-						</DialogTrigger>
+							</IconButton>
+							<Drawer title={t("navigation-menu")}>
+								<ul className="-mx-3 grid gap-y-4 text-sm" role="list">
+									{Object.entries(links).map(([id, link]) => {
+										return (
+											<li key={id}>
+												<AppMobileNavLink href={link.href}>{link.label}</AppMobileNavLink>
+											</li>
+										);
+									})}
+								</ul>
+							</Drawer>
+						</DrawerTrigger>
 					</div>
 				</nav>
 
@@ -82,7 +79,7 @@ export function AppHeader(): ReactNode {
 						<ColorSchemeSwitcher />
 						<LocaleSwitcher />
 					</div>
-					<AuthMenu />
+					<AuthControls />
 				</div>
 			</div>
 		</header>

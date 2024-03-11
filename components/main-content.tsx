@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 
+import { cn } from "@/lib/styles";
+
 export const id = "main-content";
 
 interface MainContentProps {
@@ -11,7 +13,7 @@ export function MainContent(props: MainContentProps): ReactNode {
 	const { children, className } = props;
 
 	return (
-		<main className={className} id={id} tabIndex={-1}>
+		<main className={cn("max-w-screen-lg outline-0", className)} id={id} tabIndex={-1}>
 			{children}
 		</main>
 	);

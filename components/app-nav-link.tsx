@@ -14,7 +14,11 @@ export function AppNavLink(props: AppNavLinkProps): ReactNode {
 	const navLinkProps = useNavLink(rest);
 
 	return (
-		<AppLink {...rest} {...navLinkProps}>
+		<AppLink
+			{...rest}
+			{...navLinkProps}
+			data-current={Boolean(navLinkProps["aria-current"]) || undefined}
+		>
 			{children}
 		</AppLink>
 	);

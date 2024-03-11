@@ -18,18 +18,18 @@ export const authSignUpPageSearchParams = z.object({
 
 export type AuthSignUpPageSearchParams = z.infer<typeof authSignUpPageSearchParams>;
 
-export const signInSchema = z.object({
+export const signInFormSchema = z.object({
 	email: z.string().email(),
 	password: z.string().min(1),
 });
 
-export type SignInSchema = z.infer<typeof signInSchema>;
+export type SignInFormSchema = z.infer<typeof signInFormSchema>;
 
-export const signUpSchema = z.object({
+export const signUpFormSchema = z.object({
 	email: z.string().email(),
 	name: z.string().min(1),
 	password: z.string().min(8),
 	redirectTo: z.string().url().nullable().optional(),
 });
 
-export type SignUpSchema = z.infer<typeof signUpSchema>;
+export type SignUpFormSchema = z.infer<typeof signUpFormSchema>;
