@@ -1,6 +1,7 @@
 {
 	"AppFooter": {
 		"links": {
+			"contact": "Kontakt",
 			"imprint": "Impressum"
 		},
 		"navigation-secondary": "Sekundär"
@@ -45,6 +46,18 @@
 			"light": "Hell",
 			"system": "System"
 		}
+	},
+	"ContactForm": {
+		"email": "Email",
+		"message": "Nachricht",
+		"send": "Absenden",
+		"subject": "Betreff"
+	},
+	"ContactPage": {
+		"meta": {
+			"title": "Kontakt"
+		},
+		"title": "Kontakt"
 	},
 	"DashboardCountryReportEditStepPage": {
 		"meta": {
@@ -146,6 +159,9 @@
 		"sign-up": "Registrieren"
 	},
 	"actions": {
+		"sendEmail": {
+			"success": "Email erfolgreich gesendet."
+		},
 		"signIn": {
 			"errors": {
 				"AccessDeniedError": "Sie haben keine Berechtigung, sich anzumelden.",

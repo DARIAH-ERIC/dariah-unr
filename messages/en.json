@@ -1,6 +1,7 @@
 {
 	"AppFooter": {
 		"links": {
+			"contact": "Contact",
 			"imprint": "Imprint"
 		},
 		"navigation-secondary": "Secondary"
@@ -45,6 +46,18 @@
 			"light": "Light",
 			"system": "System"
 		}
+	},
+	"ContactForm": {
+		"email": "Email",
+		"message": "Message",
+		"send": "Send",
+		"subject": "Subject"
+	},
+	"ContactPage": {
+		"meta": {
+			"title": "Contact"
+		},
+		"title": "Contact"
 	},
 	"DashboardCountryReportEditStepPage": {
 		"meta": {
@@ -146,6 +159,9 @@
 		"sign-up": "Sign up"
 	},
 	"actions": {
+		"sendEmail": {
+			"success": "Successfully sent email."
+		},
 		"signIn": {
 			"errors": {
 				"AccessDeniedError": "You do not have permission to sign in.",
