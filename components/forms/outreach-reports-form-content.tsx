@@ -25,14 +25,14 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
-import { updateOutreachReports } from "@/lib/actions/outreach-reports-form";
+import { updateOutreachReportsAction } from "@/lib/actions/update-outreach-reports";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
 
 interface OutreachReportWithKpis
 	extends Prisma.OutreachReportGetPayload<{ include: { kpis: true; outreach: true } }> {}
 
 interface OutreachReportsFormContentProps {
-	comments: ReportCommentsSchema | null;
+	comments: ReportCommentsSchema["outreachReports"];
 	countryId: Country["id"];
 	outreachReports: Array<OutreachReportWithKpis>;
 	outreachs: Array<Outreach>;
@@ -52,7 +52,7 @@ export function OutreachReportsFormContent(props: OutreachReportsFormContentProp
 		reportId,
 	} = props;
 
-	const [formState, formAction] = useFormState(updateOutreachReports, undefined);
+	const [formState, formAction] = useFormState(updateOutreachReportsAction, undefined);
 
 	const outreachReportsByOutreachId = keyByToMap(outreachReports, (outreachReport) => {
 		return outreachReport.outreach.id;
@@ -115,7 +115,7 @@ export function OutreachReportsFormContent(props: OutreachReportsFormContentProp
 				})}
 			</section>
 
-			<TextAreaField defaultValue={comments?.outreachReports} label="Comment" name="comment" />
+			<TextAreaField defaultValue={comments} label="Comment" name="comment" />
 
 			<SubmitButton>Submit</SubmitButton>
 

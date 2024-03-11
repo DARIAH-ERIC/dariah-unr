@@ -28,7 +28,7 @@ import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
 import { Modal, ModalOverlay } from "@/components/ui/modal";
-import { updateProjectsFundingLeverages } from "@/lib/actions/projects-funding-leverages-form";
+import { updateProjectsFundingLeveragesAction } from "@/lib/actions/update-projects-funding-leverages";
 import { getFormData } from "@/lib/get-form-data";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
 
@@ -43,7 +43,7 @@ interface AddedProjectsFundingLeverage {
 }
 
 interface ProjectsFundingLeveragesFormContentProps {
-	comments: ReportCommentsSchema | null;
+	comments: ReportCommentsSchema["projectsFundingLeverages"];
 	previousProjectsFundingLeverages: Array<ProjectsFundingLeverage> | null;
 	previousReportId: Report["id"] | undefined;
 	projectsFundingLeverages: Array<ProjectsFundingLeverage>;
@@ -61,7 +61,7 @@ export function ProjectsFundingLeveragesFormContent(
 		reportId,
 	} = props;
 
-	const [formState, formAction] = useFormState(updateProjectsFundingLeverages, undefined);
+	const [formState, formAction] = useFormState(updateProjectsFundingLeveragesAction, undefined);
 
 	const addedProjectsFundingLeverages = useListData<AddedProjectsFundingLeverage>({
 		initialItems: [],
@@ -162,11 +162,7 @@ export function ProjectsFundingLeveragesFormContent(
 				projectsFundingLeverages={addedProjectsFundingLeverages}
 			/>
 
-			<TextAreaField
-				defaultValue={comments?.projectsFundingLeverages}
-				label="Comment"
-				name="comment"
-			/>
+			<TextAreaField defaultValue={comments} label="Comment" name="comment" />
 
 			<SubmitButton>Submit</SubmitButton>
 

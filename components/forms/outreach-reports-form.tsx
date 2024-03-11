@@ -25,7 +25,7 @@ export async function OutreachReportsForm(props: OutreachReportsFormProps): Prom
 
 	return (
 		<OutreachReportsFormContent
-			comments={comments}
+			comments={comments?.outreachReports}
 			countryId={countryId}
 			outreachReports={outreachReports}
 			outreachs={outreachs}

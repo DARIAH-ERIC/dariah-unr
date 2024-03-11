@@ -63,6 +63,10 @@ export async function PublicationsForm(props: PublicationsFormProps): Promise<Re
 		});
 
 	return (
-		<PublicationsFormContent comments={comments} publications={publications} reportId={reportId} />
+		<PublicationsFormContent
+			comments={comments?.publications}
+			publications={publications}
+			reportId={reportId}
+		/>
 	);
 }

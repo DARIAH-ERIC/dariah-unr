@@ -26,7 +26,7 @@ import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
 import { LinkButton } from "@/components/ui/link-button";
-import { updateServiceReports } from "@/lib/actions/service-reports-form";
+import { updateServiceReportsAction } from "@/lib/actions/update-service-reports";
 import { createHref } from "@/lib/create-href";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
 
@@ -34,7 +34,7 @@ interface ServiceReportWithKpis
 	extends Prisma.ServiceReportGetPayload<{ include: { kpis: true; service: true } }> {}
 
 interface ServiceReportsFormContentProps {
-	comments: ReportCommentsSchema | null;
+	comments: ReportCommentsSchema["serviceReports"];
 	countryId: Country["id"];
 	previousReportId: Report["id"] | undefined;
 	previousServiceReports: Array<ServiceReportWithKpis> | null;
@@ -58,7 +58,7 @@ export function ServiceReportsFormContent(props: ServiceReportsFormContentProps)
 
 	// const serviceStatuses = Object.values(ServiceStatus);
 
-	const [formState, formAction] = useFormState(updateServiceReports, undefined);
+	const [formState, formAction] = useFormState(updateServiceReportsAction, undefined);
 
 	const serviceReportsByServiceId = keyByToMap(serviceReports, (serviceReport) => {
 		return serviceReport.service.id;
@@ -128,7 +128,7 @@ export function ServiceReportsFormContent(props: ServiceReportsFormContentProps)
 				/>
 			</div>
 
-			<TextAreaField defaultValue={comments?.serviceReports} label="Comment" name="comment" />
+			<TextAreaField defaultValue={comments} label="Comment" name="comment" />
 
 			<SubmitButton>Submit</SubmitButton>
 

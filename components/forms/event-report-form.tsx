@@ -21,7 +21,7 @@ export async function EventReportForm(props: EventReportFormProps): Promise<Reac
 
 	return (
 		<EventReportFormContent
-			comments={comments}
+			comments={comments?.eventReport}
 			eventReport={eventReport}
 			previousEventReport={previousEventReport}
 			previousReportId={previousReportId}

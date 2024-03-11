@@ -26,12 +26,12 @@ import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
 import { Modal, ModalOverlay } from "@/components/ui/modal";
-import { updateContributions } from "@/lib/actions/contributions-form";
+import { updateContributionsAction } from "@/lib/actions/update-contributions";
 import { getFormData } from "@/lib/get-form-data";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
 
 interface ContributionsFormContentProps {
-	comments: ReportCommentsSchema | null;
+	comments: ReportCommentsSchema["contributions"];
 	countryId: Country["id"];
 	contributions: Array<
 		Prisma.ContributionGetPayload<{
@@ -63,7 +63,7 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 		year,
 	} = props;
 
-	const [formState, formAction] = useFormState(updateContributions, undefined);
+	const [formState, formAction] = useFormState(updateContributionsAction, undefined);
 
 	const contributionsByRoleId = groupBy(contributions, (contribution) => {
 		return contribution.roleId;
@@ -119,7 +119,7 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 				name="contributionsCount"
 			/>
 
-			<TextAreaField defaultValue={comments?.contributions} label="Comment" name="comment" />
+			<TextAreaField defaultValue={comments} label="Comment" name="comment" />
 
 			<SubmitButton>Submit</SubmitButton>
 

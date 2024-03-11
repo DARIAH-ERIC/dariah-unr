@@ -11,11 +11,11 @@ import { TextInputField } from "@/components/ui/blocks/text-input-field";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
-import { updateEventReport } from "@/lib/actions/event-report-form";
+import { updateEventReportAction } from "@/lib/actions/update-event-report";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
 
 interface EventReportFormContentProps {
-	comments: ReportCommentsSchema | null;
+	comments: ReportCommentsSchema["eventReport"];
 	eventReport: EventReport | null;
 	previousEventReport: EventReport | null;
 	previousReportId: Report["id"] | undefined;
@@ -25,7 +25,7 @@ interface EventReportFormContentProps {
 export function EventReportFormContent(props: EventReportFormContentProps): ReactNode {
 	const { comments, eventReport, previousEventReport, previousReportId, reportId } = props;
 
-	const [formState, formAction] = useFormState(updateEventReport, undefined);
+	const [formState, formAction] = useFormState(updateEventReportAction, undefined);
 
 	return (
 		<Form
@@ -69,7 +69,7 @@ export function EventReportFormContent(props: EventReportFormContentProps): Reac
 				name="eventReport.reusableOutcomes"
 			/>
 
-			<TextAreaField defaultValue={comments?.eventReport} label="Comment" name="comment" />
+			<TextAreaField defaultValue={comments} label="Comment" name="comment" />
 
 			<SubmitButton>Submit</SubmitButton>
 

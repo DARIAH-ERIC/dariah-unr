@@ -2,11 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
-import { z } from "zod";
+import type { z } from "zod";
 
 import { sendEmail } from "@/lib/email";
 import { getFormData } from "@/lib/get-form-data";
-import { contactFormSchema, type ContactFormSchema } from "@/lib/schemas/email";
+import { type ContactFormSchema,contactFormSchema } from "@/lib/schemas/email";
 
 type FormSchema = ContactFormSchema;
 

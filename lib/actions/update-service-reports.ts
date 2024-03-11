@@ -1,25 +1,27 @@
 "use server";
 
-import { OutreachKpiType } from "@prisma/client";
+import { ServiceKpiType } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
 import {
-	createOutreachReport,
+	createServiceReport,
 	getReportComments,
 	updateReportComments,
-	upsertOutreachKpi,
+	upsertServiceKpi,
 } from "@/lib/data/report";
 import { getFormData } from "@/lib/get-form-data";
+import type { ReportCommentsSchema } from "@/lib/schemas/report";
 import { nonEmptyString } from "@/lib/schemas/utils";
 
 const formSchema = z.object({
 	comment: z.string().optional(),
-	outreachReports: z.array(
+	reportId: z.string(),
+	serviceReports: z.array(
 		z.object({
 			id: z.string().optional(),
-			outreach: z.object({
+			service: z.object({
 				id: z.string(),
 				// name: z.string(),
 				// url: z.string().url(),
@@ -29,7 +31,7 @@ const formSchema = z.object({
 					z.object({
 						id: z.string().optional(),
 						unit: z.enum(
-							Object.values(OutreachKpiType) as [OutreachKpiType, ...Array<OutreachKpiType>],
+							Object.values(ServiceKpiType) as [ServiceKpiType, ...Array<ServiceKpiType>],
 						),
 						value: nonEmptyString(z.coerce.number().int().nonnegative()),
 					}),
@@ -37,7 +39,7 @@ const formSchema = z.object({
 				.optional(),
 		}),
 	),
-	reportId: z.string(),
+	year: nonEmptyString(z.coerce.number().int().positive()),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -53,11 +55,11 @@ interface FormSuccess {
 
 type FormState = FormErrors | FormSuccess;
 
-export async function updateOutreachReports(
+export async function updateServiceReportsAction(
 	previousFormState: FormState | undefined,
 	formData: FormData,
 ) {
-	const t = await getTranslations("actions.updateOutreachReports");
+	const t = await getTranslations("actions.updateServiceReports");
 
 	const input = getFormData(formData);
 	const result = formSchema.safeParse(input);
@@ -69,32 +71,32 @@ export async function updateOutreachReports(
 		};
 	}
 
-	const { comment, outreachReports, reportId } = result.data;
+	const { comment, reportId, serviceReports, year } = result.data;
 
-	for (const outreachReport of outreachReports) {
-		if (outreachReport.kpis == null || outreachReport.kpis.length === 0) continue;
+	for (const serviceReport of serviceReports) {
+		if (serviceReport.kpis == null || serviceReport.kpis.length === 0) continue;
 
-		let outreachReportId = outreachReport.id;
+		let serviceReportId = serviceReport.id;
 
-		if (outreachReportId == null) {
-			const createdOutreachReport = await createOutreachReport({
+		if (serviceReportId == null) {
+			const createdServiceReport = await createServiceReport({
 				reportId,
-				outreachId: outreachReport.outreach.id,
+				serviceId: serviceReport.service.id,
 			});
 
-			outreachReportId = createdOutreachReport.id;
+			serviceReportId = createdServiceReport.id;
 		}
 
-		for (const kpi of outreachReport.kpis) {
-			await upsertOutreachKpi({ ...kpi, outreachReportId });
+		for (const kpi of serviceReport.kpis) {
+			await upsertServiceKpi({ ...kpi, serviceReportId });
 		}
 	}
 
 	const report = await getReportComments({ id: reportId });
-	const comments = report?.comments;
-	await updateReportComments({ id: reportId, comments: { ...comments, outreach: comment } });
+	const comments = report?.comments as ReportCommentsSchema | undefined;
+	await updateReportComments({ id: reportId, comments: { ...comments, serviceReports: comment } });
 
-	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/outreach", "page");
+	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/services", "page");
 
 	return {
 		status: "success" as const,

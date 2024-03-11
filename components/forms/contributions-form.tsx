@@ -27,7 +27,7 @@ export async function ContributionsForm(props: ContributionsFormProps): Promise<
 
 	return (
 		<ContributionsFormContent
-			comments={comments}
+			comments={comments?.contributions}
 			contributions={contributions}
 			contributionsCount={contributionsCount}
 			countryId={countryId}

@@ -9,11 +9,11 @@ import { TextAreaField } from "@/components/ui/blocks/text-area-field";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
-import { updatePublications } from "@/lib/actions/publications-form";
+import { updatePublicationsAction } from "@/lib/actions/update-publications";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
 
 interface PublicationsFormContentProps {
-	comments: ReportCommentsSchema | null;
+	comments: ReportCommentsSchema["publications"];
 	publications: Array<{
 		id: string;
 		// title: string;
@@ -28,7 +28,7 @@ interface PublicationsFormContentProps {
 export function PublicationsFormContent(props: PublicationsFormContentProps): ReactNode {
 	const { comments, publications, reportId } = props;
 
-	const [formState, formAction] = useFormState(updatePublications, undefined);
+	const [formState, formAction] = useFormState(updatePublicationsAction, undefined);
 
 	return (
 		<Form
@@ -61,7 +61,7 @@ export function PublicationsFormContent(props: PublicationsFormContentProps): Re
 				</div>
 			)}
 
-			<TextAreaField defaultValue={comments?.publications} label="Comment" name="comment" />
+			<TextAreaField defaultValue={comments} label="Comment" name="comment" />
 
 			<SubmitButton>Submit</SubmitButton>
 

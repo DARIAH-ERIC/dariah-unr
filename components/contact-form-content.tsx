@@ -2,8 +2,8 @@ import type { ReactNode } from "react";
 import { useFormState } from "react-dom";
 
 import { SubmitButton } from "@/components/submit-button";
-import { TextInputField } from "@/components/ui/blocks/text-input-field";
 import { TextAreaField } from "@/components/ui/blocks/text-area-field";
+import { TextInputField } from "@/components/ui/blocks/text-input-field";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";

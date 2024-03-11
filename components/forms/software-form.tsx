@@ -19,7 +19,7 @@ export async function SoftwareForm(props: SoftwareFormProps): Promise<ReactNode>
 
 	return (
 		<SoftwareFormContent
-			comments={comments}
+			comments={comments?.software}
 			countryId={countryId}
 			reportId={reportId}
 			softwares={softwares}

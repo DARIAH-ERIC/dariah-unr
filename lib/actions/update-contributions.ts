@@ -4,13 +4,14 @@ import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
-import { createContribution, updateContributionEndDate } from "@/lib/data/contributions";
+import { createContribution } from "@/lib/data/contributions";
 import {
 	getReportComments,
 	updateReportComments,
 	updateReportContributionsCount,
 } from "@/lib/data/report";
 import { getFormData } from "@/lib/get-form-data";
+import type { ReportCommentsSchema } from "@/lib/schemas/report";
 import { nonEmptyString } from "@/lib/schemas/utils";
 
 const formSchema = z.object({
@@ -28,7 +29,7 @@ const formSchema = z.object({
 	contributionsCount: nonEmptyString(z.coerce.number().int().nonnegative().optional().default(0)),
 	countryId: z.string(),
 	reportId: z.string(),
-	year: z.number(),
+	year: nonEmptyString(z.coerce.number().int().positive()),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -44,7 +45,7 @@ interface FormSuccess {
 
 type FormState = FormErrors | FormSuccess;
 
-export async function updateContributions(
+export async function updateContributionsAction(
 	previousFormState: FormState | undefined,
 	formData: FormData,
 ) {
@@ -72,34 +73,8 @@ export async function updateContributions(
 	}
 
 	const report = await getReportComments({ id: reportId });
-	const comments = report?.comments;
+	const comments = report?.comments as ReportCommentsSchema | undefined;
 	await updateReportComments({ id: reportId, comments: { ...comments, contributions: comment } });
-
-	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/contributions", "page");
-
-	return {
-		status: "success" as const,
-		message: t("success"),
-	};
-}
-
-export async function removeContribution(formData: FormData) {
-	const t = await getTranslations("actions.removeContribution");
-
-	const input = getFormData(formData);
-	const result = removeContributionFormSchema.safeParse(input);
-
-	if (!result.success) {
-		return {
-			status: "error" as const,
-			...result.error.flatten(),
-		};
-	}
-
-	const { id, year } = result.data;
-
-	const endDate = new Date(Date.UTC(year, 11, 1));
-	await updateContributionEndDate({ id, endDate });
 
 	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/contributions", "page");
 

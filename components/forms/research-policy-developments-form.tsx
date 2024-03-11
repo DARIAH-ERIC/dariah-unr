@@ -23,7 +23,7 @@ export async function ResearchPolicyDevelopmentsForm(
 
 	return (
 		<ResearchPolicyDevelopmentsFormContent
-			comments={comments}
+			comments={comments?.researchPolicyDevelopments}
 			previousReportId={previousReportId}
 			previousResearchPolicyDevelopments={previousResearchPolicyDevelopments}
 			reportId={reportId}

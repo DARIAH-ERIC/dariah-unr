@@ -20,7 +20,7 @@ export async function InstitutionsForm(props: InstitutionsFormProps): Promise<Re
 
 	return (
 		<InstitutionsFormContent
-			comments={comments}
+			comments={comments?.institutions}
 			countryId={countryId}
 			institutions={institutions}
 			reportId={reportId}

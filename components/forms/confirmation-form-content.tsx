@@ -8,7 +8,7 @@ import { SubmitButton } from "@/components/submit-button";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
-import { updateReport } from "@/lib/actions/confirmation-form";
+import { updateReportStatusAction } from "@/lib/actions/update-report-status";
 
 interface ConfirmationFormContentProps {
 	reportId: Report["id"];
@@ -17,7 +17,7 @@ interface ConfirmationFormContentProps {
 export function ConfirmationFormContent(props: ConfirmationFormContentProps): ReactNode {
 	const { reportId } = props;
 
-	const [formState, formAction] = useFormState(updateReport, undefined);
+	const [formState, formAction] = useFormState(updateReportStatusAction, undefined);
 
 	return (
 		<Form
