@@ -20,6 +20,7 @@ export async function PublicationsForm(props: PublicationsFormProps): Promise<Re
 
 	const { list } = useFormatter();
 
+	// FIXME: handle fetch errors
 	const collectionsByCountryCode = await getCollectionsByCountryCode();
 	const collection = collectionsByCountryCode.get(countryCode);
 	const items = collection != null ? await getCollectionItems(collection.key) : [];
@@ -62,6 +63,10 @@ export async function PublicationsForm(props: PublicationsFormProps): Promise<Re
 		});
 
 	return (
-		<PublicationsFormContent comments={comments} publications={publications} reportId={reportId} />
+		<PublicationsFormContent
+			comments={comments?.publications}
+			publications={publications}
+			reportId={reportId}
+		/>
 	);
 }

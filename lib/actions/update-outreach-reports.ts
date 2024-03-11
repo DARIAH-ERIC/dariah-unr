@@ -12,6 +12,7 @@ import {
 	upsertOutreachKpi,
 } from "@/lib/data/report";
 import { getFormData } from "@/lib/get-form-data";
+import type { ReportCommentsSchema } from "@/lib/schemas/report";
 import { nonEmptyString } from "@/lib/schemas/utils";
 
 const formSchema = z.object({
@@ -53,7 +54,7 @@ interface FormSuccess {
 
 type FormState = FormErrors | FormSuccess;
 
-export async function updateOutreachReports(
+export async function updateOutreachReportsAction(
 	previousFormState: FormState | undefined,
 	formData: FormData,
 ) {
@@ -90,8 +91,9 @@ export async function updateOutreachReports(
 		}
 	}
 
-	const comments = await getReportComments({ reportId });
-	await updateReportComments({ reportId, comments: { ...comments, outreach: comment } });
+	const report = await getReportComments({ id: reportId });
+	const comments = report?.comments as ReportCommentsSchema | undefined;
+	await updateReportComments({ id: reportId, comments: { ...comments, outreach: comment } });
 
 	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/outreach", "page");
 

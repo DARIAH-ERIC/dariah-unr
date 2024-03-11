@@ -3,33 +3,17 @@ import { string, z } from "zod";
 
 import { nonEmptyString } from "@/lib/schemas/utils";
 
-export const reportCommentsSchema = z
-	.string()
-	.transform((value, context) => {
-		try {
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-			return JSON.parse(value);
-		} catch {
-			context.addIssue({
-				code: z.ZodIssueCode.custom,
-				message: "Invalid JSON",
-			});
-			return z.NEVER;
-		}
-	})
-	.pipe(
-		z.object({
-			contributions: z.string().optional(),
-			eventReport: z.string().optional(),
-			institutions: z.string().optional(),
-			outreachReports: z.string().optional(),
-			projectsFundingLeverages: z.string().optional(),
-			publications: z.string().optional(),
-			researchPolicyDevelopments: z.string().optional(),
-			serviceReports: z.string().optional(),
-			software: z.string().optional(),
-		}),
-	);
+export const reportCommentsSchema = z.object({
+	contributions: z.string().optional(),
+	eventReport: z.string().optional(),
+	institutions: z.string().optional(),
+	outreachReports: z.string().optional(),
+	projectsFundingLeverages: z.string().optional(),
+	publications: z.string().optional(),
+	researchPolicyDevelopments: z.string().optional(),
+	serviceReports: z.string().optional(),
+	software: z.string().optional(),
+});
 
 export type ReportCommentsSchema = z.infer<typeof reportCommentsSchema>;
 

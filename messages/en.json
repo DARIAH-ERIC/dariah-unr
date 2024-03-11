@@ -178,6 +178,9 @@
 			},
 			"success": "Successfully registered."
 		},
+		"updateContributionEndDate": {
+			"success": "Successfully removed contribution."
+		},
 		"updateContributions": {
 			"success": "Successfully updated contributions."
 		},

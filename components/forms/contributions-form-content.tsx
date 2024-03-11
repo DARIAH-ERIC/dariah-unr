@@ -1,7 +1,8 @@
 "use client";
 
 import { groupBy, keyByToMap } from "@acdh-oeaw/lib";
-import type { Country, Person, Prisma, Report, Role } from "@prisma/client";
+import type { Country, Person, Prisma, Report, Role, WorkingGroup } from "@prisma/client";
+import { useListData } from "@react-stately/data";
 import { PlusIcon } from "lucide-react";
 import { Fragment, type ReactNode, useId } from "react";
 import { useFormState } from "react-dom";
@@ -10,6 +11,7 @@ import { SubmitButton } from "@/components/submit-button";
 import { NumberInputField } from "@/components/ui/blocks/number-input-field";
 import { SelectField, SelectItem } from "@/components/ui/blocks/select-field";
 import { TextAreaField } from "@/components/ui/blocks/text-area-field";
+import { TextInputField } from "@/components/ui/blocks/text-input-field";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -24,12 +26,12 @@ import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
 import { Modal, ModalOverlay } from "@/components/ui/modal";
-import { updateContributions } from "@/lib/actions/contributions-form";
+import { updateContributionsAction } from "@/lib/actions/update-contributions";
 import { getFormData } from "@/lib/get-form-data";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
 
 interface ContributionsFormContentProps {
-	comments: ReportCommentsSchema | null;
+	comments: ReportCommentsSchema["contributions"];
 	countryId: Country["id"];
 	contributions: Array<
 		Prisma.ContributionGetPayload<{
@@ -45,6 +47,7 @@ interface ContributionsFormContentProps {
 	reportId: Report["id"];
 	roles: Array<Pick<Role, "id" | "name">>;
 	workingGroups: Array<Pick<Role, "id" | "name">>;
+	year: number;
 }
 
 export function ContributionsFormContent(props: ContributionsFormContentProps): ReactNode {
@@ -57,16 +60,25 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 		reportId,
 		roles,
 		workingGroups,
+		year,
 	} = props;
 
-	const [formState, formAction] = useFormState(updateContributions, undefined);
+	const [formState, formAction] = useFormState(updateContributionsAction, undefined);
 
 	const contributionsByRoleId = groupBy(contributions, (contribution) => {
 		return contribution.roleId;
 	});
 
+	const personsById = keyByToMap(persons, (person) => {
+		return person.id;
+	});
+
 	const rolesById = keyByToMap(roles, (role) => {
 		return role.id;
+	});
+
+	const workingGroupsById = keyByToMap(workingGroups, (workingGroup) => {
+		return workingGroup.id;
 	});
 
 	return (
@@ -79,6 +91,8 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 
 			<input name="reportId" type="hidden" value={reportId} />
 
+			<input name="year" type="hidden" value={year} />
+
 			<section className="grid content-start items-start gap-x-4 gap-y-6 xs:grid-cols-2 md:grid-cols-4">
 				{Object.entries(contributionsByRoleId).map(([roleId, contributions]) => {
 					const role = rolesById.get(roleId);
@@ -86,48 +100,14 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 
 					return (
 						<article key={roleId} className="grid gap-1.5">
-							<h3 className="text-sm font-medium text-neutral-950 dark:text-neutral-0">
-								{role.name}
-							</h3>
-
-							<ul className="grid gap-1 text-sm" role="list">
-								{contributions.map((contribution) => {
-									const workingGroup = contribution.workingGroup?.name;
-
-									return (
-										<li key={contribution.id}>
-											<div>
-												{contribution.person.name}
-												{workingGroup != null ? <span> ({workingGroup})</span> : null}
-											</div>
-											{/* <button>TODO: remove === set endDate</button> */}
-										</li>
-									);
-								})}
-							</ul>
-
-							<div className="my-2">
-								<DialogTrigger>
-									<Button>
-										<PlusIcon aria-hidden={true} className="size-4 shrink-0" />
-										Add
-									</Button>
-
-									<AddContributionFormDialog
-										action={(formData, close) => {
-											const contribution = getFormData(formData) as { _id: string; name: string };
-
-											// TODO:
-											// addedContributions.append(contribution);
-
-											close();
-										}}
-										persons={persons}
-										role={role}
-										workingGroups={workingGroups}
-									/>
-								</DialogTrigger>
-							</div>
+							<ContributionsByRole
+								contributions={contributions}
+								persons={persons}
+								personsById={personsById}
+								role={role}
+								workingGroups={workingGroups}
+								workingGroupsById={workingGroupsById}
+							/>
 						</article>
 					);
 				})}
@@ -139,7 +119,7 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 				name="contributionsCount"
 			/>
 
-			<TextAreaField defaultValue={comments?.contributions} label="Comment" name="comment" />
+			<TextAreaField defaultValue={comments} label="Comment" name="comment" />
 
 			<SubmitButton>Submit</SubmitButton>
 
@@ -156,10 +136,124 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 	);
 }
 
+interface AddedContribution {
+	_id: string;
+	personId: Person["id"];
+	roleId?: Role["id"];
+	workingGroupId?: WorkingGroup["id"];
+}
+
+interface ContributionsByRoleProps {
+	contributions: Array<
+		Prisma.ContributionGetPayload<{
+			include: {
+				person: { select: { id: true; name: true } };
+				role: { select: { id: true; name: true } };
+				workingGroup: { select: { id: true; name: true } };
+			};
+		}>
+	>;
+	persons: Array<Pick<Person, "id" | "name">>;
+	personsById: Map<Person["id"], Pick<Person, "id" | "name">>;
+	role: Pick<Role, "id" | "name">;
+	workingGroups: Array<Pick<Role, "id" | "name">>;
+	workingGroupsById: Map<WorkingGroup["id"], Pick<Role, "id" | "name">>;
+}
+
+function ContributionsByRole(props: ContributionsByRoleProps): ReactNode {
+	const { contributions, persons, personsById, role, workingGroups, workingGroupsById } = props;
+
+	const addedContributions = useListData<AddedContribution>({ initialItems: [] });
+
+	return (
+		<Fragment>
+			<h3 className="text-sm font-medium text-neutral-950 dark:text-neutral-0">{role.name}</h3>
+
+			<ul className="grid gap-y-4" role="list">
+				{contributions.map((contribution) => {
+					const workingGroup = contribution.workingGroup?.name;
+
+					return (
+						<li key={contribution.id}>
+							<TextInputField
+								defaultValue={
+									workingGroup != null
+										? `${contribution.person.name} (${workingGroup})`
+										: contribution.person.name
+								}
+								isReadOnly={true}
+								label="Name"
+							/>
+							{/* <button onPress>TODO: remove === set endDate</button> */}
+						</li>
+					);
+				})}
+			</ul>
+
+			<hr />
+
+			<ul className="grid gap-y-4" role="list">
+				{addedContributions.items.map((contribution, index) => {
+					const { personId, workingGroupId } = contribution;
+					const person = personsById.get(personId);
+					const workingGroup =
+						workingGroupId != null ? workingGroupsById.get(workingGroupId) : null;
+
+					return (
+						<li key={contribution._id}>
+							<input name={`addedContributions.${index}.personId`} type="hidden" value={personId} />
+
+							<input name={`addedContributions.${index}.roleId`} type="hidden" value={role.id} />
+
+							{workingGroupId != null ? (
+								<input
+									name={`addedContributions.${index}.workingGroupId`}
+									type="hidden"
+									value={workingGroupId}
+								/>
+							) : null}
+
+							<TextInputField
+								defaultValue={
+									workingGroup != null ? `${person?.name} (${workingGroup.name})` : person?.name
+								}
+								isReadOnly={true}
+								label="Name"
+							/>
+						</li>
+					);
+				})}
+			</ul>
+
+			<div className="my-2">
+				<DialogTrigger>
+					<Button>
+						<PlusIcon aria-hidden={true} className="size-4 shrink-0" />
+						Add
+					</Button>
+
+					<AddContributionFormDialog
+						action={(formData, close) => {
+							const contribution = getFormData(formData) as AddedContribution;
+
+							addedContributions.append(contribution);
+
+							close();
+						}}
+						persons={persons}
+						role={role}
+						workingGroups={workingGroups}
+					/>
+				</DialogTrigger>
+			</div>
+		</Fragment>
+	);
+}
+
 interface AddContributionFormDialogProps {
 	action: (formData: FormData, close: () => void) => void;
 	persons: Array<Pick<Person, "id" | "name">>;
-	role: Role;
+	role: Pick<Role, "id" | "name">;
 	workingGroups: Array<Pick<Role, "id" | "name">>;
 }
 
@@ -190,7 +284,9 @@ function AddContributionFormDialog(props: AddContributionFormDialogProps): React
 									>
 										<input name="_id" type="hidden" value={crypto.randomUUID()} />
 
-										<SelectField>
+										<input name="roleId" type="hidden" value={role.id} />
+
+										<SelectField isRequired={true} label="Name" name="personId">
 											{persons.map((person) => {
 												return (
 													<SelectItem key={person.name} id={person.id} textValue={person.name}>
@@ -201,7 +297,7 @@ function AddContributionFormDialog(props: AddContributionFormDialogProps): React
 										</SelectField>
 
 										{role.name === "WG chair" ? (
-											<SelectField>
+											<SelectField isRequired={true} label="Working Group" name="workingGroupId">
 												{workingGroups.map((workingGroup) => {
 													return (
 														<SelectItem

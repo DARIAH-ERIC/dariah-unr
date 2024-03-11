@@ -33,7 +33,6 @@ async function ingest() {
 		/** Additional lookup maps. */
 		reports: {
 			2022: new Map<string, string>(),
-			2023: new Map<string, string>(),
 		},
 		serviceSizes: new Map<string, string>(),
 	};
@@ -269,7 +268,6 @@ async function ingest() {
 		const record = await db.contribution.create({
 			data: {
 				endDate: getIsoDate(row["end date"]),
-				name: row.contributor[0]?.value,
 				startDate: getIsoDate(row["start date"]),
 				country: country ? { connect: { id: country } } : undefined,
 				person: { connect: { id: person } },
@@ -281,7 +279,7 @@ async function ingest() {
 	}
 
 	/** Reports. */
-	const years = [2022, 2023] as const;
+	const years = [2022] as const;
 	for (const year of years) {
 		for (const [tableId, id] of ids.countries) {
 			const record = await db.report.create({
@@ -298,7 +296,7 @@ async function ingest() {
 	const eventReports = baserow.get("Events");
 	for (const _row of eventReports?.rows ?? []) {
 		const row = _row as any;
-		const year = Number(row.Year.value) as 2022 | 2023;
+		const year = Number(row.Year.value) as 2022;
 		const report = ids.reports[year].get(row.Country[0].id);
 		await db.eventReport.create({
 			data: {
@@ -315,9 +313,8 @@ async function ingest() {
 	const outreachReports = baserow.get("WebsiteSocialYearKPI");
 	for (const _row of outreachReports?.rows ?? []) {
 		const row = _row as any;
-		// TODO: discuss what to do with report data without year
 		if (row.Year == null) continue;
-		const year = Number(row.Year.value) as 2022 | 2023;
+		const year = Number(row.Year.value) as 2022;
 		const report = ids.reports[year].get(row.Country[0].ids.database_table_2607);
 		const outreach = ids.outreach.get(row["Website or Media"][0].id);
 		const record = await db.outreachReport.create({
@@ -391,7 +388,7 @@ async function ingest() {
 	const projectsFundingLeverages = baserow.get("Projects Funding Leverage");
 	for (const _row of projectsFundingLeverages?.rows ?? []) {
 		const row = _row as any;
-		const year = Number(row.Year.value) as 2022 | 2023;
+		const year = Number(row.Year.value) as 2022;
 		const report = ids.reports[year].get(row.Country[0].id);
 		await db.projectsFundingLeverage.create({
 			data: {
@@ -410,7 +407,7 @@ async function ingest() {
 	const researchPolicyDevelopments = baserow.get("Research Policy Developments");
 	for (const _row of researchPolicyDevelopments?.rows ?? []) {
 		const row = _row as any;
-		const year = Number(row.Year.value) as 2022 | 2023;
+		const year = Number(row.Year.value) as 2022;
 		const report = ids.reports[year].get(row.Country[0].id);
 		await db.researchPolicyDevelopment.create({
 			data: {
@@ -425,7 +422,7 @@ async function ingest() {
 	const serviceReports = baserow.get("ServiceYearKPI");
 	for (const _row of serviceReports?.rows ?? []) {
 		const row = _row as any;
-		const year = Number(row.Year) as 2022 | 2023;
+		const year = Number(row.Year) as 2022;
 		const report = ids.reports[year].get(row.Country[0].ids.database_table_2607);
 		const service = ids.services.get(row.Service[0].id);
 		const record = await db.serviceReport.create({

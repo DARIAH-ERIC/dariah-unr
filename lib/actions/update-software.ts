@@ -7,7 +7,11 @@ import { z } from "zod";
 import { getReportComments, updateReportComments } from "@/lib/data/report";
 import { createSoftware, updateSoftwareStatus } from "@/lib/data/software";
 import { getFormData } from "@/lib/get-form-data";
-import { softwareSchema, softwareStatusSchema } from "@/lib/schemas/report";
+import {
+	type ReportCommentsSchema,
+	softwareSchema,
+	softwareStatusSchema,
+} from "@/lib/schemas/report";
 
 const formSchema = z.object({
 	addedSoftware: z.array(softwareSchema).optional().default([]),
@@ -30,7 +34,10 @@ interface FormSuccess {
 
 type FormState = FormErrors | FormSuccess;
 
-export async function updateSoftware(previousFormState: FormState | undefined, formData: FormData) {
+export async function updateSoftwareAction(
+	previousFormState: FormState | undefined,
+	formData: FormData,
+) {
 	const t = await getTranslations("actions.updateSoftware");
 
 	const input = getFormData(formData);
@@ -54,8 +61,9 @@ export async function updateSoftware(previousFormState: FormState | undefined, f
 		await createSoftware({ ...software, countryId });
 	}
 
-	const comments = await getReportComments({ reportId });
-	await updateReportComments({ reportId, comments: { ...comments, software: comment } });
+	const report = await getReportComments({ id: reportId });
+	const comments = report?.comments as ReportCommentsSchema | undefined;
+	await updateReportComments({ id: reportId, comments: { ...comments, software: comment } });
 
 	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/software", "page");
 

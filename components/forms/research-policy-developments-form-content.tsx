@@ -10,7 +10,7 @@ import { TextAreaField } from "@/components/ui/blocks/text-area-field";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
-import { updateResearchPolicyDevelopments } from "@/lib/actions/research-policy-developments-form";
+import { updateResearchPolicyDevelopmentsAction } from "@/lib/actions/update-research-policy-developments";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
 
 interface AddedResearchPolicyDevelopment {
@@ -19,7 +19,7 @@ interface AddedResearchPolicyDevelopment {
 }
 
 interface ResearchPolicyDevelopmentsFormContentProps {
-	comments: ReportCommentsSchema | null;
+	comments: ReportCommentsSchema["researchPolicyDevelopments"];
 	previousReportId: Report["id"] | undefined;
 	previousResearchPolicyDevelopments: Array<ResearchPolicyDevelopment> | null;
 	reportId: Report["id"];
@@ -37,7 +37,7 @@ export function ResearchPolicyDevelopmentsFormContent(
 		researchPolicyDevelopments,
 	} = props;
 
-	const [formState, formAction] = useFormState(updateResearchPolicyDevelopments, undefined);
+	const [formState, formAction] = useFormState(updateResearchPolicyDevelopmentsAction, undefined);
 
 	const addedResearchPolicyDevelopments = useListData<AddedResearchPolicyDevelopment>({
 		initialItems: [],
@@ -71,11 +71,7 @@ export function ResearchPolicyDevelopmentsFormContent(
 				researchPolicyDevelopments={addedResearchPolicyDevelopments}
 			/>
 
-			<TextAreaField
-				defaultValue={comments?.researchPolicyDevelopments}
-				label="Comment"
-				name="comment"
-			/>
+			<TextAreaField defaultValue={comments} label="Comment" name="comment" />
 
 			<SubmitButton>Submit</SubmitButton>
 

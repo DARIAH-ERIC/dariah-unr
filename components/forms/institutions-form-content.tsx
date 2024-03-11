@@ -25,7 +25,7 @@ import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
 import { Modal, ModalOverlay } from "@/components/ui/modal";
-import { updateInstitutions } from "@/lib/actions/institutions-form";
+import { updateInstitutionsAction } from "@/lib/actions/update-institutions";
 import { getFormData } from "@/lib/get-form-data";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
 
@@ -35,7 +35,7 @@ interface AddedInstitution {
 }
 
 interface InstitutionsFormContentProps {
-	comments: ReportCommentsSchema | null;
+	comments: ReportCommentsSchema["institutions"];
 	countryId: Country["id"];
 	institutions: Array<Institution>;
 	reportId: Report["id"];
@@ -45,7 +45,7 @@ interface InstitutionsFormContentProps {
 export function InstitutionsFormContent(props: InstitutionsFormContentProps): ReactNode {
 	const { comments, countryId, institutions, reportId, year } = props;
 
-	const [formState, formAction] = useFormState(updateInstitutions, undefined);
+	const [formState, formAction] = useFormState(updateInstitutionsAction, undefined);
 
 	const addedInstitutions = useListData<AddedInstitution>({
 		initialItems: [],
@@ -115,7 +115,7 @@ export function InstitutionsFormContent(props: InstitutionsFormContentProps): Re
 
 			<AddedInstitutionsSection institutions={addedInstitutions} />
 
-			<TextAreaField defaultValue={comments?.institutions} label="Comment" name="comment" />
+			<TextAreaField defaultValue={comments} label="Comment" name="comment" />
 
 			<SubmitButton>Submit</SubmitButton>
 

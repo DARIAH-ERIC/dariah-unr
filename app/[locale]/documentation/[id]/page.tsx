@@ -7,6 +7,7 @@ import { DraftModeToggle } from "@/components/draft-mode-toggle";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import type { Locale } from "@/config/i18n.config";
+import { getDocumentationContent } from "@/lib/content/mdx";
 import { reader } from "@/lib/content/reader";
 
 interface DocumentationPageProps {
@@ -76,10 +77,7 @@ async function DocumentationPageContent(props: DocumentationPageContentProps): P
 	const document = await reader().collections.documentation.read(id);
 	if (document == null) notFound();
 
-	// TODO:
-	// const content = await document.content();
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-	const { default: Content } = await import(`@/content/documentation/${id}.mdx`);
+	const { Content } = await getDocumentationContent(id);
 
 	return (
 		<div className="prose prose-sm mx-auto w-full">

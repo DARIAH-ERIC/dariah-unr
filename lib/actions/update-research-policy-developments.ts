@@ -4,8 +4,9 @@ import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
-import { getReportComments, updateReportComments, updateReportStatus } from "@/lib/data/report";
+import { getReportComments, updateReportComments } from "@/lib/data/report";
 import { getFormData } from "@/lib/get-form-data";
+import type { ReportCommentsSchema } from "@/lib/schemas/report";
 
 const formSchema = z.object({
 	comment: z.string().optional(),
@@ -25,8 +26,11 @@ interface FormSuccess {
 
 type FormState = FormErrors | FormSuccess;
 
-export async function updateReport(previousFormState: FormState | undefined, formData: FormData) {
-	const t = await getTranslations("actions.updateReport");
+export async function updateResearchPolicyDevelopmentsAction(
+	previousFormState: FormState | undefined,
+	formData: FormData,
+) {
+	const t = await getTranslations("actions.updateResearchPolicyDevelopments");
 
 	const input = getFormData(formData);
 	const result = formSchema.safeParse(input);
@@ -40,12 +44,17 @@ export async function updateReport(previousFormState: FormState | undefined, for
 
 	const { comment, reportId } = result.data;
 
-	const comments = await getReportComments({ reportId });
-	await updateReportComments({ reportId, comments: { ...comments, confirmation: comment } });
+	const report = await getReportComments({ id: reportId });
+	const comments = report?.comments as ReportCommentsSchema | undefined;
+	await updateReportComments({
+		id: reportId,
+		comments: { ...comments, researchPolicyDevelopments: comment },
+	});
 
-	await updateReportStatus({ id: reportId });
-
-	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/confirm", "page");
+	revalidatePath(
+		"/[locale]/dashboard/reports/[year]/countries/[code]/edit/research-policy-developments",
+		"page",
+	);
 
 	return {
 		status: "success" as const,

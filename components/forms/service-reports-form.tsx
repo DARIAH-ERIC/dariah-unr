@@ -26,7 +26,7 @@ export async function ServiceReportsForm(props: ServiceReportsFormProps): Promis
 
 	return (
 		<ServiceReportsFormContent
-			comments={comments}
+			comments={comments?.serviceReports}
 			countryId={countryId}
 			previousReportId={previousReportId}
 			previousServiceReports={previousServiceReports}

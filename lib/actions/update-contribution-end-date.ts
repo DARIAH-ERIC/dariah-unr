@@ -4,14 +4,13 @@ import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
-import { getReportComments, updateReportComments } from "@/lib/data/report";
+import { updateContributionEndDate } from "@/lib/data/contributions";
 import { getFormData } from "@/lib/get-form-data";
 import { nonEmptyString } from "@/lib/schemas/utils";
 
 const formSchema = z.object({
-	comment: z.string().optional(),
-	contributionsCount: nonEmptyString(z.coerce.number().int().nonnegative().optional()),
-	reportId: z.string(),
+	id: z.string().min(1),
+	year: nonEmptyString(z.coerce.number().int().positive()),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -27,11 +26,11 @@ interface FormSuccess {
 
 type FormState = FormErrors | FormSuccess;
 
-export async function updateContributions(
+export async function updateContributionEndDateAction(
 	previousFormState: FormState | undefined,
 	formData: FormData,
 ) {
-	const t = await getTranslations("actions.updateContributions");
+	const t = await getTranslations("actions.updateContributionEndDate");
 
 	const input = getFormData(formData);
 	const result = formSchema.safeParse(input);
@@ -43,12 +42,10 @@ export async function updateContributions(
 		};
 	}
 
-	const { comment, reportId } = result.data;
+	const { id, year } = result.data;
 
-	// TODO:
-
-	const comments = await getReportComments({ reportId });
-	await updateReportComments({ reportId, comments: { ...comments, contributions: comment } });
+	const endDate = new Date(Date.UTC(year, 11, 1));
+	await updateContributionEndDate({ id, endDate });
 
 	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/contributions", "page");
 

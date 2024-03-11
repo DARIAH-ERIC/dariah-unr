@@ -22,6 +22,10 @@ const basePlugin = createPlugin(({ addBase }) => {
 
 const config = {
 	content: ["./@(app|components|config|lib|styles)/**/*.@(css|ts|tsx)", "./content/**/*.@(md|mdx)"],
+	darkMode: [
+		"variant",
+		[":where(.kui-theme.kui-scheme--dark) &", ':where([data-ui-color-scheme="dark"]) &'],
+	],
 	plugins: [reactAriaComponentsPlugin, basePlugin],
 	presets: [designTokensPreset],
 	theme: {

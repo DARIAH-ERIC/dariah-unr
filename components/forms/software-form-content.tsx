@@ -25,7 +25,7 @@ import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
 import { Modal, ModalOverlay } from "@/components/ui/modal";
-import { updateSoftware } from "@/lib/actions/software-form";
+import { updateSoftwareAction } from "@/lib/actions/update-software";
 import { getFormData } from "@/lib/get-form-data";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
 
@@ -36,7 +36,7 @@ interface AddedSoftware {
 }
 
 interface SoftwareFormContentProps {
-	comments: ReportCommentsSchema | null;
+	comments: ReportCommentsSchema["software"];
 	countryId: Country["id"];
 	reportId: Report["id"];
 	softwares: Array<Software>;
@@ -47,7 +47,7 @@ export function SoftwareFormContent(props: SoftwareFormContentProps): ReactNode 
 
 	const softwareStatuses = Object.values(SoftwareStatus);
 
-	const [formState, formAction] = useFormState(updateSoftware, undefined);
+	const [formState, formAction] = useFormState(updateSoftwareAction, undefined);
 
 	const addedSoftware = useListData<AddedSoftware>({
 		initialItems: [],
@@ -123,7 +123,7 @@ export function SoftwareFormContent(props: SoftwareFormContentProps): ReactNode 
 
 			<AddedSoftwareSection softwares={addedSoftware} />
 
-			<TextAreaField defaultValue={comments?.software} label="Comment" name="comment" />
+			<TextAreaField defaultValue={comments} label="Comment" name="comment" />
 
 			<SubmitButton>Submit</SubmitButton>
 

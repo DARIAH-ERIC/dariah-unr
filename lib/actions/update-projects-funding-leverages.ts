@@ -11,6 +11,7 @@ import {
 	updateReportComments,
 } from "@/lib/data/report";
 import { getFormData } from "@/lib/get-form-data";
+import type { ReportCommentsSchema } from "@/lib/schemas/report";
 
 const formSchema = z.object({
 	addedProjectsFundingLeverages: z
@@ -48,7 +49,7 @@ interface FormSuccess {
 
 type FormState = FormErrors | FormSuccess;
 
-export async function updateProjectsFundingLeverages(
+export async function updateProjectsFundingLeveragesAction(
 	previousFormState: FormState | undefined,
 	formData: FormData,
 ) {
@@ -75,9 +76,10 @@ export async function updateProjectsFundingLeverages(
 		await createProjectFundingLeverage({ ...projectsFundingLeverage, reportId });
 	}
 
-	const comments = await getReportComments({ reportId });
+	const report = await getReportComments({ id: reportId });
+	const comments = report?.comments as ReportCommentsSchema | undefined;
 	await updateReportComments({
-		reportId,
+		id: reportId,
 		comments: { ...comments, projectFundingLeverages: comment },
 	});
 

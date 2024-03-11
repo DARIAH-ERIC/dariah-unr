@@ -179,7 +179,6 @@ export function getServiceReports(params: GetServiceReportsParams) {
 }
 
 interface UpsertEventReportParams {
-	attendees?: EventReport["attendees"];
 	dariahCommissionedEvent?: EventReport["dariahCommissionedEvent"];
 	eventReportId: EventReport["id"] | undefined;
 	largeMeetings?: EventReport["largeMeetings"];
@@ -375,15 +374,15 @@ export function createProjectFundingLeverage(params: CreateProjectFundingLeverag
 }
 
 interface GetReportCommentsParams {
-	reportId: Report["id"];
+	id: Report["id"];
 }
 
 export function getReportComments(params: GetReportCommentsParams) {
-	const { reportId } = params;
+	const { id } = params;
 
 	return db.report.findUnique({
 		where: {
-			id: reportId,
+			id,
 		},
 		select: {
 			comments: true,
@@ -393,18 +392,36 @@ export function getReportComments(params: GetReportCommentsParams) {
 
 interface UpdateReportCommentsParams {
 	comments: Prisma.ReportUpdateInput["comments"];
-	reportId: Report["id"];
+	id: Report["id"];
 }
 
 export function updateReportComments(params: UpdateReportCommentsParams) {
-	const { comments, reportId } = params;
+	const { comments, id } = params;
 
 	return db.report.update({
 		where: {
-			id: reportId,
+			id,
 		},
 		data: {
 			comments,
+		},
+	});
+}
+
+interface UpdateReportContributionsCountParams {
+	contributionsCount: Report["contributionsCount"];
+	id: Report["id"];
+}
+
+export function updateReportContributionsCount(params: UpdateReportContributionsCountParams) {
+	const { contributionsCount, id } = params;
+
+	return db.report.update({
+		where: {
+			id,
+		},
+		data: {
+			contributionsCount,
 		},
 	});
 }
