@@ -57,19 +57,19 @@ dependencies:
     specifier: ^3.3.2
     version: 3.3.2
   lucide-react:
-    specifier: ^0.350.0
-    version: 0.350.0(react@18.2.0)
+    specifier: ^0.354.0
+    version: 0.354.0(react@18.2.0)
   next:
-    specifier: ^14.2.0-canary.12
+    specifier: ^14.2.0-canary.13
     version: 14.2.0-canary.13(react-dom@18.2.0)(react@18.2.0)
   next-auth:
     specifier: ^5.0.0-beta.15
     version: 5.0.0-beta.15(next@14.2.0-canary.13)(nodemailer@6.9.12)(react@18.2.0)
   next-intl:
-    specifier: ^3.9.3
-    version: 3.9.3(next@14.2.0-canary.13)(react@18.2.0)
+    specifier: ^3.9.4
+    version: 3.9.4(next@14.2.0-canary.13)(react@18.2.0)
   nodemailer:
-    specifier: ^6.9.11
+    specifier: ^6.9.12
     version: 6.9.12
   react:
     specifier: ^18.2.0
@@ -137,13 +137,13 @@ devDependencies:
     specifier: ^3.0.1
     version: 3.0.1(webpack@5.90.2)
   '@next/bundle-analyzer':
-    specifier: ^14.2.0-canary.12
+    specifier: ^14.2.0-canary.13
     version: 14.2.0-canary.13
   '@next/eslint-plugin-next':
-    specifier: ^14.2.0-canary.12
+    specifier: ^14.2.0-canary.13
     version: 14.2.0-canary.13
   '@next/mdx':
-    specifier: ^14.2.0-canary.12
+    specifier: ^14.2.0-canary.13
     version: 14.2.0-canary.13(@mdx-js/loader@3.0.1)
   '@playwright/test':
     specifier: ^1.42.1
@@ -194,8 +194,8 @@ devDependencies:
     specifier: ^16.4.5
     version: 16.4.5
   dotenv-cli:
-    specifier: ^7.4.0
-    version: 7.4.0
+    specifier: ^7.4.1
+    version: 7.4.1
   dotenv-expand:
     specifier: ^11.0.6
     version: 11.0.6
@@ -203,8 +203,8 @@ devDependencies:
     specifier: ^8.57.0
     version: 8.57.0
   eslint-plugin-tailwindcss:
-    specifier: ^3.14.3
-    version: 3.14.3(tailwindcss@3.4.1)
+    specifier: ^3.15.0
+    version: 3.15.0(tailwindcss@3.4.1)
   is-ci:
     specifier: ^3.0.1
     version: 3.0.1
@@ -4941,8 +4941,8 @@ packages:
       is-obj: 2.0.0
     dev: true
 
-  /dotenv-cli@7.4.0:
-    resolution: {integrity: sha512-fZGFOGCC5rEz1OJ0Pp+1LN8y78ClMcyXDmBEmjvJwqCqZVsPHcQ85bLCh5hZ4Bqotw4dptXOLvvw0vxm2MD30g==}
+  /dotenv-cli@7.4.1:
+    resolution: {integrity: sha512-fE1aywjRrWGxV3miaiUr3d2zC/VAiuzEGghi+QzgIA9fEf/M5hLMaRSXb4IxbUAwGmaLi0IozdZddnVU96acag==}
     hasBin: true
     dependencies:
       cross-spawn: 7.0.3
@@ -5359,8 +5359,8 @@ packages:
       eslint: 8.57.0
     dev: true
 
-  /eslint-plugin-tailwindcss@3.14.3(tailwindcss@3.4.1):
-    resolution: {integrity: sha512-1MKT8CrVuqVJleHxb7ICHsF2QwO0G+VJ28athTtlcOkccp0qmwK7nCUa1C9paCZ+VVgQU4fonsjLz/wUxoMHJQ==}
+  /eslint-plugin-tailwindcss@3.15.0(tailwindcss@3.4.1):
+    resolution: {integrity: sha512-mRs8OGJMxkCl8cD0wGjr9NbcRYJCN3D1TfgmIGb1L+3opqYyTT1jjVau1s6SUdVJqci3EfbxG60TJQtgqfEtTw==}
     engines: {node: '>=12.13.0'}
     peerDependencies:
       tailwindcss: ^3.4.0
@@ -6719,8 +6719,8 @@ packages:
     engines: {node: '>=12'}
     dev: false
 
-  /lucide-react@0.350.0(react@18.2.0):
-    resolution: {integrity: sha512-5IZVKsxxG8Nn81gpsz4XLNgCAXkppCh0Y0P0GLO39h5iVD2WEaB9of6cPkLtzys1GuSfxJxmwsDh487y7LAf/g==}
+  /lucide-react@0.354.0(react@18.2.0):
+    resolution: {integrity: sha512-qI0x/hhcuHieaUUxFejesm5T/ditszQ2x1gUkqKnTMZRAOdxT2nGzbOFYrhc0wRjuA2MN1o5JCrcRPYcHH3l8A==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0
     dependencies:
@@ -7440,8 +7440,8 @@ packages:
       react: 18.2.0
     dev: false
 
-  /next-intl@3.9.3(next@14.2.0-canary.13)(react@18.2.0):
-    resolution: {integrity: sha512-O7LQlL4dUai019Jp8pkMB0LUw8gwhvBlUe82zaNwEWADeIEpRTWWbyEmNkQ5sqk3EgEWoMcVlF/b+Y+n/MRCmg==}
+  /next-intl@3.9.4(next@14.2.0-canary.13)(react@18.2.0):
+    resolution: {integrity: sha512-ktm7tKgD35GY08HrCbuTFdgaLFNykUB1EOef4JPUo63E7qDShBx8bD+A4HYjs/Y/zoq4K5IPyG03Thj+lKmymg==}
     peerDependencies:
       next: ^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0.0 || ^14.0.0
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -7450,7 +7450,7 @@ packages:
       negotiator: 0.6.3
       next: 14.2.0-canary.13(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
-      use-intl: 3.9.3(react@18.2.0)
+      use-intl: 3.9.4(react@18.2.0)
     dev: false
 
   /next@14.2.0-canary.13(react-dom@18.2.0)(react@18.2.0):
@@ -9626,8 +9626,8 @@ packages:
       - graphql
     dev: false
 
-  /use-intl@3.9.3(react@18.2.0):
-    resolution: {integrity: sha512-M022G+p3nW6P1edJvYDYmV353OI+rlvwjupjuXkX6/sjoareG5fvlUfLXkHXO3f6Gzit1ReZAAlnW50eOFLYfg==}
+  /use-intl@3.9.4(react@18.2.0):
+    resolution: {integrity: sha512-z53WpHqVMnIV23YO92nUhXePjPk18VIYQayMQbPYe7wPEau7IhXcZqWLC5xrzpj7HORKzwmHDOzDQ6X09BbsTA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
