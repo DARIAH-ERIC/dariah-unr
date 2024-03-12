@@ -50,7 +50,27 @@ export default function DashboardPage(props: DashboardPageProps): ReactNode {
 	return (
 		<MainContent className="container grid content-start gap-y-4 py-8">
 			<PageTitle>{t("title")}</PageTitle>
-			<PageLeadIn>{t("lead-in")}</PageLeadIn>
+			{/* <PageLeadIn>{t("lead-in")}</PageLeadIn> */}
+			<PageLeadIn>
+				<p>
+					Welcome to the DARIAH National Coordinator Dashboard! This is where you will complete your
+					annual reporting for the Unified National Reports. The information requested is the same
+					as previous years, and this new format will allow us to create a better integration of
+					data from one year to the next.
+				</p>
+
+				<p>
+					You may complete the UNR over several sessions, just make sure to save. As well, multiple
+					users can be logged in and contribute, though please keep in mind that there is no dynamic
+					saving here - if two of your staff members are working simultaneously, the most recent
+					save will overwrite the other.
+				</p>
+
+				<p>
+					If at any point you have questions, don&apos;t hesitate to reach out to your DCO helper or
+					the UNR email alias.
+				</p>
+			</PageLeadIn>
 
 			<DashboardPageContent />
 		</MainContent>
