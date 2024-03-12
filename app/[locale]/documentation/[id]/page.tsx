@@ -70,8 +70,7 @@ interface DocumentationPageContentProps {
 	locale: Locale;
 }
 
-// @ts-expect-error Upstream type issue.
-async function DocumentationPageContent(props: DocumentationPageContentProps): Promise<ReactNode> {
+async function DocumentationPageContent(props: DocumentationPageContentProps) {
 	const { id, locale } = props;
 
 	const document = await reader().collections.documentation.read(id);

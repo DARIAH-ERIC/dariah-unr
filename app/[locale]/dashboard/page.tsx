@@ -61,8 +61,7 @@ export default function DashboardPage(props: DashboardPageProps): ReactNode {
 	);
 }
 
-// @ts-expect-error Upstream type issue.
-export async function DashboardPageContent(): Promise<ReactNode> {
+export async function DashboardPageContent() {
 	const t = await getTranslations("DashboardPageContent");
 
 	const user = await getCurrentUser();

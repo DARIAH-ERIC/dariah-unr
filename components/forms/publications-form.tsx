@@ -14,8 +14,7 @@ interface PublicationsFormProps {
 	year: number;
 }
 
-// @ts-expect-error Upstream type issue.
-export async function PublicationsForm(props: PublicationsFormProps): Promise<ReactNode> {
+export async function PublicationsForm(props: PublicationsFormProps) {
 	const { comments, countryCode, reportId, year } = props;
 
 	const { list } = useFormatter();

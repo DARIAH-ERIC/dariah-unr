@@ -82,6 +82,7 @@ model Country {
 }
 
 enum EventSizeType {
+  dariah_commissioned
   large
   medium
   small
@@ -306,7 +307,7 @@ model Report {
   comments                 Json?
   contributionsCount       Int?
   operationalCost          Int?
-  operationalCostDetail    String?
+  operationalCostDetail    Json?
   operationalCostThreshold Int?
   status                   ReportStatus @default(draft)
   year                     Int

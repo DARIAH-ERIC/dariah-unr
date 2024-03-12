@@ -13,8 +13,7 @@ interface OutreachReportsFormProps {
 	reportId: Report["id"];
 }
 
-// @ts-expect-error Upstream type issue.
-export async function OutreachReportsForm(props: OutreachReportsFormProps): Promise<ReactNode> {
+export async function OutreachReportsForm(props: OutreachReportsFormProps) {
 	const { comments, countryId, previousReportId, reportId } = props;
 
 	const outreachs = await getOutreachByCountry({ countryId });

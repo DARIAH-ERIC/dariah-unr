@@ -79,10 +79,7 @@ interface DashboardCountryReportPageContentProps {
 	year: number;
 }
 
-// @ts-expect-error Upstream type issue.
-async function DashboardCountryReportPageContent(
-	props: DashboardCountryReportPageContentProps,
-): Promise<ReactNode> {
+async function DashboardCountryReportPageContent(props: DashboardCountryReportPageContentProps) {
 	const { code, year } = props;
 
 	const user = await getCurrentUser();

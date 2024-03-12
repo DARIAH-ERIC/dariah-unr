@@ -4,12 +4,19 @@ import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
-import { getReportComments, updateReportComments, updateReportStatus } from "@/lib/data/report";
+import { calculateOperationalCost } from "@/lib/calculate-operational-cost";
+import {
+	getReportComments,
+	updateReportCalculation,
+	updateReportComments,
+	updateReportStatus,
+} from "@/lib/data/report";
 import { getFormData } from "@/lib/get-form-data";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
 
 const formSchema = z.object({
 	comment: z.string().optional(),
+	countryId: z.string(),
 	reportId: z.string(),
 });
 
@@ -42,13 +49,21 @@ export async function updateReportStatusAction(
 		};
 	}
 
-	const { comment, reportId } = result.data;
+	const { comment, countryId, reportId } = result.data;
 
 	const report = await getReportComments({ id: reportId });
 	const comments = report?.comments as ReportCommentsSchema | undefined;
 	await updateReportComments({ id: reportId, comments: { ...comments, confirmation: comment } });
 
 	await updateReportStatus({ id: reportId });
+
+	const calculation = await calculateOperationalCost({ countryId, reportId });
+	await updateReportCalculation({
+		id: reportId,
+		operationalCost: calculation.operationalCost,
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
+		operationalCostDetail: calculation as any,
+	});
 
 	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/confirm", "page");
 

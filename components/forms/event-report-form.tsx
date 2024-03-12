@@ -11,8 +11,7 @@ interface EventReportFormProps {
 	reportId: Report["id"];
 }
 
-// @ts-expect-error Upstream type issue.
-export async function EventReportForm(props: EventReportFormProps): Promise<ReactNode> {
+export async function EventReportForm(props: EventReportFormProps) {
 	const { comments, previousReportId, reportId } = props;
 
 	const eventReport = await getEventReport({ reportId });

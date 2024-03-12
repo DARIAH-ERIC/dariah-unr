@@ -1,6 +1,6 @@
 "use client";
 
-import type { Report } from "@prisma/client";
+import type { Country, Report } from "@prisma/client";
 import type { ReactNode } from "react";
 import { useFormState } from "react-dom";
 
@@ -11,11 +11,12 @@ import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success"
 import { updateReportStatusAction } from "@/lib/actions/update-report-status";
 
 interface ConfirmationFormContentProps {
+	countryId: Country["id"];
 	reportId: Report["id"];
 }
 
 export function ConfirmationFormContent(props: ConfirmationFormContentProps): ReactNode {
-	const { reportId } = props;
+	const { countryId, reportId } = props;
 
 	const [formState, formAction] = useFormState(updateReportStatusAction, undefined);
 
@@ -25,6 +26,8 @@ export function ConfirmationFormContent(props: ConfirmationFormContentProps): Re
 			className="grid gap-y-6"
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
+			<input name="countryId" type="hidden" value={countryId} />
+
 			<input name="reportId" type="hidden" value={reportId} />
 
 			<SubmitButton>Submit</SubmitButton>

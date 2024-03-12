@@ -5,8 +5,7 @@ import { AuthSignInButton } from "@/components/auth-sign-in-button";
 import { AuthUserMenu } from "@/components/auth-user-menu";
 import { getCurrentUser } from "@/lib/auth/session";
 
-// @ts-expect-error Upstream type issue.
-export async function AuthControls(): Promise<ReactNode> {
+export async function AuthControls() {
 	const user = await getCurrentUser();
 
 	const t = await getTranslations("AuthControls");

@@ -25,8 +25,7 @@ export async function generateMetadata(
 	return metadata;
 }
 
-// @ts-expect-error Upstream type issue.
-export default async function NotFoundPage(): Promise<ReactNode> {
+export default async function NotFoundPage() {
 	const t = await getTranslations({ locale: defaultLocale, namespace: "NotFoundPage" });
 
 	return (

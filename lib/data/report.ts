@@ -462,3 +462,23 @@ export function getOutreachTypeValues() {
 		},
 	});
 }
+
+interface UpdateReportCalculationParams {
+	id: Report["id"];
+	operationalCost: Report["operationalCost"];
+	operationalCostDetail: Prisma.ReportUpdateInput["operationalCostDetail"];
+}
+
+export function updateReportCalculation(params: UpdateReportCalculationParams) {
+	const { id, operationalCost, operationalCostDetail } = params;
+
+	return db.report.update({
+		where: {
+			id,
+		},
+		data: {
+			operationalCost,
+			operationalCostDetail,
+		},
+	});
+}

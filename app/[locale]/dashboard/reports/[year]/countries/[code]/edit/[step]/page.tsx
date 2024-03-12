@@ -134,7 +134,7 @@ async function DashboardCountryReportEditStepPageContent(
 						tempor labore.
 					</FormDescription>
 
-					<ConfirmationForm reportId={report.id} />
+					<ConfirmationForm countryId={country.id} reportId={report.id} />
 
 					<Navigation code={code} next="summary" previous="project-funding-leverage" year={year} />
 				</section>

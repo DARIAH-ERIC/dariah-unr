@@ -168,7 +168,7 @@ Table reports {
   comments Json
   contributionsCount Int
   operationalCost Int
-  operationalCostDetail String
+  operationalCostDetail Json
   operationalCostThreshold Int
   status ReportStatus [not null, default: 'draft']
   year Int [not null]
@@ -352,6 +352,7 @@ Enum CountryType {
 }
 
 Enum EventSizeType {
+  dariah_commissioned
   large
   medium
   small
