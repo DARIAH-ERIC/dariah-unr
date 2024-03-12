@@ -1,5 +1,4 @@
 import type { Country, Report } from "@prisma/client";
-import type { ReactNode } from "react";
 
 import { OutreachReportsFormContent } from "@/components/forms/outreach-reports-form-content";
 import { getOutreachByCountry } from "@/lib/data/outreach";

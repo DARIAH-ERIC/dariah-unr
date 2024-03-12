@@ -1,5 +1,4 @@
 import { getTranslations } from "next-intl/server";
-import type { ReactNode } from "react";
 
 import { AuthSignInButton } from "@/components/auth-sign-in-button";
 import { AuthUserMenu } from "@/components/auth-user-menu";

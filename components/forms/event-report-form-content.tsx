@@ -23,7 +23,13 @@ interface EventReportFormContentProps {
 }
 
 export function EventReportFormContent(props: EventReportFormContentProps): ReactNode {
-	const { comments, eventReport, previousEventReport, previousReportId, reportId } = props;
+	const {
+		comments,
+		eventReport,
+		// previousEventReport,
+		// previousReportId,
+		reportId,
+	} = props;
 
 	const [formState, formAction] = useFormState(updateEventReportAction, undefined);
 

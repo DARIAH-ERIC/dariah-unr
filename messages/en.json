@@ -2,7 +2,9 @@
 	"AppFooter": {
 		"links": {
 			"contact": "Contact",
-			"imprint": "Imprint"
+			"imprint": "Imprint",
+			"privacy-policy": "Privacy policy",
+			"terms-of-use": "Terms of use"
 		},
 		"navigation-secondary": "Secondary"
 	},
@@ -147,6 +149,12 @@
 		},
 		"title": "Page not found"
 	},
+	"PrivacyPolicyPage": {
+		"meta": {
+			"title": "Privacy policy"
+		},
+		"title": "Privacy policy"
+	},
 	"SignInForm": {
 		"email": "Email",
 		"password": "Password",
@@ -157,6 +165,12 @@
 		"name": "Name",
 		"password": "Password",
 		"sign-up": "Sign up"
+	},
+	"TermsOfUsePage": {
+		"meta": {
+			"title": "Terms of use"
+		},
+		"title": "Terms of use"
 	},
 	"actions": {
 		"sendEmail": {

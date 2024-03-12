@@ -1,5 +1,4 @@
 import type { Country, Report } from "@prisma/client";
-import type { ReactNode } from "react";
 
 import { ServiceReportsFormContent } from "@/components/forms/service-reports-form-content";
 import { getServiceReports } from "@/lib/data/report";

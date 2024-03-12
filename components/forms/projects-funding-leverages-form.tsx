@@ -1,5 +1,4 @@
 import type { Report } from "@prisma/client";
-import type { ReactNode } from "react";
 
 import { ProjectsFundingLeveragesFormContent } from "@/components/forms/projects-funding-leverages-form-content";
 import { getProjectsFundingLeverages } from "@/lib/data/report";
