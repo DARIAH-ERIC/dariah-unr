@@ -55,8 +55,8 @@ export function ProjectsFundingLeveragesFormContent(
 ): ReactNode {
 	const {
 		comments,
-		previousProjectsFundingLeverages,
-		previousReportId,
+		// previousProjectsFundingLeverages,
+		// previousReportId,
 		projectsFundingLeverages,
 		reportId,
 	} = props;

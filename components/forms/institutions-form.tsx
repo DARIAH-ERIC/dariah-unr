@@ -1,5 +1,4 @@
 import type { Country, Report } from "@prisma/client";
-import type { ReactNode } from "react";
 
 import { InstitutionsFormContent } from "@/components/forms/institutions-form-content";
 import { getPartnerInstitutionsByCountry } from "@/lib/data/institution";

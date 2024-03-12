@@ -1,7 +1,6 @@
 import { isNonEmptyString } from "@acdh-oeaw/lib";
 import type { Country, Report } from "@prisma/client";
 import { useFormatter } from "next-intl";
-import type { ReactNode } from "react";
 
 import { PublicationsFormContent } from "@/components/forms/publications-form-content";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";

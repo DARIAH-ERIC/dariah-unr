@@ -1,6 +1,5 @@
 import "server-only";
 
-import type { ReactNode } from "react";
 import { codeToHtml } from "shiki";
 
 import { config as syntaxHighlighterConfig } from "@/config/syntax-highlighter.config.mjs";

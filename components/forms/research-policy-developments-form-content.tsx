@@ -31,10 +31,10 @@ export function ResearchPolicyDevelopmentsFormContent(
 ): ReactNode {
 	const {
 		comments,
-		previousReportId,
-		previousResearchPolicyDevelopments,
+		// previousReportId,
+		// previousResearchPolicyDevelopments,
 		reportId,
-		researchPolicyDevelopments,
+		// researchPolicyDevelopments,
 	} = props;
 
 	const [formState, formAction] = useFormState(updateResearchPolicyDevelopmentsAction, undefined);
@@ -95,7 +95,7 @@ interface AddedResearchPolicyDevelopmentsSectionProps {
 function AddedResearchPolicyDevelopmentsSection(
 	props: AddedResearchPolicyDevelopmentsSectionProps,
 ): ReactNode {
-	const { researchPolicyDevelopments } = props;
+	const { researchPolicyDevelopments: _researchPolicyDevelopments } = props;
 
 	return null;
 }

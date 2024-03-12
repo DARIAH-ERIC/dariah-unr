@@ -39,7 +39,7 @@ const formSchema = z.object({
 				.optional(),
 		}),
 	),
-	year: nonEmptyString(z.coerce.number().int().positive()),
+	// year: nonEmptyString(z.coerce.number().int().positive()),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -71,7 +71,7 @@ export async function updateServiceReportsAction(
 		};
 	}
 
-	const { comment, reportId, serviceReports, year } = result.data;
+	const { comment, reportId, serviceReports } = result.data;
 
 	for (const serviceReport of serviceReports) {
 		if (serviceReport.kpis == null || serviceReport.kpis.length === 0) continue;

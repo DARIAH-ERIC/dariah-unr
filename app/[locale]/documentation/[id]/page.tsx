@@ -19,12 +19,9 @@ interface DocumentationPageProps {
 
 export const dynamicParams = false;
 
-export async function generateStaticParams(props: {
+export async function generateStaticParams(_props: {
 	params: Pick<DocumentationPageProps["params"], "locale">;
 }): Promise<Array<Pick<DocumentationPageProps["params"], "id">>> {
-	const { params } = props;
-
-	const { locale } = params;
 	const ids = await reader().collections.documentation.list();
 
 	return ids.map((id) => {
@@ -38,7 +35,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
 	const { params } = props;
 
-	const { id, locale } = params;
+	const { id } = params;
 	const document = await reader().collections.documentation.read(id);
 
 	if (document == null) notFound();
@@ -71,7 +68,7 @@ interface DocumentationPageContentProps {
 }
 
 async function DocumentationPageContent(props: DocumentationPageContentProps) {
-	const { id, locale } = props;
+	const { id } = props;
 
 	const document = await reader().collections.documentation.read(id);
 	if (document == null) notFound();

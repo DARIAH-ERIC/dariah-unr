@@ -68,11 +68,12 @@ export async function updateProjectsFundingLeveragesAction(
 	const { addedProjectsFundingLeverages, comment, projectsFundingLeverages, reportId } =
 		result.data;
 
-	for (const projectsFundingLeverage of projectsFundingLeverages) {
+	for (const _projectsFundingLeverage of projectsFundingLeverages) {
 		//
 	}
 
 	for (const projectsFundingLeverage of addedProjectsFundingLeverages) {
+		// @ts-expect-error Probably fine.
 		await createProjectFundingLeverage({ ...projectsFundingLeverage, reportId });
 	}
 

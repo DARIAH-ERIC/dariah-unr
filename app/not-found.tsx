@@ -1,6 +1,5 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import { getTranslations } from "next-intl/server";
-import type { ReactNode } from "react";
 
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";

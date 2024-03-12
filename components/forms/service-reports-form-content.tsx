@@ -47,9 +47,9 @@ interface ServiceReportsFormContentProps {
 export function ServiceReportsFormContent(props: ServiceReportsFormContentProps): ReactNode {
 	const {
 		comments,
-		countryId,
-		previousReportId,
-		previousServiceReports,
+		// countryId,
+		// previousReportId,
+		// previousServiceReports,
 		reportId,
 		serviceReports,
 		services,

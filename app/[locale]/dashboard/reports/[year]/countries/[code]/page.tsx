@@ -24,12 +24,9 @@ interface DashboardCountryReportPageProps {
 
 export const dynamicParams = false;
 
-export async function generateStaticParams(props: {
+export async function generateStaticParams(_props: {
 	params: Pick<DashboardCountryReportPageProps["params"], "locale">;
 }): Promise<Array<Pick<DashboardCountryReportPageProps["params"], "code">>> {
-	const { params } = props;
-
-	const { locale } = params;
 	const countries = await getCountryCodes();
 
 	return countries;

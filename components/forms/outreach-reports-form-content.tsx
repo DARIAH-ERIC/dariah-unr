@@ -44,11 +44,11 @@ interface OutreachReportsFormContentProps {
 export function OutreachReportsFormContent(props: OutreachReportsFormContentProps): ReactNode {
 	const {
 		comments,
-		countryId,
+		// countryId,
 		outreachReports,
 		outreachs,
-		previousOutreachReports,
-		previousReportId,
+		// previousOutreachReports,
+		// previousReportId,
 		reportId,
 	} = props;
 
