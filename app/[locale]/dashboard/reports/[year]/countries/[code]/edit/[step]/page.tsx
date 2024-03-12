@@ -393,6 +393,12 @@ async function DashboardCountryReportEditStepPageContent(
 							</a>
 							.
 						</p>
+
+						<p>
+							Please note that if you are adding resources to the Marketplace, they may not
+							immediately appear in this tool. If this is the case, once you have made additions, or
+							if you have any questions, please contact the UNR team.
+						</p>
 					</FormDescription>
 
 					<ServiceReportsForm

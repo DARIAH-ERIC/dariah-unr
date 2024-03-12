@@ -90,5 +90,5 @@ async function DashboardCountryReportPageContent(props: DashboardCountryReportPa
 	const report = await getReportByCountryCode({ countryCode: code, year });
 	if (report == null) notFound();
 
-	return <pre>{JSON.stringify(report, null, 2)}</pre>;
+	return null;
 }

@@ -50,11 +50,7 @@ export default function DashboardPage(props: DashboardPageProps): ReactNode {
 	return (
 		<MainContent className="container grid content-start gap-y-4 py-8">
 			<PageTitle>{t("title")}</PageTitle>
-			<PageLeadIn>
-				Reprehenderit labore nostrud consectetur exercitation ea aliquip sunt officia ea culpa
-				voluptate. Laborum excepteur do voluptate adipisicing consequat ipsum et elit dolore fugiat
-				mollit. Eiusmod sunt et sit est ipsum aliquip est aliquip non eiusmod.
-			</PageLeadIn>
+			<PageLeadIn>{t("lead-in")}</PageLeadIn>
 
 			<DashboardPageContent />
 		</MainContent>

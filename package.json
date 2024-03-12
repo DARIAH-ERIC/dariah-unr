@@ -32,7 +32,7 @@
 		"lint:styles:check": "stylelint \"./**/*.css\" --cache --ignore-path ./.gitignore",
 		"lint:styles:fix": "pnpm run lint:styles:check --fix",
 		"preinstall": "npx only-allow pnpm",
-		"prepare": "run-s setup",
+		"prepare": "run-s setup db:generate",
 		"setup": "is-ci || simple-git-hooks",
 		"start": "next start",
 		"test:db": "docker run -d -e POSTGRES_DB=dariah-unr-test -e POSTGRES_USER=dariah-unr-test -e POSTGRES_PASSWORD=dariah-unr-test --name dariah-unr-test -p 5432:5432 --rm postgres",
