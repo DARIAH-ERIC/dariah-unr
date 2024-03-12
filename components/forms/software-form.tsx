@@ -11,8 +11,7 @@ interface SoftwareFormProps {
 	reportId: Report["id"];
 }
 
-// @ts-expect-error Upstream type issue.
-export async function SoftwareForm(props: SoftwareFormProps): Promise<ReactNode> {
+export async function SoftwareForm(props: SoftwareFormProps) {
 	const { comments, countryId, reportId } = props;
 
 	const softwares = await getSoftwareByCountry({ countryId });

@@ -11,10 +11,7 @@ interface ProjectsFundingLeveragesFormProps {
 	reportId: Report["id"];
 }
 
-// @ts-expect-error Upstream type issue.
-export async function ProjectsFundingLeveragesForm(
-	props: ProjectsFundingLeveragesFormProps,
-): Promise<ReactNode> {
+export async function ProjectsFundingLeveragesForm(props: ProjectsFundingLeveragesFormProps) {
 	const { comments, previousReportId, reportId } = props;
 
 	const projectsFundingLeverages = await getProjectsFundingLeverages({ reportId });

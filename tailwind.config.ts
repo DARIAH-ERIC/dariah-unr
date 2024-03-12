@@ -6,12 +6,11 @@ import reactAriaComponentsPlugin from "tailwindcss-react-aria-components";
 
 const designTokensPreset = createDesignTokenPreset();
 
-// TODO: move to acdh tailwindcss preset
 const basePlugin = createPlugin(({ addBase }) => {
 	addBase({
 		':root, [data-ui-color-scheme="light"]': {
 			backgroundColor: "hsl(var(--color-neutral-0))",
-			color: "hsl(var(--color-neutral-500))",
+			color: "hsl(var(--color-neutral-600))",
 		},
 		'[data-ui-color-scheme="dark"]': {
 			backgroundColor: "hsl(var(--color-neutral-900))",
@@ -21,7 +20,11 @@ const basePlugin = createPlugin(({ addBase }) => {
 });
 
 const config = {
-	content: ["./@(app|components|config|lib|styles)/**/*.@(css|ts|tsx)", "./content/**/*.@(md|mdx)"],
+	content: [
+		"./@(app|components|config|lib|styles)/**/*.@(css|ts|tsx)",
+		"./content/**/*.@(md|mdx)",
+		"./keystatic.config.ts",
+	],
 	darkMode: [
 		"variant",
 		[":where(.kui-theme.kui-scheme--dark) &", ':where([data-ui-color-scheme="dark"]) &'],

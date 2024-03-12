@@ -53,8 +53,7 @@ interface ImprintPageContentProps {
 	locale: Locale;
 }
 
-// @ts-expect-error Upstream type issue.
-async function ImprintPageContent(props: ImprintPageContentProps): Promise<ReactNode> {
+async function ImprintPageContent(props: ImprintPageContentProps) {
 	const { locale } = props;
 
 	const html = await getImprintHtml(locale);

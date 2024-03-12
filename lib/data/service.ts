@@ -16,6 +16,22 @@ export function getServicesByCountry(params: GetServicesByCountryParams) {
 					id: countryId,
 				},
 			},
+			status: {
+				not: "discontinued",
+			},
+		},
+		include: {
+			size: true,
+		},
+	});
+}
+
+export function getServiceSizes() {
+	return db.serviceSize.findMany({
+		select: {
+			annualValue: true,
+			id: true,
+			type: true,
 		},
 	});
 }

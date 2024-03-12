@@ -10,8 +10,7 @@ interface CodeBlockProps {
 	language: string;
 }
 
-// @ts-expect-error Upstream type issue.
-export async function CodeBlock(props: CodeBlockProps): Promise<ReactNode> {
+export async function CodeBlock(props: CodeBlockProps) {
 	const { code, language } = props;
 
 	const html = await codeToHtml(code, {

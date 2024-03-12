@@ -43,7 +43,7 @@ export function AuthUserMenu(props: AuthUserMenuProps) {
 			</IconButton>
 			<DropdownMenu onAction={onAction} placement="bottom">
 				<Section>
-					<Header className="mb-1.5 border-b px-3 py-1.5 text-xs text-neutral-500 dark:text-neutral-400">
+					<Header className="mb-1.5 border-b px-3 py-1.5 text-xs text-neutral-600 dark:text-neutral-400">
 						Signed in as {user.name}
 					</Header>
 					<DropdownMenuItem id="sign-out">{signOutLabel}</DropdownMenuItem>

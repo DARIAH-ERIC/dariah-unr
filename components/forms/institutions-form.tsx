@@ -2,7 +2,7 @@ import type { Country, Report } from "@prisma/client";
 import type { ReactNode } from "react";
 
 import { InstitutionsFormContent } from "@/components/forms/institutions-form-content";
-import { getActivePartnerInstitutionsByCountry } from "@/lib/data/institution";
+import { getPartnerInstitutionsByCountry } from "@/lib/data/institution";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
 
 interface InstitutionsFormProps {
@@ -12,11 +12,10 @@ interface InstitutionsFormProps {
 	year: number;
 }
 
-// @ts-expect-error Upstream type issue.
-export async function InstitutionsForm(props: InstitutionsFormProps): Promise<ReactNode> {
+export async function InstitutionsForm(props: InstitutionsFormProps) {
 	const { comments, countryId, reportId, year } = props;
 
-	const institutions = await getActivePartnerInstitutionsByCountry({ countryId });
+	const institutions = await getPartnerInstitutionsByCountry({ countryId });
 
 	return (
 		<InstitutionsFormContent

@@ -16,8 +16,7 @@ interface ContributionsFormProps {
 	year: number;
 }
 
-// @ts-expect-error Upstream type issue.
-export async function ContributionsForm(props: ContributionsFormProps): Promise<ReactNode> {
+export async function ContributionsForm(props: ContributionsFormProps) {
 	const { comments, contributionsCount, countryId, reportId, year } = props;
 
 	const contributions = await getContributionsByCountry({ countryId });

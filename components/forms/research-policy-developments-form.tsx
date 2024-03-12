@@ -11,10 +11,7 @@ interface ResearchPolicyDevelopmentsFormProps {
 	reportId: Report["id"];
 }
 
-// @ts-expect-error Upstream type issue.
-export async function ResearchPolicyDevelopmentsForm(
-	props: ResearchPolicyDevelopmentsFormProps,
-): Promise<ReactNode> {
+export async function ResearchPolicyDevelopmentsForm(props: ResearchPolicyDevelopmentsFormProps) {
 	const { comments, previousReportId, reportId } = props;
 
 	const researchPolicyDevelopments = await getResearchPolicyDevelopments({ reportId });

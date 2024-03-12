@@ -12,7 +12,7 @@ import { type VariantProps, variants } from "@/lib/styles";
 export const fieldDescriptionStyles = variants({
 	base: [
 		"transition",
-		"text-xs leading-normal text-neutral-500 dark:text-neutral-400",
+		"text-xs leading-normal text-neutral-600 dark:text-neutral-400",
 		"disabled:opacity-50",
 	],
 });

@@ -14,8 +14,7 @@ interface ServiceReportsFormProps {
 	year: number;
 }
 
-// @ts-expect-error Upstream type issue.
-export async function ServiceReportsForm(props: ServiceReportsFormProps): Promise<ReactNode> {
+export async function ServiceReportsForm(props: ServiceReportsFormProps) {
 	const { comments, countryId, previousReportId, reportId, year } = props;
 
 	const services = await getServicesByCountry({ countryId });

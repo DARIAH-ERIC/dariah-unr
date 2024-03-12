@@ -14,6 +14,7 @@ export function getContributionsByCountry(params: GetContributionsByCountryParam
 			country: {
 				id: countryId,
 			},
+			endDate: null,
 		},
 		include: {
 			person: {

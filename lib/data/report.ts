@@ -14,6 +14,23 @@ import type {
 
 import { db } from "@/lib/db";
 
+interface GetReportByIdParams {
+	id: Report["id"];
+}
+
+export function getReportById(params: GetReportByIdParams) {
+	const { id } = params;
+
+	return db.report.findFirst({
+		where: {
+			id,
+		},
+		include: {
+			eventReport: true,
+		},
+	});
+}
+
 interface GetReportByCountryCodeParams {
 	countryCode: Country["code"];
 	year: Report["year"];
@@ -422,6 +439,46 @@ export function updateReportContributionsCount(params: UpdateReportContributions
 		},
 		data: {
 			contributionsCount,
+		},
+	});
+}
+
+export function getEventSizes() {
+	return db.eventSize.findMany({
+		select: {
+			annualValue: true,
+			id: true,
+			type: true,
+		},
+	});
+}
+
+export function getOutreachTypeValues() {
+	return db.outreachTypeValue.findMany({
+		select: {
+			annualValue: true,
+			id: true,
+			type: true,
+		},
+	});
+}
+
+interface UpdateReportCalculationParams {
+	id: Report["id"];
+	operationalCost: Report["operationalCost"];
+	operationalCostDetail: Prisma.ReportUpdateInput["operationalCostDetail"];
+}
+
+export function updateReportCalculation(params: UpdateReportCalculationParams) {
+	const { id, operationalCost, operationalCostDetail } = params;
+
+	return db.report.update({
+		where: {
+			id,
+		},
+		data: {
+			operationalCost,
+			operationalCostDetail,
 		},
 	});
 }
