@@ -12,6 +12,7 @@ import { assert, createUrl, createUrlSearchParams, log, request } from "@acdh-oe
 import { PrismaClient } from "@prisma/client";
 
 import { env } from "@/config/env.config";
+import { getCountryCodes } from "@/lib/get-country-codes";
 
 const db = new PrismaClient();
 
@@ -582,42 +583,9 @@ async function getCachedBaserowDatabase() {
 	}
 }
 
+const countries = getCountryCodes();
+
 function getCountryCode(value: string) {
-	const countries = new Map([
-		["Austria", "at"],
-		["Belgium", "be"],
-		["Bosnia and Herzegovina", "ba"],
-		["Bulgaria", "bg"],
-		["Croatia", "hr"],
-		["Cyprus", "cy"],
-		["Czech Republic", "cz"],
-		["Denmark", "dk"],
-		["France", "fr"],
-		["Germany", "de"],
-		["Greece", "gr"],
-		["Ireland", "ie"],
-		["Italy", "it"],
-		["Luxembourg", "lu"],
-		["Malta", "mt"],
-		["Netherlands", "nl"],
-		["Poland", "pl"],
-		["Portugal", "pt"],
-		["Serbia", "rs"],
-		["Slovenia", "si"],
-		["Spain", "es"],
-		["Switzerland", "ch"],
-		["Finland", "fi"],
-		["Hungary", "hu"],
-		["Norway", "no"],
-		["Romania", "ro"],
-		["Sweden", "se"],
-		["Slovakia", "sk"],
-		["United Kingdom", "gb"],
-		["Egypt", "eg"],
-		["Iceland", "is"],
-		["United States", "us"],
-		["Latvia", "lv"],
-	]);
 	const code = countries.get(value);
 	assert(code);
 	return code;
