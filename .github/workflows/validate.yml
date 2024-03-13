@@ -82,6 +82,10 @@ jobs:
           path: ${{ github.workspace }}/.next/cache
           key: ${{ matrix.os }}-nextjs-${{ hashFiles('pnpm-lock.yaml') }}
 
+      # TODO: local postgres instance for e2e tests
+      # TODO: create test user in local postgres instance for e2e tests
+      # TODO: ingest local postgres instance with seed/ingest for e2e tests
+
       - name: Build app
         run: pnpm run build
         env:
@@ -104,7 +108,21 @@ jobs:
       - name: Run e2e tests
         run: pnpm run test:e2e
         env:
+          AUTH_SECRET: "${{ secrets.K8S_SECRET_AUTH_SECRET }}"
+          EMAIL_CONTACT_ADDRESS: "${{ secrets.K8S_SECRET_EMAIL_CONTACT_ADDRESS }}"
+          EMAIL_SMTP_PORT: "${{ vars.K8S_SECRET_EMAIL_SMTP_PORT }}"
+          EMAIL_SMTP_SERVER: "${{ vars.K8S_SECRET_EMAIL_SMTP_SERVER }}"
+          DATABASE_DIRECT_URL: "postgresql://dariah-unr:dariah-unr@localhost:5432/dariah-unr?schema=public"
+          DATABASE_TEST_USER_COUNTRY_CODE:
+            "${{ secrets.K8S_SECRET_DATABASE_TEST_USER_COUNTRY_CODE }}"
+          DATABASE_TEST_USER_EMAIL: "${{ secrets.K8S_SECRET_DATABASE_TEST_USER_EMAIL }}"
+          DATABASE_TEST_USER_NAME: "${{ secrets.K8S_SECRET_DATABASE_TEST_USER_NAME }}"
+          DATABASE_TEST_USER_PASSWORD: "${{ secrets.K8S_SECRET_DATABASE_TEST_USER_PASSWORD }}"
+          DATABASE_URL: "postgresql://dariah-unr:dariah-unr@localhost:5432/dariah-unr?schema=public"
           NEXT_PUBLIC_APP_BASE_URL: "http://localhost:3000"
+          NEXT_PUBLIC_REDMINE_ID: "${{ vars.SERVICE_ID }}"
+          SSHOC_MARKETPLACE_USER_NAME: "${{ secrets.K8S_SECRET_SSHOC_MARKETPLACE_USER_NAME }}"
+          SSHOC_MARKETPLACE_PASSWORD: "${{ secrets.K8S_SECRET_SSHOC_MARKETPLACE_PASSWORD }}"
 
       - uses: actions/upload-artifact@v4
         if: always()
