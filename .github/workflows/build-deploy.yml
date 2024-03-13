@@ -1,7 +1,7 @@
 name: Build and deploy
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: "${{ github.workflow }}-${{ github.ref }}-build-deploy"
   cancel-in-progress: true
 
 on:
@@ -32,10 +32,10 @@ jobs:
           echo "ENVIRONMENT=$ENVIRONMENT" >> $GITHUB_OUTPUT
           echo "APP_NAME_SUFFIX=$APP_NAME_SUFFIX" >> $GITHUB_OUTPUT
     outputs:
-      environment: ${{ steps.environment.outputs.ENVIRONMENT }}
-      app_name_suffix: ${{ steps.environment.outputs.APP_NAME_SUFFIX }}
-      registry: ghcr.io
-      image: ${{ github.repository }}
+      environment: "${{ steps.environment.outputs.ENVIRONMENT }}"
+      app_name: "dariah-unr${{ steps.environment.outputs.APP_NAME_SUFFIX }}"
+      registry: "ghcr.io"
+      image: "${{ github.repository }}"
 
   vars:
     name: Generate public url
@@ -47,15 +47,15 @@ jobs:
       - name: Generate public URL
         id: public_url
         run: |
-          if [[ -z "${{ vars.PUBLIC_URL }}" ]]; then
-            PUBLIC_URL="https://${{ needs.env.outputs.app_name_suffix }}.${{ vars.KUBE_INGRESS_BASE_DOMAIN }}"
+          if [ -z "${{ vars.PUBLIC_URL }}" ]; then
+            PUBLIC_URL="https://${{ needs.env.outputs.app_name }}.${{ vars.KUBE_INGRESS_BASE_DOMAIN }}"
           else
             PUBLIC_URL="${{ vars.PUBLIC_URL }}"
           fi
 
           echo "PUBLIC_URL=$PUBLIC_URL" >> $GITHUB_OUTPUT
     outputs:
-      public_url: ${{ steps.public_url.outputs.PUBLIC_URL }}
+      public_url: "${{ steps.public_url.outputs.PUBLIC_URL }}"
 
   build:
     name: Build and push docker image
@@ -83,7 +83,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ needs.env.outputs.registry }}/${{ needs.env.outputs.image }}
+          images: "${{ needs.env.outputs.registry }}/${{ needs.env.outputs.image }}"
           tags: |
             type=raw,value={{sha}}
             type=ref,event=branch
@@ -100,16 +100,16 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            NEXT_PUBLIC_APP_BASE_URL="${{ needs.vars.outputs.public_url }}"
-            NEXT_PUBLIC_BOTS="${{ vars.NEXT_PUBLIC_BOTS }}"
-            NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION="${{ vars.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }}"
-            NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG="${{ vars.NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG }}"
-            NEXT_PUBLIC_KEYSTATIC_GITHUB_REPO_NAME="${{ vars.NEXT_PUBLIC_KEYSTATIC_GITHUB_REPO_NAME }}"
-            NEXT_PUBLIC_KEYSTATIC_GITHUB_REPO_OWNER="${{ vars.NEXT_PUBLIC_KEYSTATIC_GITHUB_REPO_OWNER }}"
-            NEXT_PUBLIC_KEYSTATIC_MODE="${{ vars.NEXT_PUBLIC_KEYSTATIC_MODE }}"
-            NEXT_PUBLIC_MATOMO_BASE_URL="${{ vars.NEXT_PUBLIC_MATOMO_BASE_URL }}"
-            NEXT_PUBLIC_MATOMO_ID="${{ vars.NEXT_PUBLIC_MATOMO_ID }}"
-            NEXT_PUBLIC_REDMINE_ID="${{ vars.SERVICE_ID }}"
+            "NEXT_PUBLIC_APP_BASE_URL=${{ needs.vars.outputs.public_url }}"
+            "NEXT_PUBLIC_BOTS=${{ vars.NEXT_PUBLIC_BOTS }}"
+            "NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=${{ vars.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }}"
+            "NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=${{ vars.NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG }}"
+            "NEXT_PUBLIC_KEYSTATIC_GITHUB_REPO_NAME=${{ vars.NEXT_PUBLIC_KEYSTATIC_GITHUB_REPO_NAME }}"
+            "NEXT_PUBLIC_KEYSTATIC_GITHUB_REPO_OWNER=${{ vars.NEXT_PUBLIC_KEYSTATIC_GITHUB_REPO_OWNER }}"
+            "NEXT_PUBLIC_KEYSTATIC_MODE=${{ vars.NEXT_PUBLIC_KEYSTATIC_MODE }}"
+            "NEXT_PUBLIC_MATOMO_BASE_URL=${{ vars.NEXT_PUBLIC_MATOMO_BASE_URL }}"
+            "NEXT_PUBLIC_MATOMO_ID=${{ vars.NEXT_PUBLIC_MATOMO_ID }}"
+            "NEXT_PUBLIC_REDMINE_ID=${{ vars.SERVICE_ID }}"
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -119,10 +119,10 @@ jobs:
     uses: dariah-eric/gl-autodevops-minimal-port/.github/workflows/deploy-cluster-2.yml@main
     secrets: inherit
     with:
-      environment: ${{ needs.env.outputs.environment }}
-      DOCKER_TAG: ${{ needs.env.outputs.registry }}/${{ needs.env.outputs.image }}
-      APP_NAME: frontend${{ needs.env.outputs.app_name_suffix }}
-      APP_ROOT: /
-      SERVICE_ID: ${{ vars.SERVICE_ID }}
-      PUBLIC_URL: ${{ needs.vars.outputs.public_url }}
-      default_port: 3000
+      environment: "${{ needs.env.outputs.environment }}"
+      DOCKER_TAG: "${{ needs.env.outputs.registry }}/${{ needs.env.outputs.image }}"
+      APP_NAME: "${{ needs.env.outputs.app_name }}"
+      APP_ROOT: "/"
+      SERVICE_ID: "${{ vars.SERVICE_ID }}"
+      PUBLIC_URL: "${{ needs.vars.outputs.public_url }}"
+      default_port: "3000"

@@ -56,6 +56,7 @@
 		"subject": "Subject"
 	},
 	"ContactPage": {
+		"lead-in": "Velit dolor elit aliqua veniam eu duis. Nulla occaecat sit ullamco velit id occaecat consequat elit adipisicing anim do. Elit ipsum culpa deserunt nostrud labore culpa esse veniam amet velit labore.",
 		"meta": {
 			"title": "Contact"
 		},
@@ -92,6 +93,7 @@
 		"title": "Report"
 	},
 	"DashboardPage": {
+		"lead-in": "Reprehenderit labore nostrud consectetur exercitation ea aliquip sunt officia ea culpa voluptate. Laborum excepteur do voluptate adipisicing consequat ipsum et elit dolore fugiat mollit. Eiusmod sunt et sit est ipsum aliquip est aliquip non eiusmod.",
 		"meta": {
 			"title": "Dashboard"
 		},
@@ -115,7 +117,7 @@
 	"IndexPageHeroSection": {
 		"badge": "DARIAH Unified National Reporting",
 		"go-to-dashboard": "Go to dashboard",
-		"lead-in": "Pariatur sunt dolore mollit occaecat laborum sit. Nulla est laboris labore et aliquip proident eu aliquip ullamco aute. Ut ad sunt pariatur irure commodo enim est non officia.",
+		"lead-in": "Welcome to the DARIAH National Coordinator Dashboard! This portal is designed to collect valuable data necessary for the evaluation and measurement of DARIAH-EU and its national consortia. If you are a National Coordinator, or part of a National Consortium staff, please login.",
 		"read-documentation": "Read documentation",
 		"title": "We want to see performance indicators!"
 	},

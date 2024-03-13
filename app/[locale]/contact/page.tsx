@@ -42,11 +42,7 @@ export default function ContactPage(props: ContactPageProps): ReactNode {
 	return (
 		<MainContent className="container grid content-start gap-y-8 py-8">
 			<PageTitle>{t("title")}</PageTitle>
-			<PageLeadIn>
-				Velit dolor elit aliqua veniam eu duis. Nulla occaecat sit ullamco velit id occaecat
-				consequat elit adipisicing anim do. Elit ipsum culpa deserunt nostrud labore culpa esse
-				veniam amet velit labore.
-			</PageLeadIn>
+			<PageLeadIn>{t("lead-in")}</PageLeadIn>
 
 			<ContactForm />
 		</MainContent>

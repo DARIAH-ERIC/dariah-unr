@@ -255,11 +255,12 @@ async function DashboardCountryReportEditStepPageContent(
 				<section className="grid gap-6">
 					<FormTitle>{t("outreach")}</FormTitle>
 					<FormDescription>
-						Tempor aliqua non ad sint sint officia Lorem cupidatat cillum sint non tempor quis qui.
-						Voluptate sunt cillum et do cillum ut deserunt aliqua nisi pariatur velit adipisicing
-						sint. Incididunt laboris tempor cupidatat tempor laborum nulla consectetur consectetur
-						exercitation tempor veniam ullamco ullamco commodo. Nulla commodo ad dolor laboris nulla
-						tempor labore.
+						<p>
+							It is important for DARIAH-EU to keep track of outreach statistics. Please give us the
+							number of page impressions for any national DARIAH website that you may have, as well
+							as the number of users and posts for your various social media accounts (Twitter,
+							LinkedIn, Youtube, Facebook, etc.)
+						</p>
 					</FormDescription>
 
 					<OutreachReportsForm
@@ -279,10 +280,12 @@ async function DashboardCountryReportEditStepPageContent(
 				<section className="grid gap-6">
 					<FormTitle>{t("project-funding-leverage")}</FormTitle>
 					<FormDescription>
-						Please report the overall amount in Euros of any grant funding awarded to or within the
-						DARIAH national consortium that is directly or indirectly related to DARIAH activities.
-						Do not include funding from DARIAH itself (such as DARIAH Theme or Working Group
-						funding).
+						<p>
+							Please report the overall amount in Euros of any grant funding awarded to or within
+							the DARIAH national consortium that is directly or indirectly related to DARIAH
+							activities. Do not include funding from DARIAH itself (such as DARIAH Theme or Working
+							Group funding).
+						</p>
 					</FormDescription>
 
 					<ProjectsFundingLeveragesForm
@@ -392,6 +395,12 @@ async function DashboardCountryReportEditStepPageContent(
 								these guidelines
 							</a>
 							.
+						</p>
+
+						<p>
+							Please note that if you are adding resources to the Marketplace, they may not
+							immediately appear in this tool. If this is the case, once you have made additions, or
+							if you have any questions, please contact the UNR team.
 						</p>
 					</FormDescription>
 
