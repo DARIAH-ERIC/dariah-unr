@@ -23,6 +23,7 @@ export default authMiddleware((req) => {
 	 */
 	if (req.nextUrl.pathname.startsWith("/api/")) return;
 
+	// eslint-disable-next-line consistent-return
 	return i18nMiddleware(req);
 });
 

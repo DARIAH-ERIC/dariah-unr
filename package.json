@@ -179,6 +179,7 @@
 					"allowNamedFunctions": true
 				}
 			],
+			"@typescript-eslint/no-unused-vars": "off",
 			"react/jsx-boolean-value": [
 				"error",
 				"always"
