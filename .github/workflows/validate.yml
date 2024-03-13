@@ -1,7 +1,7 @@
 name: Validate
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: "${{ github.workflow }}-${{ github.ref }}-validate"
   cancel-in-progress: true
 
 on:
@@ -42,7 +42,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Commit message
+      - name: Lint commit messages
         uses: acdh-oeaw/commitlint-action@v1
 
       - name: Format
@@ -67,12 +67,14 @@ jobs:
         id: cache-playwright-browsers
         with:
           path: "~/.cache/ms-playwright"
-          key: ${{ matrix.os }}-playwright-browsers-${{ env.PLAYWRIGHT_VERSION }}
+          key: "${{ matrix.os }}-playwright-browsers-${{ env.PLAYWRIGHT_VERSION }}"
 
-      # TODO: might need https://github.com/microsoft/playwright/issues/7249#issuecomment-1597663397
       - name: Install playwright browsers
         if: steps.cache-playwright-browsers.outputs.cache-hit != 'true'
         run: pnpm exec playwright install --with-deps
+      - name: Install playwright browsers (operating system dependencies)
+        if: steps.cache-playwright-browsers.outputs.cache-hit == 'true'
+        run: pnpm exec playwright install-deps
 
       - name: Cache Next.js build output
         uses: actions/cache@v4
@@ -88,6 +90,8 @@ jobs:
 
       - name: Run e2e tests
         run: pnpm run test:e2e
+        env:
+          NEXT_PUBLIC_APP_BASE_URL: "http://localhost:3000"
 
       - uses: actions/upload-artifact@v4
         if: always()
