@@ -9,8 +9,9 @@ import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import type { Locale } from "@/config/i18n.config";
 import { getCurrentUser } from "@/lib/auth/session";
-import { getCountryCodes } from "@/lib/data/country";
+import { getCountryCodes as _getCountryCodes } from "@/lib/data/country";
 import { getReportByCountryCode } from "@/lib/data/report";
+import { getCountryCodes as getStaticCountryCodes } from "@/lib/get-country-codes";
 import { redirect } from "@/lib/navigation";
 import { dashboardCountryReportPageParams } from "@/lib/schemas/dashboard";
 
@@ -27,9 +28,20 @@ export const dynamicParams = false;
 export async function generateStaticParams(_props: {
 	params: Pick<DashboardCountryReportPageProps["params"], "locale">;
 }): Promise<Array<Pick<DashboardCountryReportPageProps["params"], "code">>> {
-	const countries = await getCountryCodes();
+	/**
+	 * FIXME: we cannot access the postgres database on acdh servers from github ci/cd, so we cannot
+	 * query for country codes at build time.
+	 */
+	// const countries = await getCountryCodes();
+	const countries = await Promise.resolve(
+		Array.from(getStaticCountryCodes().values()).map((code) => {
+			return { code };
+		}),
+	);
 
-	return countries;
+	const params = countries;
+
+	return params;
 }
 
 export async function generateMetadata(

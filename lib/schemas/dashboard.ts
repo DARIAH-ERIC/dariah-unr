@@ -16,23 +16,25 @@ export type DashboardCountryReportEditPageParams = z.infer<
 	typeof dashboardCountryReportEditPageParams
 >;
 
+export const dashboardCountryReportSteps = [
+	"confirm",
+	"contributions",
+	"events",
+	"institutions",
+	"outreach",
+	"project-funding-leverage",
+	"publications",
+	// "research-policy-developments",
+	"services",
+	"software",
+	"summary",
+	"welcome",
+] as const;
+
 export const dashboardCountryReportEditStepPageParams = z.object({
 	code: z.string(),
 	year: z.coerce.number().int().positive().min(2020),
-	step: z.enum([
-		"confirm",
-		"contributions",
-		"events",
-		"institutions",
-		"outreach",
-		"project-funding-leverage",
-		"publications",
-		// "research-policy-developments",
-		"services",
-		"software",
-		"summary",
-		"welcome",
-	]),
+	step: z.enum(dashboardCountryReportSteps),
 });
 
 export type DashboardCountryReportEditStepPageParams = z.infer<

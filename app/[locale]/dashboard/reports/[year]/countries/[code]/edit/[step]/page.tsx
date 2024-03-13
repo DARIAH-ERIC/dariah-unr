@@ -25,12 +25,14 @@ import { PageTitle } from "@/components/page-title";
 import type { Locale } from "@/config/i18n.config";
 import { getCurrentUser } from "@/lib/auth/session";
 import { createHref } from "@/lib/create-href";
-import { getCountryByCode, getCountryCodes } from "@/lib/data/country";
+import { getCountryByCode, getCountryCodes as _getCountryCodes } from "@/lib/data/country";
 import { getReportByCountryCode } from "@/lib/data/report";
+import { getCountryCodes as getStaticCountryCodes } from "@/lib/get-country-codes";
 import { redirect } from "@/lib/navigation";
 import {
 	type DashboardCountryReportEditStepPageParams,
 	dashboardCountryReportEditStepPageParams,
+	dashboardCountryReportSteps,
 } from "@/lib/schemas/dashboard";
 import { reportCommentsSchema } from "@/lib/schemas/report";
 
@@ -39,6 +41,7 @@ interface DashboardCountryReportEditStepPageProps {
 		code: string;
 		locale: Locale;
 		step: string;
+		year: string;
 	};
 }
 
@@ -46,12 +49,23 @@ export const dynamicParams = false;
 
 export async function generateStaticParams(_props: {
 	params: Pick<DashboardCountryReportEditStepPageProps["params"], "locale">;
-}): Promise<Array<Pick<DashboardCountryReportEditStepPageProps["params"], "code">>> {
-	const countries = await getCountryCodes();
+}): Promise<Array<Pick<DashboardCountryReportEditStepPageProps["params"], "code" | "step">>> {
+	/**
+	 * FIXME: we cannot access the postgres database on acdh servers from github ci/cd, so we cannot
+	 * query for country codes at build time.
+	 */
+	// const countries = await getCountryCodes();
+	const countries = await Promise.resolve(Array.from(getStaticCountryCodes().values()));
 
-	// FIXME: step
+	const steps = dashboardCountryReportSteps;
 
-	return countries;
+	const params = countries.flatMap((code) => {
+		return steps.map((step) => {
+			return { code, step };
+		});
+	});
+
+	return params;
 }
 
 export async function generateMetadata(
