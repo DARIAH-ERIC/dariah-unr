@@ -14,7 +14,7 @@ import { Modal, ModalOverlay, type ModalOverlayProps } from "@/components/ui/mod
 interface DialogProps
 	extends Omit<ModalOverlayProps, "isDismissable" | "isKeyboardDismissDisabled"> {
 	children?: ReactNode;
-	description: ReactNode;
+	description?: ReactNode;
 	title: ReactNode;
 }
 

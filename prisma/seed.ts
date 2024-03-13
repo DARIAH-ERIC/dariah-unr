@@ -87,7 +87,6 @@ async function seed() {
 					id: country.id,
 				},
 			},
-			name: "Application development",
 			person: {
 				connect: {
 					id: person.id,
@@ -149,7 +148,6 @@ async function seed() {
 
 	const _eventReport = await db.eventReport.create({
 		data: {
-			attendees: 1,
 			report: {
 				connect: {
 					id: report.id,
