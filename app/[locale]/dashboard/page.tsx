@@ -77,7 +77,7 @@ export default function DashboardPage(props: DashboardPageProps): ReactNode {
 	);
 }
 
-export async function DashboardPageContent() {
+async function DashboardPageContent() {
 	const t = await getTranslations("DashboardPageContent");
 
 	const user = await getCurrentUser();

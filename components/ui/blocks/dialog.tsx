@@ -18,7 +18,7 @@ interface DialogProps extends ModalOverlayProps {
 	actionLabel: ReactNode;
 	cancelLabel: ReactNode;
 	children?: ReactNode;
-	description: ReactNode;
+	description?: ReactNode;
 	onAction: () => void;
 	title: ReactNode;
 }
