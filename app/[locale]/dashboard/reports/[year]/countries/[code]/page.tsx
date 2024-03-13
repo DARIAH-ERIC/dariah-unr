@@ -33,13 +33,11 @@ export async function generateStaticParams(_props: {
 	 * query for country codes at build time.
 	 */
 	// const countries = await getCountryCodes();
-	const countries = await Promise.resolve(
-		Array.from(getStaticCountryCodes().values()).map((code) => {
-			return { code };
-		}),
-	);
+	const countries = await Promise.resolve(Array.from(getStaticCountryCodes().values()));
 
-	const params = countries;
+	const params = countries.map((code) => {
+		return { code };
+	});
 
 	return params;
 }
