@@ -85,8 +85,21 @@ jobs:
       - name: Build app
         run: pnpm run build
         env:
+          AUTH_SECRET: "${{ secrets.K8S_SECRET_AUTH_SECRET }}"
+          EMAIL_CONTACT_ADDRESS: "${{ secrets.K8S_SECRET_EMAIL_CONTACT_ADDRESS }}"
+          EMAIL_SMTP_PORT: "${{ vars.K8S_SECRET_EMAIL_SMTP_PORT }}"
+          EMAIL_SMTP_SERVER: "${{ vars.K8S_SECRET_EMAIL_SMTP_SERVER }}"
+          DATABASE_DIRECT_URL: "${{ secrets.K8S_SECRET_DATABASE_DIRECT_URL }}"
+          DATABASE_TEST_USER_COUNTRY_CODE:
+            "${{ secrets.K8S_SECRET_DATABASE_TEST_USER_COUNTRY_CODE }}"
+          DATABASE_TEST_USER_EMAIL: "${{ secrets.K8S_SECRET_DATABASE_TEST_USER_EMAIL }}"
+          DATABASE_TEST_USER_NAME: "${{ secrets.K8S_SECRET_DATABASE_TEST_USER_NAME }}"
+          DATABASE_TEST_USER_PASSWORD: "${{ secrets.K8S_SECRET_DATABASE_TEST_USER_PASSWORD }}"
+          DATABASE_URL: "${{ secrets.K8S_SECRET_DATABASE_URL }}"
           NEXT_PUBLIC_APP_BASE_URL: "http://localhost:3000"
           NEXT_PUBLIC_REDMINE_ID: "${{ vars.SERVICE_ID }}"
+          SSHOC_MARKETPLACE_USER_NAME: "${{ secrets.K8S_SECRET_SSHOC_MARKETPLACE_USER_NAME }}"
+          SSHOC_MARKETPLACE_PASSWORD: "${{ secrets.K8S_SECRET_SSHOC_MARKETPLACE_PASSWORD }}"
 
       - name: Run e2e tests
         run: pnpm run test:e2e

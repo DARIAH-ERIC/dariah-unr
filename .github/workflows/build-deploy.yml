@@ -77,7 +77,7 @@ jobs:
         with:
           registry: ${{ needs.env.outputs.registry }}
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.K8S_SECRET_GITHUB_TOKEN }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -100,6 +100,18 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
+            "AUTH_SECRET=${{ secrets.K8S_SECRET_AUTH_SECRET }}"
+            "EMAIL_CONTACT_ADDRESS=${{ secrets.K8S_SECRET_EMAIL_CONTACT_ADDRESS }}"
+            "EMAIL_SMTP_PORT=${{ vars.K8S_SECRET_EMAIL_SMTP_PORT }}"
+            "EMAIL_SMTP_SERVER=${{ vars.K8S_SECRET_EMAIL_SMTP_SERVER }}"
+            "DATABASE_DIRECT_URL=${{ secrets.K8S_SECRET_DATABASE_DIRECT_URL }}"
+            "DATABASE_ADMIN_USER_EMAIL=${{ secrets.K8S_SECRET_DATABASE_ADMIN_USER_EMAIL }}"
+            "DATABASE_ADMIN_USER_NAME=${{ secrets.K8S_SECRET_DATABASE_ADMIN_USER_NAME }}"
+            "DATABASE_ADMIN_USER_PASSWORD=${{ secrets.K8S_SECRET_DATABASE_ADMIN_USER_PASSWORD }}"
+            "DATABASE_URL=${{ secrets.K8S_SECRET_DATABASE_URL }}"
+            "KEYSTATIC_GITHUB_CLIENT_ID=${{ secrets.K8S_SECRET_KEYSTATIC_GITHUB_CLIENT_ID }}"
+            "KEYSTATIC_GITHUB_CLIENT_SECRET=${{ secrets.K8S_SECRET_KEYSTATIC_GITHUB_CLIENT_SECRET }}"
+            "KEYSTATIC_SECRET=${{ secrets.K8S_SECRET_KEYSTATIC_SECRET }}"
             "NEXT_PUBLIC_APP_BASE_URL=${{ needs.vars.outputs.public_url }}"
             "NEXT_PUBLIC_BOTS=${{ vars.NEXT_PUBLIC_BOTS }}"
             "NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=${{ vars.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }}"
@@ -110,6 +122,8 @@ jobs:
             "NEXT_PUBLIC_MATOMO_BASE_URL=${{ vars.NEXT_PUBLIC_MATOMO_BASE_URL }}"
             "NEXT_PUBLIC_MATOMO_ID=${{ vars.NEXT_PUBLIC_MATOMO_ID }}"
             "NEXT_PUBLIC_REDMINE_ID=${{ vars.SERVICE_ID }}"
+            "SSHOC_MARKETPLACE_USER_NAME=${{ secrets.K8S_SECRET_SSHOC_MARKETPLACE_USER_NAME }}"
+            "SSHOC_MARKETPLACE_PASSWORD=${{ secrets.K8S_SECRET_SSHOC_MARKETPLACE_PASSWORD }}"
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
