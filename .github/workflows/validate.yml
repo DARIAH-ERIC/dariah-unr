@@ -90,6 +90,7 @@ jobs:
         run: pnpm run build
         env:
           AUTH_SECRET: "${{ secrets.K8S_SECRET_AUTH_SECRET }}"
+          AUTH_URL: "http://localhost:3000/api/auth"
           EMAIL_CONTACT_ADDRESS: "${{ secrets.K8S_SECRET_EMAIL_CONTACT_ADDRESS }}"
           EMAIL_SMTP_PORT: "${{ vars.K8S_SECRET_EMAIL_SMTP_PORT }}"
           EMAIL_SMTP_SERVER: "${{ vars.K8S_SECRET_EMAIL_SMTP_SERVER }}"
@@ -109,6 +110,7 @@ jobs:
         run: pnpm run test:e2e
         env:
           AUTH_SECRET: "${{ secrets.K8S_SECRET_AUTH_SECRET }}"
+          AUTH_URL: "http://localhost:3000/api/auth"
           EMAIL_CONTACT_ADDRESS: "${{ secrets.K8S_SECRET_EMAIL_CONTACT_ADDRESS }}"
           EMAIL_SMTP_PORT: "${{ vars.K8S_SECRET_EMAIL_SMTP_PORT }}"
           EMAIL_SMTP_SERVER: "${{ vars.K8S_SECRET_EMAIL_SMTP_SERVER }}"
