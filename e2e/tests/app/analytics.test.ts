@@ -10,6 +10,8 @@ test.describe("analytics service", () => {
 		"Analytics service disabled.",
 	);
 
+	console.log("env.NEXT_PUBLIC_MATOMO_BASE_URL", env.NEXT_PUBLIC_MATOMO_BASE_URL);
+	console.log("env.NEXT_PUBLIC_MATOMO_BASE_URL", typeof env.NEXT_PUBLIC_MATOMO_BASE_URL);
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const baseUrl = String(createUrl({ baseUrl: env.NEXT_PUBLIC_MATOMO_BASE_URL!, pathname: "/**" }));
 
