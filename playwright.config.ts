@@ -73,7 +73,6 @@ export default defineConfig({
 			command: "pnpm run start",
 			url: baseUrl,
 			reuseExistingServer: !isCI,
-			stdout: "pipe",
 		},
 	],
 });
