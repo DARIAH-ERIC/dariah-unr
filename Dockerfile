@@ -38,7 +38,35 @@ ENV BUILD_MODE=standalone
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN pnpm run build
+RUN --mount=type=secret,id=AUTH_SECRET,uid=1000 \
+		--mount=type=secret,id=EMAIL_CONTACT_ADDRESS,uid=1000 \
+		--mount=type=secret,id=EMAIL_SMTP_PORT,uid=1000 \
+		--mount=type=secret,id=EMAIL_SMTP_SERVER,uid=1000 \
+		--mount=type=secret,id=DATABASE_DIRECT_URL,uid=1000 \
+		--mount=type=secret,id=DATABASE_ADMIN_USER_EMAIL,uid=1000 \
+		--mount=type=secret,id=DATABASE_ADMIN_USER_NAME,uid=1000 \
+		--mount=type=secret,id=DATABASE_ADMIN_USER_PASSWORD,uid=1000 \
+		--mount=type=secret,id=DATABASE_URL,uid=1000 \
+		--mount=type=secret,id=KEYSTATIC_GITHUB_CLIENT_ID,uid=1000 \
+		--mount=type=secret,id=KEYSTATIC_GITHUB_CLIENT_SECRET,uid=1000 \
+		--mount=type=secret,id=KEYSTATIC_SECRET,uid=1000 \
+		--mount=type=secret,id=SSHOC_MARKETPLACE_USER_NAME,uid=1000 \
+		--mount=type=secret,id=SSHOC_MARKETPLACE_PASSWORD,uid=1000 \
+			AUTH_SECRET=$(cat /run/secrets/AUTH_SECRET) \
+			EMAIL_CONTACT_ADDRESS=$(cat /run/secrets/EMAIL_CONTACT_ADDRESS) \
+			EMAIL_SMTP_PORT=$(cat /run/secrets/EMAIL_SMTP_PORT) \
+			EMAIL_SMTP_SERVER=$(cat /run/secrets/EMAIL_SMTP_SERVER) \
+			DATABASE_DIRECT_URL=$(cat /run/secrets/DATABASE_DIRECT_URL) \
+			DATABASE_ADMIN_USER_EMAIL=$(cat /run/secrets/DATABASE_ADMIN_USER_EMAIL) \
+			DATABASE_ADMIN_USER_NAME=$(cat /run/secrets/DATABASE_ADMIN_USER_NAME) \
+			DATABASE_ADMIN_USER_PASSWORD=$(cat /run/secrets/DATABASE_ADMIN_USER_PASSWORD) \
+			DATABASE_URL=$(cat /run/secrets/DATABASE_URL) \
+			KEYSTATIC_GITHUB_CLIENT_ID=$(cat /run/secrets/KEYSTATIC_GITHUB_CLIENT_ID) \
+			KEYSTATIC_GITHUB_CLIENT_SECRET=$(cat /run/secrets/KEYSTATIC_GITHUB_CLIENT_SECRET) \
+			KEYSTATIC_SECRET=$(cat /run/secrets/KEYSTATIC_SECRET) \
+			SSHOC_MARKETPLACE_USER_NAME=$(cat /run/secrets/SSHOC_MARKETPLACE_USER_NAME) \
+			SSHOC_MARKETPLACE_PASSWORD=$(cat /run/secrets/SSHOC_MARKETPLACE_PASSWORD) \
+		pnpm run build
 
 # serve
 FROM node:20-alpine AS serve
@@ -50,6 +78,7 @@ USER node
 
 COPY --from=build --chown=node:node /app/next.config.js ./
 COPY --from=build --chown=node:node /app/public ./public
+COPY --from=build --chown=node:node /app/content ./content
 COPY --from=build --chown=node:node /app/.next/standalone ./
 COPY --from=build --chown=node:node /app/.next/static ./.next/static
 
