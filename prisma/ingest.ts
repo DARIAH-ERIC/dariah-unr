@@ -311,12 +311,24 @@ async function ingest() {
 		});
 	}
 
+	const eventSizes = ["small", "medium", "large", "dariah_commissioned"] as const;
+	for (const type of eventSizes) {
+		await db.eventSize.create({
+			data: {
+				annualValue: 0,
+				type,
+			},
+		});
+	}
+
 	const outreachReports = baserow.get("WebsiteSocialYearKPI");
 	for (const _row of outreachReports?.rows ?? []) {
 		const row = _row as any;
 		if (row.Year == null) continue;
+		const country = row.Country[0];
+		if (country == null) continue;
 		const year = Number(row.Year.value) as 2022;
-		const report = ids.reports[year].get(row.Country[0].ids.database_table_2607);
+		const report = ids.reports[year].get(country.ids.database_table_2607);
 		const outreach = ids.outreach.get(row["Website or Media"][0].id);
 		const record = await db.outreachReport.create({
 			data: {
@@ -384,6 +396,16 @@ async function ingest() {
 				},
 			});
 		}
+	}
+
+	const outreachTypes = ["national_website", "social_media"] as const;
+	for (const type of outreachTypes) {
+		await db.outreachTypeValue.create({
+			data: {
+				annualValue: 0,
+				type,
+			},
+		});
 	}
 
 	const projectsFundingLeverages = baserow.get("Projects Funding Leverage");
