@@ -128,7 +128,7 @@ jobs:
   deploy:
     name: Deploy docker image
     needs: [env, vars, build]
-    uses: dariah-eric/gl-autodevops-minimal-port/.github/workflows/deploy-cluster-2.yml@main
+    uses: dariah-eric/gl-autodevops-minimal-port/.github/workflows/deploy.yml@main
     secrets: inherit
     with:
       environment: "${{ needs.env.outputs.environment }}"
