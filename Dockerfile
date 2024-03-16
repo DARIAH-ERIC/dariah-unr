@@ -30,7 +30,7 @@ ARG NEXT_PUBLIC_KEYSTATIC_GITHUB_REPO_NAME
 ARG NEXT_PUBLIC_KEYSTATIC_GITHUB_REPO_OWNER
 ARG NEXT_PUBLIC_KEYSTATIC_MODE
 ARG NEXT_PUBLIC_MATOMO_BASE_URL
-ARG NEXT_PUBLIC_MATOMO_ID
+# ARG NEXT_PUBLIC_MATOMO_ID
 ARG NEXT_PUBLIC_REDMINE_ID
 
 RUN pnpm install --frozen-lockfile --offline
@@ -44,9 +44,6 @@ RUN --mount=type=secret,id=AUTH_SECRET,uid=1000 \
 		--mount=type=secret,id=EMAIL_SMTP_PORT,uid=1000 \
 		--mount=type=secret,id=EMAIL_SMTP_SERVER,uid=1000 \
 		--mount=type=secret,id=DATABASE_DIRECT_URL,uid=1000 \
-		--mount=type=secret,id=DATABASE_ADMIN_USER_EMAIL,uid=1000 \
-		--mount=type=secret,id=DATABASE_ADMIN_USER_NAME,uid=1000 \
-		--mount=type=secret,id=DATABASE_ADMIN_USER_PASSWORD,uid=1000 \
 		--mount=type=secret,id=DATABASE_URL,uid=1000 \
 		--mount=type=secret,id=KEYSTATIC_GITHUB_CLIENT_ID,uid=1000 \
 		--mount=type=secret,id=KEYSTATIC_GITHUB_CLIENT_SECRET,uid=1000 \
@@ -58,9 +55,6 @@ RUN --mount=type=secret,id=AUTH_SECRET,uid=1000 \
 			EMAIL_SMTP_PORT=$(cat /run/secrets/EMAIL_SMTP_PORT) \
 			EMAIL_SMTP_SERVER=$(cat /run/secrets/EMAIL_SMTP_SERVER) \
 			DATABASE_DIRECT_URL=$(cat /run/secrets/DATABASE_DIRECT_URL) \
-			DATABASE_ADMIN_USER_EMAIL=$(cat /run/secrets/DATABASE_ADMIN_USER_EMAIL) \
-			DATABASE_ADMIN_USER_NAME=$(cat /run/secrets/DATABASE_ADMIN_USER_NAME) \
-			DATABASE_ADMIN_USER_PASSWORD=$(cat /run/secrets/DATABASE_ADMIN_USER_PASSWORD) \
 			DATABASE_URL=$(cat /run/secrets/DATABASE_URL) \
 			KEYSTATIC_GITHUB_CLIENT_ID=$(cat /run/secrets/KEYSTATIC_GITHUB_CLIENT_ID) \
 			KEYSTATIC_GITHUB_CLIENT_SECRET=$(cat /run/secrets/KEYSTATIC_GITHUB_CLIENT_SECRET) \
