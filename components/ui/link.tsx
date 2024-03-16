@@ -13,7 +13,7 @@ import { type VariantProps, variants } from "@/lib/styles";
 
 export const linkStyles = variants({
 	base: [
-		"underline transition",
+		"relative underline transition",
 		"text-sm leading-normal",
 		"text-neutral-950 decoration-neutral-950/50 underline-offset-4 hover:decoration-neutral-950 dark:text-neutral-0 dark:decoration-neutral-0/50 dark:hover:decoration-neutral-0",
 	],

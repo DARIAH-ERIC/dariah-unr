@@ -13,7 +13,7 @@ import { type VariantProps, variants } from "@/lib/styles";
 
 export const linkButtonStyles = variants({
 	base: [
-		"inline-flex cursor-pointer items-center justify-center gap-x-2 whitespace-nowrap transition",
+		"relative inline-flex cursor-pointer items-center justify-center gap-x-2 whitespace-nowrap transition",
 		"rounded-md px-3 py-1.5",
 		"text-sm font-medium leading-normal",
 		"border",
