@@ -12,6 +12,7 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { getCountryCodes as _getCountryCodes } from "@/lib/data/country";
 import { getReportByCountryCode } from "@/lib/data/report";
 import { getCountryCodes as getStaticCountryCodes } from "@/lib/get-country-codes";
+import { getReportYears } from "@/lib/get-report-years";
 import { redirect } from "@/lib/navigation";
 import { dashboardCountryReportPageParams } from "@/lib/schemas/dashboard";
 
@@ -23,20 +24,24 @@ interface DashboardCountryReportPageProps {
 	};
 }
 
-export const dynamicParams = false;
+// export const dynamicParams = false;
 
 export async function generateStaticParams(_props: {
 	params: Pick<DashboardCountryReportPageProps["params"], "locale">;
-}): Promise<Array<Pick<DashboardCountryReportPageProps["params"], "code">>> {
+}): Promise<Array<Pick<DashboardCountryReportPageProps["params"], "code" | "year">>> {
 	/**
 	 * FIXME: we cannot access the postgres database on acdh servers from github ci/cd, so we cannot
-	 * query for country codes at build time.
+	 * query for country codes (or report years) at build time.
 	 */
 	// const countries = await getCountryCodes();
 	const countries = await Promise.resolve(Array.from(getStaticCountryCodes().values()));
 
-	const params = countries.map((code) => {
-		return { code };
+	const years = getReportYears();
+
+	const params = years.flatMap((year) => {
+		return countries.map((code) => {
+			return { code, year };
+		});
 	});
 
 	return params;

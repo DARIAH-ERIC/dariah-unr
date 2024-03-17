@@ -26,7 +26,7 @@ interface LocaleLayoutProps {
 	};
 }
 
-export const dynamicParams = false;
+// export const dynamicParams = false;
 
 export function generateStaticParams(): Array<LocaleLayoutProps["params"]> {
 	return locales.map((locale) => {

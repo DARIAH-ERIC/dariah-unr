@@ -38,6 +38,7 @@
 		"setup": "is-ci || simple-git-hooks",
 		"start": "next start",
 		"test:db": "docker run -d -e POSTGRES_DB=dariah-unr-test -e POSTGRES_USER=dariah-unr-test -e POSTGRES_PASSWORD=dariah-unr-test --name dariah-unr-test -p 5432:5432 --rm postgres",
+		"test:db:init": "dotenv -c test -- run-s db:push db:ingest db:create-test-user db:create-report-year db:create-operational-cost-thresholds db:create-annual-values",
 		"test:db:push": "dotenv -c test -- prisma db push --force-reset",
 		"test:unit": "vitest run",
 		"test:unit:ui": "vitest run --ui",
