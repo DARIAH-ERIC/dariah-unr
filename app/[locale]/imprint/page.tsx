@@ -41,7 +41,7 @@ export default function ImprintPage(props: ImprintPageProps): ReactNode {
 	const t = useTranslations("ImprintPage");
 
 	return (
-		<MainContent className="container grid content-start gap-8 py-8">
+		<MainContent className="container grid max-w-screen-md content-start gap-8 py-8">
 			<PageTitle>{t("title")}</PageTitle>
 
 			<ImprintPageContent locale={locale} />
@@ -58,11 +58,7 @@ async function ImprintPageContent(props: ImprintPageContentProps) {
 
 	const html = await getImprintHtml(locale);
 
-	return (
-		<div className="prose prose-sm mx-auto w-full max-w-screen-md">
-			<div dangerouslySetInnerHTML={{ __html: html }} />
-		</div>
-	);
+	return <div dangerouslySetInnerHTML={{ __html: html }} className="prose prose-sm" />;
 }
 
 async function getImprintHtml(locale: Locale): Promise<string> {

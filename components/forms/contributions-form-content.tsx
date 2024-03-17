@@ -93,6 +93,12 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 
 			<input name="year" type="hidden" value={year} />
 
+			<NumberInputField
+				defaultValue={contributionsCount ?? undefined}
+				label="Total contributors to national node"
+				name="contributionsCount"
+			/>
+
 			<section className="grid content-start items-start gap-x-4 gap-y-6 xs:grid-cols-2 md:grid-cols-4">
 				{Object.entries(contributionsByRoleId).map(([roleId, contributions]) => {
 					const role = rolesById.get(roleId);
@@ -112,12 +118,6 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 					);
 				})}
 			</section>
-
-			<NumberInputField
-				defaultValue={contributionsCount ?? undefined}
-				label="Other"
-				name="contributionsCount"
-			/>
 
 			<TextAreaField defaultValue={comments} label="Comment" name="comment" />
 

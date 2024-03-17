@@ -121,8 +121,9 @@ export function ServiceReportsFormContent(props: ServiceReportsFormContentProps)
 				>
 					Add new service
 				</LinkButton>
+
 				<ContextualHelp
-					description="Nulla in minim nulla nisi reprehenderit sunt incididunt mollit aliqua reprehenderit. Nisi duis aliquip esse laborum laborum nulla ipsum tempor deserunt proident. Nulla incididunt fugiat aute laborum proident duis velit reprehenderit officia irure."
+					description="Click here to add a DARIAH National tool or service. You will be redirected to the SSH Open Marketplace."
 					title="Help"
 					trigger="Help"
 				/>
@@ -205,10 +206,9 @@ function ServiceKpiList(props: ServiceKpiListProps): ReactNode {
 				>
 					Add KPI
 				</Button>
+
 				<ContextualHelp
-					description="Dolore consectetur eu ex officia consequat dolor nulla ut incididunt nisi id. Cillum
-					consequat ad proident quis. Proident magna culpa ut eiusmod. Qui pariatur in irure ipsum
-					cillum est. Laboris magna magna irure dolor aliquip qui aliquip."
+					description="Add a KPI for a DARIAH National tool or service."
 					title="Help"
 					trigger="Help"
 				/>
