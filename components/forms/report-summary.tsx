@@ -1,6 +1,7 @@
 import type { Country, Report } from "@prisma/client";
 import { useFormatter } from "next-intl";
 
+import { Confetti } from "@/components/confetti";
 import { calculateOperationalCost } from "@/lib/calculate-operational-cost";
 
 interface ReportSummaryProps {
@@ -84,6 +85,8 @@ export async function ReportSummary(props: ReportSummaryProps) {
 				<div>Threshold: {calculation.operationalCostThreshold}</div>
 				<div>Cost calculation: {calculation.operationalCost}</div>
 			</div>
+
+			<Confetti isEnabled={calculation.operationalCost >= calculation.operationalCostThreshold} />
 		</section>
 	);
 }
