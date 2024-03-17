@@ -1,6 +1,6 @@
 "use client";
 
-import { groupBy, keyByToMap } from "@acdh-oeaw/lib";
+import { groupBy, groupByToMap, keyByToMap } from "@acdh-oeaw/lib";
 import type { Country, Person, Prisma, Report, Role, WorkingGroup } from "@prisma/client";
 import { useListData } from "@react-stately/data";
 import { PlusIcon } from "lucide-react";
@@ -65,7 +65,7 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 
 	const [formState, formAction] = useFormState(updateContributionsAction, undefined);
 
-	const contributionsByRoleId = groupBy(contributions, (contribution) => {
+	const contributionsByRoleId = groupByToMap(contributions, (contribution) => {
 		return contribution.roleId;
 	});
 
@@ -85,7 +85,13 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 		return role.name;
 	});
 
-	const relevantRoles = ["National Coordinator", ""];
+	// FIXME: role names should be enum.
+	const relevantRoles = [
+		"National Representative",
+		"National Coordinator",
+		"JRC member",
+		"WG chair",
+	] as const;
 
 	return (
 		<Form
@@ -106,9 +112,11 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 			/>
 
 			<section className="grid content-start items-start gap-x-4 gap-y-6 xs:grid-cols-2 md:grid-cols-4">
-				{Object.entries(contributionsByRoleId).map(([roleId, contributions]) => {
-					const role = rolesById.get(roleId);
+				{relevantRoles.map((roleName) => {
+					const role = rolesByName.get(roleName);
 					if (role == null) return null;
+					const roleId = role.id;
+					const contributions = contributionsByRoleId.get(roleId) ?? [];
 
 					return (
 						<article key={roleId} className="grid gap-1.5">

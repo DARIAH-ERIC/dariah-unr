@@ -222,7 +222,7 @@ async function DashboardCountryReportEditStepPageContent(
 							to help determine your in-kind contributions as well.
 						</p>
 
-						<h3>DARIAH Commissioned Event</h3>
+						<strong>DARIAH Commissioned Event</strong>
 
 						<p>
 							These are big, international events that are commissioned by DARIAH and serve to
