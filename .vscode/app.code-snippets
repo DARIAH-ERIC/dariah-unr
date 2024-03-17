@@ -71,7 +71,7 @@
 			"\t};",
 			"}",
 			"",
-			"export const dynamicParams = false;",
+			"// export const dynamicParams = false;",
 			"",
 			"export async function generateStaticParams(props: {",
 			"\tparams: Pick<${1:Name}PageProps[\"params\"], \"locale\">;",

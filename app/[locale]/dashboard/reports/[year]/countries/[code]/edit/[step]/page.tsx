@@ -28,6 +28,7 @@ import { createHref } from "@/lib/create-href";
 import { getCountryByCode, getCountryCodes as _getCountryCodes } from "@/lib/data/country";
 import { getReportByCountryCode } from "@/lib/data/report";
 import { getCountryCodes as getStaticCountryCodes } from "@/lib/get-country-codes";
+import { getReportYears } from "@/lib/get-report-years";
 import { redirect } from "@/lib/navigation";
 import {
 	type DashboardCountryReportEditStepPageParams,
@@ -45,23 +46,29 @@ interface DashboardCountryReportEditStepPageProps {
 	};
 }
 
-export const dynamicParams = false;
+// export const dynamicParams = false;
 
 export async function generateStaticParams(_props: {
 	params: Pick<DashboardCountryReportEditStepPageProps["params"], "locale">;
-}): Promise<Array<Pick<DashboardCountryReportEditStepPageProps["params"], "code" | "step">>> {
+}): Promise<
+	Array<Pick<DashboardCountryReportEditStepPageProps["params"], "code" | "step" | "year">>
+> {
 	/**
 	 * FIXME: we cannot access the postgres database on acdh servers from github ci/cd, so we cannot
-	 * query for country codes at build time.
+	 * query for country codes (or report years) at build time.
 	 */
 	// const countries = await getCountryCodes();
 	const countries = await Promise.resolve(Array.from(getStaticCountryCodes().values()));
 
 	const steps = dashboardCountryReportSteps;
 
-	const params = countries.flatMap((code) => {
-		return steps.map((step) => {
-			return { code, step };
+	const years = getReportYears();
+
+	const params = years.flatMap((year) => {
+		return countries.flatMap((code) => {
+			return steps.map((step) => {
+				return { code, step, year };
+			});
 		});
 	});
 

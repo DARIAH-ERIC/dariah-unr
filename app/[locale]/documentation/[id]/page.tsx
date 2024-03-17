@@ -17,7 +17,7 @@ interface DocumentationPageProps {
 	};
 }
 
-export const dynamicParams = false;
+// export const dynamicParams = false;
 
 export async function generateStaticParams(_props: {
 	params: Pick<DocumentationPageProps["params"], "locale">;
