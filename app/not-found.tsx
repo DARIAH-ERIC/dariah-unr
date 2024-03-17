@@ -39,7 +39,7 @@ export default async function NotFoundPage() {
 			<body>
 				<ColorSchemeScript />
 
-				<MainContent className="container place-content-center py-8">
+				<MainContent className="container grid min-h-full place-content-center py-8">
 					<PageTitle>{t("title")}</PageTitle>
 				</MainContent>
 			</body>
