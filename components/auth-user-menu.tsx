@@ -11,18 +11,29 @@ import {
 } from "@/components/ui/blocks/dropdown-menu";
 import { IconButton } from "@/components/ui/icon-button";
 import { signOut } from "@/lib/actions/auth";
+import { useRouter } from "@/lib/navigation";
 
 interface AuthUserMenuProps {
+	adminDashboardLabel: string;
 	signOutLabel: string;
 	toggleUserMenuLabel: string;
 	user: Session["user"];
 }
 
 export function AuthUserMenu(props: AuthUserMenuProps) {
-	const { signOutLabel, toggleUserMenuLabel, user } = props;
+	const { adminDashboardLabel, signOutLabel, toggleUserMenuLabel, user } = props;
+
+	const router = useRouter();
+
+	const isAdminUser = user.role === "admin";
 
 	async function onAction(key: Key) {
 		switch (key) {
+			case "admin-dasboard": {
+				router.push("/dashboard/admin");
+				break;
+			}
+
 			case "sign-out": {
 				await signOut();
 				break;
@@ -46,6 +57,9 @@ export function AuthUserMenu(props: AuthUserMenuProps) {
 					<Header className="mb-1.5 border-b px-3 py-1.5 text-xs text-neutral-600 dark:text-neutral-400">
 						Signed in as {user.name}
 					</Header>
+					{isAdminUser ? (
+						<DropdownMenuItem id="admin-dashboard">{adminDashboardLabel}</DropdownMenuItem>
+					) : null}
 					<DropdownMenuItem id="sign-out">{signOutLabel}</DropdownMenuItem>
 				</Section>
 			</DropdownMenu>

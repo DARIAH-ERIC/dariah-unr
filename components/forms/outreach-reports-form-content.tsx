@@ -197,10 +197,9 @@ function OutreachKpiList(props: OutreachKpiListProps): ReactNode {
 				>
 					Add KPI
 				</Button>
+
 				<ContextualHelp
-					description="Dolore consectetur eu ex officia consequat dolor nulla ut incididunt nisi id. Cillum
-					consequat ad proident quis. Proident magna culpa ut eiusmod. Qui pariatur in irure ipsum
-					cillum est. Laboris magna magna irure dolor aliquip qui aliquip."
+					description="Click here to add a KPI for a DARIAH National outreach platform."
 					title="Help"
 					trigger="Help"
 				/>

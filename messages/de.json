@@ -19,6 +19,7 @@
 		"toggle-navigation-menu": "Navigationsmenü öffnen"
 	},
 	"AuthControls": {
+		"admin-dashboard": "Admin dashboard",
 		"sign-in": "Anmelden",
 		"sign-out": "Abmelden",
 		"toggle-user-menu": "User-Menü öffnen"
@@ -56,11 +57,17 @@
 		"subject": "Betreff"
 	},
 	"ContactPage": {
-		"lead-in": "Velit dolor elit aliqua veniam eu duis. Nulla occaecat sit ullamco velit id occaecat consequat elit adipisicing anim do. Elit ipsum culpa deserunt nostrud labore culpa esse veniam amet velit labore.",
+		"lead-in": "Bei Fragen schreiben Sie uns gerne eine Nachricht.",
 		"meta": {
 			"title": "Kontakt"
 		},
 		"title": "Kontakt"
+	},
+	"DashboardAdminPage": {
+		"meta": {
+			"title": "Admin dashboard"
+		},
+		"title": "Admin dashboard"
 	},
 	"DashboardCountryReportEditStepPage": {
 		"meta": {

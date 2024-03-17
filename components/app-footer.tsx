@@ -9,7 +9,6 @@ export function AppFooter(): ReactNode {
 	const t = useTranslations("AppFooter");
 
 	const links = {
-		imprint: { href: createHref({ pathname: "/imprint" }), label: t("links.imprint") },
 		contact: { href: createHref({ pathname: "/contact" }), label: t("links.contact") },
 		"privacy-policy": {
 			href: createHref({ pathname: "/privacy-policy" }),
@@ -19,6 +18,7 @@ export function AppFooter(): ReactNode {
 			href: createHref({ pathname: "/terms-of-use" }),
 			label: t("links.terms-of-use"),
 		},
+		imprint: { href: createHref({ pathname: "/imprint" }), label: t("links.imprint") },
 	} satisfies Record<string, { href: LinkProps["href"]; label: string }>;
 
 	return (

@@ -8,6 +8,7 @@ import { Group } from "react-aria-components";
 import { useFormState } from "react-dom";
 
 import { SubmitButton } from "@/components/submit-button";
+import { ContextualHelp } from "@/components/ui/blocks/contextual-help";
 import { Radio, RadioGroupField } from "@/components/ui/blocks/radio-group-field";
 import { TextAreaField } from "@/components/ui/blocks/text-area-field";
 import { TextInputField } from "@/components/ui/blocks/text-input-field";
@@ -154,7 +155,7 @@ function AddedInstitutionsSection(props: AddedInstitutionsSectionProps): ReactNo
 				);
 			})}
 
-			<div>
+			<div className="flex items-center gap-x-2">
 				<DialogTrigger>
 					<Button>
 						<PlusIcon aria-hidden={true} className="size-4 shrink-0" />
@@ -171,6 +172,12 @@ function AddedInstitutionsSection(props: AddedInstitutionsSectionProps): ReactNo
 						}}
 					/>
 				</DialogTrigger>
+
+				<ContextualHelp
+					description="Click here to add a partner institution for your DARIAH national consortium."
+					title="Help"
+					trigger="Help"
+				/>
 			</div>
 		</section>
 	);
