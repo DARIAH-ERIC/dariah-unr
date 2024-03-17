@@ -7,9 +7,5 @@ interface FormDescriptionProps {
 export function FormDescription(props: FormDescriptionProps): ReactNode {
 	const { children } = props;
 
-	return (
-		<div className="max-w-screen-md text-pretty text-sm leading-normal text-neutral-600 dark:text-neutral-400">
-			{children}
-		</div>
-	);
+	return <div className="prose prose-sm max-w-screen-md text-pretty">{children}</div>;
 }

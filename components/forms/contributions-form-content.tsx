@@ -81,6 +81,12 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 		return workingGroup.id;
 	});
 
+	const rolesByName = keyByToMap(roles, (role) => {
+		return role.name;
+	});
+
+	const relevantRoles = ["National Coordinator", ""];
+
 	return (
 		<Form
 			action={formAction}

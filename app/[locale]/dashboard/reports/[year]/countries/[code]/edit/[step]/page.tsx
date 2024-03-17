@@ -149,11 +149,7 @@ async function DashboardCountryReportEditStepPageContent(
 				<section className="grid gap-6">
 					<FormTitle>{t("confirm-information")}</FormTitle>
 					<FormDescription>
-						Tempor aliqua non ad sint sint officia Lorem cupidatat cillum sint non tempor quis qui.
-						Voluptate sunt cillum et do cillum ut deserunt aliqua nisi pariatur velit adipisicing
-						sint. Incididunt laboris tempor cupidatat tempor laborum nulla consectetur consectetur
-						exercitation tempor veniam ullamco ullamco commodo. Nulla commodo ad dolor laboris nulla
-						tempor labore.
+						<p>Please confirm that all changes have been submitted.</p>
 					</FormDescription>
 
 					<ConfirmationForm countryId={country.id} reportId={report.id} />
