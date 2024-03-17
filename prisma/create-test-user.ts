@@ -6,8 +6,8 @@ import { env } from "@/config/env.config";
 
 const db = new PrismaClient();
 
-async function createTestnUser() {
-	const testUser = getTestnUser();
+async function createTestUser() {
+	const testUser = getTestUser();
 
 	const country = await db.country.findFirst({
 		where: {
@@ -32,7 +32,7 @@ async function createTestnUser() {
 	});
 }
 
-createTestnUser()
+createTestUser()
 	.then(() => {
 		log.success("Successfully created test user in the database.");
 	})
@@ -46,7 +46,7 @@ createTestnUser()
 
 // ------------------------------------------------------------------------------------------------
 
-function getTestnUser() {
+function getTestUser() {
 	assert(env.DATABASE_TEST_USER_COUNTRY_CODE);
 	assert(env.DATABASE_TEST_USER_EMAIL);
 	assert(env.DATABASE_TEST_USER_NAME);
