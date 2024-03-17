@@ -1,4 +1,5 @@
 import type { Metadata, ResolvingMetadata } from "next";
+import { notFound } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
@@ -6,6 +7,7 @@ import type { ReactNode } from "react";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import type { Locale } from "@/config/i18n.config";
+import { getCurrentUser } from "@/lib/auth/session";
 
 interface DashboardAdminPageProps {
 	params: {
@@ -40,6 +42,16 @@ export default function DashboardAdminPage(props: DashboardAdminPageProps): Reac
 	return (
 		<MainContent className="container grid content-start gap-y-4 py-8">
 			<PageTitle>{t("title")}</PageTitle>
+
+			<DashboardAdminPageContent />
 		</MainContent>
 	);
+}
+
+async function DashboardAdminPageContent() {
+	const user = await getCurrentUser();
+
+	if (user?.role !== "admin") notFound();
+
+	return <section>ADMIN DASHBOARD</section>;
 }
