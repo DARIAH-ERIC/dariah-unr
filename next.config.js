@@ -28,23 +28,11 @@ const config = {
 	},
 	output: env.BUILD_MODE,
 	pageExtensions: ["ts", "tsx", "md", "mdx"],
-	redirects() {
-		/** @type {Awaited<ReturnType<NonNullable<NextConfig["redirects"]>>>} */
-		const redirects = [
-			{
-				source: "/documentation",
-				destination: "/documentation/data-model",
-				permanent: false,
-			},
-		];
-
-		return Promise.resolve(redirects);
-	},
 	rewrites() {
 		/** @type {Awaited<ReturnType<NonNullable<NextConfig["rewrites"]>>>} */
 		const rewrites = [
 			{
-				source: "/admin",
+				source: "/cms",
 				destination: "/keystatic",
 			},
 		];

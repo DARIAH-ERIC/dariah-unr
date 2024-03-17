@@ -7,5 +7,7 @@ export const publicRoutes: Array<RegExp | string> = [
 	"/imprint",
 	"/privacy-policy",
 	"/terms-of-use",
+	"/cms",
+	"/keystatic",
 	new RegExp("^/documentation(/.*)?"),
 ];
