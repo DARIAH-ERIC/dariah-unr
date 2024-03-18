@@ -141,4 +141,5 @@ export const config = {
 	theme: {
 		logo: "/assets/images/logo.svg",
 	},
+	trustHost: true,
 } satisfies NextAuthConfig;
