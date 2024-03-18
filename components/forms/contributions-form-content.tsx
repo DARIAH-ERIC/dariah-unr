@@ -43,6 +43,7 @@ interface ContributionsFormContentProps {
 		}>
 	>;
 	contributionsCount: Report["contributionsCount"];
+	previousContributionsCount: Report["contributionsCount"] | undefined;
 	persons: Array<Pick<Person, "id" | "name">>;
 	reportId: Report["id"];
 	roles: Array<Pick<Role, "id" | "name">>;
@@ -57,6 +58,7 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 		contributions,
 		contributionsCount,
 		persons,
+		previousContributionsCount,
 		reportId,
 		roles,
 		workingGroups,
@@ -107,6 +109,11 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 
 			<NumberInputField
 				defaultValue={contributionsCount ?? undefined}
+				description={
+					previousContributionsCount != null
+						? `Previous year: ${previousContributionsCount}.`
+						: undefined
+				}
 				label="Total contributors to national node"
 				name="contributionsCount"
 			/>

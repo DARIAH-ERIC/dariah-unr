@@ -192,6 +192,7 @@ async function DashboardCountryReportEditStepPageContent(
 						comments={comments}
 						contributionsCount={report.contributionsCount}
 						countryId={country.id}
+						previousContributionsCount={previousReport?.contributionsCount}
 						reportId={report.id}
 						year={year}
 					/>

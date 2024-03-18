@@ -11,12 +11,14 @@ interface ContributionsFormProps {
 	comments: ReportCommentsSchema | null;
 	contributionsCount: Report["contributionsCount"];
 	countryId: Country["id"];
+	previousContributionsCount: Report["contributionsCount"] | undefined;
 	reportId: Report["id"];
 	year: number;
 }
 
 export async function ContributionsForm(props: ContributionsFormProps) {
-	const { comments, contributionsCount, countryId, reportId, year } = props;
+	const { comments, contributionsCount, countryId, previousContributionsCount, reportId, year } =
+		props;
 
 	const contributions = await getContributionsByCountry({ countryId });
 	const persons = await getPersonsByCountry({ countryId });
@@ -30,6 +32,7 @@ export async function ContributionsForm(props: ContributionsFormProps) {
 			contributionsCount={contributionsCount}
 			countryId={countryId}
 			persons={persons}
+			previousContributionsCount={previousContributionsCount}
 			reportId={reportId}
 			roles={roles}
 			workingGroups={workingGroups}
