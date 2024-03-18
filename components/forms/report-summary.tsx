@@ -1,5 +1,5 @@
 import type { Country, Report } from "@prisma/client";
-import { useFormatter } from "next-intl";
+import { getFormatter } from "next-intl/server";
 
 import { Confetti } from "@/components/confetti";
 import { Summary } from "@/components/forms/summary";
@@ -17,7 +17,7 @@ export async function ReportSummary(props: ReportSummaryProps) {
 	const { countryId, reportId } = props;
 
 	const user = await getCurrentUser();
-	const { number } = useFormatter();
+	const { number } = await getFormatter();
 
 	const calculation = await calculateOperationalCost({ countryId, reportId });
 
