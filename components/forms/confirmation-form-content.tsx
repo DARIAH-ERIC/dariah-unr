@@ -30,7 +30,7 @@ export function ConfirmationFormContent(props: ConfirmationFormContentProps): Re
 
 			<input name="reportId" type="hidden" value={reportId} />
 
-			<SubmitButton>Submit</SubmitButton>
+			<SubmitButton>Confirm</SubmitButton>
 
 			<FormSuccessMessage>
 				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}

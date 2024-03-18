@@ -1,5 +1,6 @@
 "use client";
 
+import { isNonEmptyString } from "@acdh-oeaw/lib";
 import type { EventReport, Report } from "@prisma/client";
 import type { ReactNode } from "react";
 import { useFormState } from "react-dom";
@@ -26,7 +27,7 @@ export function EventReportFormContent(props: EventReportFormContentProps): Reac
 	const {
 		comments,
 		eventReport,
-		// previousEventReport,
+		previousEventReport,
 		// previousReportId,
 		reportId,
 	} = props;
@@ -47,30 +48,56 @@ export function EventReportFormContent(props: EventReportFormContentProps): Reac
 
 			<TextInputField
 				defaultValue={eventReport?.dariahCommissionedEvent ?? undefined}
+				description={
+					previousEventReport != null &&
+					isNonEmptyString(previousEventReport.dariahCommissionedEvent)
+						? `Previous year: ${previousEventReport.dariahCommissionedEvent}.`
+						: undefined
+				}
 				label="DARIAH commissioned event"
 				name="eventReport.dariahCommissionedEvent"
 			/>
 
 			<NumberInputField
 				defaultValue={eventReport?.smallMeetings ?? undefined}
+				description={
+					previousEventReport != null
+						? `Previous year: ${previousEventReport.smallMeetings}.`
+						: undefined
+				}
 				label="Small meetings"
 				name="eventReport.smallMeetings"
 			/>
 
 			<NumberInputField
 				defaultValue={eventReport?.mediumMeetings ?? undefined}
+				description={
+					previousEventReport != null
+						? `Previous year: ${previousEventReport.mediumMeetings}.`
+						: undefined
+				}
 				label="Medium meetings"
 				name="eventReport.mediumMeetings"
 			/>
 
 			<NumberInputField
 				defaultValue={eventReport?.largeMeetings ?? undefined}
+				description={
+					previousEventReport != null
+						? `Previous year: ${previousEventReport.largeMeetings}.`
+						: undefined
+				}
 				label="Large meetings"
 				name="eventReport.largeMeetings"
 			/>
 
 			<TextInputField
 				defaultValue={eventReport?.reusableOutcomes ?? undefined}
+				description={
+					previousEventReport != null && isNonEmptyString(previousEventReport.reusableOutcomes)
+						? `Previous year: ${previousEventReport.reusableOutcomes}.`
+						: undefined
+				}
 				label="Reusable outcomes"
 				name="eventReport.reusableOutcomes"
 			/>
