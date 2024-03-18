@@ -493,6 +493,8 @@ async function DashboardCountryReportEditStepPageContent(
 					</FormDescription>
 
 					<ReportSummary countryId={country.id} reportId={report.id} />
+
+					<Navigation code={code} previous="confirm" year={year} />
 				</section>
 			);
 		}
