@@ -149,7 +149,10 @@ async function DashboardCountryReportEditStepPageContent(
 				<section className="grid gap-6">
 					<FormTitle>{t("confirm-information")}</FormTitle>
 					<FormDescription>
-						<p>Please confirm that all changes have been submitted.</p>
+						<p>
+							Do you wish to confirm your 2023 Unified National Report? The next screen will show
+							you a summary of the information and provide you a cost calculation.
+						</p>
 					</FormDescription>
 
 					<ConfirmationForm countryId={country.id} reportId={report.id} />
@@ -488,8 +491,13 @@ async function DashboardCountryReportEditStepPageContent(
 							please read the{" "}
 							<a href="https://docs.google.com/document/d/1A482x5XHwOsEZlmOcn5hw7lHy9muKMfeNs_T5BzQ4II/edit">
 								Policy on the financial value of DARIAH services and other IKCs
-							</a>{" "}
-							which explains two options:
+							</a>
+							.
+						</p>
+
+						<p>
+							Please check the summary below to see if it represents your fully completed 2023
+							Unified National Report.
 						</p>
 					</FormDescription>
 
