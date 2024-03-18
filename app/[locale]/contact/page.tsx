@@ -8,11 +8,13 @@ import { MainContent } from "@/components/main-content";
 import { PageLeadIn } from "@/components/page-lead-in";
 import { PageTitle } from "@/components/page-title";
 import type { Locale } from "@/config/i18n.config";
+import { contactPageSearchParams } from "@/lib/schemas/email";
 
 interface ContactPageProps {
 	params: {
 		locale: Locale;
 	};
+	searchParams: Record<string, Array<string> | string>;
 }
 
 export async function generateMetadata(
@@ -32,19 +34,21 @@ export async function generateMetadata(
 }
 
 export default function ContactPage(props: ContactPageProps): ReactNode {
-	const { params } = props;
+	const { params, searchParams } = props;
 
 	const { locale } = params;
 	setRequestLocale(locale);
 
 	const t = useTranslations("ContactPage");
 
+	const contactSearchParams = contactPageSearchParams.parse(searchParams);
+
 	return (
 		<MainContent className="container grid max-w-screen-md content-start gap-8 py-8">
 			<PageTitle>{t("title")}</PageTitle>
 			<PageLeadIn>{t("lead-in")}</PageLeadIn>
 
-			<ContactForm />
+			<ContactForm {...contactSearchParams} />
 		</MainContent>
 	);
 }
