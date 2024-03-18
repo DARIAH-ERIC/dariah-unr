@@ -91,9 +91,6 @@ jobs:
         env:
           AUTH_SECRET: "${{ secrets.K8S_SECRET_AUTH_SECRET }}"
           AUTH_URL: "http://localhost:3000/api/auth"
-          EMAIL_CONTACT_ADDRESS: "${{ secrets.K8S_SECRET_EMAIL_CONTACT_ADDRESS }}"
-          EMAIL_SMTP_PORT: "${{ vars.K8S_SECRET_EMAIL_SMTP_PORT }}"
-          EMAIL_SMTP_SERVER: "${{ vars.K8S_SECRET_EMAIL_SMTP_SERVER }}"
           DATABASE_DIRECT_URL: "postgresql://dariah-unr:dariah-unr@localhost:5432/dariah-unr?schema=public"
           DATABASE_TEST_USER_COUNTRY_CODE:
             "${{ secrets.K8S_SECRET_DATABASE_TEST_USER_COUNTRY_CODE }}"
@@ -101,6 +98,11 @@ jobs:
           DATABASE_TEST_USER_NAME: "${{ secrets.K8S_SECRET_DATABASE_TEST_USER_NAME }}"
           DATABASE_TEST_USER_PASSWORD: "${{ secrets.K8S_SECRET_DATABASE_TEST_USER_PASSWORD }}"
           DATABASE_URL: "postgresql://dariah-unr:dariah-unr@localhost:5432/dariah-unr?schema=public"
+          EMAIL_CONTACT_ADDRESS: "${{ secrets.K8S_SECRET_TEST_EMAIL_CONTACT_ADDRESS }}"
+          EMAIL_PASSWORD: "${{ secrets.K8S_SECRET_TEST_EMAIL_PASSWORD }}"
+          EMAIL_SMTP_PORT: "${{ vars.K8S_SECRET_TEST_EMAIL_SMTP_PORT }}"
+          EMAIL_SMTP_SERVER: "${{ vars.K8S_SECRET_TEST_EMAIL_SMTP_SERVER }}"
+          EMAIL_USER_NAME: "${{ secrets.K8S_SECRET_TEST_EMAIL_USER_NAME }}"
           NEXT_PUBLIC_APP_BASE_URL: "http://localhost:3000"
           NEXT_PUBLIC_MATOMO_BASE_URL: "${{ vars.NEXT_PUBLIC_MATOMO_BASE_URL }}"
           NEXT_PUBLIC_REDMINE_ID: "${{ vars.SERVICE_ID }}"
@@ -112,9 +114,6 @@ jobs:
         env:
           AUTH_SECRET: "${{ secrets.K8S_SECRET_AUTH_SECRET }}"
           AUTH_URL: "http://localhost:3000/api/auth"
-          EMAIL_CONTACT_ADDRESS: "${{ secrets.K8S_SECRET_EMAIL_CONTACT_ADDRESS }}"
-          EMAIL_SMTP_PORT: "${{ vars.K8S_SECRET_EMAIL_SMTP_PORT }}"
-          EMAIL_SMTP_SERVER: "${{ vars.K8S_SECRET_EMAIL_SMTP_SERVER }}"
           DATABASE_DIRECT_URL: "postgresql://dariah-unr:dariah-unr@localhost:5432/dariah-unr?schema=public"
           DATABASE_TEST_USER_COUNTRY_CODE:
             "${{ secrets.K8S_SECRET_DATABASE_TEST_USER_COUNTRY_CODE }}"
@@ -122,6 +121,11 @@ jobs:
           DATABASE_TEST_USER_NAME: "${{ secrets.K8S_SECRET_DATABASE_TEST_USER_NAME }}"
           DATABASE_TEST_USER_PASSWORD: "${{ secrets.K8S_SECRET_DATABASE_TEST_USER_PASSWORD }}"
           DATABASE_URL: "postgresql://dariah-unr:dariah-unr@localhost:5432/dariah-unr?schema=public"
+          EMAIL_CONTACT_ADDRESS: "${{ secrets.K8S_SECRET_TEST_EMAIL_CONTACT_ADDRESS }}"
+          EMAIL_PASSWORD: "${{ secrets.K8S_SECRET_TEST_EMAIL_PASSWORD }}"
+          EMAIL_SMTP_PORT: "${{ vars.K8S_SECRET_TEST_EMAIL_SMTP_PORT }}"
+          EMAIL_SMTP_SERVER: "${{ vars.K8S_SECRET_TEST_EMAIL_SMTP_SERVER }}"
+          EMAIL_USER_NAME: "${{ secrets.K8S_SECRET_TEST_EMAIL_USER_NAME }}"
           NEXT_PUBLIC_APP_BASE_URL: "http://localhost:3000"
           NEXT_PUBLIC_MATOMO_BASE_URL: "${{ vars.NEXT_PUBLIC_MATOMO_BASE_URL }}"
           NEXT_PUBLIC_REDMINE_ID: "${{ vars.SERVICE_ID }}"
