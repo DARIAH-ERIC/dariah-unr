@@ -45,7 +45,9 @@ export async function ReportSummary(props: ReportSummaryProps) {
 
 			{!isAboveThreshold ? (
 				<div>
-					If you want to get in touch about these numbers, please use our{" "}
+					Using the Policy on InKind Financial Value calculations, you have not reached the
+					threshold. This is not necessarily problematic, as you can report your own figures. Please
+					get in touch with the DARIAH team via our{" "}
 					<Link
 						href={createHref({
 							pathname: "/contact",
@@ -59,7 +61,12 @@ export async function ReportSummary(props: ReportSummaryProps) {
 					</Link>
 					.
 				</div>
-			) : null}
+			) : (
+				<div>
+					You have reached your financial in-kind threshold, congratulations! You have nothing
+					further to do.
+				</div>
+			)}
 		</section>
 	);
 }
