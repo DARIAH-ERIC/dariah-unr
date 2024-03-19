@@ -21,7 +21,7 @@ export const NumberInput = forwardRef(function NumberInput(
 	const { children, className, ...rest } = props;
 
 	return (
-		<Input ref={forwardedRef} {...rest} className={numberInputStyles({ className })} type="number">
+		<Input ref={forwardedRef} {...rest} className={numberInputStyles({ className })}>
 			{children}
 		</Input>
 	);
