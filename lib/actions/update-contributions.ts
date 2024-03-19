@@ -20,7 +20,7 @@ const formSchema = z.object({
 			z.object({
 				personId: z.string(),
 				roleId: z.string(),
-				workingGroupId: z.string().optional(),
+				workingGroupId: nonEmptyString(z.string().optional()),
 			}),
 		)
 		.optional()

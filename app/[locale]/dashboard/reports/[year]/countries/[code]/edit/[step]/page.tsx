@@ -1,10 +1,11 @@
 import { assert } from "@acdh-oeaw/lib";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import type { Metadata, ResolvingMetadata } from "next";
+import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { notFound } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
-import type { ReactNode } from "react";
+import { type ReactNode, Suspense } from "react";
 
 import { AppLink } from "@/components/app-link";
 import { FormDescription } from "@/components/form-description";
@@ -358,12 +359,14 @@ async function DashboardCountryReportEditStepPageContent(
 						</p>
 					</FormDescription>
 
-					<PublicationsForm
-						comments={comments}
-						countryCode={code}
-						reportId={report.id}
-						year={year}
-					/>
+					<Suspense fallback={<p>Fetching zotero collection.</p>}>
+						<PublicationsForm
+							comments={comments}
+							countryCode={code}
+							reportId={report.id}
+							year={year}
+						/>
+					</Suspense>
 
 					<Navigation code={code} next="project-funding-leverage" previous="software" year={year} />
 				</section>

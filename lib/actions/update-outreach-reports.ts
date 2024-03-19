@@ -19,7 +19,7 @@ const formSchema = z.object({
 	comment: z.string().optional(),
 	outreachReports: z.array(
 		z.object({
-			id: z.string().optional(),
+			id: nonEmptyString(z.string().optional()),
 			outreach: z.object({
 				id: z.string(),
 				// name: z.string(),
@@ -28,7 +28,7 @@ const formSchema = z.object({
 			kpis: z
 				.array(
 					z.object({
-						id: z.string().optional(),
+						id: nonEmptyString(z.string().optional()),
 						unit: z.enum(
 							Object.values(OutreachKpiType) as [OutreachKpiType, ...Array<OutreachKpiType>],
 						),
@@ -73,6 +73,7 @@ export async function updateOutreachReportsAction(
 	const { comment, outreachReports, reportId } = result.data;
 
 	for (const outreachReport of outreachReports) {
+		// FIXME: we should probably allow deleting all? so kpis.length could be 0
 		if (outreachReport.kpis == null || outreachReport.kpis.length === 0) continue;
 
 		let outreachReportId = outreachReport.id;

@@ -83,7 +83,7 @@ export function ServiceReportsFormContent(props: ServiceReportsFormContentProps)
 						<Group key={service.id} className="grid content-start gap-y-6">
 							<input name={`serviceReports.${index}.service.id`} type="hidden" value={service.id} />
 
-							{serviceReport != null ? (
+							{serviceReport?.id != null ? (
 								<input name={`serviceReports.${index}.id`} type="hidden" value={serviceReport.id} />
 							) : null}
 
@@ -158,6 +158,9 @@ function ServiceKpiList(props: ServiceKpiListProps): ReactNode {
 
 	const kpis = useListData<Partial<ServiceKpi> & { _id?: string }>({
 		initialItems: initialKpis ?? defaultServiceKpis,
+		// getKey(item) {
+		// 	return item.id ?? item._id;
+		// },
 	});
 
 	return (
@@ -168,7 +171,9 @@ function ServiceKpiList(props: ServiceKpiListProps): ReactNode {
 						return (
 							<li key={kpi.id ?? kpi._id}>
 								<Group className="grid gap-y-3">
-									<input name={`${prefix}.kpis.${index}.id`} type="hidden" value={kpi.id} />
+									{kpi.id != null ? (
+										<input name={`${prefix}.kpis.${index}.id`} type="hidden" value={kpi.id} />
+									) : null}
 
 									<SelectField
 										defaultSelectedKey={kpi.unit}

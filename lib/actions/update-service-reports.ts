@@ -20,7 +20,7 @@ const formSchema = z.object({
 	reportId: z.string(),
 	serviceReports: z.array(
 		z.object({
-			id: z.string().optional(),
+			id: nonEmptyString(z.string().optional()),
 			service: z.object({
 				id: z.string(),
 				// name: z.string(),
@@ -29,7 +29,7 @@ const formSchema = z.object({
 			kpis: z
 				.array(
 					z.object({
-						id: z.string().optional(),
+						id: nonEmptyString(z.string().optional()),
 						unit: z.enum(
 							Object.values(ServiceKpiType) as [ServiceKpiType, ...Array<ServiceKpiType>],
 						),

@@ -79,7 +79,7 @@ export function OutreachReportsFormContent(props: OutreachReportsFormContentProp
 								value={outreach.id}
 							/>
 
-							{outreachReport != null ? (
+							{outreachReport?.id != null ? (
 								<input
 									name={`outreachReports.${index}.id`}
 									type="hidden"
@@ -149,6 +149,9 @@ function OutreachKpiList(props: OutreachKpiListProps): ReactNode {
 			(outreachType === "national_website"
 				? defaultWebsiteOutreachKpis
 				: defaultSocialMediaOutreachKpis),
+		// getKey(item) {
+		// 	return item.id ?? item._id;
+		// },
 	});
 
 	return (
@@ -159,7 +162,9 @@ function OutreachKpiList(props: OutreachKpiListProps): ReactNode {
 						return (
 							<li key={kpi.id ?? kpi._id}>
 								<Group className="grid gap-y-3">
-									<input name={`${prefix}.kpis.${index}.id`} type="hidden" value={kpi.id} />
+									{kpi.id != null ? (
+										<input name={`${prefix}.kpis.${index}.id`} type="hidden" value={kpi.id} />
+									) : null}
 
 									<SelectField
 										defaultSelectedKey={kpi.unit}
@@ -208,10 +213,9 @@ function OutreachKpiList(props: OutreachKpiListProps): ReactNode {
 	);
 }
 
-/** Pre-selected outreach kpis for "national_website" outreach type. */
+/** Pre-selected outreach kpis for "social_media" outreach type. */
 const defaultWebsiteOutreachKpis: Array<{ _id: string; unit: OutreachKpi["unit"] }> = [
 	{ _id: crypto.randomUUID(), unit: "page_views" },
-	{ _id: crypto.randomUUID(), unit: "unique_visitors" },
 ];
 
 /** Pre-selected outreach kpis for "social_media" outreach type. */
