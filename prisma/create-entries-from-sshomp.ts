@@ -9,7 +9,7 @@ import { PrismaClient } from "@prisma/client";
 const db = new PrismaClient();
 
 async function createServicesFromSshomp() {
-	const members = getDariahMemberNames();
+	const actors = getSshompActors();
 
 	const serviceSizeSmall = await db.serviceSize.findFirst({
 		where: {
@@ -70,11 +70,11 @@ async function createServicesFromSshomp() {
 				continue;
 			}
 
-			const member = reviewer.actor.name;
-			const countryCode = members.get(member);
+			const actorId = reviewer.actor.id;
+			const countryCode = actors.get(actorId)?.code;
 
 			if (countryCode == null) {
-				log.warn(`Unknown country ${member}.`);
+				log.warn(`Unknown actor id ${actorId}.`);
 				continue;
 			}
 
@@ -124,26 +124,32 @@ createServicesFromSshomp()
 
 // ------------------------------------------------------------------------------------------------
 
-function getDariahMemberNames() {
-	const members = new Map([
-		["CLARIAH-AT", "at"],
-		["CLARIAH-NL", "nl"],
-		["CLaDA-BG", "bg"],
-		["DARIAH-BE", "be"],
-		["DARIAH-CH", "ch"],
-		["DARIAH-DE", "de"],
-		["DARIAH-DK", "dk"],
-		["DARIAH-FR", "fr"],
-		["DARIAH-GR / DYAS", "gr"],
-		["DARIAH-HR", "hr"],
-		["DARIAH-IE", "ie"],
-		["DARIAH-IT", "it"],
-		["DARIAH-LU", "lu"],
-		["DARIAH-PL", "pl"],
-		["DARIAH-PT / ROSSIO", "pt"],
-		["DARIAH-SI", "si"],
-		["LINDAT/CLARIAH-CZ", "cz"],
+function getSshompActors() {
+	/**
+	 * Map ssh open marketplace actor ids to country codes.
+	 *
+	 * Note: "Bosnia and Herzegovina", "Cyprus", "Malta", "Serbia", and "Spain" are currently not
+	 * represented in the ssh open marketplace.
+	 */
+	const actors = new Map([
+		[9403, { code: "at", name: "CLARIAH-AT" }],
+		[3235, { code: "be", name: "DARIAH-BE" }],
+		[3754, { code: "bg", name: "CLaDA-BG" }],
+		[3403, { code: "hr", name: "DARIAH-HR" }],
+		[3804, { code: "cz", name: "LINDAT/CLARIAH-CZ" }],
+		[9560, { code: "dk", name: "DARIAH-DK" }],
+		[10860, { code: "fr", name: "DARIAH-FR" }],
+		[2868, { code: "de", name: "DARIAH-DE" }],
+		[3502, { code: "gr", name: "DARIAH-GR / DYAS" }],
+		[3755, { code: "ie", name: "DARIAH-IE" }],
+		[10226, { code: "it", name: "DARIAH-IT" }],
+		[9561, { code: "lu", name: "DARIAH-LU" }],
+		[9562, { code: "nl", name: "CLARIAH-NL" }],
+		[3752, { code: "pl", name: "DARIAH-PL" }],
+		[3553, { code: "pt", name: "DARIAH-PT / ROSSIO" }],
+		[9133, { code: "si", name: "DARIAH-SI" }],
+		[10002, { code: "ch", name: "DARIAH-CH" }],
 	]);
 
-	return members;
+	return actors;
 }
