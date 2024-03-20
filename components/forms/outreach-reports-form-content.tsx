@@ -58,17 +58,10 @@ export function OutreachReportsFormContent(props: OutreachReportsFormContentProp
 		return outreachReport.outreach.id;
 	});
 
-	const [kpisKey, setKpisKey] = useState(Date.now());
-
-	function onSubmit() {
-		setKpisKey(Date.now());
-	}
-
 	return (
 		<Form
 			action={formAction}
 			className="grid gap-y-6"
-			onSubmit={onSubmit}
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
 			<input name="reportId" type="hidden" value={reportId} />
@@ -111,7 +104,7 @@ export function OutreachReportsFormContent(props: OutreachReportsFormContentProp
 							</div>
 
 							<OutreachKpiList
-								key={kpisKey}
+								key={formState?.timestamp}
 								kpis={kpis}
 								name={`outreachReports.${index}`}
 								outreachType={outreach.type}

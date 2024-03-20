@@ -54,6 +54,7 @@ export function createSoftware(params: CreateSoftwareParams) {
 		data: {
 			name,
 			url,
+			status: "maintained",
 			countries: {
 				connect: {
 					id: countryId,

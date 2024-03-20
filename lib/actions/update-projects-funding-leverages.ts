@@ -28,11 +28,14 @@ const formSchema = z.object({
 		.optional()
 		.default([]),
 	comment: z.string().optional(),
-	projectsFundingLeverages: z.array(
-		z.object({
-			name: z.string(),
-		}),
-	),
+	projectsFundingLeverages: z
+		.array(
+			z.object({
+				name: z.string(),
+			}),
+		)
+		.optional()
+		.default([]),
 	reportId: z.string(),
 });
 

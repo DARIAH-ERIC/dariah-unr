@@ -64,17 +64,10 @@ export function ServiceReportsFormContent(props: ServiceReportsFormContentProps)
 		return serviceReport.service.id;
 	});
 
-	const [kpisKey, setKpisKey] = useState(Date.now());
-
-	function onSubmit() {
-		setKpisKey(Date.now());
-	}
-
 	return (
 		<Form
 			action={formAction}
 			className="grid gap-y-6"
-			onSubmit={onSubmit}
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
 			<input name="reportId" type="hidden" value={reportId} />
@@ -110,7 +103,11 @@ export function ServiceReportsFormContent(props: ServiceReportsFormContentProps)
 								/>
 							</div>
 
-							<ServiceKpiList key={kpisKey} kpis={kpis} name={`serviceReports.${index}`} />
+							<ServiceKpiList
+								key={formState?.timestamp}
+								kpis={kpis}
+								name={`serviceReports.${index}`}
+							/>
 
 							<hr />
 						</Group>
@@ -198,7 +195,7 @@ function ServiceKpiList(props: ServiceKpiListProps): ReactNode {
 									</SelectField>
 
 									<NumberInputField
-										defaultValue={kpi.value}
+										defaultValue={kpi.value ?? 0}
 										isRequired={true}
 										label="Value"
 										name={`${prefix}.kpis.${index}.value`}
