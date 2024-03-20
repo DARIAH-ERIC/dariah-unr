@@ -10,11 +10,15 @@ import { type ContactFormSchema, contactFormSchema } from "@/lib/schemas/email";
 
 type FormSchema = ContactFormSchema;
 
-interface FormErrors extends z.typeToFlattenedError<FormSchema> {
+interface FormReturnValue {
+	timestamp: number;
+}
+
+interface FormErrors extends FormReturnValue, z.typeToFlattenedError<FormSchema> {
 	status: "error";
 }
 
-interface FormSuccess {
+interface FormSuccess extends FormReturnValue {
 	status: "success";
 	message: string;
 }
@@ -24,7 +28,7 @@ type FormState = FormErrors | FormSuccess;
 export async function sendContactEmail(
 	previousFormState: FormState | undefined,
 	formData: FormData,
-) {
+): Promise<FormState> {
 	const t = await getTranslations("actions.sendEmail");
 
 	const input = getFormData(formData);
@@ -34,6 +38,7 @@ export async function sendContactEmail(
 		return {
 			status: "error" as const,
 			...result.error.flatten(),
+			timestamp: Date.now(),
 		};
 	}
 
@@ -46,5 +51,6 @@ export async function sendContactEmail(
 	return {
 		status: "success" as const,
 		message: t("success"),
+		timestamp: Date.now(),
 	};
 }

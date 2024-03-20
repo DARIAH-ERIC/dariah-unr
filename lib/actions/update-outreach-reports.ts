@@ -61,7 +61,7 @@ type FormState = FormErrors | FormSuccess;
 export async function updateOutreachReportsAction(
 	previousFormState: FormState | undefined,
 	formData: FormData,
-) {
+): Promise<FormState> {
 	const t = await getTranslations("actions.updateOutreachReports");
 
 	const input = getFormData(formData);

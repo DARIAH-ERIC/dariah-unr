@@ -34,11 +34,15 @@ const formSchema = z.object({
 
 type FormSchema = z.infer<typeof formSchema>;
 
-interface FormErrors extends z.typeToFlattenedError<FormSchema> {
+interface FormReturnValue {
+	timestamp: number;
+}
+
+interface FormErrors extends FormReturnValue, z.typeToFlattenedError<FormSchema> {
 	status: "error";
 }
 
-interface FormSuccess {
+interface FormSuccess extends FormReturnValue {
 	status: "success";
 	message: string;
 }
@@ -48,7 +52,7 @@ type FormState = FormErrors | FormSuccess;
 export async function updateContributionsAction(
 	previousFormState: FormState | undefined,
 	formData: FormData,
-) {
+): Promise<FormState> {
 	const t = await getTranslations("actions.updateContributions");
 
 	const input = getFormData(formData);
@@ -58,6 +62,7 @@ export async function updateContributionsAction(
 		return {
 			status: "error" as const,
 			...result.error.flatten(),
+			timestamp: Date.now(),
 		};
 	}
 
@@ -81,5 +86,6 @@ export async function updateContributionsAction(
 	return {
 		status: "success" as const,
 		message: t("success"),
+		timestamp: Date.now(),
 	};
 }
