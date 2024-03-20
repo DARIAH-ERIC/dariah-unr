@@ -1,7 +1,6 @@
 import { assert } from "@acdh-oeaw/lib";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon, Loader2Icon } from "lucide-react";
 import type { Metadata, ResolvingMetadata } from "next";
-import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { notFound } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
@@ -21,6 +20,7 @@ import { ReportSummary } from "@/components/forms/report-summary";
 import { ServiceReportsForm } from "@/components/forms/service-reports-form";
 import { SoftwareForm } from "@/components/forms/software-form";
 import { Link } from "@/components/link";
+import { LoadingIndicator } from "@/components/loading-indicator";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import type { Locale } from "@/config/i18n.config";
@@ -156,7 +156,9 @@ async function DashboardCountryReportEditStepPageContent(
 						</p>
 					</FormDescription>
 
-					<ConfirmationForm countryId={country.id} reportId={report.id} />
+					<FormPlaceholder>
+						<ConfirmationForm countryId={country.id} reportId={report.id} />
+					</FormPlaceholder>
 
 					<Navigation code={code} next="summary" previous="project-funding-leverage" year={year} />
 				</section>
@@ -192,14 +194,16 @@ async function DashboardCountryReportEditStepPageContent(
 						</p>
 					</FormDescription>
 
-					<ContributionsForm
-						comments={comments}
-						contributionsCount={report.contributionsCount}
-						countryId={country.id}
-						previousContributionsCount={previousReport?.contributionsCount}
-						reportId={report.id}
-						year={year}
-					/>
+					<FormPlaceholder>
+						<ContributionsForm
+							comments={comments}
+							contributionsCount={report.contributionsCount}
+							countryId={country.id}
+							previousContributionsCount={previousReport?.contributionsCount}
+							reportId={report.id}
+							year={year}
+						/>
+					</FormPlaceholder>
 
 					<Navigation code={code} next="events" previous="institutions" year={year} />
 				</section>
@@ -236,11 +240,13 @@ async function DashboardCountryReportEditStepPageContent(
 						</p>
 					</FormDescription>
 
-					<EventReportForm
-						comments={comments}
-						previousReportId={previousReport?.id}
-						reportId={report.id}
-					/>
+					<FormPlaceholder>
+						<EventReportForm
+							comments={comments}
+							previousReportId={previousReport?.id}
+							reportId={report.id}
+						/>
+					</FormPlaceholder>
 
 					<Navigation code={code} next="outreach" previous="contributions" year={year} />
 				</section>
@@ -260,12 +266,14 @@ async function DashboardCountryReportEditStepPageContent(
 						</p>
 					</FormDescription>
 
-					<InstitutionsForm
-						comments={comments}
-						countryId={country.id}
-						reportId={report.id}
-						year={year}
-					/>
+					<FormPlaceholder>
+						<InstitutionsForm
+							comments={comments}
+							countryId={country.id}
+							reportId={report.id}
+							year={year}
+						/>
+					</FormPlaceholder>
 
 					<Navigation code={code} next="contributions" previous="welcome" year={year} />
 				</section>
@@ -285,12 +293,14 @@ async function DashboardCountryReportEditStepPageContent(
 						</p>
 					</FormDescription>
 
-					<OutreachReportsForm
-						comments={comments}
-						countryId={country.id}
-						previousReportId={previousReport?.id}
-						reportId={report.id}
-					/>
+					<FormPlaceholder>
+						<OutreachReportsForm
+							comments={comments}
+							countryId={country.id}
+							previousReportId={previousReport?.id}
+							reportId={report.id}
+						/>
+					</FormPlaceholder>
 
 					<Navigation code={code} next="services" previous="events" year={year} />
 				</section>
@@ -310,11 +320,13 @@ async function DashboardCountryReportEditStepPageContent(
 						</p>
 					</FormDescription>
 
-					<ProjectsFundingLeveragesForm
-						comments={comments}
-						previousReportId={previousReport?.id}
-						reportId={report.id}
-					/>
+					<FormPlaceholder>
+						<ProjectsFundingLeveragesForm
+							comments={comments}
+							previousReportId={previousReport?.id}
+							reportId={report.id}
+						/>
+					</FormPlaceholder>
 
 					<Navigation code={code} next="confirm" previous="publications" year={year} />
 				</section>
@@ -359,14 +371,14 @@ async function DashboardCountryReportEditStepPageContent(
 						</p>
 					</FormDescription>
 
-					<Suspense fallback={<p>Fetching zotero collection.</p>}>
+					<FormPlaceholder>
 						<PublicationsForm
 							comments={comments}
 							countryCode={code}
 							reportId={report.id}
 							year={year}
 						/>
-					</Suspense>
+					</FormPlaceholder>
 
 					<Navigation code={code} next="project-funding-leverage" previous="software" year={year} />
 				</section>
@@ -378,18 +390,22 @@ async function DashboardCountryReportEditStepPageContent(
 		// 		<section className="grid gap-6">
 		// 			<FormTitle>{t("research-policy-developments")}</FormTitle>
 		// 			<FormDescription>
-		// 				Tempor aliqua non ad sint sint officia Lorem cupidatat cillum sint non tempor quis qui.
-		// 				Voluptate sunt cillum et do cillum ut deserunt aliqua nisi pariatur velit adipisicing
-		// 				sint. Incididunt laboris tempor cupidatat tempor laborum nulla consectetur consectetur
-		// 				exercitation tempor veniam ullamco ullamco commodo. Nulla commodo ad dolor laboris nulla
-		// 				tempor labore.
+		// 				<p>
+		// 					Tempor aliqua non ad sint sint officia Lorem cupidatat cillum sint non tempor quis
+		// 					qui. Voluptate sunt cillum et do cillum ut deserunt aliqua nisi pariatur velit
+		// 					adipisicing sint. Incididunt laboris tempor cupidatat tempor laborum nulla consectetur
+		// 					consectetur exercitation tempor veniam ullamco ullamco commodo. Nulla commodo ad dolor
+		// 					laboris nulla tempor labore.
+		// 				</p>
 		// 			</FormDescription>
 
-		// 			<ResearchPolicyDevelopmentsForm
-		// 				comments={comments}
-		// 				previousReportId={previousReport?.id}
-		// 				reportId={report.id}
-		// 			/>
+		// 			<FormPlaceholder>
+		// 				<ResearchPolicyDevelopmentsForm
+		// 					comments={comments}
+		// 					previousReportId={previousReport?.id}
+		// 					reportId={report.id}
+		// 				/>
+		// 			</FormPlaceholder>
 		// 		</section>
 		// 	);
 		// }
@@ -428,13 +444,15 @@ async function DashboardCountryReportEditStepPageContent(
 						</p>
 					</FormDescription>
 
-					<ServiceReportsForm
-						comments={comments}
-						countryId={country.id}
-						previousReportId={previousReport?.id}
-						reportId={report.id}
-						year={year}
-					/>
+					<FormPlaceholder>
+						<ServiceReportsForm
+							comments={comments}
+							countryId={country.id}
+							previousReportId={previousReport?.id}
+							reportId={report.id}
+							year={year}
+						/>
+					</FormPlaceholder>
 
 					<Navigation code={code} next="software" previous="outreach" year={year} />
 				</section>
@@ -466,7 +484,9 @@ async function DashboardCountryReportEditStepPageContent(
 						</p>
 					</FormDescription>
 
-					<SoftwareForm comments={comments} countryId={country.id} reportId={report.id} />
+					<FormPlaceholder>
+						<SoftwareForm comments={comments} countryId={country.id} reportId={report.id} />
+					</FormPlaceholder>
 
 					<Navigation code={code} next="publications" previous="services" year={year} />
 				</section>
@@ -504,7 +524,9 @@ async function DashboardCountryReportEditStepPageContent(
 						</p>
 					</FormDescription>
 
-					<ReportSummary countryId={country.id} reportId={report.id} />
+					<FormPlaceholder>
+						<ReportSummary countryId={country.id} reportId={report.id} />
+					</FormPlaceholder>
 
 					<Navigation code={code} previous="confirm" year={year} />
 				</section>
@@ -575,5 +597,27 @@ function Navigation(props: NavigationProps): ReactNode {
 				</AppLink>
 			) : null}
 		</div>
+	);
+}
+
+interface FormPlaceholderProps {
+	children: ReactNode;
+}
+
+function FormPlaceholder(props: FormPlaceholderProps): ReactNode {
+	const { children } = props;
+
+	return (
+		<Suspense
+			fallback={
+				<div className="grid place-items-center py-16">
+					{/* FIXME: LoadingIndicator component. */}
+					<Loader2Icon aria-hidden={true} className="size-5 shrink-0 animate-spin" />
+					<span className="sr-only">Loading...</span>
+				</div>
+			}
+		>
+			{children}
+		</Suspense>
 	);
 }
