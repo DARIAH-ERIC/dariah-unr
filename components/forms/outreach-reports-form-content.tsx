@@ -11,7 +11,7 @@ import {
 	type Report,
 } from "@prisma/client";
 import { useListData } from "@react-stately/data";
-import type { ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 import { Group } from "react-aria-components";
 import { useFormState } from "react-dom";
 
@@ -58,10 +58,17 @@ export function OutreachReportsFormContent(props: OutreachReportsFormContentProp
 		return outreachReport.outreach.id;
 	});
 
+	const [kpisKey, setKpisKey] = useState(Date.now());
+
+	function onSubmit() {
+		setKpisKey(Date.now());
+	}
+
 	return (
 		<Form
 			action={formAction}
 			className="grid gap-y-6"
+			onSubmit={onSubmit}
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
 			<input name="reportId" type="hidden" value={reportId} />
@@ -104,6 +111,7 @@ export function OutreachReportsFormContent(props: OutreachReportsFormContentProp
 							</div>
 
 							<OutreachKpiList
+								key={kpisKey}
 								kpis={kpis}
 								name={`outreachReports.${index}`}
 								outreachType={outreach.type}
@@ -182,7 +190,7 @@ function OutreachKpiList(props: OutreachKpiListProps): ReactNode {
 									</SelectField>
 
 									<NumberInputField
-										defaultValue={kpi.value}
+										defaultValue={kpi.value ?? 0}
 										isRequired={true}
 										label="Value"
 										name={`${prefix}.kpis.${index}.value`}

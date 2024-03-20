@@ -11,7 +11,7 @@ import {
 	// ServiceStatus,
 } from "@prisma/client";
 import { useListData } from "@react-stately/data";
-import type { ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 import { Group } from "react-aria-components";
 import { useFormState } from "react-dom";
 
@@ -64,10 +64,17 @@ export function ServiceReportsFormContent(props: ServiceReportsFormContentProps)
 		return serviceReport.service.id;
 	});
 
+	const [kpisKey, setKpisKey] = useState(Date.now());
+
+	function onSubmit() {
+		setKpisKey(Date.now());
+	}
+
 	return (
 		<Form
 			action={formAction}
 			className="grid gap-y-6"
+			onSubmit={onSubmit}
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
 			<input name="reportId" type="hidden" value={reportId} />
@@ -103,7 +110,7 @@ export function ServiceReportsFormContent(props: ServiceReportsFormContentProps)
 								/>
 							</div>
 
-							<ServiceKpiList kpis={kpis} name={`serviceReports.${index}`} />
+							<ServiceKpiList key={kpisKey} kpis={kpis} name={`serviceReports.${index}`} />
 
 							<hr />
 						</Group>
@@ -176,7 +183,7 @@ function ServiceKpiList(props: ServiceKpiListProps): ReactNode {
 									) : null}
 
 									<SelectField
-										defaultSelectedKey={kpi.unit}
+										defaultSelectedKey={kpi.unit ?? 0}
 										isRequired={true}
 										label="Unit"
 										name={`${prefix}.kpis.${index}.unit`}
