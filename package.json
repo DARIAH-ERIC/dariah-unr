@@ -190,6 +190,7 @@
 				"error",
 				"always"
 			],
+			"react/jsx-no-literals": "error",
 			"react/jsx-no-useless-fragment": "error",
 			"react/jsx-sort-props": [
 				"error",
