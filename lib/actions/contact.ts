@@ -42,15 +42,24 @@ export async function sendContactEmail(
 		};
 	}
 
-	const { email, message, subject } = result.data;
+	try {
+		const { email, message, subject } = result.data;
 
-	await sendEmail({ from: email, subject, text: message });
+		await sendEmail({ from: email, subject, text: message });
 
-	revalidatePath("/[locale]/contact");
+		revalidatePath("/[locale]/contact");
 
-	return {
-		status: "success" as const,
-		message: t("success"),
-		timestamp: Date.now(),
-	};
+		return {
+			status: "success" as const,
+			message: t("success"),
+			timestamp: Date.now(),
+		};
+	} catch (error) {
+		return {
+			status: "error" as const,
+			formErrors: [t("errors.default")],
+			fieldErrors: {},
+			timestamp: Date.now(),
+		};
+	}
 }

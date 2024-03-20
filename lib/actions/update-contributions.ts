@@ -66,26 +66,38 @@ export async function updateContributionsAction(
 		};
 	}
 
-	const { addedContributions, comment, contributionsCount, countryId, reportId, year } =
-		result.data;
+	try {
+		const { addedContributions, comment, contributionsCount, countryId, reportId, year } =
+			result.data;
 
-	await updateReportContributionsCount({ id: reportId, contributionsCount });
+		await updateReportContributionsCount({ id: reportId, contributionsCount });
 
-	for (const contribution of addedContributions) {
-		const { personId, roleId, workingGroupId } = contribution;
-		const startDate = new Date(Date.UTC(year, 0, 1));
-		await createContribution({ countryId, personId, roleId, startDate, workingGroupId });
+		for (const contribution of addedContributions) {
+			const { personId, roleId, workingGroupId } = contribution;
+			const startDate = new Date(Date.UTC(year, 0, 1));
+			await createContribution({ countryId, personId, roleId, startDate, workingGroupId });
+		}
+
+		const report = await getReportComments({ id: reportId });
+		const comments = report?.comments as ReportCommentsSchema | undefined;
+		await updateReportComments({ id: reportId, comments: { ...comments, contributions: comment } });
+
+		revalidatePath(
+			"/[locale]/dashboard/reports/[year]/countries/[code]/edit/contributions",
+			"page",
+		);
+
+		return {
+			status: "success" as const,
+			message: t("success"),
+			timestamp: Date.now(),
+		};
+	} catch (error) {
+		return {
+			status: "error" as const,
+			formErrors: [t("errors.default")],
+			fieldErrors: {},
+			timestamp: Date.now(),
+		};
 	}
-
-	const report = await getReportComments({ id: reportId });
-	const comments = report?.comments as ReportCommentsSchema | undefined;
-	await updateReportComments({ id: reportId, comments: { ...comments, contributions: comment } });
-
-	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/contributions", "page");
-
-	return {
-		status: "success" as const,
-		message: t("success"),
-		timestamp: Date.now(),
-	};
 }

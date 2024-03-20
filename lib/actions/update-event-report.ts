@@ -50,19 +50,28 @@ export async function updateEventReportAction(
 		};
 	}
 
-	const { comment, eventReport, eventReportId, reportId } = result.data;
+	try {
+		const { comment, eventReport, eventReportId, reportId } = result.data;
 
-	await upsertEventReport({ ...eventReport, reportId, eventReportId });
+		await upsertEventReport({ ...eventReport, reportId, eventReportId });
 
-	const report = await getReportComments({ id: reportId });
-	const comments = report?.comments as ReportCommentsSchema | undefined;
-	await updateReportComments({ id: reportId, comments: { ...comments, eventReports: comment } });
+		const report = await getReportComments({ id: reportId });
+		const comments = report?.comments as ReportCommentsSchema | undefined;
+		await updateReportComments({ id: reportId, comments: { ...comments, eventReports: comment } });
 
-	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/events", "page");
+		revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/events", "page");
 
-	return {
-		status: "success" as const,
-		timestamp: Date.now(),
-		message: t("success"),
-	};
+		return {
+			status: "success" as const,
+			timestamp: Date.now(),
+			message: t("success"),
+		};
+	} catch {
+		return {
+			status: "error" as const,
+			formErrors: [t("errors.default")],
+			fieldErrors: {},
+			timestamp: Date.now(),
+		};
+	}
 }

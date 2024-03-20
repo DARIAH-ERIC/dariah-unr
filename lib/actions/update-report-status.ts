@@ -56,25 +56,34 @@ export async function updateReportStatusAction(
 
 	const { comment, countryId, reportId } = result.data;
 
-	const report = await getReportComments({ id: reportId });
-	const comments = report?.comments as ReportCommentsSchema | undefined;
-	await updateReportComments({ id: reportId, comments: { ...comments, confirmation: comment } });
+	try {
+		const report = await getReportComments({ id: reportId });
+		const comments = report?.comments as ReportCommentsSchema | undefined;
+		await updateReportComments({ id: reportId, comments: { ...comments, confirmation: comment } });
 
-	await updateReportStatus({ id: reportId });
+		await updateReportStatus({ id: reportId });
 
-	const calculation = await calculateOperationalCost({ countryId, reportId });
-	await updateReportCalculation({
-		id: reportId,
-		operationalCost: calculation.operationalCost,
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
-		operationalCostDetail: calculation as any,
-	});
+		const calculation = await calculateOperationalCost({ countryId, reportId });
+		await updateReportCalculation({
+			id: reportId,
+			operationalCost: calculation.operationalCost,
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
+			operationalCostDetail: calculation as any,
+		});
 
-	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/confirm", "page");
+		revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/confirm", "page");
 
-	return {
-		status: "success" as const,
-		message: t("success"),
-		timestamp: Date.now(),
-	};
+		return {
+			status: "success" as const,
+			message: t("success"),
+			timestamp: Date.now(),
+		};
+	} catch (error) {
+		return {
+			status: "error" as const,
+			formErrors: [t("errors.default")],
+			fieldErrors: {},
+			timestamp: Date.now(),
+		};
+	}
 }

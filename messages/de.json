@@ -183,6 +183,9 @@
 	},
 	"actions": {
 		"sendEmail": {
+			"errors": {
+				"default": "Konnte Email nicht senden."
+			},
 			"success": "Email erfolgreich gesendet."
 		},
 		"signIn": {
@@ -202,36 +205,69 @@
 			"success": "Erfolgreich registriert."
 		},
 		"updateContributionEndDate": {
+			"errors": {
+				"default": "Konnte Contribution nicht entfernen."
+			},
 			"success": "Contribution erfolgreich entfernt."
 		},
 		"updateContributions": {
+			"errors": {
+				"default": "Konnte Contributions nicht aktualisieren."
+			},
 			"success": "Contributions erfolgreich aktualisiert."
 		},
 		"updateEventReport": {
+			"errors": {
+				"default": "Konnte Events nicht aktualisieren."
+			},
 			"success": "Events erfolgreich aktualisiert."
 		},
 		"updateInstitutions": {
+			"errors": {
+				"default": "Konnte Institutionen nicht aktualisieren."
+			},
 			"success": "Institutionen erfolgreich aktualisiert."
 		},
 		"updateOutreachReports": {
+			"errors": {
+				"default": "Konnte Outreach nicht aktualisieren."
+			},
 			"success": "Outreach erfolgreich aktualisiert."
 		},
 		"updateProjectsFundingLeverages": {
+			"errors": {
+				"default": "Konnte Projektfinanzierungen nicht aktualisieren."
+			},
 			"success": "Projektfinanzierungen erfolgreich aktualisiert."
 		},
 		"updatePublications": {
+			"errors": {
+				"default": "Konnte Publikationen nicht aktualisieren."
+			},
 			"success": "Publikationen erfolgreich aktualisiert."
 		},
 		"updateReport": {
+			"errors": {
+				"default": "Konnte Bericht nicht aktualisieren."
+			},
 			"success": "Bericht erfolgreich aktualisiert."
 		},
 		"updateResearchPolicyDevelopments": {
+			"errors": {
+				"default": "Konnte Research policy development nicht aktualisieren."
+			},
 			"success": "Research policy developments erfolgreich aktualisiert."
 		},
 		"updateServiceReports": {
+			"errors": {
+				"default": "Konnte Services nicht aktualisieren."
+			},
 			"success": "Services erfolgreich aktualisiert."
 		},
 		"updateSoftware": {
+			"errors": {
+				"default": "Konnte Software nicht aktualisieren."
+			},
 			"success": "Software erfolgreich aktualisiert."
 		}
 	},

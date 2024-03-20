@@ -76,30 +76,39 @@ export async function updateProjectsFundingLeveragesAction(
 	const { addedProjectsFundingLeverages, comment, projectsFundingLeverages, reportId } =
 		result.data;
 
-	for (const _projectsFundingLeverage of projectsFundingLeverages) {
-		//
+	try {
+		for (const _projectsFundingLeverage of projectsFundingLeverages) {
+			//
+		}
+
+		for (const projectsFundingLeverage of addedProjectsFundingLeverages) {
+			// @ts-expect-error Probably fine.
+			await createProjectFundingLeverage({ ...projectsFundingLeverage, reportId });
+		}
+
+		const report = await getReportComments({ id: reportId });
+		const comments = report?.comments as ReportCommentsSchema | undefined;
+		await updateReportComments({
+			id: reportId,
+			comments: { ...comments, projectFundingLeverages: comment },
+		});
+
+		revalidatePath(
+			"/[locale]/dashboard/reports/[year]/countries/[code]/edit/project-funding-leverage",
+			"page",
+		);
+
+		return {
+			status: "success" as const,
+			message: t("success"),
+			timestamp: Date.now(),
+		};
+	} catch (error) {
+		return {
+			status: "error" as const,
+			formErrors: [t("errors.default")],
+			fieldErrors: {},
+			timestamp: Date.now(),
+		};
 	}
-
-	for (const projectsFundingLeverage of addedProjectsFundingLeverages) {
-		// @ts-expect-error Probably fine.
-		await createProjectFundingLeverage({ ...projectsFundingLeverage, reportId });
-	}
-
-	const report = await getReportComments({ id: reportId });
-	const comments = report?.comments as ReportCommentsSchema | undefined;
-	await updateReportComments({
-		id: reportId,
-		comments: { ...comments, projectFundingLeverages: comment },
-	});
-
-	revalidatePath(
-		"/[locale]/dashboard/reports/[year]/countries/[code]/edit/project-funding-leverage",
-		"page",
-	);
-
-	return {
-		status: "success" as const,
-		message: t("success"),
-		timestamp: Date.now(),
-	};
 }
