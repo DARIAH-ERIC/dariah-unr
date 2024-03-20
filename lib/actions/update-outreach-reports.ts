@@ -77,35 +77,44 @@ export async function updateOutreachReportsAction(
 
 	const { comment, outreachReports, reportId } = result.data;
 
-	for (const outreachReport of outreachReports) {
-		// FIXME: we should probably allow deleting all? so kpis.length could be 0
-		if (outreachReport.kpis == null || outreachReport.kpis.length === 0) continue;
+	try {
+		for (const outreachReport of outreachReports) {
+			// FIXME: we should probably allow deleting all? so kpis.length could be 0
+			if (outreachReport.kpis == null || outreachReport.kpis.length === 0) continue;
 
-		let outreachReportId = outreachReport.id;
+			let outreachReportId = outreachReport.id;
 
-		if (outreachReportId == null) {
-			const createdOutreachReport = await createOutreachReport({
-				reportId,
-				outreachId: outreachReport.outreach.id,
-			});
+			if (outreachReportId == null) {
+				const createdOutreachReport = await createOutreachReport({
+					reportId,
+					outreachId: outreachReport.outreach.id,
+				});
 
-			outreachReportId = createdOutreachReport.id;
+				outreachReportId = createdOutreachReport.id;
+			}
+
+			for (const kpi of outreachReport.kpis) {
+				await upsertOutreachKpi({ ...kpi, outreachReportId });
+			}
 		}
 
-		for (const kpi of outreachReport.kpis) {
-			await upsertOutreachKpi({ ...kpi, outreachReportId });
-		}
+		const report = await getReportComments({ id: reportId });
+		const comments = report?.comments as ReportCommentsSchema | undefined;
+		await updateReportComments({ id: reportId, comments: { ...comments, outreach: comment } });
+
+		revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/outreach", "page");
+
+		return {
+			status: "success" as const,
+			message: t("success"),
+			timestamp: Date.now(),
+		};
+	} catch (error) {
+		return {
+			status: "error" as const,
+			formErrors: [t("errors.default")],
+			fieldErrors: {},
+			timestamp: Date.now(),
+		};
 	}
-
-	const report = await getReportComments({ id: reportId });
-	const comments = report?.comments as ReportCommentsSchema | undefined;
-	await updateReportComments({ id: reportId, comments: { ...comments, outreach: comment } });
-
-	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/outreach", "page");
-
-	return {
-		status: "success" as const,
-		message: t("success"),
-		timestamp: Date.now(),
-	};
 }

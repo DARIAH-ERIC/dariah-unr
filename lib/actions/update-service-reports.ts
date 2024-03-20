@@ -78,34 +78,46 @@ export async function updateServiceReportsAction(
 
 	const { comment, reportId, serviceReports } = result.data;
 
-	for (const serviceReport of serviceReports) {
-		if (serviceReport.kpis == null || serviceReport.kpis.length === 0) continue;
+	try {
+		for (const serviceReport of serviceReports) {
+			if (serviceReport.kpis == null || serviceReport.kpis.length === 0) continue;
 
-		let serviceReportId = serviceReport.id;
+			let serviceReportId = serviceReport.id;
 
-		if (serviceReportId == null) {
-			const createdServiceReport = await createServiceReport({
-				reportId,
-				serviceId: serviceReport.service.id,
-			});
+			if (serviceReportId == null) {
+				const createdServiceReport = await createServiceReport({
+					reportId,
+					serviceId: serviceReport.service.id,
+				});
 
-			serviceReportId = createdServiceReport.id;
+				serviceReportId = createdServiceReport.id;
+			}
+
+			for (const kpi of serviceReport.kpis) {
+				await upsertServiceKpi({ ...kpi, serviceReportId });
+			}
 		}
 
-		for (const kpi of serviceReport.kpis) {
-			await upsertServiceKpi({ ...kpi, serviceReportId });
-		}
+		const report = await getReportComments({ id: reportId });
+		const comments = report?.comments as ReportCommentsSchema | undefined;
+		await updateReportComments({
+			id: reportId,
+			comments: { ...comments, serviceReports: comment },
+		});
+
+		revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/services", "page");
+
+		return {
+			status: "success" as const,
+			message: t("success"),
+			timestamp: Date.now(),
+		};
+	} catch (error) {
+		return {
+			status: "error" as const,
+			formErrors: [t("errors.default")],
+			fieldErrors: {},
+			timestamp: Date.now(),
+		};
 	}
-
-	const report = await getReportComments({ id: reportId });
-	const comments = report?.comments as ReportCommentsSchema | undefined;
-	await updateReportComments({ id: reportId, comments: { ...comments, serviceReports: comment } });
-
-	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/services", "page");
-
-	return {
-		status: "success" as const,
-		message: t("success"),
-		timestamp: Date.now(),
-	};
 }

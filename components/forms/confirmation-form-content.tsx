@@ -9,6 +9,7 @@ import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
 import { updateReportStatusAction } from "@/lib/actions/update-report-status";
+import { createKey } from "@/lib/create-key";
 
 interface ConfirmationFormContentProps {
 	countryId: Country["id"];
@@ -32,11 +33,11 @@ export function ConfirmationFormContent(props: ConfirmationFormContentProps): Re
 
 			<SubmitButton>Confirm</SubmitButton>
 
-			<FormSuccessMessage key={formState?.timestamp}>
+			<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
 				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}
 			</FormSuccessMessage>
 
-			<FormErrorMessage key={formState?.timestamp}>
+			<FormErrorMessage key={createKey("form-error", formState?.timestamp)}>
 				{formState?.status === "error" && formState.formErrors.length > 0
 					? formState.formErrors
 					: null}

@@ -49,21 +49,30 @@ export async function updateResearchPolicyDevelopmentsAction(
 
 	const { comment, reportId } = result.data;
 
-	const report = await getReportComments({ id: reportId });
-	const comments = report?.comments as ReportCommentsSchema | undefined;
-	await updateReportComments({
-		id: reportId,
-		comments: { ...comments, researchPolicyDevelopments: comment },
-	});
+	try {
+		const report = await getReportComments({ id: reportId });
+		const comments = report?.comments as ReportCommentsSchema | undefined;
+		await updateReportComments({
+			id: reportId,
+			comments: { ...comments, researchPolicyDevelopments: comment },
+		});
 
-	revalidatePath(
-		"/[locale]/dashboard/reports/[year]/countries/[code]/edit/research-policy-developments",
-		"page",
-	);
+		revalidatePath(
+			"/[locale]/dashboard/reports/[year]/countries/[code]/edit/research-policy-developments",
+			"page",
+		);
 
-	return {
-		status: "success" as const,
-		message: t("success"),
-		timestamp: Date.now(),
-	};
+		return {
+			status: "success" as const,
+			message: t("success"),
+			timestamp: Date.now(),
+		};
+	} catch (error) {
+		return {
+			status: "error" as const,
+			formErrors: [t("errors.default")],
+			fieldErrors: {},
+			timestamp: Date.now(),
+		};
+	}
 }

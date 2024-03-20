@@ -28,6 +28,7 @@ import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success"
 import { LinkButton } from "@/components/ui/link-button";
 import { updateServiceReportsAction } from "@/lib/actions/update-service-reports";
 import { createHref } from "@/lib/create-href";
+import { createKey } from "@/lib/create-key";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
 
 interface ServiceReportWithKpis
@@ -137,11 +138,11 @@ export function ServiceReportsFormContent(props: ServiceReportsFormContentProps)
 
 			<SubmitButton>Submit</SubmitButton>
 
-			<FormSuccessMessage key={formState?.timestamp}>
+			<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
 				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}
 			</FormSuccessMessage>
 
-			<FormErrorMessage key={formState?.timestamp}>
+			<FormErrorMessage key={createKey("form-error", formState?.timestamp)}>
 				{formState?.status === "error" && formState.formErrors.length > 0
 					? formState.formErrors
 					: null}
@@ -149,7 +150,6 @@ export function ServiceReportsFormContent(props: ServiceReportsFormContentProps)
 		</Form>
 	);
 }
-
 interface ServiceKpiListProps {
 	kpis: Array<ServiceKpi> | undefined;
 	name: string;

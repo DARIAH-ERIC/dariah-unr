@@ -27,6 +27,7 @@ import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
 import { Modal, ModalOverlay } from "@/components/ui/modal";
 import { updateContributionsAction } from "@/lib/actions/update-contributions";
+import { createKey } from "@/lib/create-key";
 import { getFormData } from "@/lib/get-form-data";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
 
@@ -145,11 +146,11 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 
 			<SubmitButton>Submit</SubmitButton>
 
-			<FormSuccessMessage key={formState?.timestamp}>
+			<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
 				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}
 			</FormSuccessMessage>
 
-			<FormErrorMessage key={formState?.timestamp}>
+			<FormErrorMessage key={createKey("form-error", formState?.timestamp)}>
 				{formState?.status === "error" && formState.formErrors.length > 0
 					? formState.formErrors
 					: null}

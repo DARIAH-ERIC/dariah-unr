@@ -47,16 +47,28 @@ export async function updateContributionEndDateAction(
 		};
 	}
 
-	const { id, year } = result.data;
+	try {
+		const { id, year } = result.data;
 
-	const endDate = new Date(Date.UTC(year, 11, 1));
-	await updateContributionEndDate({ id, endDate });
+		const endDate = new Date(Date.UTC(year, 11, 1));
+		await updateContributionEndDate({ id, endDate });
 
-	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/contributions", "page");
+		revalidatePath(
+			"/[locale]/dashboard/reports/[year]/countries/[code]/edit/contributions",
+			"page",
+		);
 
-	return {
-		status: "success" as const,
-		message: t("success"),
-		timestamp: Date.now(),
-	};
+		return {
+			status: "success" as const,
+			message: t("success"),
+			timestamp: Date.now(),
+		};
+	} catch (error) {
+		return {
+			status: "error" as const,
+			formErrors: [t("errors.default")],
+			fieldErrors: {},
+			timestamp: Date.now(),
+		};
+	}
 }

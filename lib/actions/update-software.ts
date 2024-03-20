@@ -57,24 +57,33 @@ export async function updateSoftwareAction(
 
 	const { addedSoftware, comment, countryId, reportId, software: softwares } = result.data;
 
-	for (const software of softwares) {
-		await updateSoftwareStatus({ status: software.status, id: software.id });
+	try {
+		for (const software of softwares) {
+			await updateSoftwareStatus({ status: software.status, id: software.id });
+		}
+
+		for (const software of addedSoftware) {
+			// FIXME: avoid creating software again when form is re-submitted
+			await createSoftware({ ...software, countryId });
+		}
+
+		const report = await getReportComments({ id: reportId });
+		const comments = report?.comments as ReportCommentsSchema | undefined;
+		await updateReportComments({ id: reportId, comments: { ...comments, software: comment } });
+
+		revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/software", "page");
+
+		return {
+			status: "success" as const,
+			message: t("success"),
+			timestamp: Date.now(),
+		};
+	} catch (error) {
+		return {
+			status: "error" as const,
+			formErrors: [t("errors.default")],
+			fieldErrors: {},
+			timestamp: Date.now(),
+		};
 	}
-
-	for (const software of addedSoftware) {
-		// FIXME: avoid creating software again when form is re-submitted
-		await createSoftware({ ...software, countryId });
-	}
-
-	const report = await getReportComments({ id: reportId });
-	const comments = report?.comments as ReportCommentsSchema | undefined;
-	await updateReportComments({ id: reportId, comments: { ...comments, software: comment } });
-
-	revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/software", "page");
-
-	return {
-		status: "success" as const,
-		message: t("success"),
-		timestamp: Date.now(),
-	};
 }

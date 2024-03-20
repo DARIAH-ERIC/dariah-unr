@@ -10,6 +10,7 @@ import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
 import { sendContactEmail } from "@/lib/actions/contact";
+import { createKey } from "@/lib/create-key";
 import type { ContactPageSearchParams } from "@/lib/schemas/email";
 
 interface ContactFormContentProps extends ContactPageSearchParams {
@@ -36,11 +37,11 @@ export function ContactFormContent(props: ContactFormContentProps): ReactNode {
 
 			<SubmitButton>{sendLabel}</SubmitButton>
 
-			<FormSuccessMessage key={formState?.timestamp}>
+			<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
 				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}
 			</FormSuccessMessage>
 
-			<FormErrorMessage key={formState?.timestamp}>
+			<FormErrorMessage key={createKey("form-error", formState?.timestamp)}>
 				{formState?.status === "error" && formState.formErrors.length > 0
 					? formState.formErrors
 					: null}

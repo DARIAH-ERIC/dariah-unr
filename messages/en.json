@@ -183,6 +183,9 @@
 	},
 	"actions": {
 		"sendEmail": {
+			"errors": {
+				"default": "Failed to send email."
+			},
 			"success": "Successfully sent email."
 		},
 		"signIn": {
@@ -202,36 +205,69 @@
 			"success": "Successfully registered."
 		},
 		"updateContributionEndDate": {
+			"errors": {
+				"default": "Failed to remove contribution."
+			},
 			"success": "Successfully removed contribution."
 		},
 		"updateContributions": {
+			"errors": {
+				"default": "Failed to update contributions."
+			},
 			"success": "Successfully updated contributions."
 		},
 		"updateEventReport": {
+			"errors": {
+				"default": "Failed to update events."
+			},
 			"success": "Successfully updated events."
 		},
 		"updateInstitutions": {
+			"errors": {
+				"default": "Failed to update institutions."
+			},
 			"success": "Successfully updated institutions."
 		},
 		"updateOutreachReports": {
+			"errors": {
+				"default": "Failed to update outreach."
+			},
 			"success": "Successfully updated outreach."
 		},
 		"updateProjectsFundingLeverages": {
+			"errors": {
+				"default": "Failed to update project fundings."
+			},
 			"success": "Successfully updated project fundings."
 		},
 		"updatePublications": {
+			"errors": {
+				"default": "Failed to update publications."
+			},
 			"success": "Successfully updated publications."
 		},
 		"updateReport": {
+			"errors": {
+				"default": "Failed to update report."
+			},
 			"success": "Successfully updated report."
 		},
 		"updateResearchPolicyDevelopments": {
+			"errors": {
+				"default": "Failed to update research policy developments."
+			},
 			"success": "Successfully updated research policy developments."
 		},
 		"updateServiceReports": {
+			"errors": {
+				"default": "Failed to update services."
+			},
 			"success": "Successfully updated services."
 		},
 		"updateSoftware": {
+			"errors": {
+				"default": "Failed to update software."
+			},
 			"success": "Successfully updated software."
 		}
 	},
