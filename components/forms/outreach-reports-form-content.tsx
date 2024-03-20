@@ -214,9 +214,10 @@ function OutreachKpiList(props: OutreachKpiListProps): ReactNode {
 	);
 }
 
-/** Pre-selected outreach kpis for "social_media" outreach type. */
+/** Pre-selected outreach kpis for "national_website" outreach type. */
 const defaultWebsiteOutreachKpis: Array<{ _id: string; unit: OutreachKpi["unit"] }> = [
 	{ _id: crypto.randomUUID(), unit: "page_views" },
+	{ _id: crypto.randomUUID(), unit: "unique_visitors" },
 ];
 
 /** Pre-selected outreach kpis for "social_media" outreach type. */
