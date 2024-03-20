@@ -4,7 +4,7 @@ import { parseAbsoluteToLocal, parseDate } from "@internationalized/date";
 import { ProjectScope, type ProjectsFundingLeverage, type Report } from "@prisma/client";
 import { type ListData, useListData } from "@react-stately/data";
 import { PlusIcon } from "lucide-react";
-import { Fragment, type ReactNode, useId, useOptimistic } from "react";
+import { Fragment, type ReactNode, useId } from "react";
 import { Group } from "react-aria-components";
 import { useFormState } from "react-dom";
 
@@ -63,32 +63,10 @@ export function ProjectsFundingLeveragesFormContent(
 
 	const [formState, formAction] = useFormState(updateProjectsFundingLeveragesAction, undefined);
 
-	const addedProjectsFundingLeverages = useListData<AddedProjectsFundingLeverage>({
-		initialItems: [],
-		getKey(item) {
-			return item._id;
-		},
-	});
-
-	// TODO: should we instead append all addedInstitutions via useOptimistic, which will get synced
-	// with the db on submit
-	const [optimisticAddedProjectsFundingLeverages, clearProjectsFundingLeverages] = useOptimistic(
-		addedProjectsFundingLeverages,
-		(state) => {
-			state.clear();
-			return state;
-		},
-	);
-
-	function onSubmit() {
-		addedProjectsFundingLeverages.clear();
-	}
-
 	return (
 		<Form
 			action={formAction}
 			className="grid gap-y-6"
-			onSubmit={onSubmit}
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
 			<input name="reportId" type="hidden" value={reportId} />
@@ -158,19 +136,17 @@ export function ProjectsFundingLeveragesFormContent(
 
 			<hr />
 
-			<AddedProjectsFundingLeveragesSection
-				projectsFundingLeverages={addedProjectsFundingLeverages}
-			/>
+			<AddedProjectsFundingLeveragesSection key={formState?.timestamp} />
 
 			<TextAreaField defaultValue={comments} label="Comment" name="comment" />
 
 			<SubmitButton>Submit</SubmitButton>
 
-			<FormSuccessMessage>
+			<FormSuccessMessage key={formState?.timestamp}>
 				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}
 			</FormSuccessMessage>
 
-			<FormErrorMessage>
+			<FormErrorMessage key={formState?.timestamp}>
 				{formState?.status === "error" && formState.formErrors.length > 0
 					? formState.formErrors
 					: null}
@@ -179,18 +155,17 @@ export function ProjectsFundingLeveragesFormContent(
 	);
 }
 
-interface AddedProjectsFundingLeveragesSectionProps {
-	projectsFundingLeverages: ListData<AddedProjectsFundingLeverage>;
-}
-
-function AddedProjectsFundingLeveragesSection(
-	props: AddedProjectsFundingLeveragesSectionProps,
-): ReactNode {
-	const { projectsFundingLeverages } = props;
+function AddedProjectsFundingLeveragesSection(): ReactNode {
+	const addedProjectsFundingLeverages = useListData<AddedProjectsFundingLeverage>({
+		initialItems: [],
+		getKey(item) {
+			return item._id;
+		},
+	});
 
 	return (
 		<section className="grid gap-y-6">
-			{projectsFundingLeverages.items.map((addedProjectsFundingLeverage, index) => {
+			{addedProjectsFundingLeverages.items.map((addedProjectsFundingLeverage, index) => {
 				return (
 					<Group
 						key={addedProjectsFundingLeverage._id}
@@ -252,7 +227,7 @@ function AddedProjectsFundingLeveragesSection(
 						action={(formData, close) => {
 							const projectFundingLeverage = getFormData(formData) as AddedProjectsFundingLeverage;
 
-							projectsFundingLeverages.append(projectFundingLeverage);
+							addedProjectsFundingLeverages.append(projectFundingLeverage);
 
 							close();
 						}}

@@ -3,7 +3,7 @@
 import { type Country, type Report, type Software, SoftwareStatus } from "@prisma/client";
 import { type ListData, useListData } from "@react-stately/data";
 import { PlusIcon } from "lucide-react";
-import { Fragment, type ReactNode, useId, useOptimistic } from "react";
+import { Fragment, type ReactNode, useId } from "react";
 import { Group } from "react-aria-components";
 import { useFormState } from "react-dom";
 
@@ -49,29 +49,10 @@ export function SoftwareFormContent(props: SoftwareFormContentProps): ReactNode 
 
 	const [formState, formAction] = useFormState(updateSoftwareAction, undefined);
 
-	const addedSoftware = useListData<AddedSoftware>({
-		initialItems: [],
-		getKey(item) {
-			return item._id;
-		},
-	});
-
-	// TODO: should we instead append all addedInstitutions via useOptimistic, which will get synced
-	// with the db on submit
-	const [optimisticAddedSoftware, clearAddedSoftware] = useOptimistic(addedSoftware, (state) => {
-		state.clear();
-		return state;
-	});
-
-	function onSubmit() {
-		addedSoftware.clear();
-	}
-
 	return (
 		<Form
 			action={formAction}
 			className="grid gap-y-6"
-			onSubmit={onSubmit}
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
 			<input name="countryId" type="hidden" value={countryId} />
@@ -121,17 +102,17 @@ export function SoftwareFormContent(props: SoftwareFormContentProps): ReactNode 
 
 			<hr />
 
-			<AddedSoftwareSection softwares={addedSoftware} />
+			<AddedSoftwareSection key={formState?.timestamp} />
 
 			<TextAreaField defaultValue={comments} label="Comment" name="comment" />
 
 			<SubmitButton>Submit</SubmitButton>
 
-			<FormSuccessMessage>
+			<FormSuccessMessage key={formState?.timestamp}>
 				{formState?.status === "success" ? formState.message : null}
 			</FormSuccessMessage>
 
-			<FormErrorMessage>
+			<FormErrorMessage key={formState?.timestamp}>
 				{formState?.status === "error" && formState.formErrors.length > 0
 					? formState.formErrors
 					: null}
@@ -140,16 +121,17 @@ export function SoftwareFormContent(props: SoftwareFormContentProps): ReactNode 
 	);
 }
 
-interface AddedSoftwareSectionProps {
-	softwares: ListData<AddedSoftware>;
-}
-
-function AddedSoftwareSection(props: AddedSoftwareSectionProps): ReactNode {
-	const { softwares } = props;
+function AddedSoftwareSection(): ReactNode {
+	const addedSoftware = useListData<AddedSoftware>({
+		initialItems: [],
+		getKey(item) {
+			return item._id;
+		},
+	});
 
 	return (
 		<section className="grid gap-y-6">
-			{softwares.items.map((software, index) => {
+			{addedSoftware.items.map((software, index) => {
 				return (
 					<Group key={software._id} className="grid content-start gap-x-4 gap-y-3 sm:grid-cols-2">
 						<TextInputField
@@ -180,7 +162,7 @@ function AddedSoftwareSection(props: AddedSoftwareSectionProps): ReactNode {
 						action={(formData, close) => {
 							const software = getFormData(formData) as AddedSoftware;
 
-							softwares.append(software);
+							addedSoftware.append(software);
 
 							close();
 						}}

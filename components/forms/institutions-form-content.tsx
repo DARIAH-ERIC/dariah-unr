@@ -3,7 +3,7 @@
 import type { Country, Institution, Report } from "@prisma/client";
 import { type ListData, useListData } from "@react-stately/data";
 import { PlusIcon } from "lucide-react";
-import { Fragment, type ReactNode, useId, useOptimistic } from "react";
+import { Fragment, type ReactNode, useId } from "react";
 import { Group } from "react-aria-components";
 import { useFormState } from "react-dom";
 
@@ -48,32 +48,10 @@ export function InstitutionsFormContent(props: InstitutionsFormContentProps): Re
 
 	const [formState, formAction] = useFormState(updateInstitutionsAction, undefined);
 
-	const addedInstitutions = useListData<AddedInstitution>({
-		initialItems: [],
-		getKey(item) {
-			return item._id;
-		},
-	});
-
-	// TODO: should we instead append all addedInstitutions via useOptimistic, which will get synced
-	// with the db on submit
-	const [optimisticAddedInstitutions, clearAddedInstitution] = useOptimistic(
-		addedInstitutions,
-		(state) => {
-			state.clear();
-			return state;
-		},
-	);
-
-	function onSubmit() {
-		addedInstitutions.clear();
-	}
-
 	return (
 		<Form
 			action={formAction}
 			className="grid gap-y-6"
-			onSubmit={onSubmit}
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
 			<input name="reportId" type="hidden" value={reportId} />
@@ -114,17 +92,17 @@ export function InstitutionsFormContent(props: InstitutionsFormContentProps): Re
 
 			<hr />
 
-			<AddedInstitutionsSection institutions={addedInstitutions} />
+			<AddedInstitutionsSection key={formState?.timestamp} />
 
 			<TextAreaField defaultValue={comments} label="Comment" name="comment" />
 
 			<SubmitButton>Submit</SubmitButton>
 
-			<FormSuccessMessage>
+			<FormSuccessMessage key={formState?.timestamp}>
 				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}
 			</FormSuccessMessage>
 
-			<FormErrorMessage>
+			<FormErrorMessage key={formState?.timestamp}>
 				{formState?.status === "error" && formState.formErrors.length > 0
 					? formState.formErrors
 					: null}
@@ -133,16 +111,17 @@ export function InstitutionsFormContent(props: InstitutionsFormContentProps): Re
 	);
 }
 
-interface AddedInstitutionsSectionProps {
-	institutions: ListData<AddedInstitution>;
-}
-
-function AddedInstitutionsSection(props: AddedInstitutionsSectionProps): ReactNode {
-	const { institutions } = props;
+function AddedInstitutionsSection(): ReactNode {
+	const addedInstitutions = useListData<AddedInstitution>({
+		initialItems: [],
+		getKey(item) {
+			return item._id;
+		},
+	});
 
 	return (
 		<section className="grid gap-y-6">
-			{institutions.items.map((institution, index) => {
+			{addedInstitutions.items.map((institution, index) => {
 				return (
 					<Group key={institution._id} className="grid content-start gap-x-4">
 						<TextInputField
@@ -166,7 +145,7 @@ function AddedInstitutionsSection(props: AddedInstitutionsSectionProps): ReactNo
 						action={(formData, close) => {
 							const institution = getFormData(formData) as AddedInstitution;
 
-							institutions.append(institution);
+							addedInstitutions.append(institution);
 
 							close();
 						}}

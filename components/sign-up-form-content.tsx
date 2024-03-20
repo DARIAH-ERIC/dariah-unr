@@ -9,7 +9,7 @@ import { TextInputField } from "@/components/ui/blocks/text-input-field";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
-import { signUp } from "@/lib/actions/auth";
+import { signUpAction } from "@/lib/actions/auth";
 
 interface SignUpFormContentProps {
 	callbackUrl: string | null;
@@ -22,7 +22,7 @@ interface SignUpFormContentProps {
 export function SignUpFormContent(props: SignUpFormContentProps): ReactNode {
 	const { callbackUrl, emailLabel, nameLabel, passwordLabel, signUpLabel } = props;
 
-	const [formState, formAction] = useFormState(signUp, undefined);
+	const [formState, formAction] = useFormState(signUpAction, undefined);
 
 	return (
 		<Form
@@ -48,11 +48,11 @@ export function SignUpFormContent(props: SignUpFormContentProps): ReactNode {
 
 			<SubmitButton>{signUpLabel}</SubmitButton>
 
-			<FormSuccessMessage>
+			<FormSuccessMessage key={formState?.timestamp}>
 				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}
 			</FormSuccessMessage>
 
-			<FormErrorMessage>
+			<FormErrorMessage key={formState?.timestamp}>
 				{formState?.status === "error" && formState.formErrors.length > 0
 					? formState.formErrors
 					: null}
