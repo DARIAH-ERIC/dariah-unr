@@ -98,6 +98,7 @@ export function ProjectsFundingLeveragesFormContent(
 										? parseAbsoluteToLocal(projectsFundingLeverage.startDate.toISOString())
 										: undefined
 								}
+								granularity="day"
 								isRequired={true}
 								label="Start date"
 								name={`projectsFundingLeverages.${index}.startDate`}
