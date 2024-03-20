@@ -95,44 +95,10 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 		"WG chair",
 	] as const;
 
-	const addedContributionsByRole = {
-		"National Representative": useListData<AddedContribution>({
-			initialItems: [],
-			getKey(item) {
-				return item._id;
-			},
-		}),
-		"National Coordinator": useListData<AddedContribution>({
-			initialItems: [],
-			getKey(item) {
-				return item._id;
-			},
-		}),
-		"JRC member": useListData<AddedContribution>({
-			initialItems: [],
-			getKey(item) {
-				return item._id;
-			},
-		}),
-		"WG chair": useListData<AddedContribution>({
-			initialItems: [],
-			getKey(item) {
-				return item._id;
-			},
-		}),
-	};
-
-	function onSubmit() {
-		Object.values(addedContributionsByRole).forEach((addedContributions) => {
-			addedContributions.clear();
-		});
-	}
-
 	return (
 		<Form
 			action={formAction}
 			className="grid gap-y-6"
-			onSubmit={onSubmit}
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
 			<input name="countryId" type="hidden" value={countryId} />
@@ -159,12 +125,10 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 					const roleId = role.id;
 					const contributions = contributionsByRoleId.get(roleId) ?? [];
 
-					const addedContributions = addedContributionsByRole[roleName];
-
 					return (
 						<article key={roleId} className="grid gap-1.5">
 							<ContributionsByRole
-								addedContributions={addedContributions}
+								key={formState?.timestamp}
 								contributions={contributions}
 								persons={persons}
 								personsById={personsById}
@@ -181,11 +145,11 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 
 			<SubmitButton>Submit</SubmitButton>
 
-			<FormSuccessMessage>
+			<FormSuccessMessage key={formState?.timestamp}>
 				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}
 			</FormSuccessMessage>
 
-			<FormErrorMessage>
+			<FormErrorMessage key={formState?.timestamp}>
 				{formState?.status === "error" && formState.formErrors.length > 0
 					? formState.formErrors
 					: null}
@@ -202,7 +166,6 @@ interface AddedContribution {
 }
 
 interface ContributionsByRoleProps {
-	addedContributions: ListData<AddedContribution>;
 	contributions: Array<
 		Prisma.ContributionGetPayload<{
 			include: {
@@ -220,15 +183,14 @@ interface ContributionsByRoleProps {
 }
 
 function ContributionsByRole(props: ContributionsByRoleProps): ReactNode {
-	const {
-		addedContributions,
-		contributions,
-		persons,
-		personsById,
-		role,
-		workingGroups,
-		workingGroupsById,
-	} = props;
+	const { contributions, persons, personsById, role, workingGroups, workingGroupsById } = props;
+
+	const addedContributions = useListData<AddedContribution>({
+		initialItems: [],
+		getKey(item) {
+			return item._id;
+		},
+	});
 
 	return (
 		<Fragment>

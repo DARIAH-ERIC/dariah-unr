@@ -10,7 +10,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/blocks/dropdown-menu";
 import { IconButton } from "@/components/ui/icon-button";
-import { signOut } from "@/lib/actions/auth";
+import { signOutAction } from "@/lib/actions/auth";
 import { useRouter } from "@/lib/navigation";
 
 interface AuthUserMenuProps {
@@ -35,7 +35,7 @@ export function AuthUserMenu(props: AuthUserMenuProps) {
 			}
 
 			case "sign-out": {
-				await signOut();
+				await signOutAction();
 				break;
 			}
 		}

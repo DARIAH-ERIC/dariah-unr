@@ -145,9 +145,6 @@
 			"@commitlint/config-conventional": "$@commitlint/cli",
 			"@prisma/generator-helper": "$prisma",
 			"@prisma/internals": "$prisma"
-		},
-		"patchedDependencies": {
-			"@react-stately/data@3.11.2": "patches/@react-stately__data@3.11.2.patch"
 		}
 	},
 	"browserslist": {

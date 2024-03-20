@@ -5,30 +5,38 @@ import { AuthError } from "next-auth";
 import { getTranslations } from "next-intl/server";
 import { type z, ZodError } from "zod";
 
-import { signIn as _signIn, signOut as _signOut } from "@/lib/auth";
+import { signIn, signOut } from "@/lib/auth";
 import { createUser, getUserByEmail } from "@/lib/data/user";
 import { type SignInFormSchema, type SignUpFormSchema, signUpFormSchema } from "@/lib/schemas/auth";
 
-interface SignInFormErrors extends z.typeToFlattenedError<SignInFormSchema> {
+interface SignInFormReturnValue {
+	timestamp: number;
+}
+
+interface SignInFormErrors extends SignInFormReturnValue, z.typeToFlattenedError<SignInFormSchema> {
 	status: "error";
 }
 
-interface SignInFormSuccess {
+interface SignInFormSuccess extends SignInFormReturnValue {
 	status: "success";
 	message: string;
 }
 
 type SignInFormState = SignInFormErrors | SignInFormSuccess;
 
-export async function signIn(prevState: SignInFormState | undefined, formData: FormData) {
+export async function signInAction(
+	prevState: SignInFormState | undefined,
+	formData: FormData,
+): Promise<SignInFormState> {
 	const t = await getTranslations("actions.signIn");
 
 	try {
-		await _signIn("credentials", formData);
+		await signIn("credentials", formData);
 
 		return {
 			status: "success" as const,
 			message: t("success"),
+			timestamp: Date.now(),
 		};
 	} catch (error) {
 		if (error instanceof AuthError) {
@@ -40,6 +48,7 @@ export async function signIn(prevState: SignInFormState | undefined, formData: F
 						status: "error" as const,
 						formErrors: [t("errors.AccessDeniedError")],
 						fieldErrors: {},
+						timestamp: Date.now(),
 					};
 				}
 
@@ -48,6 +57,7 @@ export async function signIn(prevState: SignInFormState | undefined, formData: F
 						status: "error" as const,
 						formErrors: [t("errors.CredentialsSignInError")],
 						fieldErrors: {},
+						timestamp: Date.now(),
 					};
 				}
 
@@ -56,6 +66,7 @@ export async function signIn(prevState: SignInFormState | undefined, formData: F
 						status: "error" as const,
 						formErrors: [t("errors.DefaultAuthError")],
 						fieldErrors: {},
+						timestamp: Date.now(),
 					};
 				}
 			}
@@ -65,22 +76,29 @@ export async function signIn(prevState: SignInFormState | undefined, formData: F
 	}
 }
 
-export async function signOut(): Promise<void> {
-	await _signOut();
+export async function signOutAction(): Promise<void> {
+	await signOut();
 }
 
-interface SignUpFormErrors extends z.typeToFlattenedError<SignUpFormSchema> {
+interface SignUpFormReturnValue {
+	timestamp: number;
+}
+
+interface SignUpFormErrors extends SignUpFormReturnValue, z.typeToFlattenedError<SignUpFormSchema> {
 	status: "error";
 }
 
-interface SignUpFormSuccess {
+interface SignUpFormSuccess extends SignUpFormReturnValue {
 	status: "success";
 	message: string;
 }
 
 type SignUpFormState = SignUpFormErrors | SignUpFormSuccess;
 
-export async function signUp(prevState: SignUpFormState | undefined, formData: FormData) {
+export async function signUpAction(
+	prevState: SignUpFormState | undefined,
+	formData: FormData,
+): Promise<SignUpFormState> {
 	const t = await getTranslations("actions.signUp");
 
 	try {
@@ -100,6 +118,7 @@ export async function signUp(prevState: SignUpFormState | undefined, formData: F
 				status: "error" as const,
 				formErrors: [t("errors.DatabaseUserExistsError")],
 				fieldErrors: {},
+				timestamp: Date.now(),
 			};
 		}
 
@@ -110,6 +129,7 @@ export async function signUp(prevState: SignUpFormState | undefined, formData: F
 		return {
 			status: "success" as const,
 			message: t("success"),
+			timestamp: Date.now(),
 		};
 	} catch (error) {
 		if (error instanceof ZodError) {
@@ -118,6 +138,7 @@ export async function signUp(prevState: SignUpFormState | undefined, formData: F
 				status: "error" as const,
 				formErrors: [t("errors.InvalidInputError")],
 				fieldErrors: {},
+				timestamp: Date.now(),
 			};
 		}
 
@@ -126,6 +147,7 @@ export async function signUp(prevState: SignUpFormState | undefined, formData: F
 				status: "error" as const,
 				formErrors: [t("errors.DatabaseError")],
 				fieldErrors: {},
+				timestamp: Date.now(),
 			};
 		}
 

@@ -9,11 +9,6 @@ overrides:
   '@prisma/generator-helper': ^5.11.0
   '@prisma/internals': ^5.11.0
 
-patchedDependencies:
-  '@react-stately/data@3.11.2':
-    hash: x6srtduz4l76f6uj4zxznqtw6a
-    path: patches/@react-stately__data@3.11.2.patch
-
 dependencies:
   '@acdh-oeaw/lib':
     specifier: ^0.1.7
@@ -38,7 +33,7 @@ dependencies:
     version: 3.23.2(react@18.2.0)
   '@react-stately/data':
     specifier: ^3.11.2
-    version: 3.11.2(patch_hash=x6srtduz4l76f6uj4zxznqtw6a)(react@18.2.0)
+    version: 3.11.2(react@18.2.0)
   '@t3-oss/env-nextjs':
     specifier: ^0.9.2
     version: 0.9.2(typescript@5.4.2)(zod@3.22.4)
@@ -1494,7 +1489,7 @@ packages:
       '@react-stately/checkbox': 3.6.3(react@18.2.0)
       '@react-stately/collections': 3.10.5(react@18.2.0)
       '@react-stately/combobox': 3.8.2(react@18.2.0)
-      '@react-stately/data': 3.11.2(patch_hash=x6srtduz4l76f6uj4zxznqtw6a)(react@18.2.0)
+      '@react-stately/data': 3.11.2(react@18.2.0)
       '@react-stately/datepicker': 3.9.2(react@18.2.0)
       '@react-stately/dnd': 3.2.8(react@18.2.0)
       '@react-stately/layout': 3.13.7(react@18.2.0)
@@ -2750,7 +2745,7 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@react-stately/data@3.11.2(patch_hash=x6srtduz4l76f6uj4zxznqtw6a)(react@18.2.0):
+  /@react-stately/data@3.11.2(react@18.2.0):
     resolution: {integrity: sha512-yhK2upk2WbJeiLBRWHrh/4G2CvmmozCzoivLaRAPYu53m1J3MyzVGCLJgnZMbMZvAbNcYWZK6IzO6VqZ2y1fOw==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
@@ -2759,7 +2754,6 @@ packages:
       '@swc/helpers': 0.5.6
       react: 18.2.0
     dev: false
-    patched: true
 
   /@react-stately/datepicker@3.9.2(react@18.2.0):
     resolution: {integrity: sha512-Z6FrK6Af7R5BizqHhJFCj3Hn32mg5iLSDdEgFQAuO043guOXUKFUAnbxfbQUjL6PGE6QwWMfQD7PPGebHn9Ifw==}
@@ -8524,7 +8518,7 @@ packages:
       '@react-stately/checkbox': 3.6.3(react@18.2.0)
       '@react-stately/collections': 3.10.5(react@18.2.0)
       '@react-stately/combobox': 3.8.2(react@18.2.0)
-      '@react-stately/data': 3.11.2(patch_hash=x6srtduz4l76f6uj4zxznqtw6a)(react@18.2.0)
+      '@react-stately/data': 3.11.2(react@18.2.0)
       '@react-stately/datepicker': 3.9.2(react@18.2.0)
       '@react-stately/dnd': 3.2.8(react@18.2.0)
       '@react-stately/form': 3.0.1(react@18.2.0)

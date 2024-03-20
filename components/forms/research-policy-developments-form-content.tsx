@@ -2,7 +2,7 @@
 
 import type { Report, ResearchPolicyDevelopment } from "@prisma/client";
 import { type ListData, useListData } from "@react-stately/data";
-import { type ReactNode, useOptimistic } from "react";
+import type { ReactNode } from "react";
 import { useFormState } from "react-dom";
 
 import { SubmitButton } from "@/components/submit-button";
@@ -39,47 +39,25 @@ export function ResearchPolicyDevelopmentsFormContent(
 
 	const [formState, formAction] = useFormState(updateResearchPolicyDevelopmentsAction, undefined);
 
-	const addedResearchPolicyDevelopments = useListData<AddedResearchPolicyDevelopment>({
-		initialItems: [],
-		getKey(item) {
-			return item._id;
-		},
-	});
-
-	// TODO: should we instead append all addedInstitutions via useOptimistic, which will get synced
-	// with the db on submit
-	const [optimisticAddedResearchPolicyDevelopments, clearAddedResearchPolicyDevelopments] =
-		useOptimistic(addedResearchPolicyDevelopments, (state) => {
-			state.clear();
-			return state;
-		});
-
-	function onSubmit() {
-		addedResearchPolicyDevelopments.clear();
-	}
-
 	return (
 		<Form
 			action={formAction}
 			className="grid gap-y-6"
-			onSubmit={onSubmit}
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
 			<input name="reportId" type="hidden" value={reportId} />
 
-			<AddedResearchPolicyDevelopmentsSection
-				researchPolicyDevelopments={addedResearchPolicyDevelopments}
-			/>
+			<AddedResearchPolicyDevelopmentsSection key={formState?.timestamp} />
 
 			<TextAreaField defaultValue={comments} label="Comment" name="comment" />
 
 			<SubmitButton>Submit</SubmitButton>
 
-			<FormSuccessMessage>
+			<FormSuccessMessage key={formState?.timestamp}>
 				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}
 			</FormSuccessMessage>
 
-			<FormErrorMessage>
+			<FormErrorMessage key={formState?.timestamp}>
 				{formState?.status === "error" && formState.formErrors.length > 0
 					? formState.formErrors
 					: null}
@@ -88,14 +66,13 @@ export function ResearchPolicyDevelopmentsFormContent(
 	);
 }
 
-interface AddedResearchPolicyDevelopmentsSectionProps {
-	researchPolicyDevelopments: ListData<AddedResearchPolicyDevelopment>;
-}
-
-function AddedResearchPolicyDevelopmentsSection(
-	props: AddedResearchPolicyDevelopmentsSectionProps,
-): ReactNode {
-	const { researchPolicyDevelopments: _researchPolicyDevelopments } = props;
+function AddedResearchPolicyDevelopmentsSection(): ReactNode {
+	const _addedResearchPolicyDevelopments = useListData<AddedResearchPolicyDevelopment>({
+		initialItems: [],
+		getKey(item) {
+			return item._id;
+		},
+	});
 
 	return null;
 }
