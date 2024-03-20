@@ -160,7 +160,7 @@ function AddedSoftwareSection(props: AddedSoftwareSectionProps): ReactNode {
 						/>
 
 						<TextInputField
-							defaultValue={software.url[0]}
+							defaultValue={software.url}
 							isReadOnly={true}
 							label="URL"
 							name={`addedSoftware.${index}.url.0`}

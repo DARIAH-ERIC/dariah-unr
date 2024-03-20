@@ -2,7 +2,7 @@
 
 import { groupBy, groupByToMap, keyByToMap } from "@acdh-oeaw/lib";
 import type { Country, Person, Prisma, Report, Role, WorkingGroup } from "@prisma/client";
-import { useListData } from "@react-stately/data";
+import { type ListData, useListData } from "@react-stately/data";
 import { PlusIcon } from "lucide-react";
 import { Fragment, type ReactNode, useId } from "react";
 import { useFormState } from "react-dom";
@@ -87,7 +87,7 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 		return role.name;
 	});
 
-	// FIXME: role names should be enum.
+	// FIXME: role names should be database enum.
 	const relevantRoles = [
 		"National Representative",
 		"National Coordinator",
@@ -95,10 +95,44 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 		"WG chair",
 	] as const;
 
+	const addedContributionsByRole = {
+		"National Representative": useListData<AddedContribution>({
+			initialItems: [],
+			getKey(item) {
+				return item._id;
+			},
+		}),
+		"National Coordinator": useListData<AddedContribution>({
+			initialItems: [],
+			getKey(item) {
+				return item._id;
+			},
+		}),
+		"JRC member": useListData<AddedContribution>({
+			initialItems: [],
+			getKey(item) {
+				return item._id;
+			},
+		}),
+		"WG chair": useListData<AddedContribution>({
+			initialItems: [],
+			getKey(item) {
+				return item._id;
+			},
+		}),
+	};
+
+	function onSubmit() {
+		Object.values(addedContributionsByRole).forEach((addedContributions) => {
+			addedContributions.clear();
+		});
+	}
+
 	return (
 		<Form
 			action={formAction}
 			className="grid gap-y-6"
+			onSubmit={onSubmit}
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
 			<input name="countryId" type="hidden" value={countryId} />
@@ -125,9 +159,12 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 					const roleId = role.id;
 					const contributions = contributionsByRoleId.get(roleId) ?? [];
 
+					const addedContributions = addedContributionsByRole[roleName];
+
 					return (
 						<article key={roleId} className="grid gap-1.5">
 							<ContributionsByRole
+								addedContributions={addedContributions}
 								contributions={contributions}
 								persons={persons}
 								personsById={personsById}
@@ -165,6 +202,7 @@ interface AddedContribution {
 }
 
 interface ContributionsByRoleProps {
+	addedContributions: ListData<AddedContribution>;
 	contributions: Array<
 		Prisma.ContributionGetPayload<{
 			include: {
@@ -182,9 +220,15 @@ interface ContributionsByRoleProps {
 }
 
 function ContributionsByRole(props: ContributionsByRoleProps): ReactNode {
-	const { contributions, persons, personsById, role, workingGroups, workingGroupsById } = props;
-
-	const addedContributions = useListData<AddedContribution>({ initialItems: [] });
+	const {
+		addedContributions,
+		contributions,
+		persons,
+		personsById,
+		role,
+		workingGroups,
+		workingGroupsById,
+	} = props;
 
 	return (
 		<Fragment>

@@ -7,11 +7,12 @@ import { z } from "zod";
 import { getReportComments, updateReportComments, upsertEventReport } from "@/lib/data/report";
 import { getFormData } from "@/lib/get-form-data";
 import { eventReportSchema, type ReportCommentsSchema } from "@/lib/schemas/report";
+import { nonEmptyString } from "@/lib/schemas/utils";
 
 const formSchema = z.object({
 	comment: z.string().optional(),
 	eventReport: eventReportSchema,
-	eventReportId: z.string().optional(),
+	eventReportId: nonEmptyString(z.string().optional()),
 	reportId: z.string(),
 });
 

@@ -11,7 +11,7 @@ import {
 	type Report,
 } from "@prisma/client";
 import { useListData } from "@react-stately/data";
-import type { ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 import { Group } from "react-aria-components";
 import { useFormState } from "react-dom";
 
@@ -79,7 +79,7 @@ export function OutreachReportsFormContent(props: OutreachReportsFormContentProp
 								value={outreach.id}
 							/>
 
-							{outreachReport != null ? (
+							{outreachReport?.id != null ? (
 								<input
 									name={`outreachReports.${index}.id`}
 									type="hidden"
@@ -104,6 +104,7 @@ export function OutreachReportsFormContent(props: OutreachReportsFormContentProp
 							</div>
 
 							<OutreachKpiList
+								key={formState?.timestamp}
 								kpis={kpis}
 								name={`outreachReports.${index}`}
 								outreachType={outreach.type}
@@ -149,6 +150,9 @@ function OutreachKpiList(props: OutreachKpiListProps): ReactNode {
 			(outreachType === "national_website"
 				? defaultWebsiteOutreachKpis
 				: defaultSocialMediaOutreachKpis),
+		// getKey(item) {
+		// 	return item.id ?? item._id;
+		// },
 	});
 
 	return (
@@ -159,7 +163,9 @@ function OutreachKpiList(props: OutreachKpiListProps): ReactNode {
 						return (
 							<li key={kpi.id ?? kpi._id}>
 								<Group className="grid gap-y-3">
-									<input name={`${prefix}.kpis.${index}.id`} type="hidden" value={kpi.id} />
+									{kpi.id != null ? (
+										<input name={`${prefix}.kpis.${index}.id`} type="hidden" value={kpi.id} />
+									) : null}
 
 									<SelectField
 										defaultSelectedKey={kpi.unit}
@@ -177,7 +183,7 @@ function OutreachKpiList(props: OutreachKpiListProps): ReactNode {
 									</SelectField>
 
 									<NumberInputField
-										defaultValue={kpi.value}
+										defaultValue={kpi.value ?? 0}
 										isRequired={true}
 										label="Value"
 										name={`${prefix}.kpis.${index}.value`}

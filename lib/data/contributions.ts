@@ -68,11 +68,14 @@ export function createContribution(params: CreateContributionParams) {
 				},
 			},
 			startDate,
-			workingGroup: {
-				connect: {
-					id: workingGroupId,
-				},
-			},
+			workingGroup:
+				workingGroupId != null
+					? {
+							connect: {
+								id: workingGroupId,
+							},
+						}
+					: undefined,
 		},
 	});
 }

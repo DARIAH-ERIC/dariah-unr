@@ -19,7 +19,7 @@ const formSchema = z.object({
 	comment: z.string().optional(),
 	outreachReports: z.array(
 		z.object({
-			id: z.string().optional(),
+			id: nonEmptyString(z.string().optional()),
 			outreach: z.object({
 				id: z.string(),
 				// name: z.string(),
@@ -28,7 +28,7 @@ const formSchema = z.object({
 			kpis: z
 				.array(
 					z.object({
-						id: z.string().optional(),
+						id: nonEmptyString(z.string().optional()),
 						unit: z.enum(
 							Object.values(OutreachKpiType) as [OutreachKpiType, ...Array<OutreachKpiType>],
 						),
@@ -43,11 +43,15 @@ const formSchema = z.object({
 
 type FormSchema = z.infer<typeof formSchema>;
 
-interface FormErrors extends z.typeToFlattenedError<FormSchema> {
+interface FormReturnValue {
+	timestamp: number;
+}
+
+interface FormErrors extends FormReturnValue, z.typeToFlattenedError<FormSchema> {
 	status: "error";
 }
 
-interface FormSuccess {
+interface FormSuccess extends FormReturnValue {
 	status: "success";
 	message: string;
 }
@@ -67,12 +71,14 @@ export async function updateOutreachReportsAction(
 		return {
 			status: "error" as const,
 			...result.error.flatten(),
+			timestamp: Date.now(),
 		};
 	}
 
 	const { comment, outreachReports, reportId } = result.data;
 
 	for (const outreachReport of outreachReports) {
+		// FIXME: we should probably allow deleting all? so kpis.length could be 0
 		if (outreachReport.kpis == null || outreachReport.kpis.length === 0) continue;
 
 		let outreachReportId = outreachReport.id;
@@ -100,5 +106,6 @@ export async function updateOutreachReportsAction(
 	return {
 		status: "success" as const,
 		message: t("success"),
+		timestamp: Date.now(),
 	};
 }

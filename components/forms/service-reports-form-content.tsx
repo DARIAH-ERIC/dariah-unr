@@ -11,7 +11,7 @@ import {
 	// ServiceStatus,
 } from "@prisma/client";
 import { useListData } from "@react-stately/data";
-import type { ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 import { Group } from "react-aria-components";
 import { useFormState } from "react-dom";
 
@@ -83,7 +83,7 @@ export function ServiceReportsFormContent(props: ServiceReportsFormContentProps)
 						<Group key={service.id} className="grid content-start gap-y-6">
 							<input name={`serviceReports.${index}.service.id`} type="hidden" value={service.id} />
 
-							{serviceReport != null ? (
+							{serviceReport?.id != null ? (
 								<input name={`serviceReports.${index}.id`} type="hidden" value={serviceReport.id} />
 							) : null}
 
@@ -103,7 +103,11 @@ export function ServiceReportsFormContent(props: ServiceReportsFormContentProps)
 								/>
 							</div>
 
-							<ServiceKpiList kpis={kpis} name={`serviceReports.${index}`} />
+							<ServiceKpiList
+								key={formState?.timestamp}
+								kpis={kpis}
+								name={`serviceReports.${index}`}
+							/>
 
 							<hr />
 						</Group>
@@ -158,6 +162,9 @@ function ServiceKpiList(props: ServiceKpiListProps): ReactNode {
 
 	const kpis = useListData<Partial<ServiceKpi> & { _id?: string }>({
 		initialItems: initialKpis ?? defaultServiceKpis,
+		// getKey(item) {
+		// 	return item.id ?? item._id;
+		// },
 	});
 
 	return (
@@ -168,10 +175,12 @@ function ServiceKpiList(props: ServiceKpiListProps): ReactNode {
 						return (
 							<li key={kpi.id ?? kpi._id}>
 								<Group className="grid gap-y-3">
-									<input name={`${prefix}.kpis.${index}.id`} type="hidden" value={kpi.id} />
+									{kpi.id != null ? (
+										<input name={`${prefix}.kpis.${index}.id`} type="hidden" value={kpi.id} />
+									) : null}
 
 									<SelectField
-										defaultSelectedKey={kpi.unit}
+										defaultSelectedKey={kpi.unit ?? 0}
 										isRequired={true}
 										label="Unit"
 										name={`${prefix}.kpis.${index}.unit`}
@@ -186,7 +195,7 @@ function ServiceKpiList(props: ServiceKpiListProps): ReactNode {
 									</SelectField>
 
 									<NumberInputField
-										defaultValue={kpi.value}
+										defaultValue={kpi.value ?? 0}
 										isRequired={true}
 										label="Value"
 										name={`${prefix}.kpis.${index}.value`}
