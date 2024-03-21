@@ -150,7 +150,7 @@ export const SelectPopover = forwardRef(function SelectPopover(
 
 export const selectListBoxStyles = variants({
 	base: [
-		"outline outline-1 outline-transparent transition",
+		"max-h-80 overflow-auto outline outline-1 outline-transparent transition",
 		"select-none",
 		"rounded-md p-1",
 		"bg-neutral-0 dark:bg-neutral-800",

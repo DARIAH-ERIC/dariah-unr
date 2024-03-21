@@ -29,7 +29,7 @@ export function AuthUserMenu(props: AuthUserMenuProps) {
 
 	async function onAction(key: Key) {
 		switch (key) {
-			case "admin-dasboard": {
+			case "admin-dashboard": {
 				router.push("/dashboard/admin");
 				break;
 			}

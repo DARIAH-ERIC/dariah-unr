@@ -69,6 +69,12 @@
 		},
 		"title": "Admin dashboard"
 	},
+	"DashboardAdminUsersPage": {
+		"meta": {
+			"title": "Users"
+		},
+		"title": "Users"
+	},
 	"DashboardCountryReportEditStepPage": {
 		"meta": {
 			"title": "Edit report"
@@ -269,6 +275,12 @@
 				"default": "Failed to update software."
 			},
 			"success": "Successfully updated software."
+		},
+		"updateUsers": {
+			"errors": {
+				"default": "Failed to update users."
+			},
+			"success": "Successfully updated users."
 		}
 	},
 	"ui": {

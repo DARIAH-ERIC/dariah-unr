@@ -14,6 +14,7 @@ async function createAdminUser() {
 			email: adminUser.email,
 			name: adminUser.name,
 			password: await hash(adminUser.password, 10),
+			role: "admin",
 			status: "verified",
 		},
 	});
