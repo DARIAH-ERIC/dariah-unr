@@ -2,6 +2,7 @@
 
 import { CheckIcon } from "lucide-react";
 import type { ComponentPropsWithoutRef, ElementRef } from "react";
+import { useFormStatus } from "react-dom";
 
 import { type ForwardedRef, forwardRef } from "@/lib/forward-ref";
 import { type VariantProps, variants } from "@/lib/styles";
@@ -31,7 +32,12 @@ export const FormSuccess = forwardRef(function FormSuccess(
 ) {
 	const { children, className, ...rest } = props;
 
-	const isEmpty = children == null;
+	/** TODO: Consider moving up a level once `useActionState` lands in `react`. */
+	const { pending } = useFormStatus();
+
+	/** Clear message when form submission is in flight. */
+	const message = pending ? null : children;
+	const isEmpty = message == null;
 
 	return (
 		<div
@@ -43,7 +49,7 @@ export const FormSuccess = forwardRef(function FormSuccess(
 			className={formSuccessStyles({ className, isEmpty })}
 		>
 			{!isEmpty ? <CheckIcon aria-hidden={true} className="size-4 shrink-0" /> : null}
-			{children}
+			{message}
 		</div>
 	);
 });

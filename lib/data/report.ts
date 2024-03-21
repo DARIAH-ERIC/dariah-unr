@@ -133,6 +133,9 @@ export function getOutreachReports(params: GetOutreachReportsParams) {
 				id: reportId,
 			},
 		},
+		orderBy: {
+			createdAt: "asc",
+		},
 		include: {
 			kpis: true,
 			outreach: true,
@@ -153,6 +156,9 @@ export function getProjectsFundingLeverages(params: GetProjectsFundingLeveragesP
 				id: reportId,
 			},
 		},
+		orderBy: {
+			createdAt: "asc",
+		},
 	});
 }
 
@@ -168,6 +174,9 @@ export function getResearchPolicyDevelopments(params: GetResearchPolicyDevelopme
 			report: {
 				id: reportId,
 			},
+		},
+		orderBy: {
+			createdAt: "asc",
 		},
 	});
 }
@@ -187,6 +196,9 @@ export function getServiceReports(params: GetServiceReportsParams) {
 			service: {
 				status: "live",
 			},
+		},
+		orderBy: {
+			createdAt: "asc",
 		},
 		include: {
 			kpis: true,
@@ -445,6 +457,9 @@ export function updateReportContributionsCount(params: UpdateReportContributions
 
 export function getEventSizes() {
 	return db.eventSize.findMany({
+		orderBy: {
+			type: "asc",
+		},
 		select: {
 			annualValue: true,
 			id: true,
@@ -455,6 +470,9 @@ export function getEventSizes() {
 
 export function getOutreachTypeValues() {
 	return db.outreachTypeValue.findMany({
+		orderBy: {
+			type: "asc",
+		},
 		select: {
 			annualValue: true,
 			id: true,

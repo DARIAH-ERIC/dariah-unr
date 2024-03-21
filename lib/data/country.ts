@@ -4,6 +4,9 @@ import { db } from "@/lib/db";
 
 export function getCountryCodes() {
 	return db.country.findMany({
+		orderBy: {
+			code: "asc",
+		},
 		select: {
 			code: true,
 		},
@@ -34,6 +37,14 @@ export function getCountryById(params: GetCountryByIdParams) {
 	return db.country.findFirst({
 		where: {
 			id,
+		},
+	});
+}
+
+export function getCountries() {
+	return db.country.findMany({
+		orderBy: {
+			code: "asc",
 		},
 	});
 }

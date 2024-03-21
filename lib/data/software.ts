@@ -20,6 +20,9 @@ export function getSoftwareByCountry(params: GetSoftwareByCountryParams) {
 				not: "not_maintained",
 			},
 		},
+		orderBy: {
+			name: "asc",
+		},
 	});
 }
 

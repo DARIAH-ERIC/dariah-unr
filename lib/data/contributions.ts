@@ -16,6 +16,9 @@ export function getContributionsByCountry(params: GetContributionsByCountryParam
 			},
 			endDate: null,
 		},
+		orderBy: {
+			startDate: "asc",
+		},
 		include: {
 			person: {
 				select: {

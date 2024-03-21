@@ -16,6 +16,9 @@ export function getOutreachByCountry(params: GetOutreachByCountryParams) {
 			},
 			endDate: null,
 		},
+		orderBy: {
+			name: "asc",
+		},
 	});
 }
 
@@ -32,6 +35,9 @@ export function getOutreachUrlsByCountry(params: GetOutreachUrlsByCountryParams)
 				id: countryId,
 			},
 			endDate: null,
+		},
+		orderBy: {
+			name: "asc",
 		},
 		select: {
 			type: true,
@@ -54,6 +60,9 @@ export function getSocialMediaByCountry(params: GetSocialMediaByCountryParams) {
 			},
 			endDate: null,
 			type: "social_media",
+		},
+		orderBy: {
+			name: "asc",
 		},
 		select: {
 			url: true,
