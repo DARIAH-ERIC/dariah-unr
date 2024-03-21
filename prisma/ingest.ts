@@ -189,7 +189,7 @@ async function ingest() {
 			data: {
 				comment: row["comments - internal"],
 				marketplaceStatus: getSoftwareStatus(row["MP onboarding"]),
-				marketplaceUrl: row.MPurl,
+				marketplaceId: row.MPurl ? row.MPurl.split("/").at(-1) : undefined,
 				name: row["Short Name"],
 				status: getEnumValue<any>(row["software status"][0]?.value),
 				url: row.url ? [row.url] : undefined,
