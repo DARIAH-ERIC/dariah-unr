@@ -18,6 +18,9 @@ export function getInstitutionsByCountry(params: GetPartnerInstitutionsByCountry
 			},
 			endDate: null,
 		},
+		orderBy: {
+			name: "asc",
+		},
 	});
 }
 
@@ -39,6 +42,9 @@ export function getPartnerInstitutionsByCountry(params: GetPartnerInstitutionsBy
 			types: {
 				has: InstitutionType.partner_institution,
 			},
+		},
+		orderBy: {
+			name: "asc",
 		},
 	});
 }

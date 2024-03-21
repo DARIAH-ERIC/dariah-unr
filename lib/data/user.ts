@@ -33,3 +33,11 @@ export async function createUser(params: CreateUserByEmailParams) {
 		},
 	});
 }
+
+export function getUsers() {
+	return db.user.findMany({
+		orderBy: {
+			name: "asc",
+		},
+	});
+}

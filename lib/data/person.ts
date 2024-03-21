@@ -21,6 +21,9 @@ export function getPersonsByCountry(params: GetPersonsByCountryParams) {
 				},
 			},
 		},
+		orderBy: {
+			name: "asc",
+		},
 		select: {
 			id: true,
 			name: true,
