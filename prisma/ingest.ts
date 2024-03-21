@@ -188,7 +188,7 @@ async function ingest() {
 		const record = await db.software.create({
 			data: {
 				comment: row["comments - internal"],
-				marketplaceOnboardingStatus: getSoftwareStatus(row["MP onboarding"]),
+				marketplaceStatus: getSoftwareStatus(row["MP onboarding"]),
 				marketplaceUrl: row.MPurl,
 				name: row["Short Name"],
 				status: getEnumValue<any>(row["software status"][0]?.value),
