@@ -24,7 +24,7 @@ export default function InternalError(props: InternalErrorProps): ReactNode {
 	}, [error]);
 
 	return (
-		<MainContent className="container grid place-content-center place-items-center gap-y-8 py-8">
+		<MainContent className="container grid place-content-center place-items-center gap-y-8 py-8 text-center">
 			<PageTitle>{t("something-went-wrong")}</PageTitle>
 
 			<div>

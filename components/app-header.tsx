@@ -34,7 +34,7 @@ export function AppHeader(): ReactNode {
 	return (
 		<header className="border-b">
 			<div className="container flex items-center justify-between gap-4 py-4">
-				<nav aria-label={t("navigation-primary")} className="-mx-3">
+				<nav aria-label={t("navigation-primary")} className="-ml-3">
 					<ul className="hidden items-center gap-4 text-sm sm:flex" role="list">
 						{Object.entries(links).map(([id, link]) => {
 							return (
@@ -74,7 +74,7 @@ export function AppHeader(): ReactNode {
 					</div>
 				</nav>
 
-				<div className="flex items-center gap-x-4">
+				<div className="-mr-3 flex items-center gap-x-4">
 					<div className="flex items-center gap-x-1">
 						<ColorSchemeSwitcher />
 						<LocaleSwitcher />

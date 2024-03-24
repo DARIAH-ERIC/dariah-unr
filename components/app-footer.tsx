@@ -25,7 +25,7 @@ export function AppFooter(): ReactNode {
 		<footer className="border-t">
 			<div className="container flex items-center justify-between gap-4 py-4">
 				<nav aria-label={t("navigation-secondary")} className="-mx-3">
-					<ul className="flex items-center gap-4 text-sm" role="list">
+					<ul className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm" role="list">
 						{Object.entries(links).map(([id, link]) => {
 							return (
 								<li key={id}>
