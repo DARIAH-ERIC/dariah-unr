@@ -59,9 +59,11 @@ enum CountryType {
 model Country {
   id String @id @default(uuid()) @db.Uuid
 
-  code      String
-  endDate   DateTime?   @map(name: "end_date")
-  logo      String?
+  code          String
+  endDate       DateTime? @map(name: "end_date")
+  logo          String?
+  marketplaceId Int?      @map(name: "marketplace_id")
+
   name      String
   startDate DateTime?   @map(name: "start_date")
   type      CountryType
@@ -403,6 +405,7 @@ model Service {
   dariahBranding          Boolean?                  @map(name: "dariah_branding")
   eoscOnboarding          Boolean?                  @map(name: "eosc_onboarding")
   marketplaceStatus       ServiceMarketplaceStatus? @map(name: "marketplace_status")
+  marketplaceId           String?                   @map(name: "marketplace_id")
   monitoring              Boolean?
   name                    String
   privateSupplier         Boolean?                  @map(name: "private_supplier")
@@ -493,7 +496,7 @@ model ServiceKpi {
   @@map(name: "service_kpis")
 }
 
-enum SoftwareMarketplaceOnboardingStatus {
+enum SoftwareMarketplaceStatus {
   added_as_external_id
   added_as_item
   no
@@ -509,12 +512,12 @@ enum SoftwareStatus {
 model Software {
   id String @id @default(uuid()) @db.Uuid
 
-  comment                     String?
-  name                        String
-  marketplaceUrl              String?                              @map(name: "marketplace_url")
-  marketplaceOnboardingStatus SoftwareMarketplaceOnboardingStatus? @map(name: "marketplace_onboarding_status")
-  status                      SoftwareStatus?
-  url                         String[]
+  comment           String?
+  name              String
+  marketplaceStatus SoftwareMarketplaceStatus? @map(name: "marketplace_status")
+  marketplaceId     String?                    @map(name: "marketplace_id")
+  status            SoftwareStatus?
+  url               String[]
 
   countries Country[]
 

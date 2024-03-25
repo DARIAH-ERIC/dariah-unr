@@ -8,9 +8,7 @@ import { PrismaClient } from "@prisma/client";
 
 const db = new PrismaClient();
 
-async function createServicesFromSshomp() {
-	const actors = getSshompActors();
-
+async function createEntriesFromSshomp() {
 	const serviceSizeSmall = await db.serviceSize.findFirst({
 		where: {
 			type: "small",
@@ -22,7 +20,7 @@ async function createServicesFromSshomp() {
 	assert(serviceSizeSmall);
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const services: Array<any> = [];
+	const entries: Array<any> = [];
 	let page = 1;
 	let hasMorePages = false;
 
@@ -40,116 +38,155 @@ async function createServicesFromSshomp() {
 		});
 
 		log.info(`Fetching page ${page}.`);
-		const data = await request(url, { responseType: "json" });
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const data = (await request(url, { responseType: "json" })) as any;
+		log.info(`Processing ${data.count} entries.`);
 
-		// @ts-expect-error Missing types.
-		services.push(...data.items);
+		entries.push(...data.items);
 		page++;
-		// @ts-expect-error Missing types.
 		hasMorePages = page <= data.pages;
 	} while (hasMorePages);
 
-	for (const service of services) {
-		/** Services in sshomp often have leading whitespace in label. */
-		const name = (service.label as string).trim();
+	for (const entry of entries) {
+		const id = entry.persistentId;
 
-		const unr = await db.service.findFirst({
+		/** Entries in sshomp can have leading whitespace in label. */
+		const name = (entry.label as string).trim();
+
+		const unrEntry = await db.service.findFirst({
 			where: {
-				name,
+				marketplaceId: id,
+			},
+			select: {
+				id: true,
 			},
 		});
 
-		if (unr == null) {
-			// @ts-expect-error Missing types.
-			const reviewer = service.contributors.find((contributor) => {
-				return contributor.role.code === "reviewer";
-			});
+		// @ts-expect-error Missing types.
+		const reviewer = entry.contributors.find((contributor) => {
+			return contributor.role.code === "reviewer";
+		});
 
-			if (reviewer == null) {
-				log.warn(`No reviewer found for ${name}.`);
-				continue;
-			}
+		if (reviewer == null) {
+			log.warn(`No reviewer found for ${name}.`);
+			continue;
+		}
 
-			const actorId = reviewer.actor.id;
-			const countryCode = actors.get(actorId)?.code;
+		const actorId = reviewer.actor.id;
+		const country = await db.country.findFirst({
+			where: {
+				marketplaceId: actorId,
+			},
+			select: {
+				id: true,
+			},
+		});
 
-			if (countryCode == null) {
-				log.warn(`Unknown actor id ${actorId}.`);
-				continue;
-			}
+		if (country == null) {
+			log.warn(`Unknown actor id ${actorId}.`);
+			continue;
+		}
 
-			const country = await db.country.findFirst({
-				where: {
-					code: countryCode,
-				},
-			});
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const resourceType = entry.properties.find((property: any) => {
+			return property.type.code === "resource-category";
+		})?.concept?.label;
 
-			if (country == null) {
-				log.warn(`Missing country ${countryCode}.`);
-				continue;
-			}
-
-			await db.service.create({
-				data: {
-					name,
-					marketplaceStatus: "yes",
-					status: "live",
-					countries: {
-						connect: {
-							id: country.id,
+		if (resourceType === "Software") {
+			if (unrEntry == null) {
+				await db.software.create({
+					data: {
+						name,
+						marketplaceId: id,
+						marketplaceStatus: "added_as_item",
+						status: "maintained",
+						countries: {
+							connect: {
+								id: country.id,
+							},
 						},
 					},
-					size: {
-						connect: {
-							id: serviceSizeSmall.id,
+				});
+				log.info(`Created software "${name}".`);
+			} else {
+				await db.software.update({
+					where: {
+						id: unrEntry.id,
+					},
+					data: {
+						name,
+						marketplaceId: id,
+						marketplaceStatus: "added_as_item",
+						status: "maintained",
+						countries: {
+							connect: {
+								id: country.id,
+							},
 						},
 					},
-				},
-			});
+				});
+				log.info(`Updated software "${name}".`);
+			}
+		} else {
+			if (unrEntry == null) {
+				await db.service.create({
+					data: {
+						name,
+						marketplaceId: id,
+						marketplaceStatus: "yes",
+						status: "live",
+						countries: {
+							connect: {
+								id: country.id,
+							},
+						},
+						size: {
+							connect: {
+								id: serviceSizeSmall.id,
+							},
+						},
+					},
+				});
+				log.info(`Created service "${name}".`);
+			} else {
+				await db.service.update({
+					where: {
+						id: unrEntry.id,
+					},
+					data: {
+						name,
+						marketplaceId: id,
+						marketplaceStatus: "yes",
+						status: "live",
+						countries: {
+							connect: {
+								id: country.id,
+							},
+						},
+						size: {
+							connect: {
+								id: serviceSizeSmall.id,
+							},
+						},
+					},
+				});
+				log.info(`Updated service "${name}".`);
+			}
 		}
 	}
 }
 
-createServicesFromSshomp()
+createEntriesFromSshomp()
 	.then(() => {
-		log.success("Successfully updated ssh open marketplace services in the database.");
+		log.success("Successfully updated ssh open marketplace software and services in the database.");
 	})
 	.catch((error) => {
-		log.error("Failed to update ssh open marketplace services in the database.\n", error);
+		log.error(
+			"Failed to update ssh open marketplace software and services in the database.\n",
+			error,
+		);
 		process.exitCode = 1;
 	})
 	.finally(() => {
 		return db.$disconnect();
 	});
-
-// ------------------------------------------------------------------------------------------------
-
-function getSshompActors() {
-	/**
-	 * Map ssh open marketplace actor ids to country codes.
-	 *
-	 * Note: "Bosnia and Herzegovina", "Cyprus", "Malta", "Serbia", and "Spain" are currently not
-	 * represented in the ssh open marketplace.
-	 */
-	const actors = new Map([
-		[9403, { code: "at", name: "CLARIAH-AT" }],
-		[3235, { code: "be", name: "DARIAH-BE" }],
-		[3754, { code: "bg", name: "CLaDA-BG" }],
-		[3403, { code: "hr", name: "DARIAH-HR" }],
-		[3804, { code: "cz", name: "LINDAT/CLARIAH-CZ" }],
-		[9560, { code: "dk", name: "DARIAH-DK" }],
-		[10860, { code: "fr", name: "DARIAH-FR" }],
-		[2868, { code: "de", name: "DARIAH-DE" }],
-		[3502, { code: "gr", name: "DARIAH-GR / DYAS" }],
-		[3755, { code: "ie", name: "DARIAH-IE" }],
-		[10226, { code: "it", name: "DARIAH-IT" }],
-		[9561, { code: "lu", name: "DARIAH-LU" }],
-		[9562, { code: "nl", name: "CLARIAH-NL" }],
-		[3752, { code: "pl", name: "DARIAH-PL" }],
-		[3553, { code: "pt", name: "DARIAH-PT / ROSSIO" }],
-		[9133, { code: "si", name: "DARIAH-SI" }],
-		[10002, { code: "ch", name: "DARIAH-CH" }],
-	]);
-
-	return actors;
-}

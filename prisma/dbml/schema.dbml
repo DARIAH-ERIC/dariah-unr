@@ -32,6 +32,7 @@ Table countries {
   code String [not null]
   endDate DateTime
   logo String
+  marketplaceId Int
   name String [not null]
   startDate DateTime
   type CountryType [not null]
@@ -215,6 +216,7 @@ Table services {
   dariahBranding Boolean
   eoscOnboarding Boolean
   marketplaceStatus ServiceMarketplaceStatus
+  marketplaceId String
   monitoring Boolean
   name String [not null]
   privateSupplier Boolean
@@ -267,8 +269,8 @@ Table software {
   id String [pk]
   comment String
   name String [not null]
-  marketplaceUrl String
-  marketplaceOnboardingStatus SoftwareMarketplaceOnboardingStatus
+  marketplaceStatus SoftwareMarketplaceStatus
+  marketplaceId String
   status SoftwareStatus
   url String[] [not null]
   countries countries [not null]
@@ -459,7 +461,7 @@ Enum ServiceKpiType {
   websites_hosted
 }
 
-Enum SoftwareMarketplaceOnboardingStatus {
+Enum SoftwareMarketplaceStatus {
   added_as_external_id
   added_as_item
   no
