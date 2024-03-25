@@ -207,7 +207,7 @@ function CreateSoftwareFormDialog(props: CreateSoftwareFormDialogProps): ReactNo
 
 										<TextInputField autoFocus={true} isRequired={true} label="Name" name="name" />
 
-										<TextInputField isRequired={true} label="URL" name="url" />
+										<TextInputField isRequired={true} label="URL" name="url" type="url" />
 									</Form>
 								</div>
 

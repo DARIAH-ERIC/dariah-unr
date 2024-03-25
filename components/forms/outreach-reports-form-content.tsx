@@ -6,12 +6,12 @@ import {
 	type Outreach,
 	type OutreachKpi,
 	OutreachKpiType,
-	type OutreachType,
+	OutreachType,
 	type Prisma,
 	type Report,
 } from "@prisma/client";
 import { useListData } from "@react-stately/data";
-import { type ReactNode, useState } from "react";
+import { Fragment, type ReactNode, useId, useState } from "react";
 import { Group } from "react-aria-components";
 import { useFormState } from "react-dom";
 
@@ -22,9 +22,20 @@ import { SelectField, SelectItem } from "@/components/ui/blocks/select-field";
 import { TextAreaField } from "@/components/ui/blocks/text-area-field";
 import { TextInputField } from "@/components/ui/blocks/text-input-field";
 import { Button } from "@/components/ui/button";
+import {
+	Dialog,
+	DialogCancelButton,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
+import { Modal, ModalOverlay } from "@/components/ui/modal";
+import { createOutreachAction } from "@/lib/actions/create-outreach";
 import { updateOutreachReportsAction } from "@/lib/actions/update-outreach-reports";
 import { createKey } from "@/lib/create-key";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
@@ -227,3 +238,63 @@ const defaultSocialMediaOutreachKpis: Array<{ _id: string; unit: OutreachKpi["un
 	{ _id: crypto.randomUUID(), unit: "followers" },
 	{ _id: crypto.randomUUID(), unit: "impressions" },
 ];
+
+function CreateOutreachFormDialog(): ReactNode {
+	const formId = useId();
+
+	const outreachTypes = Object.values(OutreachType);
+
+	// FIXME: only close dialog when submit was successful.
+	const [formState, formAction] = useFormState(createOutreachAction, undefined);
+
+	return (
+		<ModalOverlay>
+			<Modal isDismissable={true}>
+				<Dialog>
+					{({ close }) => {
+						return (
+							<Fragment>
+								<DialogHeader>
+									<DialogTitle>Create outreach</DialogTitle>
+									<DialogDescription>Please provide outreach details.</DialogDescription>
+								</DialogHeader>
+
+								<div>
+									<Form
+										action={(formData) => {
+											formAction(formData);
+											close();
+										}}
+										className="grid gap-y-4"
+										id={formId}
+									>
+										<input name="_id" type="hidden" value={crypto.randomUUID()} />
+
+										<TextInputField autoFocus={true} isRequired={true} label="Name" name="name" />
+
+										<TextInputField isRequired={true} label="URL" name="url" type="url" />
+
+										<SelectField isRequired={true} label="Type" name="type">
+											{outreachTypes.map((type) => {
+												return (
+													<SelectItem key={type} id={type} textValue={type}>
+														{type}
+													</SelectItem>
+												);
+											})}
+										</SelectField>
+									</Form>
+								</div>
+
+								<DialogFooter>
+									<DialogCancelButton>Cancel</DialogCancelButton>
+									<SubmitButton form={formId}>Create</SubmitButton>
+								</DialogFooter>
+							</Fragment>
+						);
+					}}
+				</Dialog>
+			</Modal>
+		</ModalOverlay>
+	);
+}

@@ -1,4 +1,4 @@
-import type { Country } from "@prisma/client";
+import type { Country, Outreach } from "@prisma/client";
 
 import { db } from "@/lib/db";
 
@@ -66,6 +66,24 @@ export function getSocialMediaByCountry(params: GetSocialMediaByCountryParams) {
 		},
 		select: {
 			url: true,
+		},
+	});
+}
+
+interface CreateOutreachParams {
+	name: string;
+	url: string;
+	type: Outreach["type"];
+}
+
+export function createOutreach(params: CreateOutreachParams) {
+	const { name, url, type } = params;
+
+	return db.outreach.create({
+		data: {
+			name,
+			url,
+			type,
 		},
 	});
 }

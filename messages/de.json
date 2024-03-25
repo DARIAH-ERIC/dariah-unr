@@ -182,6 +182,12 @@
 		"title": "Nutzungsbedingungen"
 	},
 	"actions": {
+		"createOutreach": {
+			"errors": {
+				"default": "Konnte Outreach nicht erstellen."
+			},
+			"success": "Outreach erfolgreich erstellt."
+		},
 		"sendEmail": {
 			"errors": {
 				"default": "Konnte Email nicht senden."
