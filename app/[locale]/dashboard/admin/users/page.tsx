@@ -3,26 +3,27 @@ import { useTranslations } from "next-intl";
 import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 
-import { Link } from "@/components/link";
+import { UsersFormContent } from "@/components/admin/users-form-content";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import type { Locale } from "@/config/i18n.config";
-import { createHref } from "@/lib/create-href";
+import { getCountries } from "@/lib/data/country";
+import { getUsers } from "@/lib/data/user";
 
-interface DashboardAdminPageProps {
+interface DashboardAdminUsersPageProps {
 	params: {
 		locale: Locale;
 	};
 }
 
 export async function generateMetadata(
-	props: DashboardAdminPageProps,
+	props: DashboardAdminUsersPageProps,
 	_parent: ResolvingMetadata,
 ): Promise<Metadata> {
 	const { params } = props;
 
 	const { locale } = params;
-	const t = await getTranslations({ locale, namespace: "DashboardAdminPage" });
+	const t = await getTranslations({ locale, namespace: "DashboardAdminUsersPage" });
 
 	const metadata: Metadata = {
 		title: t("meta.title"),
@@ -31,27 +32,30 @@ export async function generateMetadata(
 	return metadata;
 }
 
-export default function DashboardAdminPage(props: DashboardAdminPageProps): ReactNode {
+export default function DashboardAdminUsersPage(props: DashboardAdminUsersPageProps): ReactNode {
 	const { params } = props;
 
 	const { locale } = params;
 	setRequestLocale(locale);
 
-	const t = useTranslations("DashboardAdminPage");
+	const t = useTranslations("DashboardAdminUsersPage");
 
 	return (
-		<MainContent className="container grid content-start gap-y-4 py-8">
+		<MainContent className="container grid content-start gap-y-8 py-8">
 			<PageTitle>{t("title")}</PageTitle>
 
-			<DashboardAdminPageContent />
+			<DashboardAdminUsersContent />
 		</MainContent>
 	);
 }
 
-function DashboardAdminPageContent() {
+async function DashboardAdminUsersContent() {
+	const users = await getUsers();
+	const countries = await getCountries();
+
 	return (
 		<section>
-			<Link href={createHref({ pathname: "/dashboard/admin/users" })}>Users</Link>
+			<UsersFormContent countries={countries} users={users} />
 		</section>
 	);
 }

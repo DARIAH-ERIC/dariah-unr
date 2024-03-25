@@ -69,6 +69,12 @@
 		},
 		"title": "Admin dashboard"
 	},
+	"DashboardAdminUsersPage": {
+		"meta": {
+			"title": "Users"
+		},
+		"title": "Users"
+	},
 	"DashboardCountryReportEditStepPage": {
 		"meta": {
 			"title": "Bericht bearbeiten"
@@ -275,6 +281,12 @@
 				"default": "Konnte Software nicht aktualisieren."
 			},
 			"success": "Software erfolgreich aktualisiert."
+		},
+		"updateUsers": {
+			"errors": {
+				"default": "Konnte Benutzer*innen nicht aktualisieren."
+			},
+			"success": "Benutzer*innen erfolgreich aktualisiert."
 		}
 	},
 	"ui": {

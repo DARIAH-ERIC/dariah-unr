@@ -34,6 +34,7 @@ export const config = {
 
 			const isSignedIn = auth != null;
 			const isVerified = auth?.user.status === "verified";
+			const isAdmin = auth?.user.role === "admin";
 			const pathname = getNormalizedPathname(request.nextUrl.pathname);
 
 			const isAuthRoute = pathname.startsWith("/auth/");
@@ -78,6 +79,12 @@ export const config = {
 			if (isSignedIn) {
 				if (!isVerified) {
 					const url = createUrl({ pathname: "/auth/unverified-user", baseUrl: request.nextUrl });
+
+					return NextResponse.redirect(url);
+				}
+
+				if (pathname.startsWith("/dashboard/admin") && !isAdmin) {
+					const url = createUrl({ pathname: "/", baseUrl: request.nextUrl });
 
 					return NextResponse.redirect(url);
 				}

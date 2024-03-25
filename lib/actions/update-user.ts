@@ -2,13 +2,21 @@
 
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
-import type { z } from "zod";
+import { z } from "zod";
 
-import { sendEmail } from "@/lib/email";
+import { updateUser } from "@/lib/data/user";
 import { getFormData } from "@/lib/get-form-data";
-import { type ContactFormSchema, contactFormSchema } from "@/lib/schemas/email";
 
-type FormSchema = ContactFormSchema;
+const formSchema = z.object({
+	id: z.string().min(1),
+	name: z.string().min(1).optional(),
+	email: z.string().email(),
+	role: z.enum(["admin", "contributor"]),
+	status: z.enum(["verified", "unverified"]),
+	countryId: z.string().optional(),
+});
+
+type FormSchema = z.infer<typeof formSchema>;
 
 interface FormReturnValue {
 	timestamp: number;
@@ -25,14 +33,14 @@ interface FormSuccess extends FormReturnValue {
 
 type FormState = FormErrors | FormSuccess;
 
-export async function sendContactEmailAction(
+export async function updateUserAction(
 	previousFormState: FormState | undefined,
 	formData: FormData,
 ): Promise<FormState> {
-	const t = await getTranslations("actions.sendEmail");
+	const t = await getTranslations("actions.updateUsers");
 
 	const input = getFormData(formData);
-	const result = contactFormSchema.safeParse(input);
+	const result = formSchema.safeParse(input);
 
 	if (!result.success) {
 		return {
@@ -42,12 +50,12 @@ export async function sendContactEmailAction(
 		};
 	}
 
+	const { id, name, email, role, status, countryId } = result.data;
+
 	try {
-		const { email, message, subject } = result.data;
+		await updateUser({ id, name, email, role, status, countryId });
 
-		await sendEmail({ from: email, subject, text: message });
-
-		revalidatePath("/[locale]/contact");
+		revalidatePath("/[locale]/dashboard/admin/users", "page");
 
 		return {
 			status: "success" as const,
