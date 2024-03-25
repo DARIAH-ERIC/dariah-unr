@@ -69,6 +69,12 @@
 		},
 		"title": "Admin dashboard"
 	},
+	"DashboardAdminInstitutionsPage": {
+		"meta": {
+			"title": "Institutions"
+		},
+		"title": "Institutions"
+	},
 	"DashboardAdminUsersPage": {
 		"meta": {
 			"title": "Users"
@@ -233,6 +239,12 @@
 				"default": "Failed to update events."
 			},
 			"success": "Successfully updated events."
+		},
+		"updateInstitution": {
+			"errors": {
+				"default": "Failed to update institution."
+			},
+			"success": "Successfully updated institution."
 		},
 		"updateInstitutions": {
 			"errors": {

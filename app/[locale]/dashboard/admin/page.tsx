@@ -51,7 +51,10 @@ export default function DashboardAdminPage(props: DashboardAdminPageProps): Reac
 function DashboardAdminPageContent() {
 	return (
 		<section>
-			<Link href={createHref({ pathname: "/dashboard/admin/users" })}>Users</Link>
+			<Link href={createHref({ pathname: "/dashboard/admin/users" })}>Edit users</Link>
+			<Link href={createHref({ pathname: "/dashboard/admin/institutions" })}>
+				Edit institutions
+			</Link>
 		</section>
 	);
 }
