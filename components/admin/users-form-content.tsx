@@ -26,12 +26,12 @@ import { Modal, ModalOverlay } from "@/components/ui/modal";
 import { updateUserAction } from "@/lib/actions/update-user";
 import { createKey } from "@/lib/create-key";
 
-interface UsersFormContentProps {
+interface AdminUsersFormContentProps {
 	countries: Array<Country>;
 	users: Array<User>;
 }
 
-export function UsersFormContent(props: UsersFormContentProps): ReactNode {
+export function AdminUsersFormContent(props: AdminUsersFormContentProps): ReactNode {
 	const { countries, users } = props;
 
 	const countriesById = keyByToMap(countries, (country) => {
@@ -39,14 +39,14 @@ export function UsersFormContent(props: UsersFormContentProps): ReactNode {
 	});
 
 	return (
-		<section className="text-neutral-600 dark:text-neutral-400">
-			<ul role="list">
+		<section className="text-neutral-700 dark:text-neutral-300">
+			<ul className="grid gap-y-6" role="list">
 				{users.map((user) => {
 					const country = user.countryId != null ? countriesById.get(user.countryId) : null;
 
 					return (
 						<li key={user.id}>
-							<article className="flex items-center gap-x-4">
+							<article className="grid gap-y-2">
 								<div>{user.name}</div>
 								<div>{user.email}</div>
 								<div>{country?.name ?? "(None)"}</div>

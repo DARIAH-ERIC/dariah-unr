@@ -99,7 +99,7 @@ export function ProjectsFundingLeveragesFormContent(
 										: undefined
 								}
 								granularity="day"
-								isRequired={true}
+								isReadOnly={true}
 								label="Start date"
 								name={`projectsFundingLeverages.${index}.startDate`}
 							/>
@@ -181,7 +181,8 @@ function AddedProjectsFundingLeveragesSection(): ReactNode {
 
 						<DateInputField
 							defaultValue={parseDate(addedProjectsFundingLeverage.startDate)}
-							isRequired={true}
+							granularity="day"
+							isReadOnly={true}
 							label="Start date"
 							name={`addedProjectsFundingLeverages.${index}.startDate`}
 						/>
@@ -278,7 +279,12 @@ function CreateProjectsFundingLeverageFormDialog(
 
 										<TextInputField autoFocus={true} isRequired={true} label="Name" name="name" />
 
-										<DateInputField isRequired={true} label="Start date" name="startDate" />
+										<DateInputField
+											granularity="day"
+											isRequired={true}
+											label="Start date"
+											name="startDate"
+										/>
 
 										<NumberInputField
 											isRequired={true}

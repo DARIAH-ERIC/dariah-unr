@@ -114,3 +114,55 @@ export function createPartnerInstitution(params: CreateInstitutionParams) {
 		},
 	});
 }
+
+export function getInstitutions() {
+	return db.institution.findMany({
+		orderBy: {
+			name: "asc",
+		},
+		include: {
+			countries: {
+				select: {
+					id: true,
+				},
+			},
+		},
+	});
+}
+
+interface UpdateInstitutionParams {
+	id: string;
+	endDate?: Date;
+	name: string;
+	ROR?: string;
+	startDate?: Date;
+	types?: Institution["types"];
+	url?: Institution["url"];
+	countries?: Array<string>;
+}
+
+export function updateInstitution(params: UpdateInstitutionParams) {
+	const { id, endDate, name, ROR, startDate, types, url, countries } = params;
+
+	return db.institution.update({
+		where: {
+			id,
+		},
+		data: {
+			endDate,
+			name,
+			ROR,
+			startDate,
+			types,
+			url,
+			countries:
+				countries != null && countries.length > 0
+					? {
+							connect: countries.map((id) => {
+								return { id };
+							}),
+						}
+					: undefined,
+		},
+	});
+}

@@ -69,11 +69,17 @@
 		},
 		"title": "Admin dashboard"
 	},
+	"DashboardAdminInstitutionsPage": {
+		"meta": {
+			"title": "Institutionen"
+		},
+		"title": "Institutionen"
+	},
 	"DashboardAdminUsersPage": {
 		"meta": {
-			"title": "Users"
+			"title": "Benutzer*innen"
 		},
-		"title": "Users"
+		"title": "Benutzer*innen"
 	},
 	"DashboardCountryReportEditStepPage": {
 		"meta": {
@@ -233,6 +239,12 @@
 				"default": "Konnte Events nicht aktualisieren."
 			},
 			"success": "Events erfolgreich aktualisiert."
+		},
+		"updateInstitution": {
+			"errors": {
+				"default": "Konnte Institution nicht aktualisieren."
+			},
+			"success": "Institution erfolgreich aktualisiert."
 		},
 		"updateInstitutions": {
 			"errors": {

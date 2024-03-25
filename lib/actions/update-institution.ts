@@ -1,20 +1,26 @@
 "use server";
 
 import { log } from "@acdh-oeaw/lib";
+import { InstitutionType } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
-import { getReportComments, updateReportComments, upsertEventReport } from "@/lib/data/report";
+import { updateInstitution } from "@/lib/data/institution";
 import { getFormData } from "@/lib/get-form-data";
-import { eventReportSchema, type ReportCommentsSchema } from "@/lib/schemas/report";
 import { nonEmptyString } from "@/lib/schemas/utils";
 
 const formSchema = z.object({
-	comment: z.string().optional(),
-	eventReport: eventReportSchema,
-	eventReportId: nonEmptyString(z.string().optional()),
-	reportId: z.string(),
+	id: z.string().min(1),
+	endDate: nonEmptyString(z.coerce.date().optional()),
+	name: z.string().min(1),
+	ROR: nonEmptyString(z.string().url().optional()),
+	startDate: nonEmptyString(z.coerce.date().optional()),
+	types: z
+		.array(z.enum(Object.values(InstitutionType) as [InstitutionType, ...Array<InstitutionType>]))
+		.optional(),
+	url: z.array(z.string()).optional(),
+	countries: z.array(z.string()),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -34,11 +40,11 @@ interface FormSuccess extends FormReturnValue {
 
 type FormState = FormErrors | FormSuccess;
 
-export async function updateEventReportAction(
+export async function updateInstitutionAction(
 	previousFormState: FormState | undefined,
 	formData: FormData,
 ): Promise<FormState> {
-	const t = await getTranslations("actions.updateEventReport");
+	const t = await getTranslations("actions.updateInstitution");
 
 	const input = getFormData(formData);
 	const result = formSchema.safeParse(input);
@@ -53,21 +59,17 @@ export async function updateEventReportAction(
 		};
 	}
 
+	const { id, endDate, name, ROR, startDate, types, url, countries } = result.data;
+
 	try {
-		const { comment, eventReport, eventReportId, reportId } = result.data;
+		await updateInstitution({ id, endDate, name, ROR, startDate, types, url, countries });
 
-		await upsertEventReport({ ...eventReport, reportId, eventReportId });
-
-		const report = await getReportComments({ id: reportId });
-		const comments = report?.comments as ReportCommentsSchema | undefined;
-		await updateReportComments({ id: reportId, comments: { ...comments, eventReports: comment } });
-
-		revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/events", "page");
+		revalidatePath("/[locale]/dashboard/admin/institutions", "page");
 
 		return {
 			status: "success" as const,
-			timestamp: Date.now(),
 			message: t("success"),
+			timestamp: Date.now(),
 		};
 	} catch (error) {
 		log.error(error);
