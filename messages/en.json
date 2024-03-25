@@ -182,6 +182,12 @@
 		"title": "Terms of use"
 	},
 	"actions": {
+		"createOutreach": {
+			"errors": {
+				"default": "Could not create outreach."
+			},
+			"success": "Successfully created outreach."
+		},
 		"sendEmail": {
 			"errors": {
 				"default": "Failed to send email."
