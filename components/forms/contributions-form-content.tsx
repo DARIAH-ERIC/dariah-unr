@@ -144,7 +144,7 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 
 			<TextAreaField defaultValue={comments} label="Comment" name="comment" />
 
-			<SubmitButton>Submit</SubmitButton>
+			<SubmitButton>Save and continue</SubmitButton>
 
 			<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
 				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}

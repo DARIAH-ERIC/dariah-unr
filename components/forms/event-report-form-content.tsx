@@ -94,18 +94,14 @@ export function EventReportFormContent(props: EventReportFormContentProps): Reac
 
 			<TextInputField
 				defaultValue={eventReport?.reusableOutcomes ?? undefined}
-				description={
-					previousEventReport != null && isNonEmptyString(previousEventReport.reusableOutcomes)
-						? `Previous year: ${previousEventReport.reusableOutcomes}.`
-						: undefined
-				}
+				description="We expect to see here links to any reusable outcomes."
 				label="Reusable outcomes"
 				name="eventReport.reusableOutcomes"
 			/>
 
 			<TextAreaField defaultValue={comments} label="Comment" name="comment" />
 
-			<SubmitButton>Submit</SubmitButton>
+			<SubmitButton>Save and continue</SubmitButton>
 
 			<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
 				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}

@@ -24,10 +24,11 @@ interface PublicationsFormContentProps {
 		citation: string;
 	}>;
 	reportId: Report["id"];
+	year: number;
 }
 
 export function PublicationsFormContent(props: PublicationsFormContentProps): ReactNode {
-	const { comments, publications, reportId } = props;
+	const { comments, publications, reportId, year } = props;
 
 	const [formState, formAction] = useFormState(updatePublicationsAction, undefined);
 
@@ -57,14 +58,14 @@ export function PublicationsFormContent(props: PublicationsFormContentProps): Re
 					})}
 				</ul>
 			) : (
-				<div className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
-					Empty zotero collection.
+				<div className="grid place-items-center py-6 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
+					No entries found for {year} in your zotero collection.
 				</div>
 			)}
 
 			<TextAreaField defaultValue={comments} label="Comment" name="comment" />
 
-			<SubmitButton>Submit</SubmitButton>
+			<SubmitButton>Save and continue</SubmitButton>
 
 			<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
 				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}
