@@ -107,7 +107,7 @@ export function SoftwareFormContent(props: SoftwareFormContentProps): ReactNode 
 
 			<TextAreaField defaultValue={comments} label="Comment" name="comment" />
 
-			<SubmitButton>Submit</SubmitButton>
+			<SubmitButton>Save and continue</SubmitButton>
 
 			<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
 				{formState?.status === "success" ? formState.message : null}

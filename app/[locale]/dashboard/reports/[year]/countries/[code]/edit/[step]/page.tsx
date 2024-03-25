@@ -180,6 +180,10 @@ async function DashboardCountryReportEditStepPageContent(
 
 						<ol>
 							<li>At least one person per partner institution</li>
+							<li>
+								People working in national coordination office/secretariat to organize and run on a
+								daily basis your national consortium
+							</li>
 							<li>Anyone directly paid or funded by the a national DARIAH (or CLARIAH) project</li>
 							<li>People on &quot;DARIAH-affiliated projects&quot; (humanities infrastructure)</li>
 							<li>People&apos;s whose work is submitted as DARIAH in kind contribution</li>
@@ -187,6 +191,11 @@ async function DashboardCountryReportEditStepPageContent(
 								People making contribution but who are not paid (running DARIAH-relevant events)
 							</li>
 						</ol>
+
+						<p>
+							If the person you are looking for is not available, please get in contact with DARIAH
+							Staff.
+						</p>
 
 						<p>
 							This response will consist of a single number. If you estimate, please let us know the
@@ -286,10 +295,13 @@ async function DashboardCountryReportEditStepPageContent(
 					<FormTitle>{t("outreach")}</FormTitle>
 					<FormDescription>
 						<p>
-							It is important for DARIAH-EU to keep track of outreach statistics. Please give us the
-							number of page impressions for any national DARIAH website that you may have, as well
-							as the number of users and posts for your various social media accounts (Twitter,
-							LinkedIn, Youtube, Facebook, etc.)
+							There are several pieces of information (see unit types) that can be provided for each
+							DARIAH national outreach platform. The minimal information we would like to receive is
+							the number of page impressions for any national DARIAH website that you may have, as
+							well as the number of users and posts for your various social media accounts (Twitter,
+							LinkedIn, Youtube, Facebook, etc.). Nevertheless, you can add more if you think it is
+							relevant. Also, you can add new DARIAH national outreach platforms, if the situation
+							has changed compared to the previous year.
 						</p>
 					</FormDescription>
 

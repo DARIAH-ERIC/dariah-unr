@@ -65,6 +65,7 @@ export async function PublicationsForm(props: PublicationsFormProps) {
 			comments={comments?.publications}
 			publications={publications}
 			reportId={reportId}
+			year={year}
 		/>
 	);
 }
