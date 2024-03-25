@@ -1,5 +1,6 @@
 "use server";
 
+import { log } from "@acdh-oeaw/lib";
 import { InstitutionType } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
@@ -7,13 +8,14 @@ import { z } from "zod";
 
 import { updateInstitution } from "@/lib/data/institution";
 import { getFormData } from "@/lib/get-form-data";
+import { nonEmptyString } from "@/lib/schemas/utils";
 
 const formSchema = z.object({
 	id: z.string().min(1),
-	endDate: z.coerce.date().optional(),
+	endDate: nonEmptyString(z.coerce.date().optional()),
 	name: z.string().min(1),
-	ROR: z.string().optional(),
-	startDate: z.coerce.date().optional(),
+	ROR: nonEmptyString(z.string().url().optional()),
+	startDate: nonEmptyString(z.coerce.date().optional()),
 	types: z
 		.array(z.enum(Object.values(InstitutionType) as [InstitutionType, ...Array<InstitutionType>]))
 		.optional(),
@@ -48,6 +50,8 @@ export async function updateInstitutionAction(
 	const result = formSchema.safeParse(input);
 
 	if (!result.success) {
+		log.error(result.error.flatten());
+
 		return {
 			status: "error" as const,
 			...result.error.flatten(),
@@ -68,6 +72,8 @@ export async function updateInstitutionAction(
 			timestamp: Date.now(),
 		};
 	} catch (error) {
+		log.error(error);
+
 		return {
 			status: "error" as const,
 			formErrors: [t("errors.default")],

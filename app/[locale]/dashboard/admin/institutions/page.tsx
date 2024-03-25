@@ -3,7 +3,7 @@ import { useTranslations } from "next-intl";
 import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 
-import { InstitutionsFormContent } from "@/components/admin/institutions-form-content";
+import { AdminInstitutionsFormContent } from "@/components/admin/institutions-form-content";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import type { Locale } from "@/config/i18n.config";
@@ -57,7 +57,7 @@ async function DashboardAdminInstitutionsContent() {
 
 	return (
 		<section>
-			<InstitutionsFormContent countries={countries} institutions={institutions} />
+			<AdminInstitutionsFormContent countries={countries} institutions={institutions} />
 		</section>
 	);
 }

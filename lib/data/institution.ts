@@ -117,6 +117,9 @@ export function createPartnerInstitution(params: CreateInstitutionParams) {
 
 export function getInstitutions() {
 	return db.institution.findMany({
+		orderBy: {
+			name: "asc",
+		},
 		include: {
 			countries: {
 				select: {

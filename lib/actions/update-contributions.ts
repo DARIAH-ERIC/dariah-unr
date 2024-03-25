@@ -1,5 +1,6 @@
 "use server";
 
+import { log } from "@acdh-oeaw/lib";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
@@ -59,6 +60,8 @@ export async function updateContributionsAction(
 	const result = formSchema.safeParse(input);
 
 	if (!result.success) {
+		log.error(result.error.flatten());
+
 		return {
 			status: "error" as const,
 			...result.error.flatten(),
@@ -93,6 +96,8 @@ export async function updateContributionsAction(
 			timestamp: Date.now(),
 		};
 	} catch (error) {
+		log.error(error);
+
 		return {
 			status: "error" as const,
 			formErrors: [t("errors.default")],

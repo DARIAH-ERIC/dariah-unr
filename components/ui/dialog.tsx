@@ -32,7 +32,7 @@ export { AriaDialogTrigger as DialogTrigger, type AriaDialogTriggerProps as Dial
 export const dialogStyles = variants({
 	base: [
 		"outline outline-0",
-		"relative grid max-h-[inherit] min-w-80 max-w-screen-sm content-start gap-y-6 overflow-auto",
+		"relative grid max-h-[inherit] min-w-96 max-w-screen-sm content-start gap-y-6 overflow-auto",
 		"rounded-md",
 		"bg-neutral-0 dark:bg-neutral-900",
 		"border border-neutral-950/10",

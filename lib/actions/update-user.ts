@@ -1,5 +1,6 @@
 "use server";
 
+import { log } from "@acdh-oeaw/lib";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
@@ -9,7 +10,7 @@ import { getFormData } from "@/lib/get-form-data";
 
 const formSchema = z.object({
 	id: z.string().min(1),
-	name: z.string().min(1).optional(),
+	name: z.string().optional(),
 	email: z.string().email(),
 	role: z.enum(["admin", "contributor"]),
 	status: z.enum(["verified", "unverified"]),
@@ -43,6 +44,8 @@ export async function updateUserAction(
 	const result = formSchema.safeParse(input);
 
 	if (!result.success) {
+		log.error(result.error.flatten());
+
 		return {
 			status: "error" as const,
 			...result.error.flatten(),
@@ -63,6 +66,8 @@ export async function updateUserAction(
 			timestamp: Date.now(),
 		};
 	} catch (error) {
+		log.error(error);
+
 		return {
 			status: "error" as const,
 			formErrors: [t("errors.default")],

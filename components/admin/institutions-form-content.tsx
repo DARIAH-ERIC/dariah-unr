@@ -29,7 +29,7 @@ import { Modal, ModalOverlay } from "@/components/ui/modal";
 import { updateInstitutionAction } from "@/lib/actions/update-institution";
 import { createKey } from "@/lib/create-key";
 
-interface InstitutionsFormContentProps {
+interface AdminInstitutionsFormContentProps {
 	countries: Array<Country>;
 	institutions: Array<
 		Prisma.InstitutionGetPayload<{
@@ -40,18 +40,18 @@ interface InstitutionsFormContentProps {
 	>;
 }
 
-export function InstitutionsFormContent(props: InstitutionsFormContentProps): ReactNode {
+export function AdminInstitutionsFormContent(props: AdminInstitutionsFormContentProps): ReactNode {
 	const { countries, institutions } = props;
 
-	const { list } = useFormatter();
+	const { dateTime, list } = useFormatter();
 
 	const countriesById = keyByToMap(countries, (country) => {
 		return country.id;
 	});
 
 	return (
-		<section className="text-neutral-600 dark:text-neutral-400">
-			<ul role="list">
+		<section className="text-neutral-700 dark:text-neutral-300">
+			<ul className="grid gap-y-6" role="list">
 				{institutions.map((institution) => {
 					const countries = institution.countries
 						.map((country) => {
@@ -61,9 +61,22 @@ export function InstitutionsFormContent(props: InstitutionsFormContentProps): Re
 
 					return (
 						<li key={institution.id}>
-							<article className="flex items-center gap-x-4">
-								<div>{institution.name}</div>
+							<article className="grid gap-y-2">
+								<div>Name: {institution.name}</div>
+								<div>ROR: {institution.ROR}</div>
 								<div>
+									Start date:{" "}
+									{institution.startDate != null ? dateTime(institution.startDate) : "(None)"}
+								</div>
+								<div>
+									End date: {institution.endDate != null ? dateTime(institution.endDate) : "(None)"}
+								</div>
+								<div>
+									Types: {institution.types.length > 0 ? list(institution.types) : "(None)"}
+								</div>
+								<div>URLs: {institution.url.length > 0 ? list(institution.url) : "(None)"}</div>
+								<div>
+									Countries:{" "}
 									{countries.length > 0
 										? list(
 												countries.map((country) => {
@@ -146,6 +159,7 @@ function UpdateInstitutionFormDialog(props: UpdateInstitutionFormDialogProps) {
 											defaultValue={institution.ROR ?? undefined}
 											label="ROR"
 											name="ROR"
+											type="url"
 										/>
 
 										<DateInputField
@@ -155,7 +169,7 @@ function UpdateInstitutionFormDialog(props: UpdateInstitutionFormDialogProps) {
 													: undefined
 											}
 											granularity="day"
-											label="startDate"
+											label="Start date"
 											name="startDate"
 										/>
 
@@ -166,7 +180,7 @@ function UpdateInstitutionFormDialog(props: UpdateInstitutionFormDialogProps) {
 													: undefined
 											}
 											granularity="day"
-											label="endDate"
+											label="End date"
 											name="endDate"
 										/>
 
@@ -177,7 +191,7 @@ function UpdateInstitutionFormDialog(props: UpdateInstitutionFormDialogProps) {
 													defaultSelectedKey={type}
 													isRequired={true}
 													label="Type"
-													name={`types.${index}.id`}
+													name={`types.${index}`}
 												>
 													{Array.from(countriesById.values()).map((country) => {
 														return (
@@ -209,7 +223,7 @@ function UpdateInstitutionFormDialog(props: UpdateInstitutionFormDialogProps) {
 													defaultSelectedKey={country.id}
 													isRequired={true}
 													label="Country"
-													name={`countries.${index}.id`}
+													name={`countries.${index}`}
 												>
 													{Array.from(countriesById.values()).map((country) => {
 														return (
