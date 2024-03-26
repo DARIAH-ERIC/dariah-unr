@@ -20,13 +20,12 @@ import { ReportSummary } from "@/components/forms/report-summary";
 import { ServiceReportsForm } from "@/components/forms/service-reports-form";
 import { SoftwareForm } from "@/components/forms/software-form";
 import { Link } from "@/components/link";
-import { LoadingIndicator } from "@/components/loading-indicator";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import type { Locale } from "@/config/i18n.config";
 import { getCurrentUser } from "@/lib/auth/session";
 import { createHref } from "@/lib/create-href";
-import { getCountryByCode, getCountryCodes as _getCountryCodes } from "@/lib/data/country";
+import { getCountryByCode } from "@/lib/data/country";
 import { getReportByCountryCode } from "@/lib/data/report";
 import { getCountryCodes as getStaticCountryCodes } from "@/lib/get-country-codes";
 import { getReportYears } from "@/lib/get-report-years";
@@ -37,6 +36,7 @@ import {
 	dashboardCountryReportSteps,
 } from "@/lib/schemas/dashboard";
 import { reportCommentsSchema } from "@/lib/schemas/report";
+import { createZoteroCollectionUrl } from "@/lib/zotero";
 
 interface DashboardCountryReportEditStepPageProps {
 	params: {
@@ -384,8 +384,10 @@ async function DashboardCountryReportEditStepPageContent(
 						</p>
 
 						<p>
-							To add your publications, please do so in your national folder of the DARIAH Zotero
-							Group Library following the Guidelines.
+							To add your publications, please do so in your national folder of the{" "}
+							<a href={String(createZoteroCollectionUrl())}>DARIAH Zotero Group Library</a>{" "}
+							following the{" "}
+							<Link href={createHref({ pathname: "/documentation/guidelines" })}>Guidelines</Link>.
 						</p>
 					</FormDescription>
 
