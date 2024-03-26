@@ -75,6 +75,12 @@
 		},
 		"title": "Institutions"
 	},
+	"DashboardAdminSshompIngestPage": {
+		"meta": {
+			"title": "SSH Open Marketplace import"
+		},
+		"title": "SSH Open Marketplace import"
+	},
 	"DashboardAdminUsersPage": {
 		"meta": {
 			"title": "Users"
@@ -199,6 +205,12 @@
 				"default": "Could not create outreach."
 			},
 			"success": "Successfully created outreach."
+		},
+		"ingestDataFromSshomp": {
+			"errors": {
+				"default": "Could not import software and services."
+			},
+			"success": "Successfully imported software and services."
 		},
 		"sendEmail": {
 			"errors": {
