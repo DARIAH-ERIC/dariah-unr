@@ -63,7 +63,7 @@ export function AdminInstitutionsFormContent(props: AdminInstitutionsFormContent
 						<li key={institution.id}>
 							<article className="grid gap-y-2">
 								<div>Name: {institution.name}</div>
-								<div>ROR: {institution.ROR}</div>
+								<div>ROR: {institution.ror}</div>
 								<div>
 									Start date:{" "}
 									{institution.startDate != null ? dateTime(institution.startDate) : "(None)"}
@@ -156,9 +156,9 @@ function UpdateInstitutionFormDialog(props: UpdateInstitutionFormDialogProps) {
 										/>
 
 										<TextInputField
-											defaultValue={institution.ROR ?? undefined}
+											defaultValue={institution.ror ?? undefined}
 											label="ROR"
-											name="ROR"
+											name="ror"
 											type="url"
 										/>
 

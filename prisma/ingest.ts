@@ -63,6 +63,7 @@ async function ingest() {
 			data: {
 				annualValue: getNumberValue(row.annualRoleValue) ?? 0,
 				name: row.Name.value,
+				type: getEnumValue(row.Name.value),
 			},
 		});
 		ids.roles.set(row.id, record.id);
@@ -84,6 +85,7 @@ async function ingest() {
 				acronym: row["body Acronym"],
 				name: row["body name"].value,
 				roles,
+				type: getEnumValue(row["body Acronym"]),
 			},
 		});
 		ids.bodies.set(row.id, record.id);
@@ -97,7 +99,7 @@ async function ingest() {
 			data: {
 				email: row.email,
 				name: row.Name,
-				ORCID: undefined,
+				orcid: undefined,
 			},
 		});
 		ids.persons.set(row.id, record.id);
@@ -140,7 +142,7 @@ async function ingest() {
 				endDate: getIsoDate(row["End Date of the partnership"]),
 				name: row["Name of the institution"],
 				startDate: getIsoDate(row["Start Date of the partnership"]),
-				ROR: row.ROR,
+				ror: row.ROR,
 				types: row["type of partnership"]?.map((entry: any) => {
 					if (entry.value.startsWith("other")) return "other";
 					return getEnumValue<any>(entry.value);

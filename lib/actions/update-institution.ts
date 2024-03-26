@@ -14,7 +14,7 @@ const formSchema = z.object({
 	id: z.string().min(1),
 	endDate: nonEmptyString(z.coerce.date().optional()),
 	name: z.string().min(1),
-	ROR: nonEmptyString(z.string().url().optional()),
+	ror: nonEmptyString(z.string().url().optional()),
 	startDate: nonEmptyString(z.coerce.date().optional()),
 	types: z
 		.array(z.enum(Object.values(InstitutionType) as [InstitutionType, ...Array<InstitutionType>]))
@@ -59,10 +59,10 @@ export async function updateInstitutionAction(
 		};
 	}
 
-	const { id, endDate, name, ROR, startDate, types, url, countries } = result.data;
+	const { id, endDate, name, ror, startDate, types, url, countries } = result.data;
 
 	try {
-		await updateInstitution({ id, endDate, name, ROR, startDate, types, url, countries });
+		await updateInstitution({ id, endDate, name, ror, startDate, types, url, countries });
 
 		revalidatePath("/[locale]/dashboard/admin/institutions", "page");
 
