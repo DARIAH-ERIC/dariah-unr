@@ -1,6 +1,7 @@
 import type { Country, Report } from "@prisma/client";
 
 import { ServiceReportsFormContent } from "@/components/forms/service-reports-form-content";
+import { env } from "@/config/env.config";
 import { getServiceReports } from "@/lib/data/report";
 import { getServicesByCountry } from "@/lib/data/service";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
@@ -31,6 +32,7 @@ export async function ServiceReportsForm(props: ServiceReportsFormProps) {
 			reportId={reportId}
 			serviceReports={serviceReports}
 			services={services}
+			sshompBaseUrl={env.SSHOC_MARKETPLACE_BASE_URL}
 			year={year}
 		/>
 	);

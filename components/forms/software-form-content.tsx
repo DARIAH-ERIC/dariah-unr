@@ -1,33 +1,21 @@
 "use client";
 
 import { type Country, type Report, type Software, SoftwareStatus } from "@prisma/client";
-import { type ListData, useListData } from "@react-stately/data";
-import { PlusIcon } from "lucide-react";
-import { Fragment, type ReactNode, useId } from "react";
+import type { ReactNode } from "react";
 import { Group } from "react-aria-components";
 import { useFormState } from "react-dom";
 
 import { SubmitButton } from "@/components/submit-button";
-import { SelectField, SelectItem } from "@/components/ui/blocks/select-field";
+import { ContextualHelp } from "@/components/ui/blocks/contextual-help";
 import { TextAreaField } from "@/components/ui/blocks/text-area-field";
 import { TextInputField } from "@/components/ui/blocks/text-input-field";
-import { Button } from "@/components/ui/button";
-import {
-	Dialog,
-	DialogCancelButton,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
-import { Modal, ModalOverlay } from "@/components/ui/modal";
+import { LinkButton } from "@/components/ui/link-button";
 import { updateSoftwareAction } from "@/lib/actions/update-software";
+import { createHref } from "@/lib/create-href";
 import { createKey } from "@/lib/create-key";
-import { getFormData } from "@/lib/get-form-data";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
 
 interface AddedSoftware {
@@ -41,10 +29,11 @@ interface SoftwareFormContentProps {
 	countryId: Country["id"];
 	reportId: Report["id"];
 	softwares: Array<Software>;
+	sshompBaseUrl: string;
 }
 
 export function SoftwareFormContent(props: SoftwareFormContentProps): ReactNode {
-	const { comments, countryId, reportId, softwares } = props;
+	const { comments, countryId, reportId, softwares, sshompBaseUrl } = props;
 
 	const softwareStatuses = Object.values(SoftwareStatus);
 
@@ -82,20 +71,6 @@ export function SoftwareFormContent(props: SoftwareFormContentProps): ReactNode 
 								label="URL"
 								name={`software.${index}.url.0`}
 							/>
-
-							<SelectField
-								defaultSelectedKey={software.status ?? undefined}
-								label="Status"
-								name={`software.${index}.status`}
-							>
-								{softwareStatuses.map((id) => {
-									return (
-										<SelectItem key={id} id={id} textValue={id}>
-											{id}
-										</SelectItem>
-									);
-								})}
-							</SelectField>
 						</Group>
 					);
 				})}
@@ -103,7 +78,23 @@ export function SoftwareFormContent(props: SoftwareFormContentProps): ReactNode 
 
 			<hr />
 
-			<AddedSoftwareSection key={formState?.timestamp} />
+			<div className="flex items-center gap-x-2">
+				<LinkButton
+					href={createHref({
+						baseUrl: sshompBaseUrl,
+						pathname: "/tool-or-service/new",
+					})}
+					target="_blank"
+				>
+					Add new software
+				</LinkButton>
+
+				<ContextualHelp
+					description="Click here to add a DARIAH National tool or service. You will be redirected to the SSH Open Marketplace."
+					title="Help"
+					trigger="Help"
+				/>
+			</div>
 
 			<TextAreaField defaultValue={comments} label="Comment" name="comment" />
 
@@ -119,107 +110,5 @@ export function SoftwareFormContent(props: SoftwareFormContentProps): ReactNode 
 					: null}
 			</FormErrorMessage>
 		</Form>
-	);
-}
-
-function AddedSoftwareSection(): ReactNode {
-	const addedSoftware = useListData<AddedSoftware>({
-		initialItems: [],
-		getKey(item) {
-			return item._id;
-		},
-	});
-
-	return (
-		<section className="grid gap-y-6">
-			{addedSoftware.items.map((software, index) => {
-				return (
-					<Group key={software._id} className="grid content-start gap-x-4 gap-y-3 sm:grid-cols-2">
-						<TextInputField
-							defaultValue={software.name}
-							isReadOnly={true}
-							label="Name"
-							name={`addedSoftware.${index}.name`}
-						/>
-
-						<TextInputField
-							defaultValue={software.url}
-							isReadOnly={true}
-							label="URL"
-							name={`addedSoftware.${index}.url.0`}
-						/>
-					</Group>
-				);
-			})}
-
-			<div>
-				<DialogTrigger>
-					<Button>
-						<PlusIcon aria-hidden={true} className="size-4 shrink-0" />
-						Add software
-					</Button>
-
-					<CreateSoftwareFormDialog
-						action={(formData, close) => {
-							const software = getFormData(formData) as AddedSoftware;
-
-							addedSoftware.append(software);
-
-							close();
-						}}
-					/>
-				</DialogTrigger>
-			</div>
-		</section>
-	);
-}
-
-interface CreateSoftwareFormDialogProps {
-	action: (formData: FormData, close: () => void) => void;
-}
-
-function CreateSoftwareFormDialog(props: CreateSoftwareFormDialogProps): ReactNode {
-	const { action } = props;
-
-	const formId = useId();
-
-	return (
-		<ModalOverlay>
-			<Modal isDismissable={true}>
-				<Dialog>
-					{({ close }) => {
-						return (
-							<Fragment>
-								<DialogHeader>
-									<DialogTitle>Create software</DialogTitle>
-									<DialogDescription>Please provide software details.</DialogDescription>
-								</DialogHeader>
-
-								<div>
-									<Form
-										action={(formData) => {
-											action(formData, close);
-										}}
-										className="grid gap-y-4"
-										id={formId}
-									>
-										<input name="_id" type="hidden" value={crypto.randomUUID()} />
-
-										<TextInputField autoFocus={true} isRequired={true} label="Name" name="name" />
-
-										<TextInputField isRequired={true} label="URL" name="url" type="url" />
-									</Form>
-								</div>
-
-								<DialogFooter>
-									<DialogCancelButton>Cancel</DialogCancelButton>
-									<SubmitButton form={formId}>Create</SubmitButton>
-								</DialogFooter>
-							</Fragment>
-						);
-					}}
-				</Dialog>
-			</Modal>
-		</ModalOverlay>
 	);
 }

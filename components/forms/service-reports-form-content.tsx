@@ -42,6 +42,7 @@ interface ServiceReportsFormContentProps {
 	reportId: Report["id"];
 	serviceReports: Array<ServiceReportWithKpis>;
 	services: Array<Service>;
+	sshompBaseUrl: string;
 	year: number;
 }
 
@@ -54,6 +55,7 @@ export function ServiceReportsFormContent(props: ServiceReportsFormContentProps)
 		reportId,
 		serviceReports,
 		services,
+		sshompBaseUrl,
 		year,
 	} = props;
 
@@ -119,7 +121,7 @@ export function ServiceReportsFormContent(props: ServiceReportsFormContentProps)
 			<div className="flex items-center gap-x-2">
 				<LinkButton
 					href={createHref({
-						baseUrl: "https://marketplace.sshopencloud.eu",
+						baseUrl: sshompBaseUrl,
 						pathname: "/tool-or-service/new",
 					})}
 					target="_blank"

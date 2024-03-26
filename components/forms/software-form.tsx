@@ -1,6 +1,7 @@
 import type { Country, Report } from "@prisma/client";
 
 import { SoftwareFormContent } from "@/components/forms/software-form-content";
+import { env } from "@/config/env.config";
 import { getSoftwareByCountry } from "@/lib/data/software";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
 
@@ -21,6 +22,7 @@ export async function SoftwareForm(props: SoftwareFormProps) {
 			countryId={countryId}
 			reportId={reportId}
 			softwares={softwares}
+			sshompBaseUrl={env.SSHOC_MARKETPLACE_BASE_URL}
 		/>
 	);
 }
