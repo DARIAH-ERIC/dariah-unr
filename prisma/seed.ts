@@ -34,6 +34,7 @@ async function seed() {
 	const body = await db.body.create({
 		data: {
 			name: "DARIAH bosses",
+			type: "bod",
 		},
 	});
 
@@ -66,6 +67,7 @@ async function seed() {
 		data: {
 			annualValue: 1,
 			name: "Boss",
+			type: "director",
 			bodies: {
 				connect: {
 					id: body.id,
