@@ -6,6 +6,7 @@ Table bodies {
   id String [pk]
   acronym String
   name String [not null]
+  type BodyType [not null]
   roles roles [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
@@ -72,7 +73,7 @@ Table institutions {
   id String [pk]
   endDate DateTime
   name String [not null]
-  ROR String
+  ror String
   startDate DateTime
   types InstitutionType[] [not null]
   url String[] [not null]
@@ -142,7 +143,7 @@ Table persons {
   id String [pk]
   email String
   name String [not null]
-  ORCID String
+  orcid String
   contributions contributions [not null]
   institutions institutions [not null]
   createdAt DateTime [default: `now()`, not null]
@@ -203,6 +204,7 @@ Table roles {
   id String [pk]
   annualValue Int [not null]
   name String [not null]
+  type RoleType [not null]
   bodies bodies [not null]
   contributions contributions [not null]
   createdAt DateTime [default: `now()`, not null]
@@ -239,7 +241,7 @@ Table service_sizes {
   id String [pk]
   annualValue Int [not null]
   type ServiceSizeType [not null]
-  Service services [not null]
+  services services [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
@@ -347,6 +349,16 @@ Table InstitutionToPerson {
   institutionsId String [ref: > institutions.id]
 }
 
+Enum BodyType {
+  bod
+  dco
+  ga
+  jrc
+  ncc
+  sb
+  smt
+}
+
 Enum CountryType {
   cooperating_partnership
   member_country
@@ -412,6 +424,19 @@ Enum ResearchPolicyLevel {
   institutional
   national
   regional
+}
+
+Enum RoleType {
+  dco_member
+  director
+  national_coordinator
+  national_coordinator_deputy
+  national_representative
+  jrc_member
+  scientific_board_member
+  smt_member
+  wg_chair
+  wg_member
 }
 
 Enum ServiceAudience {

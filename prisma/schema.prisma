@@ -14,11 +14,22 @@ datasource db {
 
 // -------------------------------------------------------------------------------------------------
 
+enum BodyType {
+  bod
+  dco
+  ga
+  jrc
+  ncc
+  sb
+  smt
+}
+
 model Body {
   id String @id @default(uuid()) @db.Uuid
 
   acronym String?
   name    String
+  type    BodyType
 
   roles Role[]
 
@@ -134,7 +145,7 @@ model Institution {
 
   endDate   DateTime?         @map(name: "end_date")
   name      String
-  ROR       String?           @map(name: "ror")
+  ror       String?
   startDate DateTime?         @map(name: "start_date")
   types     InstitutionType[]
   url       String[]
@@ -260,7 +271,7 @@ model Person {
   // @see https://github.com/prisma/prisma/issues/3387
   email String? // @unique
   name  String
-  ORCID String? @map(name: "orcid")
+  orcid String?
 
   contributions Contribution[]
   institutions  Institution[]
@@ -356,11 +367,25 @@ model ResearchPolicyDevelopment {
   @@map(name: "research_policy_developments")
 }
 
+enum RoleType {
+  dco_member
+  director
+  national_coordinator
+  national_coordinator_deputy
+  national_representative
+  jrc_member
+  scientific_board_member
+  smt_member
+  wg_chair
+  wg_member
+}
+
 model Role {
   id String @id @default(uuid()) @db.Uuid
 
-  annualValue Int    @map(name: "annual_value")
+  annualValue Int      @map(name: "annual_value")
   name        String
+  type        RoleType
 
   bodies        Body[]
   contributions Contribution[]
@@ -442,7 +467,7 @@ model ServiceSize {
   annualValue Int             @map(name: "annual_value")
   type        ServiceSizeType
 
-  Service Service[]
+  services Service[]
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")

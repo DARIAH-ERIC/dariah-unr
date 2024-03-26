@@ -134,7 +134,7 @@ interface UpdateInstitutionParams {
 	id: string;
 	endDate?: Date;
 	name: string;
-	ROR?: string;
+	ror?: string;
 	startDate?: Date;
 	types?: Institution["types"];
 	url?: Institution["url"];
@@ -142,7 +142,7 @@ interface UpdateInstitutionParams {
 }
 
 export function updateInstitution(params: UpdateInstitutionParams) {
-	const { id, endDate, name, ROR, startDate, types, url, countries } = params;
+	const { id, endDate, name, ror, startDate, types, url, countries } = params;
 
 	return db.institution.update({
 		where: {
@@ -151,7 +151,7 @@ export function updateInstitution(params: UpdateInstitutionParams) {
 		data: {
 			endDate,
 			name,
-			ROR,
+			ror,
 			startDate,
 			types,
 			url,
