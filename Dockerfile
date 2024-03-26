@@ -47,8 +47,10 @@ RUN --mount=type=secret,id=AUTH_SECRET,uid=1000 \
 		--mount=type=secret,id=KEYSTATIC_GITHUB_CLIENT_ID,uid=1000 \
 		--mount=type=secret,id=KEYSTATIC_GITHUB_CLIENT_SECRET,uid=1000 \
 		--mount=type=secret,id=KEYSTATIC_SECRET,uid=1000 \
-		--mount=type=secret,id=SSHOC_MARKETPLACE_USER_NAME,uid=1000 \
+		--mount=type=secret,id=SSHOC_MARKETPLACE_API_BASE_URL,uid=1000 \
+		--mount=type=secret,id=SSHOC_MARKETPLACE_BASE_URL,uid=1000 \
 		--mount=type=secret,id=SSHOC_MARKETPLACE_PASSWORD,uid=1000 \
+		--mount=type=secret,id=SSHOC_MARKETPLACE_USER_NAME,uid=1000 \
 			AUTH_SECRET=$(cat /run/secrets/AUTH_SECRET) \
 			EMAIL_CONTACT_ADDRESS=$(cat /run/secrets/EMAIL_CONTACT_ADDRESS) \
 			EMAIL_SMTP_PORT=$(cat /run/secrets/EMAIL_SMTP_PORT) \
@@ -58,8 +60,10 @@ RUN --mount=type=secret,id=AUTH_SECRET,uid=1000 \
 			KEYSTATIC_GITHUB_CLIENT_ID=$(cat /run/secrets/KEYSTATIC_GITHUB_CLIENT_ID) \
 			KEYSTATIC_GITHUB_CLIENT_SECRET=$(cat /run/secrets/KEYSTATIC_GITHUB_CLIENT_SECRET) \
 			KEYSTATIC_SECRET=$(cat /run/secrets/KEYSTATIC_SECRET) \
-			SSHOC_MARKETPLACE_USER_NAME=$(cat /run/secrets/SSHOC_MARKETPLACE_USER_NAME) \
+			SSHOC_MARKETPLACE_API_BASE_URL=$(cat /run/secrets/SSHOC_MARKETPLACE_API_BASE_URL) \
+			SSHOC_MARKETPLACE_BASE_URL=$(cat /run/secrets/SSHOC_MARKETPLACE_BASE_URL) \
 			SSHOC_MARKETPLACE_PASSWORD=$(cat /run/secrets/SSHOC_MARKETPLACE_PASSWORD) \
+			SSHOC_MARKETPLACE_USER_NAME=$(cat /run/secrets/SSHOC_MARKETPLACE_USER_NAME) \
 		pnpm run build
 
 # serve
