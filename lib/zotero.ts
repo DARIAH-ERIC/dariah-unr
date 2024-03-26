@@ -47,6 +47,15 @@ export interface ZoteroItem {
 const baseUrl = "https://api.zotero.org";
 const headers = { "Zotero-API-Version": "3" };
 
+export function createZoteroCollectionUrl() {
+	const url = createUrl({
+		baseUrl,
+		pathname: `/groups/${groupId}/collections`,
+	});
+
+	return url;
+}
+
 export async function getCollectionsByCountryCode() {
 	const url = createUrl({
 		baseUrl,
