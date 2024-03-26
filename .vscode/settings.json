@@ -52,7 +52,11 @@
 	"typescript.tsdk": "node_modules/typescript/lib",
 	"workbench.editor.labelFormat": "medium",
 	"workbench.tree.enableStickyScroll": true,
-	"[markdown][mdx]": {
+	"[markdown]": {
+		"editor.wordWrap": "on"
+	},
+	"[mdx]": {
+		"editor.formatOnSave": false,
 		"editor.wordWrap": "on"
 	},
 	"[prisma]": {
