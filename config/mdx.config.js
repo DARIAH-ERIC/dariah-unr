@@ -1,4 +1,5 @@
 import withSyntaxHighlighter from "@shikijs/rehype";
+import withHeadingIds from "rehype-slug";
 import withFrontmatter from "remark-frontmatter";
 import withGfm from "remark-gfm";
 import withMdxFrontmatter from "remark-mdx-frontmatter";
@@ -9,5 +10,5 @@ import { config as syntaxHighlighterConfig } from "./syntax-highlighter.config.m
 /** @type {import('@mdx-js/mdx').CompileOptions} */
 export const config = {
 	remarkPlugins: [withFrontmatter, withMdxFrontmatter, withGfm, withTypographicQuotes],
-	rehypePlugins: [[withSyntaxHighlighter, syntaxHighlighterConfig]],
+	rehypePlugins: [withHeadingIds, [withSyntaxHighlighter, syntaxHighlighterConfig]],
 };

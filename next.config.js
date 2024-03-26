@@ -3,14 +3,10 @@
 import createBundleAnalyzer from "@next/bundle-analyzer";
 import createMdxPlugin from "@next/mdx";
 import localesPlugin from "@react-aria/optimize-locales-plugin";
-import withSyntaxHighlighter from "@shikijs/rehype";
 import createI18nPlugin from "next-intl/plugin";
-import withFrontmatter from "remark-frontmatter";
-import withGfm from "remark-gfm";
-import withMdxFrontmatter from "remark-mdx-frontmatter";
 
 import { env } from "./config/env.config.js";
-import { config as syntaxHighlighterConfig } from "./config/syntax-highlighter.config.mjs";
+import { config as mdxConfig } from "./config/mdx.config.js";
 
 /** @type {NextConfig} */
 const config = {
@@ -51,10 +47,7 @@ const plugins = [
 	createI18nPlugin("./lib/i18n.ts"),
 	createMdxPlugin({
 		extension: /\.(md|mdx)$/,
-		options: {
-			remarkPlugins: [withFrontmatter, withMdxFrontmatter, withGfm],
-			rehypePlugins: [[withSyntaxHighlighter, syntaxHighlighterConfig]],
-		},
+		options: mdxConfig,
 	}),
 ];
 

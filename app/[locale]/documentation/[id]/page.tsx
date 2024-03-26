@@ -76,10 +76,12 @@ async function DocumentationPageContent(props: DocumentationPageContentProps) {
 	const { Content } = await getDocumentationContent(id);
 
 	return (
-		<div className="prose prose-sm mx-auto w-full">
+		<div className="mx-auto grid w-full max-w-screen-md content-start gap-y-8">
 			<PageTitle>{document.title}</PageTitle>
 
-			<Content />
+			<div className="prose prose-sm">
+				<Content />
+			</div>
 		</div>
 	);
 }
