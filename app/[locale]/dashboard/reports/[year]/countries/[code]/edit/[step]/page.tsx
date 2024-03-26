@@ -387,7 +387,15 @@ async function DashboardCountryReportEditStepPageContent(
 							To add your publications, please do so in your national folder of the{" "}
 							<a href={String(createZoteroCollectionUrl())}>DARIAH Zotero Group Library</a>{" "}
 							following the{" "}
-							<Link href={createHref({ pathname: "/documentation/guidelines" })}>Guidelines</Link>.
+							<Link
+								href={createHref({
+									pathname: "/documentation/guidelines",
+									hash: "number-of-publications",
+								})}
+							>
+								Guidelines
+							</Link>
+							.
 						</p>
 					</FormDescription>
 

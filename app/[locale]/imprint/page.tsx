@@ -41,7 +41,7 @@ export default function ImprintPage(props: ImprintPageProps): ReactNode {
 	const t = useTranslations("ImprintPage");
 
 	return (
-		<MainContent className="container grid max-w-screen-md content-start gap-8 py-8">
+		<MainContent className="container grid max-w-screen-md content-start gap-y-8 py-8">
 			<PageTitle>{t("title")}</PageTitle>
 
 			<ImprintPageContent locale={locale} />
