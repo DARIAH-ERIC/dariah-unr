@@ -6,11 +6,12 @@ import { calculateOperationalCost } from "@/lib/calculate-operational-cost";
 
 interface ConfirmationFormProps {
 	countryId: Country["id"];
+	isConfirmationAvailable: boolean;
 	reportId: Report["id"];
 }
 
 export async function ConfirmationForm(props: ConfirmationFormProps) {
-	const { countryId, reportId } = props;
+	const { countryId, isConfirmationAvailable, reportId } = props;
 
 	const calculation = await calculateOperationalCost({ countryId, reportId });
 
@@ -18,7 +19,11 @@ export async function ConfirmationForm(props: ConfirmationFormProps) {
 		<section className="grid gap-y-8">
 			<Summary calculation={calculation} />
 
-			<ConfirmationFormContent countryId={countryId} reportId={reportId} />
+			<ConfirmationFormContent
+				countryId={countryId}
+				isConfirmationAvailable={isConfirmationAvailable}
+				reportId={reportId}
+			/>
 		</section>
 	);
 }

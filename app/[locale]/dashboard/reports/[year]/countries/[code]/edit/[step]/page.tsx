@@ -144,6 +144,8 @@ async function DashboardCountryReportEditStepPageContent(
 
 	const previousReport = await getReportByCountryCode({ countryCode: code, year: year - 1 });
 
+	const isConfirmationAvailable = user.role === "admin" || user.role === "national_coordinator";
+
 	switch (step) {
 		case "confirm": {
 			return (
@@ -157,7 +159,11 @@ async function DashboardCountryReportEditStepPageContent(
 					</FormDescription>
 
 					<FormPlaceholder>
-						<ConfirmationForm countryId={country.id} reportId={report.id} />
+						<ConfirmationForm
+							countryId={country.id}
+							isConfirmationAvailable={isConfirmationAvailable}
+							reportId={report.id}
+						/>
 					</FormPlaceholder>
 
 					<Navigation code={code} next="summary" previous="project-funding-leverage" year={year} />

@@ -13,11 +13,12 @@ import { createKey } from "@/lib/create-key";
 
 interface ConfirmationFormContentProps {
 	countryId: Country["id"];
+	isConfirmationAvailable: boolean;
 	reportId: Report["id"];
 }
 
 export function ConfirmationFormContent(props: ConfirmationFormContentProps): ReactNode {
-	const { countryId, reportId } = props;
+	const { countryId, isConfirmationAvailable, reportId } = props;
 
 	const [formState, formAction] = useFormState(updateReportStatusAction, undefined);
 
@@ -31,7 +32,9 @@ export function ConfirmationFormContent(props: ConfirmationFormContentProps): Re
 
 			<input name="reportId" type="hidden" value={reportId} />
 
-			<SubmitButton>Confirm</SubmitButton>
+			<SubmitButton isDisabled={!isConfirmationAvailable}>
+				{isConfirmationAvailable ? "Confirm" : "Only national coordinators can submit confirmation"}
+			</SubmitButton>
 
 			<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
 				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}

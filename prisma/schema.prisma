@@ -600,6 +600,7 @@ model Account {
 enum UserRole {
   admin
   contributor
+  national_coordinator
 }
 
 enum UserStatus {
