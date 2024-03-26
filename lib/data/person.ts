@@ -30,3 +30,49 @@ export function getPersonsByCountry(params: GetPersonsByCountryParams) {
 		},
 	});
 }
+
+export function getPersons() {
+	return db.person.findMany({
+		orderBy: {
+			name: "asc",
+		},
+		include: {
+			institutions: {
+				select: {
+					id: true,
+				},
+			},
+		},
+	});
+}
+
+interface UpdatePersonParams {
+	id: string;
+	name: string;
+	email?: string;
+	orcid?: string;
+	institutions?: Array<string>;
+}
+
+export function updatePerson(params: UpdatePersonParams) {
+	const { id, name, email, orcid, institutions } = params;
+
+	return db.person.update({
+		where: {
+			id,
+		},
+		data: {
+			name,
+			email,
+			orcid,
+			institutions:
+				institutions != null && institutions.length > 0
+					? {
+							connect: institutions.map((id) => {
+								return { id };
+							}),
+						}
+					: undefined,
+		},
+	});
+}

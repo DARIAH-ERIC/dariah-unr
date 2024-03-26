@@ -75,6 +75,12 @@
 		},
 		"title": "Institutionen"
 	},
+	"DashboardAdminPersonsPage": {
+		"meta": {
+			"title": "Personen"
+		},
+		"title": "Personen"
+	},
 	"DashboardAdminSshompIngestPage": {
 		"meta": {
 			"title": "SSH Open Marketplace Import"
@@ -269,6 +275,12 @@
 				"default": "Konnte Outreach nicht aktualisieren."
 			},
 			"success": "Outreach erfolgreich aktualisiert."
+		},
+		"updatePerson": {
+			"errors": {
+				"default": "Konnte Person nicht aktualisieren."
+			},
+			"success": "Person erfolgreich aktualisiert."
 		},
 		"updateProjectsFundingLeverages": {
 			"errors": {

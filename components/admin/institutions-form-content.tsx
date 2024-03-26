@@ -2,7 +2,7 @@
 
 import { isNonNullable, keyByToMap } from "@acdh-oeaw/lib";
 import { parseAbsoluteToLocal } from "@internationalized/date";
-import type { Country, Institution, Prisma } from "@prisma/client";
+import { type Country, type Institution, InstitutionType, type Prisma } from "@prisma/client";
 import { PencilIcon } from "lucide-react";
 import { useFormatter } from "next-intl";
 import { Fragment, type ReactNode, useId } from "react";
@@ -122,6 +122,8 @@ function UpdateInstitutionFormDialog(props: UpdateInstitutionFormDialogProps) {
 
 	const [formState, formAction] = useFormState(updateInstitutionAction, undefined);
 
+	const institutionTypes = Object.values(InstitutionType);
+
 	return (
 		<ModalOverlay>
 			<Modal isDismissable={true}>
@@ -193,10 +195,14 @@ function UpdateInstitutionFormDialog(props: UpdateInstitutionFormDialogProps) {
 													label="Type"
 													name={`types.${index}`}
 												>
-													{Array.from(countriesById.values()).map((country) => {
+													{institutionTypes.map((institutionType) => {
 														return (
-															<SelectItem key={type} id={type} textValue={type}>
-																{type}
+															<SelectItem
+																key={institutionType}
+																id={institutionType}
+																textValue={institutionType}
+															>
+																{institutionType}
 															</SelectItem>
 														);
 													})}
