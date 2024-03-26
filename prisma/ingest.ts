@@ -164,8 +164,7 @@ async function ingest() {
 		const type = getEnumValue<any>(row["channel type"]?.value);
 		const record = await db.outreach.create({
 			data: {
-				/** There is no `name` field in the baserow database, so we duplicate `url`. */
-				name: row["Website or channel"],
+				name: row["name of the outreach channel"],
 				type: type,
 				url: row["Website or channel"],
 				country,
