@@ -60,6 +60,11 @@ function DashboardAdminPageContent() {
 						Edit institutions
 					</Link>
 				</li>
+				<li>
+					<Link href={createHref({ pathname: "/dashboard/admin/sshomp" })}>
+						Ingest software and services from SSH Open Marketplace
+					</Link>
+				</li>
 			</ul>
 		</section>
 	);
