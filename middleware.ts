@@ -4,6 +4,7 @@ import createI18nMiddleware from "next-intl/middleware";
 
 import { defaultLocale, locales } from "@/config/i18n.config";
 import { config as authConfig } from "@/lib/auth/config";
+import { getNormalizedPathname } from "@/lib/get-normalized-pathname";
 
 /**
  * Next.js currently only supports the "edge" runtime in middleware, which is not
@@ -16,15 +17,20 @@ const i18nMiddleware = createI18nMiddleware({
 	locales,
 });
 
-export default authMiddleware((req) => {
+export default authMiddleware((request) => {
+	const pathname = getNormalizedPathname(request.nextUrl.pathname);
+	if (pathname === "/documentation") {
+		request.nextUrl.pathname += "/guidelines";
+	}
+
 	/**
 	 * Don't add locale prefixes to api routes (in case they are included in the
 	 * middleware `matcher` config).
 	 */
-	if (req.nextUrl.pathname.startsWith("/api/")) return;
+	if (request.nextUrl.pathname.startsWith("/api/")) return;
 
 	// eslint-disable-next-line consistent-return
-	return i18nMiddleware(req);
+	return i18nMiddleware(request);
 });
 
 export const config: MiddlewareConfig = {
