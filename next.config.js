@@ -28,6 +28,18 @@ const config = {
 	},
 	output: env.BUILD_MODE,
 	pageExtensions: ["ts", "tsx", "md", "mdx"],
+	redirects() {
+		/** @type {Awaited<ReturnType<NonNullable<NextConfig["redirects"]>>>} */
+		const redirects = ["de", "en"].map((locale) => {
+			return {
+				source: "/documentation",
+				destination: "/documentation/guidelines",
+				permanent: false,
+			};
+		});
+
+		return Promise.resolve(redirects);
+	},
 	rewrites() {
 		/** @type {Awaited<ReturnType<NonNullable<NextConfig["rewrites"]>>>} */
 		const rewrites = [
