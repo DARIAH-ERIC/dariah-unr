@@ -59,27 +59,34 @@ export async function ingestDataFromSshomp() {
 		const name = (entry.label as string).trim();
 
 		// @ts-expect-error Missing types.
-		const reviewer = entry.contributors.find((contributor) => {
+		const reviewers = entry.contributors.filter((contributor) => {
 			return contributor.role.code === "reviewer";
 		});
 
-		if (reviewer == null) {
+		if (reviewers == null || reviewers.length === 0) {
 			log.warn(`No reviewer found for ${name}.`);
 			continue;
 		}
 
-		const actorId = reviewer.actor.id;
-		const country = await db.country.findFirst({
-			where: {
-				marketplaceId: actorId,
-			},
-			select: {
-				id: true,
-			},
-		});
+		const countries = [];
 
-		if (country == null) {
-			log.warn(`Unknown actor id ${actorId}.`);
+		for (const reviewer of reviewers) {
+			const country = await db.country.findFirst({
+				where: {
+					marketplaceId: reviewer.actor.id,
+				},
+				select: {
+					id: true,
+				},
+			});
+
+			if (country != null) {
+				countries.push(country);
+			}
+		}
+
+		if (countries.length === 0) {
+			log.warn(`Unknown actor id for ${name}.`);
 			continue;
 		}
 
@@ -106,9 +113,9 @@ export async function ingestDataFromSshomp() {
 						marketplaceStatus: "added_as_item",
 						status: "maintained",
 						countries: {
-							connect: {
-								id: country.id,
-							},
+							connect: countries.map((country) => {
+								return { id: country.id };
+							}),
 						},
 					},
 				});
@@ -126,9 +133,9 @@ export async function ingestDataFromSshomp() {
 						marketplaceStatus: "added_as_item",
 						status: "maintained",
 						countries: {
-							connect: {
-								id: country.id,
-							},
+							connect: countries.map((country) => {
+								return { id: country.id };
+							}),
 						},
 					},
 				});
@@ -154,9 +161,9 @@ export async function ingestDataFromSshomp() {
 						marketplaceStatus: "yes",
 						status: "live",
 						countries: {
-							connect: {
-								id: country.id,
-							},
+							connect: countries.map((country) => {
+								return { id: country.id };
+							}),
 						},
 						size: {
 							connect: {
@@ -179,9 +186,9 @@ export async function ingestDataFromSshomp() {
 						marketplaceStatus: "yes",
 						status: "live",
 						countries: {
-							connect: {
-								id: country.id,
-							},
+							connect: countries.map((country) => {
+								return { id: country.id };
+							}),
 						},
 						size: {
 							connect: {
