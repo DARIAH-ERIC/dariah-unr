@@ -16,9 +16,7 @@ export function getServicesByCountry(params: GetServicesByCountryParams) {
 					id: countryId,
 				},
 			},
-			status: {
-				not: "discontinued",
-			},
+			status: "live",
 		},
 		orderBy: {
 			name: "asc",
