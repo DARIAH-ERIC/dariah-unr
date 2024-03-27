@@ -33,4 +33,4 @@ pnpm run dev
 ## data model
 
 inspect the data model as [prisma schema](./prisma/schema.prisma) or
-[svg diagram](./public/assets/images/content/documentation/data-model/data-model.svg).
+[svg diagram](./public/assets/content/documentation/data-model/data-model.svg).
