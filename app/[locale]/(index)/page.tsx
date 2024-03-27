@@ -68,7 +68,7 @@ function IndexPageHeroSection(): ReactNode {
 				<LinkButton href={createHref({ pathname: "/dashboard" })}>
 					{t("go-to-dashboard")}
 				</LinkButton>
-				<LinkButton href={createHref({ pathname: "/documentation" })} variant="outline">
+				<LinkButton href={createHref({ pathname: "/documentation/guidelines" })} variant="outline">
 					{t("read-documentation")}
 				</LinkButton>
 			</div>

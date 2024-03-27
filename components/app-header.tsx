@@ -26,7 +26,7 @@ export function AppHeader(): ReactNode {
 			label: t("links.dashboard"),
 		},
 		documentation: {
-			href: createHref({ pathname: "/documentation" }),
+			href: createHref({ pathname: "/documentation/guidelines" }),
 			label: t("links.documentation"),
 		},
 	} satisfies Record<string, { href: LinkProps["href"]; label: string }>;
