@@ -126,8 +126,8 @@ async function createEntriesFromSshomp() {
 					data: {
 						name,
 						marketplaceId: id,
-						marketplaceStatus: "added_as_item",
-						status: "maintained",
+						// marketplaceStatus: "added_as_item",
+						// status: "maintained",
 						countries: {
 							connect: countries.map((country) => {
 								return { id: country.id };
@@ -179,8 +179,8 @@ async function createEntriesFromSshomp() {
 					data: {
 						name,
 						marketplaceId: id,
-						marketplaceStatus: "yes",
-						status: "live",
+						// marketplaceStatus: "yes",
+						// status: "live",
 						countries: {
 							connect: countries.map((country) => {
 								return { id: country.id };
