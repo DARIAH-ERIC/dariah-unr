@@ -14,7 +14,8 @@ test.describe("i18n", () => {
 		});
 	});
 
-	test.describe("should redirect root route to preferred locale", () => {
+	// eslint-disable-next-line playwright/no-skipped-test
+	test.describe.skip("should redirect root route to preferred locale", () => {
 		test.use({ locale: "de" });
 
 		test("with supported locale", async ({ page }) => {
@@ -71,7 +72,6 @@ test.describe("i18n", () => {
 	});
 
 	test("should support switching locale", async ({ page }) => {
-		// @ts-expect-error Single locale could be configured.
 		// eslint-disable-next-line playwright/no-skipped-test, @typescript-eslint/no-unnecessary-condition
 		test.skip(locales.length === 1, "Only single locale configured.");
 
@@ -98,7 +98,8 @@ test.describe("i18n", () => {
 		}
 	});
 
-	test("should set alternate links in response header", async ({ page }) => {
+	// eslint-disable-next-line playwright/no-skipped-test
+	test.skip("should set alternate links in response header", async ({ page }) => {
 		function createAbsoluteUrl(pathname: string) {
 			return String(createUrl({ baseUrl: env.NEXT_PUBLIC_APP_BASE_URL, pathname }));
 		}

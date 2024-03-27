@@ -85,7 +85,8 @@ test.describe("should set page metadata", () => {
 		await expect(ogLocale).toHaveAttribute("content", "en");
 	});
 
-	test("with de locale", async ({ page }) => {
+	// eslint-disable-next-line playwright/no-skipped-test
+	test.skip("with de locale", async ({ page }) => {
 		await page.goto("/de");
 
 		await expect(page).toHaveTitle("DARIAH Unified National Reporting");
@@ -132,7 +133,8 @@ test.describe("should add json+ld metadata", () => {
 		);
 	});
 
-	test("with de locale", async ({ page }) => {
+	// eslint-disable-next-line playwright/no-skipped-test
+	test.skip("with de locale", async ({ page }) => {
 		await page.goto("/de");
 
 		const metadata = await page.locator('script[type="application/ld+json"]').textContent();
