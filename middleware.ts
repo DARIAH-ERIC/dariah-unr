@@ -18,11 +18,6 @@ const i18nMiddleware = createI18nMiddleware({
 });
 
 export default authMiddleware((request) => {
-	const pathname = getNormalizedPathname(request.nextUrl.pathname);
-	if (pathname === "/documentation") {
-		request.nextUrl.pathname += "/guidelines";
-	}
-
 	/**
 	 * Don't add locale prefixes to api routes (in case they are included in the
 	 * middleware `matcher` config).
