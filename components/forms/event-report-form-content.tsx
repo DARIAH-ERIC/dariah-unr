@@ -94,7 +94,7 @@ export function EventReportFormContent(props: EventReportFormContentProps): Reac
 
 			<TextInputField
 				defaultValue={eventReport?.reusableOutcomes ?? undefined}
-				description="We expect to see here links to any reusable outcomes."
+				description='During the course of your events, you may have produced "reusable outcomes", such as slides, videos, or posters. We would like to valorize these materials, by either placing them in the DARIAH Zenodo or even putting them into DARIAH Campus or the SSH Open Marketplace. Are there any materials you would like help with integrating into the DARIAH-EU ecosystem? We expect to see here links to any reusable outcomes.'
 				label="Reusable outcomes"
 				name="eventReport.reusableOutcomes"
 			/>

@@ -54,7 +54,7 @@ export function SoftwareFormContent(props: SoftwareFormContentProps): ReactNode 
 					return (
 						<Group
 							key={software.id}
-							className="grid content-start gap-x-4 gap-y-3 sm:grid-cols-[1fr_1fr_220px]"
+							className="grid content-start gap-x-4 gap-y-3 sm:grid-cols-[1fr_1fr]"
 						>
 							<input name={`software.${index}.id`} type="hidden" value={software.id} />
 

@@ -493,13 +493,8 @@ async function DashboardCountryReportEditStepPageContent(
 					<FormTitle>{t("software")}</FormTitle>
 					<FormDescription>
 						<p>
-							List here any software/code of a specialized application that has been or is being
-							developed within your consortium and is made available under a permissive license for
-							reuse. Examples of software is any code made available through github (e.g.{" "}
-							<a href="https://github.com/acdh-oeaw/OpenAtlas">
-								https://github.com/acdh-oeaw/OpenAtlas
-							</a>
-							).
+							Like services, software developed within the DARIAH national consortia should be added
+							to the SSH Open Marketplace.
 						</p>
 
 						<p>
@@ -509,6 +504,28 @@ async function DashboardCountryReportEditStepPageContent(
 							documented as well, not just orphan code). The code can be in any programming
 							language, it can also be only a simple script dedicated to one specific task, as long
 							as it is working and documented.
+						</p>
+
+						<p>
+							Software in this list are the ones included in your national catalogue, as{" "}
+							<a href="https://marketplace.sshopencloud.eu/search?f.keyword=DARIAH+Resource">
+								maintained in the SSH Open Marketplace
+							</a>
+							, and displayed on the{" "}
+							<a href="https://www.dariah.eu/tools-services/tools-and-services/">
+								DARIAH tools and services catalogue
+							</a>
+							. If you want to update the list, please refer to{" "}
+							<a href="https://drive.google.com/file/d/10tGdjKY8XC3TkNnVD_svl9_VrPoWTBWw/view">
+								these guidelines
+							</a>
+							.
+						</p>
+
+						<p>
+							Please note that if you are adding resources to the Marketplace, they may not
+							immediately appear in this tool. If this is the case, once you have made additions, or
+							if you have any questions, please contact the UNR team.
 						</p>
 					</FormDescription>
 
