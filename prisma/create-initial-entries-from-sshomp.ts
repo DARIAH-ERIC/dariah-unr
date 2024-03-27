@@ -19,8 +19,7 @@ async function createEntriesFromSshomp() {
 	});
 	assert(serviceSizeSmall);
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const entries: Array<any> = [];
+	const entries = [];
 	let page = 1;
 	let hasMorePages = false;
 
@@ -51,19 +50,10 @@ async function createEntriesFromSshomp() {
 		const id = entry.persistentId;
 
 		/** Entries in sshomp can have leading whitespace in label. */
-		const name = (entry.label as string).trim();
+		const name = entry.label.trim();
 
-		const unrEntry = await db.service.findFirst({
-			where: {
-				marketplaceId: id,
-			},
-			select: {
-				id: true,
-			},
-		});
-
-		// @ts-expect-error Missing types.
-		const reviewer = entry.contributors.find((contributor) => {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const reviewer = entry.contributors.find((contributor: any) => {
 			return contributor.role.code === "reviewer";
 		});
 
@@ -83,7 +73,7 @@ async function createEntriesFromSshomp() {
 		});
 
 		if (country == null) {
-			log.warn(`Unknown actor id ${actorId}.`);
+			log.warn(`Unknown actor id ${actorId}, for ${name}.`);
 			continue;
 		}
 
@@ -93,7 +83,20 @@ async function createEntriesFromSshomp() {
 		})?.concept?.label;
 
 		if (resourceType === "Software") {
-			if (unrEntry == null) {
+			const software = await db.software.findFirst({
+				where: {
+					/**
+					 * De-deplicate by name, because the initial baserow ingest does not yet have
+					 * ssh open marketplace ids.
+					 */
+					name,
+				},
+				select: {
+					id: true,
+				},
+			});
+
+			if (software == null) {
 				await db.software.create({
 					data: {
 						name,
@@ -111,7 +114,7 @@ async function createEntriesFromSshomp() {
 			} else {
 				await db.software.update({
 					where: {
-						id: unrEntry.id,
+						id: software.id,
 					},
 					data: {
 						name,
@@ -128,7 +131,20 @@ async function createEntriesFromSshomp() {
 				log.info(`Updated software "${name}".`);
 			}
 		} else {
-			if (unrEntry == null) {
+			const service = await db.service.findFirst({
+				where: {
+					/**
+					 * De-deplicate by name, because the initial baserow ingest does not yet have
+					 * ssh open marketplace ids.
+					 */
+					name,
+				},
+				select: {
+					id: true,
+				},
+			});
+
+			if (service == null) {
 				await db.service.create({
 					data: {
 						name,
@@ -151,7 +167,7 @@ async function createEntriesFromSshomp() {
 			} else {
 				await db.service.update({
 					where: {
-						id: unrEntry.id,
+						id: service.id,
 					},
 					data: {
 						name,

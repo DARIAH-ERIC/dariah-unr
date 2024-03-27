@@ -58,15 +58,6 @@ export async function ingestDataFromSshomp() {
 		/** Entries in sshomp can have leading whitespace in label. */
 		const name = (entry.label as string).trim();
 
-		const unrEntry = await db.service.findFirst({
-			where: {
-				marketplaceId: id,
-			},
-			select: {
-				id: true,
-			},
-		});
-
 		// @ts-expect-error Missing types.
 		const reviewer = entry.contributors.find((contributor) => {
 			return contributor.role.code === "reviewer";
@@ -98,7 +89,16 @@ export async function ingestDataFromSshomp() {
 		})?.concept?.label;
 
 		if (resourceType === "Software") {
-			if (unrEntry == null) {
+			const software = await db.software.findFirst({
+				where: {
+					marketplaceId: id,
+				},
+				select: {
+					id: true,
+				},
+			});
+
+			if (software == null) {
 				await db.software.create({
 					data: {
 						name,
@@ -118,7 +118,7 @@ export async function ingestDataFromSshomp() {
 			} else {
 				await db.software.update({
 					where: {
-						id: unrEntry.id,
+						id: software.id,
 					},
 					data: {
 						name,
@@ -137,7 +137,16 @@ export async function ingestDataFromSshomp() {
 				stats.software.updated++;
 			}
 		} else {
-			if (unrEntry == null) {
+			const service = await db.service.findFirst({
+				where: {
+					marketplaceId: id,
+				},
+				select: {
+					id: true,
+				},
+			});
+
+			if (service == null) {
 				await db.service.create({
 					data: {
 						name,
@@ -162,7 +171,7 @@ export async function ingestDataFromSshomp() {
 			} else {
 				await db.service.update({
 					where: {
-						id: unrEntry.id,
+						id: service.id,
 					},
 					data: {
 						name,
