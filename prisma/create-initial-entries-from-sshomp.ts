@@ -53,27 +53,34 @@ async function createEntriesFromSshomp() {
 		const name = entry.label.trim();
 
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const reviewer = entry.contributors.find((contributor: any) => {
+		const reviewers = entry.contributors.filter((contributor: any) => {
 			return contributor.role.code === "reviewer";
 		});
 
-		if (reviewer == null) {
+		if (reviewers == null || reviewers.length === 0) {
 			log.warn(`No reviewer found for ${name}.`);
 			continue;
 		}
 
-		const actorId = reviewer.actor.id;
-		const country = await db.country.findFirst({
-			where: {
-				marketplaceId: actorId,
-			},
-			select: {
-				id: true,
-			},
-		});
+		const countries = [];
 
-		if (country == null) {
-			log.warn(`Unknown actor id ${actorId}, for ${name}.`);
+		for (const reviewer of reviewers) {
+			const country = await db.country.findFirst({
+				where: {
+					marketplaceId: reviewer.actor.id,
+				},
+				select: {
+					id: true,
+				},
+			});
+
+			if (country != null) {
+				countries.push(country);
+			}
+		}
+
+		if (countries.length === 0) {
+			log.warn(`Unknown actor id for ${name}.`);
 			continue;
 		}
 
@@ -104,9 +111,9 @@ async function createEntriesFromSshomp() {
 						marketplaceStatus: "added_as_item",
 						status: "maintained",
 						countries: {
-							connect: {
-								id: country.id,
-							},
+							connect: countries.map((country) => {
+								return { id: country.id };
+							}),
 						},
 					},
 				});
@@ -122,9 +129,9 @@ async function createEntriesFromSshomp() {
 						marketplaceStatus: "added_as_item",
 						status: "maintained",
 						countries: {
-							connect: {
-								id: country.id,
-							},
+							connect: countries.map((country) => {
+								return { id: country.id };
+							}),
 						},
 					},
 				});
@@ -152,9 +159,9 @@ async function createEntriesFromSshomp() {
 						marketplaceStatus: "yes",
 						status: "live",
 						countries: {
-							connect: {
-								id: country.id,
-							},
+							connect: countries.map((country) => {
+								return { id: country.id };
+							}),
 						},
 						size: {
 							connect: {
@@ -175,9 +182,9 @@ async function createEntriesFromSshomp() {
 						marketplaceStatus: "yes",
 						status: "live",
 						countries: {
-							connect: {
-								id: country.id,
-							},
+							connect: countries.map((country) => {
+								return { id: country.id };
+							}),
 						},
 						size: {
 							connect: {
