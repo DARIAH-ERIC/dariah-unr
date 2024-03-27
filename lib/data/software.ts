@@ -16,9 +16,7 @@ export function getSoftwareByCountry(params: GetSoftwareByCountryParams) {
 					id: countryId,
 				},
 			},
-			status: {
-				not: "not_maintained",
-			},
+			status: "maintained",
 		},
 		orderBy: {
 			name: "asc",
