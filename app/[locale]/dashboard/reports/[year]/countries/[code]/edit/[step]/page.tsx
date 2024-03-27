@@ -459,7 +459,7 @@ async function DashboardCountryReportEditStepPageContent(
 								DARIAH service catalogue
 							</a>
 							. If you want to update the list, please refer to{" "}
-							<a href="https://drive.google.com/file/d/10tGdjKY8XC3TkNnVD_svl9_VrPoWTBWw/view">
+							<a href="https://drive.google.com/file/d/1l7sS4lAzbFgkY9etqwGxEBQP3C8jyn_I/view">
 								these guidelines
 							</a>
 							.
