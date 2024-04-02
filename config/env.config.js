@@ -3,6 +3,7 @@ import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
 export const env = createEnv({
+	emptyStringAsUndefined: true,
 	shared: {
 		NODE_ENV: z.enum(["development", "production", "test"]).default("production"),
 	},
