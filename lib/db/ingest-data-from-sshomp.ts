@@ -133,7 +133,7 @@ export async function ingestDataFromSshomp() {
 						// marketplaceStatus: "added_as_item",
 						// status: "maintained",
 						countries: {
-							connect: countries.map((country) => {
+							set: countries.map((country) => {
 								return { id: country.id };
 							}),
 						},
@@ -186,7 +186,7 @@ export async function ingestDataFromSshomp() {
 						// marketplaceStatus: "yes",
 						// status: "live",
 						countries: {
-							connect: countries.map((country) => {
+							set: countries.map((country) => {
 								return { id: country.id };
 							}),
 						},

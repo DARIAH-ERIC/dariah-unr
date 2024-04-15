@@ -1,0 +1,415 @@
+"use client";
+
+import { keyByToMap } from "@acdh-oeaw/lib";
+import {
+	type Country,
+	type Prisma,
+	SoftwareMarketplaceStatus,
+	SoftwareStatus,
+} from "@prisma/client";
+import { EllipsisIcon } from "lucide-react";
+import { Fragment, type ReactNode, useId, useMemo, useState } from "react";
+import type { Key } from "react-aria-components";
+import { useFormState } from "react-dom";
+
+import { SubmitButton } from "@/components/submit-button";
+import {
+	DropdownMenu,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/blocks/dropdown-menu";
+import { SelectField, SelectItem } from "@/components/ui/blocks/select-field";
+import { TextAreaField } from "@/components/ui/blocks/text-area-field";
+import { TextInputField } from "@/components/ui/blocks/text-input-field";
+import {
+	Dialog,
+	DialogCancelButton,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/ui/dialog";
+import { Form } from "@/components/ui/form";
+import { FormError as FormErrorMessage } from "@/components/ui/form-error";
+import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
+import { IconButton } from "@/components/ui/icon-button";
+import { Modal, ModalOverlay } from "@/components/ui/modal";
+import { Cell, Column, Row, Table, TableBody, TableHeader } from "@/components/ui/table";
+import { deleteSoftwareAction } from "@/lib/actions/admin/delete-software";
+import { updateSoftwareAction } from "@/lib/actions/admin/update-software";
+import { createKey } from "@/lib/create-key";
+
+interface Action {
+	kind: "delete" | "edit";
+	item: Prisma.SoftwareGetPayload<{
+		include: {
+			countries: { select: { id: true } };
+		};
+	}>;
+}
+
+interface AdminSoftwareTableContentProps {
+	countries: Array<Country>;
+	software: Array<
+		Prisma.SoftwareGetPayload<{
+			include: {
+				countries: { select: { id: true } };
+			};
+		}>
+	>;
+}
+
+export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps): ReactNode {
+	const { countries, software } = props;
+
+	const countriesById = useMemo(() => {
+		return keyByToMap(countries, (country) => {
+			return country.id;
+		});
+	}, [countries]);
+
+	const [action, setAction] = useState<Action | null>(null);
+
+	function onDialogClose() {
+		setAction(null);
+	}
+
+	const [sortDescriptor, setSortDescriptor] = useState({
+		column: "name",
+		direction: "ascending",
+	});
+
+	const items = useMemo(() => {
+		const items = software.slice().sort((a, z) => {
+			if (sortDescriptor.column === "country") {
+				const idA = a.countries[0]?.id;
+				const countryA = idA ? countriesById.get(idA)?.name ?? "" : "";
+
+				const idZ = z.countries[0]?.id;
+				const countryZ = idZ ? countriesById.get(idZ)?.name ?? "" : "";
+
+				return countryA.localeCompare(countryZ);
+			}
+
+			// @ts-expect-error It's fine.
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+			return a[sortDescriptor.column].localeCompare(z[sortDescriptor.column]);
+		});
+		if (sortDescriptor.direction === "descending") {
+			items.reverse();
+		}
+		return items;
+	}, [software, sortDescriptor, countriesById]);
+
+	return (
+		<Fragment>
+			<Table
+				aria-label="Software"
+				className="w-full"
+				// @ts-expect-error It's fine.
+				onSortChange={setSortDescriptor}
+				selectionMode="none"
+				// @ts-expect-error It's fine.
+				sortDescriptor={sortDescriptor}
+			>
+				<TableHeader>
+					<Column allowsSorting={true} defaultWidth="2fr" id="name" isRowHeader={true}>
+						Name
+					</Column>
+					<Column allowsSorting={true} id="country">
+						Country
+					</Column>
+					<Column allowsSorting={true} id="status">
+						Status
+					</Column>
+					<Column id="url">URL</Column>
+					<Column id="marketplaceId">Marketplace ID</Column>
+					<Column id="marketplaceStatus">Marketplace status</Column>
+					<Column id="comment">Comment</Column>
+					<Column defaultWidth={50} id="actions">
+						Actions
+					</Column>
+				</TableHeader>
+				<TableBody items={items}>
+					{(row) => {
+						function onAction(key: Key) {
+							switch (key) {
+								case "delete": {
+									setAction({ kind: "delete", item: row });
+									break;
+								}
+
+								case "edit": {
+									setAction({ kind: "edit", item: row });
+									break;
+								}
+							}
+						}
+
+						return (
+							<Row>
+								<Cell>
+									<span title={row.name}>{row.name}</span>
+								</Cell>
+								<Cell>
+									{row.countries[0]?.id ? countriesById.get(row.countries[0].id)?.name : undefined}
+								</Cell>
+								<Cell>{row.status}</Cell>
+								<Cell>
+									<span title={row.url[0] ?? undefined}>{row.url[0]}</span>
+								</Cell>
+								<Cell>{row.marketplaceId}</Cell>
+								<Cell>{row.marketplaceStatus}</Cell>
+								<Cell>
+									<span title={row.comment ?? undefined}>{row.comment}</span>
+								</Cell>
+								<Cell>
+									<div className="flex justify-center">
+										<DropdownMenuTrigger>
+											<IconButton className="mx-auto" variant="plain">
+												<EllipsisIcon className="size-5 shrink-0" />
+												<span className="sr-only">Menu</span>
+											</IconButton>
+											<DropdownMenu onAction={onAction} placement="bottom">
+												<DropdownMenuItem id="edit">Edit</DropdownMenuItem>
+												<DropdownMenuItem id="delete">Delete</DropdownMenuItem>
+											</DropdownMenu>
+										</DropdownMenuTrigger>
+									</div>
+								</Cell>
+							</Row>
+						);
+					}}
+				</TableBody>
+			</Table>
+
+			<DeleteSoftwareDialog key={action?.item.id} action={action} onClose={onDialogClose} />
+			<EditSoftwareDialog
+				key={action?.item.id}
+				action={action}
+				countriesById={countriesById}
+				onClose={onDialogClose}
+			/>
+		</Fragment>
+	);
+}
+
+interface DeleteSoftwareDialogProps {
+	action: Action | null;
+	onClose: () => void;
+}
+
+function DeleteSoftwareDialog(props: DeleteSoftwareDialogProps) {
+	const { action, onClose } = props;
+
+	const formId = useId();
+
+	const [formState, formAction] = useFormState(deleteSoftwareAction, undefined);
+
+	if (action?.kind !== "delete") return null;
+
+	return (
+		<ModalOverlay isOpen={true} onOpenChange={onClose}>
+			<Modal isOpen={true} onOpenChange={onClose}>
+				<Dialog role="alertdialog">
+					{({ close }) => {
+						return (
+							<Fragment>
+								<DialogHeader>
+									<DialogTitle>Delete software</DialogTitle>
+									<DialogDescription>
+										Are you sure you want to delete {action.item.name}?
+									</DialogDescription>
+								</DialogHeader>
+
+								<div>
+									<Form
+										action={(formData) => {
+											formAction(formData);
+											close();
+										}}
+										className="grid gap-y-6"
+										id={formId}
+										validationErrors={
+											formState?.status === "error" ? formState.fieldErrors : undefined
+										}
+									>
+										<input name="id" type="hidden" value={action.item.id} />
+
+										<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
+											{formState?.status === "success" && formState.message.length > 0
+												? formState.message
+												: null}
+										</FormSuccessMessage>
+
+										<FormErrorMessage key={createKey("form-error", formState?.timestamp)}>
+											{formState?.status === "error" && formState.formErrors.length > 0
+												? formState.formErrors
+												: null}
+										</FormErrorMessage>
+									</Form>
+								</div>
+
+								<DialogFooter>
+									<DialogCancelButton>Cancel</DialogCancelButton>
+									<SubmitButton form={formId}>Delete</SubmitButton>
+								</DialogFooter>
+							</Fragment>
+						);
+					}}
+				</Dialog>
+			</Modal>
+		</ModalOverlay>
+	);
+}
+
+interface EditSoftwareDialogProps {
+	action: Action | null;
+	countriesById: Map<Country["id"], Country>;
+	onClose: () => void;
+}
+
+function EditSoftwareDialog(props: EditSoftwareDialogProps) {
+	const { action, countriesById, onClose } = props;
+
+	const formId = useId();
+
+	const [formState, formAction] = useFormState(updateSoftwareAction, undefined);
+
+	if (action?.kind !== "edit") return null;
+
+	const software = action.item;
+
+	const softwareStatuses = Object.values(SoftwareStatus);
+	const softwareMarketplaceStatuses = Object.values(SoftwareMarketplaceStatus);
+
+	return (
+		<ModalOverlay isOpen={true} onOpenChange={onClose}>
+			<Modal isOpen={true} onOpenChange={onClose}>
+				<Dialog>
+					{({ close }) => {
+						return (
+							<Fragment>
+								<DialogHeader>
+									<DialogTitle>Update software</DialogTitle>
+									<DialogDescription>Please provide software details.</DialogDescription>
+								</DialogHeader>
+
+								<div>
+									<Form
+										action={(formData) => {
+											formAction(formData);
+											close();
+										}}
+										className="grid gap-y-6"
+										id={formId}
+										validationErrors={
+											formState?.status === "error" ? formState.fieldErrors : undefined
+										}
+									>
+										<input name="id" type="hidden" value={software.id} />
+
+										<TextInputField
+											defaultValue={software.name}
+											isRequired={true}
+											label="Name"
+											name="name"
+										/>
+
+										{/* TODO: Multiple countries */}
+										<SelectField
+											defaultSelectedKey={software.countries[0]?.id}
+											isRequired={true}
+											label="Country"
+											name="countries.0"
+										>
+											{Array.from(countriesById.values()).map((country) => {
+												return (
+													<SelectItem key={country.id} id={country.id} textValue={country.name}>
+														{country.name}
+													</SelectItem>
+												);
+											})}
+										</SelectField>
+
+										<SelectField
+											defaultSelectedKey={software.status ?? undefined}
+											label="Status"
+											name="status"
+										>
+											{softwareStatuses.map((softwareStatus) => {
+												return (
+													<SelectItem
+														key={softwareStatus}
+														id={softwareStatus}
+														textValue={softwareStatus}
+													>
+														{softwareStatus}
+													</SelectItem>
+												);
+											})}
+										</SelectField>
+
+										{/* TODO: Multiple URLs */}
+										<TextInputField
+											defaultValue={software.url[0] ?? undefined}
+											label="URL"
+											name="url.0"
+										/>
+
+										<TextInputField
+											defaultValue={software.marketplaceId ?? undefined}
+											label="Marketplace ID"
+											name="marketplaceId"
+										/>
+
+										<SelectField
+											defaultSelectedKey={software.marketplaceStatus ?? undefined}
+											label="Marketplace status"
+											name="marketplaceStatus"
+										>
+											{softwareMarketplaceStatuses.map((softwareMarketplaceStatus) => {
+												return (
+													<SelectItem
+														key={softwareMarketplaceStatus}
+														id={softwareMarketplaceStatus}
+														textValue={softwareMarketplaceStatus}
+													>
+														{softwareMarketplaceStatus}
+													</SelectItem>
+												);
+											})}
+										</SelectField>
+
+										<TextAreaField
+											defaultValue={software.comment ?? undefined}
+											label="Comment"
+											name="comment"
+										/>
+
+										<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
+											{formState?.status === "success" && formState.message.length > 0
+												? formState.message
+												: null}
+										</FormSuccessMessage>
+
+										<FormErrorMessage key={createKey("form-error", formState?.timestamp)}>
+											{formState?.status === "error" && formState.formErrors.length > 0
+												? formState.formErrors
+												: null}
+										</FormErrorMessage>
+									</Form>
+								</div>
+
+								<DialogFooter>
+									<DialogCancelButton>Cancel</DialogCancelButton>
+									<SubmitButton form={formId}>Update</SubmitButton>
+								</DialogFooter>
+							</Fragment>
+						);
+					}}
+				</Dialog>
+			</Modal>
+		</ModalOverlay>
+	);
+}

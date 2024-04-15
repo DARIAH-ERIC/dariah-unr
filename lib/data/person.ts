@@ -68,7 +68,7 @@ export function updatePerson(params: UpdatePersonParams) {
 			institutions:
 				institutions != null && institutions.length > 0
 					? {
-							connect: institutions.map((id) => {
+							set: institutions.map((id) => {
 								return { id };
 							}),
 						}

@@ -54,14 +54,17 @@ function DashboardAdminPageContent() {
 			<ul role="list">
 				<li>
 					<Link href={createHref({ pathname: "/dashboard/admin/institutions" })}>
-						Edit institutions
+						Go to institutions
 					</Link>
 				</li>
 				<li>
-					<Link href={createHref({ pathname: "/dashboard/admin/persons" })}>Edit persons</Link>
+					<Link href={createHref({ pathname: "/dashboard/admin/persons" })}>Go to persons</Link>
 				</li>
 				<li>
-					<Link href={createHref({ pathname: "/dashboard/admin/users" })}>Edit users</Link>
+					<Link href={createHref({ pathname: "/dashboard/admin/software" })}>Go to software</Link>
+				</li>
+				<li>
+					<Link href={createHref({ pathname: "/dashboard/admin/users" })}>Go to users</Link>
 				</li>
 				<li>
 					<Link href={createHref({ pathname: "/dashboard/admin/sshomp" })}>
