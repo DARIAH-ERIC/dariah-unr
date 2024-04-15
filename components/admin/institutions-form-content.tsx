@@ -2,7 +2,7 @@
 
 import { isNonNullable, keyByToMap } from "@acdh-oeaw/lib";
 import { parseAbsoluteToLocal } from "@internationalized/date";
-import { type Country, type Institution, InstitutionType, type Prisma } from "@prisma/client";
+import { type Country, InstitutionType, type Prisma } from "@prisma/client";
 import { PencilIcon } from "lucide-react";
 import { useFormatter } from "next-intl";
 import { Fragment, type ReactNode, useId } from "react";

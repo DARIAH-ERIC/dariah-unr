@@ -37,6 +37,7 @@ const config = {
 				brand: "#006699",
 				negative: colors.red,
 				positive: colors.green,
+				accent: colors.sky,
 			},
 		},
 	},

@@ -81,6 +81,12 @@
 		},
 		"title": "Persons"
 	},
+	"DashboardAdminSoftwarePage": {
+		"meta": {
+			"title": "Software"
+		},
+		"title": "Software"
+	},
 	"DashboardAdminSshompIngestPage": {
 		"meta": {
 			"title": "SSH Open Marketplace import"
@@ -206,6 +212,26 @@
 		"title": "Terms of use"
 	},
 	"actions": {
+		"admin": {
+			"createSoftware": {
+				"errors": {
+					"default": "Could not create software."
+				},
+				"success": "Successfully created software."
+			},
+			"deleteSoftware": {
+				"errors": {
+					"default": "Could not delete software."
+				},
+				"success": "Successfully deleted software."
+			},
+			"updateSoftware": {
+				"errors": {
+					"default": "Failed to update software."
+				},
+				"success": "Successfully updated software."
+			}
+		},
 		"createOutreach": {
 			"errors": {
 				"default": "Could not create outreach."
