@@ -7,7 +7,7 @@ import {
 	SoftwareMarketplaceStatus,
 	SoftwareStatus,
 } from "@prisma/client";
-import { EllipsisIcon } from "lucide-react";
+import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { Fragment, type ReactNode, useId, useMemo, useState } from "react";
 import type { Key } from "react-aria-components";
 import { useFormState } from "react-dom";
@@ -21,6 +21,7 @@ import {
 import { SelectField, SelectItem } from "@/components/ui/blocks/select-field";
 import { TextAreaField } from "@/components/ui/blocks/text-area-field";
 import { TextInputField } from "@/components/ui/blocks/text-input-field";
+import { Button } from "@/components/ui/button";
 import {
 	Dialog,
 	DialogCancelButton,
@@ -35,18 +36,32 @@ import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success"
 import { IconButton } from "@/components/ui/icon-button";
 import { Modal, ModalOverlay } from "@/components/ui/modal";
 import { Cell, Column, Row, Table, TableBody, TableHeader } from "@/components/ui/table";
+import { createSoftwareAction } from "@/lib/actions/admin/create-software";
 import { deleteSoftwareAction } from "@/lib/actions/admin/delete-software";
 import { updateSoftwareAction } from "@/lib/actions/admin/update-software";
 import { createKey } from "@/lib/create-key";
 
-interface Action {
-	kind: "delete" | "edit";
-	item: Prisma.SoftwareGetPayload<{
-		include: {
-			countries: { select: { id: true } };
-		};
-	}>;
-}
+type Action =
+	| {
+			kind: "create";
+			item: null;
+	  }
+	| {
+			kind: "delete";
+			item: Prisma.SoftwareGetPayload<{
+				include: {
+					countries: { select: { id: true } };
+				};
+			}>;
+	  }
+	| {
+			kind: "edit";
+			item: Prisma.SoftwareGetPayload<{
+				include: {
+					countries: { select: { id: true } };
+				};
+			}>;
+	  };
 
 interface AdminSoftwareTableContentProps {
 	countries: Array<Country>;
@@ -103,6 +118,17 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 
 	return (
 		<Fragment>
+			<div className="flex justify-end">
+				<Button
+					onPress={() => {
+						setAction({ kind: "create", item: null });
+					}}
+				>
+					<PlusIcon aria-hidden={true} className="size-5 shrink-0" />
+					<span>Create</span>
+				</Button>
+			</div>
+
 			<Table
 				aria-label="Software"
 				className="w-full"
@@ -164,15 +190,21 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 									<span title={row.comment ?? undefined}>{row.comment}</span>
 								</Cell>
 								<Cell>
-									<div className="flex justify-center">
+									<div className="flex justify-end">
 										<DropdownMenuTrigger>
 											<IconButton className="mx-auto" variant="plain">
-												<EllipsisIcon className="size-5 shrink-0" />
+												<MoreHorizontalIcon aria-hidden={true} className="size-5 shrink-0" />
 												<span className="sr-only">Menu</span>
 											</IconButton>
 											<DropdownMenu onAction={onAction} placement="bottom">
-												<DropdownMenuItem id="edit">Edit</DropdownMenuItem>
-												<DropdownMenuItem id="delete">Delete</DropdownMenuItem>
+												<DropdownMenuItem id="edit">
+													Edit
+													<PencilIcon aria-hidden={true} className="size-4 shrink-0" />
+												</DropdownMenuItem>
+												<DropdownMenuItem id="delete">
+													Delete
+													<Trash2Icon aria-hidden={true} className="size-4 shrink-0" />
+												</DropdownMenuItem>
 											</DropdownMenu>
 										</DropdownMenuTrigger>
 									</div>
@@ -183,11 +215,21 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 				</TableBody>
 			</Table>
 
-			<DeleteSoftwareDialog key={action?.item.id} action={action} onClose={onDialogClose} />
-			<EditSoftwareDialog
-				key={action?.item.id}
+			<CreateSoftwareDialog
+				key={createKey("create-software", action?.item?.id)}
 				action={action}
 				countriesById={countriesById}
+				onClose={onDialogClose}
+			/>
+			<EditSoftwareDialog
+				key={createKey("edit-software", action?.item?.id)}
+				action={action}
+				countriesById={countriesById}
+				onClose={onDialogClose}
+			/>
+			<DeleteSoftwareDialog
+				key={createKey("delete-software", action?.item?.id)}
+				action={action}
 				onClose={onDialogClose}
 			/>
 		</Fragment>
@@ -218,7 +260,7 @@ function DeleteSoftwareDialog(props: DeleteSoftwareDialogProps) {
 								<DialogHeader>
 									<DialogTitle>Delete software</DialogTitle>
 									<DialogDescription>
-										Are you sure you want to delete {action.item.name}?
+										Are you sure you want to delete &quot;{action.item.name}&quot;?
 									</DialogDescription>
 								</DialogHeader>
 
@@ -263,6 +305,59 @@ function DeleteSoftwareDialog(props: DeleteSoftwareDialogProps) {
 	);
 }
 
+interface CreateSoftwareDialogProps {
+	action: Action | null;
+	countriesById: Map<Country["id"], Country>;
+	onClose: () => void;
+}
+
+function CreateSoftwareDialog(props: CreateSoftwareDialogProps) {
+	const { action, countriesById, onClose } = props;
+
+	const formId = useId();
+
+	const [formState, formAction] = useFormState(createSoftwareAction, undefined);
+
+	if (action?.kind !== "create") return null;
+
+	const software = action.item;
+
+	return (
+		<ModalOverlay isOpen={true} onOpenChange={onClose}>
+			<Modal isOpen={true} onOpenChange={onClose}>
+				<Dialog>
+					{({ close }) => {
+						return (
+							<Fragment>
+								<DialogHeader>
+									<DialogTitle>Create software</DialogTitle>
+									<DialogDescription>Please provide software details.</DialogDescription>
+								</DialogHeader>
+
+								<div>
+									<SoftwareEditForm
+										countriesById={countriesById}
+										formAction={formAction}
+										formId={formId}
+										formState={formState}
+										onClose={close}
+										software={software}
+									/>
+								</div>
+
+								<DialogFooter>
+									<DialogCancelButton>Cancel</DialogCancelButton>
+									<SubmitButton form={formId}>Create</SubmitButton>
+								</DialogFooter>
+							</Fragment>
+						);
+					}}
+				</Dialog>
+			</Modal>
+		</ModalOverlay>
+	);
+}
+
 interface EditSoftwareDialogProps {
 	action: Action | null;
 	countriesById: Map<Country["id"], Country>;
@@ -280,9 +375,6 @@ function EditSoftwareDialog(props: EditSoftwareDialogProps) {
 
 	const software = action.item;
 
-	const softwareStatuses = Object.values(SoftwareStatus);
-	const softwareMarketplaceStatuses = Object.values(SoftwareMarketplaceStatus);
-
 	return (
 		<ModalOverlay isOpen={true} onOpenChange={onClose}>
 			<Modal isOpen={true} onOpenChange={onClose}>
@@ -296,109 +388,14 @@ function EditSoftwareDialog(props: EditSoftwareDialogProps) {
 								</DialogHeader>
 
 								<div>
-									<Form
-										action={(formData) => {
-											formAction(formData);
-											close();
-										}}
-										className="grid gap-y-6"
-										id={formId}
-										validationErrors={
-											formState?.status === "error" ? formState.fieldErrors : undefined
-										}
-									>
-										<input name="id" type="hidden" value={software.id} />
-
-										<TextInputField
-											defaultValue={software.name}
-											isRequired={true}
-											label="Name"
-											name="name"
-										/>
-
-										{/* TODO: Multiple countries */}
-										<SelectField
-											defaultSelectedKey={software.countries[0]?.id}
-											isRequired={true}
-											label="Country"
-											name="countries.0"
-										>
-											{Array.from(countriesById.values()).map((country) => {
-												return (
-													<SelectItem key={country.id} id={country.id} textValue={country.name}>
-														{country.name}
-													</SelectItem>
-												);
-											})}
-										</SelectField>
-
-										<SelectField
-											defaultSelectedKey={software.status ?? undefined}
-											label="Status"
-											name="status"
-										>
-											{softwareStatuses.map((softwareStatus) => {
-												return (
-													<SelectItem
-														key={softwareStatus}
-														id={softwareStatus}
-														textValue={softwareStatus}
-													>
-														{softwareStatus}
-													</SelectItem>
-												);
-											})}
-										</SelectField>
-
-										{/* TODO: Multiple URLs */}
-										<TextInputField
-											defaultValue={software.url[0] ?? undefined}
-											label="URL"
-											name="url.0"
-										/>
-
-										<TextInputField
-											defaultValue={software.marketplaceId ?? undefined}
-											label="Marketplace ID"
-											name="marketplaceId"
-										/>
-
-										<SelectField
-											defaultSelectedKey={software.marketplaceStatus ?? undefined}
-											label="Marketplace status"
-											name="marketplaceStatus"
-										>
-											{softwareMarketplaceStatuses.map((softwareMarketplaceStatus) => {
-												return (
-													<SelectItem
-														key={softwareMarketplaceStatus}
-														id={softwareMarketplaceStatus}
-														textValue={softwareMarketplaceStatus}
-													>
-														{softwareMarketplaceStatus}
-													</SelectItem>
-												);
-											})}
-										</SelectField>
-
-										<TextAreaField
-											defaultValue={software.comment ?? undefined}
-											label="Comment"
-											name="comment"
-										/>
-
-										<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
-											{formState?.status === "success" && formState.message.length > 0
-												? formState.message
-												: null}
-										</FormSuccessMessage>
-
-										<FormErrorMessage key={createKey("form-error", formState?.timestamp)}>
-											{formState?.status === "error" && formState.formErrors.length > 0
-												? formState.formErrors
-												: null}
-										</FormErrorMessage>
-									</Form>
+									<SoftwareEditForm
+										countriesById={countriesById}
+										formAction={formAction}
+										formId={formId}
+										formState={formState}
+										onClose={close}
+										software={software}
+									/>
 								</div>
 
 								<DialogFooter>
@@ -411,5 +408,108 @@ function EditSoftwareDialog(props: EditSoftwareDialogProps) {
 				</Dialog>
 			</Modal>
 		</ModalOverlay>
+	);
+}
+
+interface SoftwareEditFormProps {
+	countriesById: Map<Country["id"], Country>;
+	formId: string;
+	formAction: (formData: FormData) => void;
+	formState:
+		| Awaited<ReturnType<typeof createSoftwareAction | typeof updateSoftwareAction>>
+		| undefined;
+	software: Prisma.SoftwareGetPayload<{
+		include: {
+			countries: { select: { id: true } };
+		};
+	}> | null;
+	onClose: () => void;
+}
+
+function SoftwareEditForm(props: SoftwareEditFormProps) {
+	const { countriesById, formId, formAction, formState, software, onClose } = props;
+
+	const softwareStatuses = Object.values(SoftwareStatus);
+	const softwareMarketplaceStatuses = Object.values(SoftwareMarketplaceStatus);
+
+	return (
+		<Form
+			action={(formData) => {
+				formAction(formData);
+				onClose();
+			}}
+			className="grid gap-y-6"
+			id={formId}
+			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
+		>
+			{software != null ? <input name="id" type="hidden" value={software.id} /> : null}
+
+			<TextInputField defaultValue={software?.name} isRequired={true} label="Name" name="name" />
+
+			{/* TODO: Multiple countries */}
+			<SelectField
+				defaultSelectedKey={software?.countries[0]?.id}
+				isRequired={true}
+				label="Country"
+				name="countries.0"
+			>
+				{Array.from(countriesById.values()).map((country) => {
+					return (
+						<SelectItem key={country.id} id={country.id} textValue={country.name}>
+							{country.name}
+						</SelectItem>
+					);
+				})}
+			</SelectField>
+
+			<SelectField defaultSelectedKey={software?.status ?? undefined} label="Status" name="status">
+				{softwareStatuses.map((softwareStatus) => {
+					return (
+						<SelectItem key={softwareStatus} id={softwareStatus} textValue={softwareStatus}>
+							{softwareStatus}
+						</SelectItem>
+					);
+				})}
+			</SelectField>
+
+			{/* TODO: Multiple URLs */}
+			<TextInputField defaultValue={software?.url[0] ?? undefined} label="URL" name="url.0" />
+
+			<TextInputField
+				defaultValue={software?.marketplaceId ?? undefined}
+				label="Marketplace ID"
+				name="marketplaceId"
+			/>
+
+			<SelectField
+				defaultSelectedKey={software?.marketplaceStatus ?? undefined}
+				label="Marketplace status"
+				name="marketplaceStatus"
+			>
+				{softwareMarketplaceStatuses.map((softwareMarketplaceStatus) => {
+					return (
+						<SelectItem
+							key={softwareMarketplaceStatus}
+							id={softwareMarketplaceStatus}
+							textValue={softwareMarketplaceStatus}
+						>
+							{softwareMarketplaceStatus}
+						</SelectItem>
+					);
+				})}
+			</SelectField>
+
+			<TextAreaField defaultValue={software?.comment ?? undefined} label="Comment" name="comment" />
+
+			<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
+				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}
+			</FormSuccessMessage>
+
+			<FormErrorMessage key={createKey("form-error", formState?.timestamp)}>
+				{formState?.status === "error" && formState.formErrors.length > 0
+					? formState.formErrors
+					: null}
+			</FormErrorMessage>
+		</Form>
 	);
 }

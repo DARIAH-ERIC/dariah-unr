@@ -213,6 +213,12 @@
 	},
 	"actions": {
 		"admin": {
+			"createSoftware": {
+				"errors": {
+					"default": "Konnte Software nicht erstellen."
+				},
+				"success": "Software erfolgreich erstellt."
+			},
 			"deleteSoftware": {
 				"errors": {
 					"default": "Konnte Software nicht entfernen."

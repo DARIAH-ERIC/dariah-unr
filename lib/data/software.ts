@@ -130,3 +130,36 @@ export function updateSoftware(params: UpdateSoftwareParams) {
 		},
 	});
 }
+
+interface CreateFullSoftwareParams {
+	comment?: Software["comment"];
+	name: Software["name"];
+	marketplaceStatus?: Software["marketplaceStatus"];
+	marketplaceId?: Software["marketplaceId"];
+	status?: Software["status"];
+	url?: Software["url"];
+	countries?: Array<string>;
+}
+
+export function createFullSoftware(params: CreateFullSoftwareParams) {
+	const { comment, name, marketplaceId, marketplaceStatus, status, url, countries } = params;
+
+	return db.software.create({
+		data: {
+			comment,
+			name,
+			marketplaceId,
+			marketplaceStatus,
+			status,
+			url,
+			countries:
+				countries != null && countries.length > 0
+					? {
+							connect: countries.map((id) => {
+								return { id };
+							}),
+						}
+					: undefined,
+		},
+	});
+}
