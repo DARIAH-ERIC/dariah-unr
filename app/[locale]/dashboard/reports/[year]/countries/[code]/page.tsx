@@ -98,8 +98,6 @@ async function DashboardCountryReportPageContent(props: DashboardCountryReportPa
 
 	if (user == null) {
 		redirect("/");
-		/** FIXME: @see https://github.com/amannn/next-intl/issues/823 */
-		assert(false);
 	}
 
 	const report = await getReportByCountryCode({ countryCode: code, year });
