@@ -12,24 +12,8 @@ import { getSoftware } from "@/lib/data/software";
 
 interface DashboardAdminSoftwarePageProps {
 	params: {
-		id: string;
 		locale: Locale;
 	};
-}
-
-// export const dynamicParams = false;
-
-export async function generateStaticParams(props: {
-	params: Pick<DashboardAdminSoftwarePageProps["params"], "locale">;
-}): Promise<Array<Pick<DashboardAdminSoftwarePageProps["params"], "id">>> {
-	const { params } = props;
-
-	const { locale } = params;
-	const ids = await Promise.resolve([]);
-
-	return ids.map((id) => {
-		return { id };
-	});
 }
 
 export async function generateMetadata(
@@ -38,7 +22,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
 	const { params } = props;
 
-	const { id, locale } = params;
+	const { locale } = params;
 	const t = await getTranslations({ locale, namespace: "DashboardAdminSoftwarePage" });
 
 	const metadata: Metadata = {
@@ -53,7 +37,7 @@ export default function DashboardAdminSoftwarePage(
 ): ReactNode {
 	const { params } = props;
 
-	const { id, locale } = params;
+	const { locale } = params;
 	setRequestLocale(locale);
 
 	const t = useTranslations("DashboardAdminSoftwarePage");
