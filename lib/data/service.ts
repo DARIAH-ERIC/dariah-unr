@@ -1,4 +1,4 @@
-import type { Country } from "@prisma/client";
+import type { Country, InstitutionServiceRole, Prisma, Service } from "@prisma/client";
 
 import { db } from "@/lib/db";
 
@@ -36,6 +36,245 @@ export function getServiceSizes() {
 			annualValue: true,
 			id: true,
 			type: true,
+		},
+	});
+}
+
+export function getServices() {
+	return db.service.findMany({
+		orderBy: {
+			name: "asc",
+		},
+		include: {
+			countries: {
+				select: {
+					id: true,
+				},
+			},
+			institutions: {
+				select: {
+					role: true,
+					institution: { select: { id: true } },
+				},
+			},
+			size: {
+				select: {
+					id: true,
+				},
+			},
+		},
+	});
+}
+
+interface DeleteServiceParams {
+	id: Service["id"];
+}
+
+export function deleteService(params: DeleteServiceParams) {
+	const { id } = params;
+
+	return db.service.delete({
+		where: {
+			id,
+		},
+	});
+}
+
+interface UpdateServiceParams {
+	id: Service["id"];
+	agreements?: Service["agreements"];
+	audience?: Service["audience"];
+	dariahBranding?: Service["dariahBranding"];
+	eoscOnboarding?: Service["eoscOnboarding"];
+	marketplaceStatus?: Service["marketplaceStatus"];
+	marketplaceId?: Service["marketplaceId"];
+	monitoring?: Service["monitoring"];
+	name: Service["name"];
+	privateSupplier?: Service["privateSupplier"];
+	status?: Service["status"];
+	technicalContact?: Service["technicalContact"];
+	technicalReadinessLevel?: Service["technicalReadinessLevel"];
+	type?: Service["type"];
+	url?: Service["url"];
+	valueProposition?: Service["valueProposition"];
+	size?: string;
+	countries?: Array<string>;
+	institutions?: Array<{ institution: string; role: InstitutionServiceRole }>;
+}
+
+export function updateService(params: UpdateServiceParams) {
+	const {
+		id,
+		agreements,
+		audience,
+		dariahBranding,
+		eoscOnboarding,
+		marketplaceStatus,
+		marketplaceId,
+		monitoring,
+		name,
+		privateSupplier,
+		status,
+		technicalContact,
+		technicalReadinessLevel,
+		type,
+		url,
+		valueProposition,
+		size,
+		countries,
+		institutions,
+	} = params;
+
+	return db.service.update({
+		where: {
+			id,
+		},
+		data: {
+			agreements,
+			audience,
+			dariahBranding,
+			eoscOnboarding,
+			marketplaceStatus,
+			marketplaceId,
+			monitoring,
+			name,
+			privateSupplier,
+			status,
+			technicalContact,
+			technicalReadinessLevel,
+			type,
+			url,
+			valueProposition,
+
+			size: size
+				? {
+						connect: {
+							id: size,
+						},
+					}
+				: undefined,
+
+			countries:
+				countries != null && countries.length > 0
+					? {
+							set: countries.map((id) => {
+								return { id };
+							}),
+						}
+					: undefined,
+
+			institutions:
+				institutions != null && institutions.length > 0
+					? {
+							// FIXME: why does `set` not work here? we need to ensure that relations which are removed get deleted
+							connectOrCreate: institutions.map(({ institution, role }) => {
+								return {
+									where: {
+										institutionId_role_serviceId: {
+											institutionId: institution,
+											role,
+											serviceId: id,
+										},
+									},
+									create: {
+										institution: { connect: { id: institution } },
+										role,
+									},
+								};
+							}),
+						}
+					: undefined,
+		},
+	});
+}
+
+interface CreateFullServiceParams {
+	agreements?: Service["agreements"];
+	audience?: Service["audience"];
+	dariahBranding?: Service["dariahBranding"];
+	eoscOnboarding?: Service["eoscOnboarding"];
+	marketplaceStatus?: Service["marketplaceStatus"];
+	marketplaceId?: Service["marketplaceId"];
+	monitoring?: Service["monitoring"];
+	name: Service["name"];
+	privateSupplier?: Service["privateSupplier"];
+	status?: Service["status"];
+	technicalContact?: Service["technicalContact"];
+	technicalReadinessLevel?: Service["technicalReadinessLevel"];
+	type?: Service["type"];
+	url?: Service["url"];
+	valueProposition?: Service["valueProposition"];
+	size: string;
+	countries?: Array<string>;
+	institutions?: Array<{ institution: string; role: InstitutionServiceRole }>;
+}
+
+export function createFullService(params: CreateFullServiceParams) {
+	const {
+		agreements,
+		audience,
+		dariahBranding,
+		eoscOnboarding,
+		marketplaceStatus,
+		marketplaceId,
+		monitoring,
+		name,
+		privateSupplier,
+		status,
+		technicalContact,
+		technicalReadinessLevel,
+		type,
+		url,
+		valueProposition,
+		size,
+		countries,
+		institutions,
+	} = params;
+
+	return db.service.create({
+		data: {
+			agreements,
+			audience,
+			dariahBranding,
+			eoscOnboarding,
+			marketplaceStatus,
+			marketplaceId,
+			monitoring,
+			name,
+			privateSupplier,
+			status,
+			technicalContact,
+			technicalReadinessLevel,
+			type,
+			url,
+			valueProposition,
+
+			size: {
+				connect: {
+					id: size,
+				},
+			},
+
+			countries:
+				countries != null && countries.length > 0
+					? {
+							connect: countries.map((id) => {
+								return { id };
+							}),
+						}
+					: undefined,
+
+			institutions:
+				institutions != null && institutions.length > 0
+					? {
+							create: institutions.map(({ institution, role }) => {
+								return {
+									institution: { connect: { id: institution } },
+									role,
+								};
+							}),
+						}
+					: undefined,
 		},
 	});
 }

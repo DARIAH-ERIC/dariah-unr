@@ -81,6 +81,12 @@
 		},
 		"title": "Personen"
 	},
+	"DashboardAdminServicesPage": {
+		"meta": {
+			"title": "Services"
+		},
+		"title": "Services"
+	},
 	"DashboardAdminSoftwarePage": {
 		"meta": {
 			"title": "Software"

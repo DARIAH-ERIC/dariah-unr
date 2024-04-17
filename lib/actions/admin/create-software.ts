@@ -8,25 +8,22 @@ import { z } from "zod";
 
 import { createFullSoftware as createSoftware } from "@/lib/data/software";
 import { getFormData } from "@/lib/get-form-data";
-import { nonEmptyString } from "@/lib/schemas/utils";
 
 const formSchema = z.object({
-	comment: nonEmptyString(z.string().optional()),
+	comment: z.string().optional(),
 	name: z.string(),
-	marketplaceStatus: nonEmptyString(
-		z
-			.enum(
-				Object.values(SoftwareMarketplaceStatus) as [
-					SoftwareMarketplaceStatus,
-					...Array<SoftwareMarketplaceStatus>,
-				],
-			)
-			.optional(),
-	),
-	marketplaceId: nonEmptyString(z.string().optional()),
-	status: nonEmptyString(
-		z.enum(Object.values(SoftwareStatus) as [SoftwareStatus, ...Array<SoftwareStatus>]).optional(),
-	),
+	marketplaceStatus: z
+		.enum(
+			Object.values(SoftwareMarketplaceStatus) as [
+				SoftwareMarketplaceStatus,
+				...Array<SoftwareMarketplaceStatus>,
+			],
+		)
+		.optional(),
+	marketplaceId: z.string().optional(),
+	status: z
+		.enum(Object.values(SoftwareStatus) as [SoftwareStatus, ...Array<SoftwareStatus>])
+		.optional(),
 	url: z.array(z.string()).optional(),
 	countries: z.array(z.string()).optional(),
 });

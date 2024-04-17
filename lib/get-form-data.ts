@@ -7,6 +7,9 @@ export function getFormData(formData: FormData): unknown {
 		/** Internally used by server actions. */
 		if (key.startsWith("$ACTION_")) continue;
 
+		/** Empty input field. */
+		if (value === "") continue;
+
 		dset(data, key, value);
 	}
 

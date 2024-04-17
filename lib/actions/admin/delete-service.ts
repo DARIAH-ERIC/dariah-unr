@@ -1,32 +1,15 @@
 "use server";
 
 import { log } from "@acdh-oeaw/lib";
-import { SoftwareMarketplaceStatus, SoftwareStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
-import { updateSoftware } from "@/lib/data/software";
+import { deleteService } from "@/lib/data/service";
 import { getFormData } from "@/lib/get-form-data";
 
 const formSchema = z.object({
 	id: z.string(),
-	comment: z.string().optional(),
-	name: z.string(),
-	marketplaceStatus: z
-		.enum(
-			Object.values(SoftwareMarketplaceStatus) as [
-				SoftwareMarketplaceStatus,
-				...Array<SoftwareMarketplaceStatus>,
-			],
-		)
-		.optional(),
-	marketplaceId: z.string().optional(),
-	status: z
-		.enum(Object.values(SoftwareStatus) as [SoftwareStatus, ...Array<SoftwareStatus>])
-		.optional(),
-	url: z.array(z.string()).optional(),
-	countries: z.array(z.string()).optional(),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -46,11 +29,11 @@ interface FormSuccess extends FormReturnValue {
 
 type FormState = FormErrors | FormSuccess;
 
-export async function updateSoftwareAction(
+export async function deleteServiceAction(
 	previousFormState: FormState | undefined,
 	formData: FormData,
 ): Promise<FormState> {
-	const t = await getTranslations("actions.admin.updateSoftware");
+	const t = await getTranslations("actions.admin.deleteService");
 
 	const input = getFormData(formData);
 	const result = formSchema.safeParse(input);
@@ -65,22 +48,12 @@ export async function updateSoftwareAction(
 		};
 	}
 
-	const { id, comment, name, marketplaceStatus, marketplaceId, status, url, countries } =
-		result.data;
+	const { id } = result.data;
 
 	try {
-		await updateSoftware({
-			id,
-			comment,
-			name,
-			marketplaceStatus,
-			marketplaceId,
-			status,
-			url,
-			countries,
-		});
+		await deleteService({ id });
 
-		revalidatePath("/[locale]/dashboard/admin/software", "page");
+		revalidatePath("/[locale]/dashboard/admin/services", "page");
 
 		return {
 			status: "success" as const,
