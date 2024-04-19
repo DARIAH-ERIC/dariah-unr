@@ -166,20 +166,17 @@ export function updateService(params: UpdateServiceParams) {
 			institutions:
 				institutions != null && institutions.length > 0
 					? {
-							// FIXME: why does `set` not work here? we need to ensure that relations which are removed get deleted
-							connectOrCreate: institutions.map(({ institution, role }) => {
+							/**
+							 * Order of object keys determines order of operations: `deleteMany` runs before `create`.
+							 * @see https://github.com/prisma/prisma/issues/16606
+							 */
+							deleteMany: {
+								serviceId: id,
+							},
+							create: institutions.map(({ institution, role }) => {
 								return {
-									where: {
-										institutionId_role_serviceId: {
-											institutionId: institution,
-											role,
-											serviceId: id,
-										},
-									},
-									create: {
-										institution: { connect: { id: institution } },
-										role,
-									},
+									institution: { connect: { id: institution } },
+									role,
 								};
 							}),
 						}
