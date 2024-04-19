@@ -84,8 +84,6 @@ async function DashboardPageContent() {
 
 	if (user == null) {
 		redirect("/");
-		/** FIXME: @see https://github.com/amannn/next-intl/issues/823 */
-		assert(false);
 	}
 
 	const year = new Date().getUTCFullYear() - 1;

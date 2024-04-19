@@ -5,9 +5,17 @@ import type { ComponentPropsWithRef, FC } from "react";
 
 import { isValidLocale, type Locale, locales } from "@/config/i18n.config";
 
-const { Link, redirect, usePathname, useRouter } = createSharedPathnamesNavigation({
+const {
+	Link,
+	redirect: __redirect,
+	usePathname,
+	useRouter,
+} = createSharedPathnamesNavigation({
 	locales,
 });
+
+/** FIXME: @see https://github.com/amannn/next-intl/issues/823 */
+const redirect: typeof __redirect = __redirect;
 
 export { redirect, usePathname, useRouter };
 
