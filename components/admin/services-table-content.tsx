@@ -3,9 +3,14 @@
 import { keyByToMap } from "@acdh-oeaw/lib";
 import {
 	type Country,
+	type Institution,
+	InstitutionServiceRole,
 	type Prisma,
-	SoftwareMarketplaceStatus,
-	SoftwareStatus,
+	ServiceAudience,
+	ServiceMarketplaceStatus,
+	type ServiceSize,
+	ServiceStatus,
+	ServiceType,
 } from "@prisma/client";
 import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { Fragment, type ReactNode, useId, useMemo, useState } from "react";
@@ -18,8 +23,8 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/blocks/dropdown-menu";
+import { NumberInputField } from "@/components/ui/blocks/number-input-field";
 import { SelectField, SelectItem } from "@/components/ui/blocks/select-field";
-import { TextAreaField } from "@/components/ui/blocks/text-area-field";
 import { TextInputField } from "@/components/ui/blocks/text-input-field";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,13 +37,14 @@ import {
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
+import { FormFieldsGroup } from "@/components/ui/form-fields-group";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
 import { IconButton } from "@/components/ui/icon-button";
 import { Modal, ModalOverlay } from "@/components/ui/modal";
 import { Cell, Column, Row, Table, TableBody, TableHeader } from "@/components/ui/table";
-import { createSoftwareAction } from "@/lib/actions/admin/create-software";
-import { deleteSoftwareAction } from "@/lib/actions/admin/delete-software";
-import { updateSoftwareAction } from "@/lib/actions/admin/update-software";
+import { createServiceAction } from "@/lib/actions/admin/create-service";
+import { deleteServiceAction } from "@/lib/actions/admin/delete-service";
+import { updateServiceAction } from "@/lib/actions/admin/update-service";
 import { createKey } from "@/lib/create-key";
 
 type Action =
@@ -48,40 +54,68 @@ type Action =
 	  }
 	| {
 			kind: "delete";
-			item: Prisma.SoftwareGetPayload<{
+			item: Prisma.ServiceGetPayload<{
 				include: {
 					countries: { select: { id: true } };
+					institutions: { select: { role: true; institution: { select: { id: true } } } };
+					size: { select: { id: true } };
 				};
 			}>;
 	  }
 	| {
 			kind: "edit";
-			item: Prisma.SoftwareGetPayload<{
+			item: Prisma.ServiceGetPayload<{
 				include: {
 					countries: { select: { id: true } };
+					institutions: { select: { role: true; institution: { select: { id: true } } } };
+					size: { select: { id: true } };
 				};
 			}>;
 	  };
 
-interface AdminSoftwareTableContentProps {
+interface AdminServicesTableContentProps {
 	countries: Array<Country>;
-	software: Array<
-		Prisma.SoftwareGetPayload<{
+	services: Array<
+		Prisma.ServiceGetPayload<{
 			include: {
 				countries: { select: { id: true } };
+				institutions: { select: { role: true; institution: { select: { id: true } } } };
+				size: { select: { id: true } };
 			};
 		}>
 	>;
+	serviceSizes: Array<
+		Prisma.ServiceSizeGetPayload<{
+			select: {
+				id: true;
+				annualValue: true;
+				type: true;
+			};
+		}>
+	>;
+	institutions: Array<Institution>;
 }
 
-export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps): ReactNode {
-	const { countries, software } = props;
+export function AdminServicesTableContent(props: AdminServicesTableContentProps): ReactNode {
+	const { countries, institutions, services, serviceSizes } = props;
 
 	const countriesById = useMemo(() => {
 		return keyByToMap(countries, (country) => {
 			return country.id;
 		});
 	}, [countries]);
+
+	const institutionsById = useMemo(() => {
+		return keyByToMap(institutions, (institution) => {
+			return institution.id;
+		});
+	}, [institutions]);
+
+	const serviceSizesById = useMemo(() => {
+		return keyByToMap(serviceSizes, (serviceSize) => {
+			return serviceSize.id;
+		});
+	}, [serviceSizes]);
 
 	const [action, setAction] = useState<Action | null>(null);
 
@@ -95,7 +129,7 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 	});
 
 	const items = useMemo(() => {
-		const items = software.slice().sort((a, z) => {
+		const items = services.slice().sort((a, z) => {
 			if (sortDescriptor.column === "country") {
 				const idA = a.countries[0]?.id;
 				const countryA = idA ? countriesById.get(idA)?.name ?? "" : "";
@@ -114,7 +148,7 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 			items.reverse();
 		}
 		return items;
-	}, [software, sortDescriptor, countriesById]);
+	}, [services, sortDescriptor, countriesById]);
 
 	return (
 		<Fragment>
@@ -130,7 +164,7 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 			</div>
 
 			<Table
-				aria-label="Software"
+				aria-label="Services"
 				className="w-full"
 				// @ts-expect-error It's fine.
 				onSortChange={setSortDescriptor}
@@ -148,10 +182,11 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 					<Column allowsSorting={true} id="status">
 						Status
 					</Column>
+					<Column id="size">Size</Column>
+					<Column id="type">Type</Column>
 					<Column id="url">URL</Column>
 					<Column id="marketplaceId">Marketplace ID</Column>
 					<Column id="marketplaceStatus">Marketplace status</Column>
-					<Column id="comment">Comment</Column>
 					<Column defaultWidth={50} id="actions">
 						Actions
 					</Column>
@@ -181,14 +216,13 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 									{row.countries[0]?.id ? countriesById.get(row.countries[0].id)?.name : undefined}
 								</Cell>
 								<Cell>{row.status}</Cell>
+								<Cell>{serviceSizesById.get(row.size.id)?.type}</Cell>
+								<Cell>{row.type}</Cell>
 								<Cell>
 									<span title={row.url[0] ?? undefined}>{row.url[0]}</span>
 								</Cell>
 								<Cell>{row.marketplaceId}</Cell>
 								<Cell>{row.marketplaceStatus}</Cell>
-								<Cell>
-									<span title={row.comment ?? undefined}>{row.comment}</span>
-								</Cell>
 								<Cell>
 									<div className="flex justify-end">
 										<DropdownMenuTrigger>
@@ -215,20 +249,24 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 				</TableBody>
 			</Table>
 
-			<CreateSoftwareDialog
-				key={createKey("create-software", action?.item?.id)}
+			<CreateServicesDialog
+				key={createKey("create-service", action?.item?.id)}
 				action={action}
 				countriesById={countriesById}
+				institutionsById={institutionsById}
 				onClose={onDialogClose}
+				serviceSizesById={serviceSizesById}
 			/>
-			<EditSoftwareDialog
-				key={createKey("edit-software", action?.item?.id)}
+			<EditServicesDialog
+				key={createKey("edit-service", action?.item?.id)}
 				action={action}
 				countriesById={countriesById}
+				institutionsById={institutionsById}
 				onClose={onDialogClose}
+				serviceSizesById={serviceSizesById}
 			/>
-			<DeleteSoftwareDialog
-				key={createKey("delete-software", action?.item?.id)}
+			<DeleteServicesDialog
+				key={createKey("delete-service", action?.item?.id)}
 				action={action}
 				onClose={onDialogClose}
 			/>
@@ -236,17 +274,17 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 	);
 }
 
-interface DeleteSoftwareDialogProps {
+interface DeleteServicesDialogProps {
 	action: Action | null;
 	onClose: () => void;
 }
 
-function DeleteSoftwareDialog(props: DeleteSoftwareDialogProps) {
+function DeleteServicesDialog(props: DeleteServicesDialogProps) {
 	const { action, onClose } = props;
 
 	const formId = useId();
 
-	const [formState, formAction] = useFormState(deleteSoftwareAction, undefined);
+	const [formState, formAction] = useFormState(deleteServiceAction, undefined);
 
 	if (action?.kind !== "delete") return null;
 
@@ -258,7 +296,7 @@ function DeleteSoftwareDialog(props: DeleteSoftwareDialogProps) {
 						return (
 							<Fragment>
 								<DialogHeader>
-									<DialogTitle>Delete software</DialogTitle>
+									<DialogTitle>Delete service</DialogTitle>
 									<DialogDescription>
 										Are you sure you want to delete &quot;{action.item.name}&quot;?
 									</DialogDescription>
@@ -305,22 +343,24 @@ function DeleteSoftwareDialog(props: DeleteSoftwareDialogProps) {
 	);
 }
 
-interface CreateSoftwareDialogProps {
+interface CreateServicesDialogProps {
 	action: Action | null;
 	countriesById: Map<Country["id"], Country>;
+	institutionsById: Map<Institution["id"], Institution>;
+	serviceSizesById: Map<ServiceSize["id"], Pick<ServiceSize, "id" | "type">>;
 	onClose: () => void;
 }
 
-function CreateSoftwareDialog(props: CreateSoftwareDialogProps) {
-	const { action, countriesById, onClose } = props;
+function CreateServicesDialog(props: CreateServicesDialogProps) {
+	const { action, countriesById, institutionsById, onClose, serviceSizesById } = props;
 
 	const formId = useId();
 
-	const [formState, formAction] = useFormState(createSoftwareAction, undefined);
+	const [formState, formAction] = useFormState(createServiceAction, undefined);
 
 	if (action?.kind !== "create") return null;
 
-	const software = action.item;
+	const service = action.item;
 
 	return (
 		<ModalOverlay isOpen={true} onOpenChange={onClose}>
@@ -330,18 +370,20 @@ function CreateSoftwareDialog(props: CreateSoftwareDialogProps) {
 						return (
 							<Fragment>
 								<DialogHeader>
-									<DialogTitle>Create software</DialogTitle>
-									<DialogDescription>Please provide software details.</DialogDescription>
+									<DialogTitle>Create service</DialogTitle>
+									<DialogDescription>Please provide service details.</DialogDescription>
 								</DialogHeader>
 
 								<div>
-									<SoftwareEditForm
+									<ServicesEditForm
 										countriesById={countriesById}
 										formAction={formAction}
 										formId={formId}
 										formState={formState}
+										institutionsById={institutionsById}
 										onClose={close}
-										software={software}
+										service={service}
+										serviceSizesById={serviceSizesById}
 									/>
 								</div>
 
@@ -358,22 +400,24 @@ function CreateSoftwareDialog(props: CreateSoftwareDialogProps) {
 	);
 }
 
-interface EditSoftwareDialogProps {
+interface EditServicesDialogProps {
 	action: Action | null;
 	countriesById: Map<Country["id"], Country>;
+	institutionsById: Map<Institution["id"], Institution>;
+	serviceSizesById: Map<ServiceSize["id"], Pick<ServiceSize, "id" | "type">>;
 	onClose: () => void;
 }
 
-function EditSoftwareDialog(props: EditSoftwareDialogProps) {
-	const { action, countriesById, onClose } = props;
+function EditServicesDialog(props: EditServicesDialogProps) {
+	const { action, countriesById, institutionsById, onClose, serviceSizesById } = props;
 
 	const formId = useId();
 
-	const [formState, formAction] = useFormState(updateSoftwareAction, undefined);
+	const [formState, formAction] = useFormState(updateServiceAction, undefined);
 
 	if (action?.kind !== "edit") return null;
 
-	const software = action.item;
+	const service = action.item;
 
 	return (
 		<ModalOverlay isOpen={true} onOpenChange={onClose}>
@@ -383,18 +427,20 @@ function EditSoftwareDialog(props: EditSoftwareDialogProps) {
 						return (
 							<Fragment>
 								<DialogHeader>
-									<DialogTitle>Update software</DialogTitle>
-									<DialogDescription>Please provide software details.</DialogDescription>
+									<DialogTitle>Update service</DialogTitle>
+									<DialogDescription>Please provide service details.</DialogDescription>
 								</DialogHeader>
 
 								<div>
-									<SoftwareEditForm
+									<ServicesEditForm
 										countriesById={countriesById}
 										formAction={formAction}
 										formId={formId}
 										formState={formState}
+										institutionsById={institutionsById}
 										onClose={close}
-										software={software}
+										service={service}
+										serviceSizesById={serviceSizesById}
 									/>
 								</div>
 
@@ -411,26 +457,40 @@ function EditSoftwareDialog(props: EditSoftwareDialogProps) {
 	);
 }
 
-interface SoftwareEditFormProps {
+interface ServicesEditFormProps {
 	countriesById: Map<Country["id"], Country>;
 	formId: string;
 	formAction: (formData: FormData) => void;
-	formState:
-		| Awaited<ReturnType<typeof createSoftwareAction | typeof updateSoftwareAction>>
-		| undefined;
-	software: Prisma.SoftwareGetPayload<{
+	formState: Awaited<ReturnType<typeof createServiceAction>> | undefined;
+	service: Prisma.ServiceGetPayload<{
 		include: {
 			countries: { select: { id: true } };
+			institutions: { select: { role: true; institution: { select: { id: true } } } };
+			size: { select: { id: true } };
 		};
 	}> | null;
+	institutionsById: Map<Institution["id"], Institution>;
+	serviceSizesById: Map<ServiceSize["id"], Pick<ServiceSize, "id" | "type">>;
 	onClose: () => void;
 }
 
-function SoftwareEditForm(props: SoftwareEditFormProps) {
-	const { countriesById, formId, formAction, formState, software, onClose } = props;
+function ServicesEditForm(props: ServicesEditFormProps) {
+	const {
+		countriesById,
+		formId,
+		formAction,
+		formState,
+		institutionsById,
+		service,
+		serviceSizesById,
+		onClose,
+	} = props;
 
-	const softwareStatuses = Object.values(SoftwareStatus);
-	const softwareMarketplaceStatuses = Object.values(SoftwareMarketplaceStatus);
+	const serviceStatuses = Object.values(ServiceStatus);
+	const serviceMarketplaceStatuses = Object.values(ServiceMarketplaceStatus);
+	const serviceTypes = Object.values(ServiceType);
+	const serviceAudiences = Object.values(ServiceAudience);
+	const institutionServiceRoles = Object.values(InstitutionServiceRole);
 
 	return (
 		<Form
@@ -442,13 +502,13 @@ function SoftwareEditForm(props: SoftwareEditFormProps) {
 			id={formId}
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
-			{software != null ? <input name="id" type="hidden" value={software.id} /> : null}
+			{service != null ? <input name="id" type="hidden" value={service.id} /> : null}
 
-			<TextInputField defaultValue={software?.name} isRequired={true} label="Name" name="name" />
+			<TextInputField defaultValue={service?.name} isRequired={true} label="Name" name="name" />
 
 			{/* TODO: Multiple countries */}
 			<SelectField
-				defaultSelectedKey={software?.countries[0]?.id}
+				defaultSelectedKey={service?.countries[0]?.id}
 				label="Country"
 				name="countries.0"
 			>
@@ -461,44 +521,184 @@ function SoftwareEditForm(props: SoftwareEditFormProps) {
 				})}
 			</SelectField>
 
-			<SelectField defaultSelectedKey={software?.status ?? undefined} label="Status" name="status">
-				{softwareStatuses.map((softwareStatus) => {
+			{/* TODO: Multiple institutions and roles */}
+			<FormFieldsGroup>
+				<SelectField
+					defaultSelectedKey={service?.institutions[0]?.institution.id}
+					label="Institution"
+					name="institutions.0.institution"
+				>
+					{Array.from(institutionsById.values()).map((institution) => {
+						return (
+							<SelectItem key={institution.id} id={institution.id} textValue={institution.name}>
+								{institution.name}
+							</SelectItem>
+						);
+					})}
+				</SelectField>
+
+				<SelectField
+					defaultSelectedKey={service?.institutions[0]?.role}
+					label="Institution role"
+					name="institutions.0.role"
+				>
+					{institutionServiceRoles.map((institutionServiceRole) => {
+						return (
+							<SelectItem
+								key={institutionServiceRole}
+								id={institutionServiceRole}
+								textValue={institutionServiceRole}
+							>
+								{institutionServiceRole}
+							</SelectItem>
+						);
+					})}
+				</SelectField>
+			</FormFieldsGroup>
+
+			<SelectField defaultSelectedKey={service?.status ?? undefined} label="Status" name="status">
+				{serviceStatuses.map((serviceStatus) => {
 					return (
-						<SelectItem key={softwareStatus} id={softwareStatus} textValue={softwareStatus}>
-							{softwareStatus}
+						<SelectItem key={serviceStatus} id={serviceStatus} textValue={serviceStatus}>
+							{serviceStatus}
+						</SelectItem>
+					);
+				})}
+			</SelectField>
+
+			<SelectField
+				defaultSelectedKey={service?.size.id ?? undefined}
+				isRequired={true}
+				label="Size"
+				name="size"
+			>
+				{Array.from(serviceSizesById.values()).map((serviceSize) => {
+					return (
+						<SelectItem key={serviceSize.id} id={serviceSize.id} textValue={serviceSize.type}>
+							{serviceSize.type}
+						</SelectItem>
+					);
+				})}
+			</SelectField>
+
+			<SelectField defaultSelectedKey={service?.type ?? undefined} label="Type" name="type">
+				{serviceTypes.map((serviceType) => {
+					return (
+						<SelectItem key={serviceType} id={serviceType} textValue={serviceType}>
+							{serviceType}
 						</SelectItem>
 					);
 				})}
 			</SelectField>
 
 			{/* TODO: Multiple URLs */}
-			<TextInputField defaultValue={software?.url[0] ?? undefined} label="URL" name="url.0" />
+			<TextInputField defaultValue={service?.url[0] ?? undefined} label="URL" name="url.0" />
 
 			<TextInputField
-				defaultValue={software?.marketplaceId ?? undefined}
+				defaultValue={service?.marketplaceId ?? undefined}
 				label="Marketplace ID"
 				name="marketplaceId"
 			/>
 
 			<SelectField
-				defaultSelectedKey={software?.marketplaceStatus ?? undefined}
+				defaultSelectedKey={service?.marketplaceStatus ?? undefined}
 				label="Marketplace status"
 				name="marketplaceStatus"
 			>
-				{softwareMarketplaceStatuses.map((softwareMarketplaceStatus) => {
+				{serviceMarketplaceStatuses.map((serviceMarketplaceStatus) => {
 					return (
 						<SelectItem
-							key={softwareMarketplaceStatus}
-							id={softwareMarketplaceStatus}
-							textValue={softwareMarketplaceStatus}
+							key={serviceMarketplaceStatus}
+							id={serviceMarketplaceStatus}
+							textValue={serviceMarketplaceStatus}
 						>
-							{softwareMarketplaceStatus}
+							{serviceMarketplaceStatus}
 						</SelectItem>
 					);
 				})}
 			</SelectField>
 
-			<TextAreaField defaultValue={software?.comment ?? undefined} label="Comment" name="comment" />
+			<TextInputField
+				defaultValue={service?.agreements ?? undefined}
+				label="Agreements"
+				name="agreements"
+			/>
+
+			<TextInputField
+				defaultValue={service?.valueProposition ?? undefined}
+				label="Value proposition"
+				name="valueProposition"
+			/>
+
+			<TextInputField
+				defaultValue={service?.technicalContact ?? undefined}
+				label="Technical contact"
+				name="technicalContact"
+			/>
+
+			<NumberInputField
+				defaultValue={service?.technicalReadinessLevel ?? undefined}
+				label="Technical readiness level"
+				name="technicalReadinessLevel"
+			/>
+
+			<SelectField
+				defaultSelectedKey={service?.audience ?? undefined}
+				label="Audience"
+				name="audience"
+			>
+				{serviceAudiences.map((audience) => {
+					return (
+						<SelectItem key={audience} id={audience} textValue={audience}>
+							{audience}
+						</SelectItem>
+					);
+				})}
+			</SelectField>
+
+			<label className="flex items-center gap-x-2">
+				<input
+					defaultChecked={service?.dariahBranding ?? undefined}
+					name="dariahBranding"
+					type="checkbox"
+				/>
+				<span className="select-none text-sm font-medium leading-normal text-neutral-950 transition disabled:opacity-50 dark:text-neutral-0">
+					DARIAH branding
+				</span>
+			</label>
+
+			<label className="flex items-center gap-x-2">
+				<input
+					defaultChecked={service?.eoscOnboarding ?? undefined}
+					name="eoscOnboarding"
+					type="checkbox"
+				/>
+				<span className="select-none text-sm font-medium leading-normal text-neutral-950 transition disabled:opacity-50 dark:text-neutral-0">
+					EOSC onboarding
+				</span>
+			</label>
+
+			<label className="flex items-center gap-x-2">
+				<input
+					defaultChecked={service?.monitoring ?? undefined}
+					name="monitoring"
+					type="checkbox"
+				/>
+				<span className="select-none text-sm font-medium leading-normal text-neutral-950 transition disabled:opacity-50 dark:text-neutral-0">
+					Monitoring
+				</span>
+			</label>
+
+			<label className="flex items-center gap-x-2">
+				<input
+					defaultChecked={service?.privateSupplier ?? undefined}
+					name="privateSupplier"
+					type="checkbox"
+				/>
+				<span className="select-none text-sm font-medium leading-normal text-neutral-950 transition disabled:opacity-50 dark:text-neutral-0">
+					Private supplier
+				</span>
+			</label>
 
 			<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
 				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}

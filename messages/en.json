@@ -81,6 +81,12 @@
 		},
 		"title": "Persons"
 	},
+	"DashboardAdminServicesPage": {
+		"meta": {
+			"title": "Services"
+		},
+		"title": "Services"
+	},
 	"DashboardAdminSoftwarePage": {
 		"meta": {
 			"title": "Software"
@@ -213,6 +219,24 @@
 	},
 	"actions": {
 		"admin": {
+			"createService": {
+				"errors": {
+					"default": "Could not create service."
+				},
+				"success": "Successfully created service."
+			},
+			"deleteService": {
+				"errors": {
+					"default": "Could not delete service."
+				},
+				"success": "Successfully deleted service."
+			},
+			"updateService": {
+				"errors": {
+					"default": "Failed to update service."
+				},
+				"success": "Successfully updated service."
+			},
 			"createSoftware": {
 				"errors": {
 					"default": "Could not create software."

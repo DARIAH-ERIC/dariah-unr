@@ -61,6 +61,9 @@ function DashboardAdminPageContent() {
 					<Link href={createHref({ pathname: "/dashboard/admin/persons" })}>Go to persons</Link>
 				</li>
 				<li>
+					<Link href={createHref({ pathname: "/dashboard/admin/services" })}>Go to services</Link>
+				</li>
+				<li>
 					<Link href={createHref({ pathname: "/dashboard/admin/software" })}>Go to software</Link>
 				</li>
 				<li>
