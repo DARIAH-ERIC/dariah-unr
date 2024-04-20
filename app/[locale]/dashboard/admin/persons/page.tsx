@@ -1,7 +1,7 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import { useTranslations } from "next-intl";
 import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
-import type { ReactNode } from "react";
+import { type ReactNode, Suspense } from "react";
 
 import { AdminPersonsFormContent } from "@/components/admin/persons-form-content";
 import { MainContent } from "@/components/main-content";
@@ -51,13 +51,18 @@ export default function DashboardAdminPersonsPage(
 	);
 }
 
-async function DashboardAdminPersonsContent() {
-	const persons = await getPersons();
-	const institutions = await getInstitutions();
-
+function DashboardAdminPersonsContent() {
 	return (
 		<section>
-			<AdminPersonsFormContent institutions={institutions} persons={persons} />
+			<Suspense>
+				<AdminPersonsForm />
+			</Suspense>
 		</section>
 	);
+}
+
+async function AdminPersonsForm() {
+	const [institutions, persons] = await Promise.all([getInstitutions(), getPersons()]);
+
+	return <AdminPersonsFormContent institutions={institutions} persons={persons} />;
 }

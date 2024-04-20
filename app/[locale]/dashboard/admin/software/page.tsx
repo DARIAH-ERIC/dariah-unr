@@ -1,7 +1,7 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import { useTranslations } from "next-intl";
 import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
-import type { ReactNode } from "react";
+import { type ReactNode, Suspense } from "react";
 
 import { AdminSoftwareTableContent } from "@/components/admin/software-table-content";
 import { MainContent } from "@/components/main-content";
@@ -51,9 +51,18 @@ export default function DashboardAdminSoftwarePage(
 	);
 }
 
-async function DashboardAdminSoftwarePageContent() {
-	const software = await getSoftware();
-	const countries = await getCountries();
+function DashboardAdminSoftwarePageContent() {
+	return (
+		<section>
+			<Suspense>
+				<AdminSoftwareTable />
+			</Suspense>
+		</section>
+	);
+}
+
+async function AdminSoftwareTable() {
+	const [countries, software] = await Promise.all([getCountries(), getSoftware()]);
 
 	return <AdminSoftwareTableContent countries={countries} software={software} />;
 }
