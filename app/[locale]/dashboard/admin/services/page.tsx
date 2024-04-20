@@ -1,7 +1,7 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import { useTranslations } from "next-intl";
 import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
-import type { ReactNode } from "react";
+import { type ReactNode, Suspense } from "react";
 
 import { AdminServicesTableContent } from "@/components/admin/services-table-content";
 import { MainContent } from "@/components/main-content";
@@ -52,11 +52,23 @@ export default function DashboardAdminServicesPage(
 	);
 }
 
-async function DashboardAdminServicesPageContent() {
-	const services = await getServices();
-	const countries = await getCountries();
-	const institutions = await getInstitutions();
-	const serviceSizes = await getServiceSizes();
+function DashboardAdminServicesPageContent() {
+	return (
+		<section>
+			<Suspense>
+				<AdminServicesTable />
+			</Suspense>
+		</section>
+	);
+}
+
+async function AdminServicesTable() {
+	const [countries, institutions, services, serviceSizes] = await Promise.all([
+		getCountries(),
+		getInstitutions(),
+		getServices(),
+		getServiceSizes(),
+	]);
 
 	return (
 		<AdminServicesTableContent

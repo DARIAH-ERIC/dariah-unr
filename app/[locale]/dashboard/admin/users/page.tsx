@@ -1,7 +1,7 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import { useTranslations } from "next-intl";
 import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
-import type { ReactNode } from "react";
+import { type ReactNode, Suspense } from "react";
 
 import { AdminUsersFormContent } from "@/components/admin/users-form-content";
 import { MainContent } from "@/components/main-content";
@@ -49,13 +49,18 @@ export default function DashboardAdminUsersPage(props: DashboardAdminUsersPagePr
 	);
 }
 
-async function DashboardAdminUsersContent() {
-	const users = await getUsers();
-	const countries = await getCountries();
-
+function DashboardAdminUsersContent() {
 	return (
 		<section>
-			<AdminUsersFormContent countries={countries} users={users} />
+			<Suspense>
+				<AdminUsersForm />
+			</Suspense>
 		</section>
 	);
+}
+
+async function AdminUsersForm() {
+	const [countries, users] = await Promise.all([getCountries(), getUsers()]);
+
+	return <AdminUsersFormContent countries={countries} users={users} />;
 }

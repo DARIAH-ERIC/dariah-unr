@@ -1,7 +1,7 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import { useTranslations } from "next-intl";
 import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
-import type { ReactNode } from "react";
+import { type ReactNode, Suspense } from "react";
 
 import { AdminInstitutionsFormContent } from "@/components/admin/institutions-form-content";
 import { MainContent } from "@/components/main-content";
@@ -51,13 +51,18 @@ export default function DashboardAdminInstitutionsPage(
 	);
 }
 
-async function DashboardAdminInstitutionsContent() {
-	const institutions = await getInstitutions();
-	const countries = await getCountries();
-
+function DashboardAdminInstitutionsContent() {
 	return (
 		<section>
-			<AdminInstitutionsFormContent countries={countries} institutions={institutions} />
+			<Suspense>
+				<AdminInstitutionsForm />
+			</Suspense>
 		</section>
 	);
+}
+
+async function AdminInstitutionsForm() {
+	const [countries, institutions] = await Promise.all([getCountries(), getInstitutions()]);
+
+	return <AdminInstitutionsFormContent countries={countries} institutions={institutions} />;
 }
