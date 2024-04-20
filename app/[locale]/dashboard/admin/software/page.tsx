@@ -53,7 +53,7 @@ export default function DashboardAdminSoftwarePage(
 
 function DashboardAdminSoftwarePageContent() {
 	return (
-		<section>
+		<section className="gap-y-8 grid">
 			<Suspense>
 				<AdminSoftwareTable />
 			</Suspense>

@@ -54,7 +54,7 @@ export default function DashboardAdminServicesPage(
 
 function DashboardAdminServicesPageContent() {
 	return (
-		<section>
+		<section className="gap-y-8 grid">
 			<Suspense>
 				<AdminServicesTable />
 			</Suspense>
