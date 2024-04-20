@@ -75,11 +75,23 @@
 		},
 		"title": "Institutionen"
 	},
+	"DashboardAdminOutreachPage": {
+		"meta": {
+			"title": "Outreach"
+		},
+		"title": "Outreach"
+	},
 	"DashboardAdminPersonsPage": {
 		"meta": {
 			"title": "Personen"
 		},
 		"title": "Personen"
+	},
+	"DashboardAdminReportsPage": {
+		"meta": {
+			"title": "Berichte"
+		},
+		"title": "Berichte"
 	},
 	"DashboardAdminServicesPage": {
 		"meta": {
@@ -219,6 +231,42 @@
 	},
 	"actions": {
 		"admin": {
+			"createOutreach": {
+				"errors": {
+					"default": "Konnte Outreach nicht erstellen."
+				},
+				"success": "Outreach erfolgreich erstellt."
+			},
+			"deleteOutreach": {
+				"errors": {
+					"default": "Konnte Outreach nicht entfernen."
+				},
+				"success": "Outreach erfolgreich entfernt."
+			},
+			"updateOutreach": {
+				"errors": {
+					"default": "Konnte Outreach nicht aktualisieren."
+				},
+				"success": "Outreach erfolgreich aktualisiert."
+			},
+			"createService": {
+				"errors": {
+					"default": "Konnte Service nicht erstellen."
+				},
+				"success": "Service erfolgreich erstellt."
+			},
+			"deleteService": {
+				"errors": {
+					"default": "Konnte Service nicht entfernen."
+				},
+				"success": "Service erfolgreich entfernt."
+			},
+			"updateService": {
+				"errors": {
+					"default": "Konnte Service nicht aktualisieren."
+				},
+				"success": "Service erfolgreich aktualisiert."
+			},
 			"createSoftware": {
 				"errors": {
 					"default": "Konnte Software nicht erstellen."

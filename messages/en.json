@@ -75,11 +75,23 @@
 		},
 		"title": "Institutions"
 	},
+	"DashboardAdminOutreachPage": {
+		"meta": {
+			"title": "Outreach"
+		},
+		"title": "Outreach"
+	},
 	"DashboardAdminPersonsPage": {
 		"meta": {
 			"title": "Persons"
 		},
 		"title": "Persons"
+	},
+	"DashboardAdminReportsPage": {
+		"meta": {
+			"title": "Reports"
+		},
+		"title": "Reports"
 	},
 	"DashboardAdminServicesPage": {
 		"meta": {
@@ -219,6 +231,24 @@
 	},
 	"actions": {
 		"admin": {
+			"createOutreach": {
+				"errors": {
+					"default": "Could not create outreach."
+				},
+				"success": "Successfully created outreach."
+			},
+			"deleteOutreach": {
+				"errors": {
+					"default": "Could not delete outreach."
+				},
+				"success": "Successfully deleted outreach."
+			},
+			"updateOutreach": {
+				"errors": {
+					"default": "Failed to update outreach."
+				},
+				"success": "Successfully updated outreach."
+			},
 			"createService": {
 				"errors": {
 					"default": "Could not create service."
