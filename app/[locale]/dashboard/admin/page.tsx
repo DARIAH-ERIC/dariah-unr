@@ -40,7 +40,7 @@ export default function DashboardAdminPage(props: DashboardAdminPageProps): Reac
 	const t = useTranslations("DashboardAdminPage");
 
 	return (
-		<MainContent className="container grid content-start gap-y-4 py-8">
+		<MainContent className="container grid content-start gap-y-8 py-8">
 			<PageTitle>{t("title")}</PageTitle>
 
 			<DashboardAdminPageContent />
@@ -51,27 +51,56 @@ export default function DashboardAdminPage(props: DashboardAdminPageProps): Reac
 function DashboardAdminPageContent() {
 	return (
 		<section>
-			<ul role="list">
+			<ul
+				className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,256px),1fr))] gap-4"
+				role="list"
+			>
 				<li>
-					<Link href={createHref({ pathname: "/dashboard/admin/institutions" })}>
+					<Link
+						className="grid place-content-center rounded-md border border-neutral-200 px-8 py-4 font-medium text-neutral-700 transition hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
+						href={createHref({ pathname: "/dashboard/admin/institutions" })}
+					>
 						Go to institutions
 					</Link>
 				</li>
 				<li>
-					<Link href={createHref({ pathname: "/dashboard/admin/persons" })}>Go to persons</Link>
+					<Link
+						className="grid place-content-center rounded-md border border-neutral-200 px-8 py-4 font-medium text-neutral-700 transition hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
+						href={createHref({ pathname: "/dashboard/admin/persons" })}
+					>
+						Go to persons
+					</Link>
 				</li>
 				<li>
-					<Link href={createHref({ pathname: "/dashboard/admin/services" })}>Go to services</Link>
+					<Link
+						className="grid place-content-center rounded-md border border-neutral-200 px-8 py-4 font-medium text-neutral-700 transition hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
+						href={createHref({ pathname: "/dashboard/admin/services" })}
+					>
+						Go to services
+					</Link>
 				</li>
 				<li>
-					<Link href={createHref({ pathname: "/dashboard/admin/software" })}>Go to software</Link>
+					<Link
+						className="grid place-content-center rounded-md border border-neutral-200 px-8 py-4 font-medium text-neutral-700 transition hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
+						href={createHref({ pathname: "/dashboard/admin/software" })}
+					>
+						Go to software
+					</Link>
 				</li>
 				<li>
-					<Link href={createHref({ pathname: "/dashboard/admin/users" })}>Go to users</Link>
+					<Link
+						className="grid place-content-center rounded-md border border-neutral-200 px-8 py-4 font-medium text-neutral-700 transition hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
+						href={createHref({ pathname: "/dashboard/admin/users" })}
+					>
+						Go to users
+					</Link>
 				</li>
 				<li>
-					<Link href={createHref({ pathname: "/dashboard/admin/sshomp" })}>
-						Ingest software and services from SSH Open Marketplace
+					<Link
+						className="grid place-content-center rounded-md border border-neutral-200 px-8 py-4 font-medium text-neutral-700 transition hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
+						href={createHref({ pathname: "/dashboard/admin/sshomp" })}
+					>
+						Ingest from SSHOMP
 					</Link>
 				</li>
 			</ul>
