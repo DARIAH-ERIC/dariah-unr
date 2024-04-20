@@ -3,28 +3,27 @@ import { useTranslations } from "next-intl";
 import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
 import { type ReactNode, Suspense } from "react";
 
-import { AdminServicesTableContent } from "@/components/admin/services-table-content";
+import { AdminReportsTableContent } from "@/components/admin/reports-table-content";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import type { Locale } from "@/config/i18n.config";
 import { getCountries } from "@/lib/data/country";
-import { getInstitutions } from "@/lib/data/institution";
-import { getServices, getServiceSizes } from "@/lib/data/service";
+import { getReports } from "@/lib/data/report";
 
-interface DashboardAdminServicesPageProps {
+interface DashboardAdminReportsPageProps {
 	params: {
 		locale: Locale;
 	};
 }
 
 export async function generateMetadata(
-	props: DashboardAdminServicesPageProps,
+	props: DashboardAdminReportsPageProps,
 	_parent: ResolvingMetadata,
 ): Promise<Metadata> {
 	const { params } = props;
 
 	const { locale } = params;
-	const t = await getTranslations({ locale, namespace: "DashboardAdminServicesPage" });
+	const t = await getTranslations({ locale, namespace: "DashboardAdminReportsPage" });
 
 	const metadata: Metadata = {
 		title: t("meta.title"),
@@ -33,49 +32,37 @@ export async function generateMetadata(
 	return metadata;
 }
 
-export default function DashboardAdminServicesPage(
-	props: DashboardAdminServicesPageProps,
+export default function DashboardAdminReportsPage(
+	props: DashboardAdminReportsPageProps,
 ): ReactNode {
 	const { params } = props;
 
 	const { locale } = params;
 	setRequestLocale(locale);
 
-	const t = useTranslations("DashboardAdminServicesPage");
+	const t = useTranslations("DashboardAdminReportsPage");
 
 	return (
 		<MainContent className="container grid !max-w-screen-2xl gap-y-8 py-8">
 			<PageTitle>{t("title")}</PageTitle>
 
-			<DashboardAdminServicesPageContent />
+			<DashboardAdminReportsPageContent />
 		</MainContent>
 	);
 }
 
-function DashboardAdminServicesPageContent() {
+function DashboardAdminReportsPageContent() {
 	return (
 		<section className="grid gap-y-8">
 			<Suspense>
-				<AdminServicesTable />
+				<AdminReportsTable />
 			</Suspense>
 		</section>
 	);
 }
 
-async function AdminServicesTable() {
-	const [countries, institutions, services, serviceSizes] = await Promise.all([
-		getCountries(),
-		getInstitutions(),
-		getServices(),
-		getServiceSizes(),
-	]);
+async function AdminReportsTable() {
+	const [countries, reports] = await Promise.all([getCountries(), getReports()]);
 
-	return (
-		<AdminServicesTableContent
-			countries={countries}
-			institutions={institutions}
-			serviceSizes={serviceSizes}
-			services={services}
-		/>
-	);
+	return <AdminReportsTableContent countries={countries} reports={reports} />;
 }

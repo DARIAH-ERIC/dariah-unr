@@ -53,7 +53,7 @@ export default function DashboardAdminPersonsPage(
 
 function DashboardAdminPersonsContent() {
 	return (
-		<section>
+		<section className="grid gap-y-8">
 			<Suspense>
 				<AdminPersonsForm />
 			</Suspense>

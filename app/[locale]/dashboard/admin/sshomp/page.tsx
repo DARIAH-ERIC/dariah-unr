@@ -51,7 +51,7 @@ export default function DashboardAdminSshompIngestPage(
 
 function DashboardAdminSshompIngestContent() {
 	return (
-		<section>
+		<section className="grid gap-y-8">
 			<AdminSshompIngestFormContent />
 		</section>
 	);

@@ -53,7 +53,7 @@ export default function DashboardAdminInstitutionsPage(
 
 function DashboardAdminInstitutionsContent() {
 	return (
-		<section>
+		<section className="grid gap-y-8">
 			<Suspense>
 				<AdminInstitutionsForm />
 			</Suspense>

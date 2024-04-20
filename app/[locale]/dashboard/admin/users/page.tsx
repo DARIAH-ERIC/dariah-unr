@@ -51,7 +51,7 @@ export default function DashboardAdminUsersPage(props: DashboardAdminUsersPagePr
 
 function DashboardAdminUsersContent() {
 	return (
-		<section>
+		<section className="grid gap-y-8">
 			<Suspense>
 				<AdminUsersForm />
 			</Suspense>

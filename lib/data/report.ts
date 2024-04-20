@@ -14,6 +14,19 @@ import type {
 
 import { db } from "@/lib/db";
 
+export function getReports() {
+	return db.report.findMany({
+		orderBy: {
+			year: "desc",
+		},
+		include: {
+			country: {
+				select: { id: true },
+			},
+		},
+	});
+}
+
 interface GetReportByIdParams {
 	id: Report["id"];
 }
