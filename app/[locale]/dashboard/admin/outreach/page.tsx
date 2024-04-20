@@ -53,7 +53,7 @@ export default function DashboardAdminOutreachPage(
 
 function DashboardAdminOutreachPageContent() {
 	return (
-		<section className="gap-y-8 grid">
+		<section className="grid gap-y-8">
 			<Suspense>
 				<AdminOutreachTable />
 			</Suspense>

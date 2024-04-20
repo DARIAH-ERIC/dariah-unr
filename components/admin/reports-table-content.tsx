@@ -1,7 +1,7 @@
 "use client";
 
 import { keyByToMap } from "@acdh-oeaw/lib";
-import { type Country, type Prisma } from "@prisma/client";
+import type { Country, Prisma } from "@prisma/client";
 import { type ReactNode, useMemo, useState } from "react";
 
 import { Cell, Column, Row, Table, TableBody, TableHeader } from "@/components/ui/table";
@@ -34,10 +34,10 @@ export function AdminReportsTableContent(props: AdminReportsTableContentProps): 
 	const items = useMemo(() => {
 		const items = reports.slice().sort((a, z) => {
 			if (sortDescriptor.column === "country") {
-				const idA = a.country?.id;
+				const idA = a.country.id;
 				const countryA = idA ? countriesById.get(idA)?.name ?? "" : "";
 
-				const idZ = z.country?.id;
+				const idZ = z.country.id;
 				const countryZ = idZ ? countriesById.get(idZ)?.name ?? "" : "";
 
 				return countryA.localeCompare(countryZ);
@@ -81,7 +81,7 @@ export function AdminReportsTableContent(props: AdminReportsTableContentProps): 
 				{(row) => {
 					return (
 						<Row>
-							<Cell>{row.country?.id ? countriesById.get(row.country.id)?.name : undefined}</Cell>
+							<Cell>{countriesById.get(row.country.id)?.name}</Cell>
 							<Cell>{row.year}</Cell>
 							<Cell>{row.status}</Cell>
 							<Cell>
