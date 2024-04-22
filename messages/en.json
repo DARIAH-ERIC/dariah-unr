@@ -267,6 +267,24 @@
 				},
 				"success": "Successfully updated outreach."
 			},
+			"createPerson": {
+				"errors": {
+					"default": "Could not create person."
+				},
+				"success": "Successfully created person."
+			},
+			"deletePerson": {
+				"errors": {
+					"default": "Could not delete person."
+				},
+				"success": "Successfully deleted person."
+			},
+			"updatePerson": {
+				"errors": {
+					"default": "Failed to update person."
+				},
+				"success": "Successfully updated person."
+			},
 			"createService": {
 				"errors": {
 					"default": "Could not create service."

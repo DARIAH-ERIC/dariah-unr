@@ -1,10 +1,8 @@
 "use client";
 
 import { keyByToMap } from "@acdh-oeaw/lib";
-import { parseAbsoluteToLocal } from "@internationalized/date";
-import { type Country, InstitutionType, type Prisma } from "@prisma/client";
+import type { Institution, Prisma } from "@prisma/client";
 import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
-import { useFormatter } from "next-intl";
 import { Fragment, type ReactNode, useId, useMemo, useState } from "react";
 import type { Key } from "react-aria-components";
 import { useFormState } from "react-dom";
@@ -12,7 +10,6 @@ import { useFormState } from "react-dom";
 import { Pagination } from "@/components/admin/pagination";
 import { usePagination } from "@/components/admin/use-pagination";
 import { SubmitButton } from "@/components/submit-button";
-import { DateInputField } from "@/components/ui/blocks/date-input-field";
 import {
 	DropdownMenu,
 	DropdownMenuItem,
@@ -35,9 +32,9 @@ import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success"
 import { IconButton } from "@/components/ui/icon-button";
 import { Modal, ModalOverlay } from "@/components/ui/modal";
 import { Cell, Column, Row, Table, TableBody, TableHeader } from "@/components/ui/table";
-import { createInstitutionAction } from "@/lib/actions/admin/create-institution";
-import { deleteInstitutionAction } from "@/lib/actions/admin/delete-institution";
-import { updateInstitutionAction } from "@/lib/actions/admin/update-institution";
+import { createPersonAction } from "@/lib/actions/admin/create-person";
+import { deletePersonAction } from "@/lib/actions/admin/delete-person";
+import { updatePersonAction } from "@/lib/actions/admin/update-person";
 import { createKey } from "@/lib/create-key";
 
 type Action =
@@ -47,23 +44,22 @@ type Action =
 	  }
 	| {
 			kind: "delete";
-			item: Prisma.InstitutionGetPayload<{
+			item: Prisma.PersonGetPayload<{
 				include: {
-					countries: { select: { id: true } };
+					institutions: { select: { id: true } };
 				};
 			}>;
 	  }
 	| {
 			kind: "edit";
-			item: Prisma.InstitutionGetPayload<{
+			item: Prisma.PersonGetPayload<{
 				include: {
-					countries: { select: { id: true } };
+					institutions: { select: { id: true } };
 				};
 			}>;
 	  };
 
-interface AdminInstitutionsTableContentProps {
-	countries: Array<Country>;
+interface AdminPersonsTableContentProps {
 	institutions: Array<
 		Prisma.InstitutionGetPayload<{
 			include: {
@@ -71,20 +67,23 @@ interface AdminInstitutionsTableContentProps {
 			};
 		}>
 	>;
+	persons: Array<
+		Prisma.PersonGetPayload<{
+			include: {
+				institutions: { select: { id: true } };
+			};
+		}>
+	>;
 }
 
-export function AdminInstitutionsTableContent(
-	props: AdminInstitutionsTableContentProps,
-): ReactNode {
-	const { countries, institutions } = props;
+export function AdminPersonsTableContent(props: AdminPersonsTableContentProps): ReactNode {
+	const { institutions, persons } = props;
 
-	const { dateTime } = useFormatter();
-
-	const countriesById = useMemo(() => {
-		return keyByToMap(countries, (country) => {
-			return country.id;
+	const institutionsById = useMemo(() => {
+		return keyByToMap(institutions, (institution) => {
+			return institution.id;
 		});
-	}, [countries]);
+	}, [institutions]);
 
 	const [action, setAction] = useState<Action | null>(null);
 
@@ -98,15 +97,15 @@ export function AdminInstitutionsTableContent(
 	});
 
 	const items = useMemo(() => {
-		const items = institutions.slice().sort((a, z) => {
-			if (sortDescriptor.column === "country") {
-				const idA = a.countries[0]?.id;
-				const countryA = idA ? countriesById.get(idA)?.name ?? "" : "";
+		const items = persons.slice().sort((a, z) => {
+			if (sortDescriptor.column === "institution") {
+				const idA = a.institutions[0]?.id;
+				const institutionA = idA ? institutionsById.get(idA)?.name ?? "" : "";
 
-				const idZ = z.countries[0]?.id;
-				const countryZ = idZ ? countriesById.get(idZ)?.name ?? "" : "";
+				const idZ = z.institutions[0]?.id;
+				const institutionZ = idZ ? institutionsById.get(idZ)?.name ?? "" : "";
 
-				return countryA.localeCompare(countryZ);
+				return institutionA.localeCompare(institutionZ);
 			}
 
 			// @ts-expect-error It's fine.
@@ -117,7 +116,7 @@ export function AdminInstitutionsTableContent(
 			items.reverse();
 		}
 		return items;
-	}, [institutions, sortDescriptor, countriesById]);
+	}, [persons, sortDescriptor, institutionsById]);
 
 	const pagination = usePagination({ items });
 
@@ -151,14 +150,11 @@ export function AdminInstitutionsTableContent(
 					<Column allowsSorting={true} defaultWidth="2fr" id="name" isRowHeader={true}>
 						Name
 					</Column>
-					<Column allowsSorting={true} id="country">
-						Country
+					<Column allowsSorting={true} id="institution">
+						Institution
 					</Column>
-					<Column id="types">Types</Column>
-					<Column id="url">URL</Column>
-					<Column id="ror">ROR</Column>
-					<Column id="startDate">Start date</Column>
-					<Column id="endDate">End date</Column>
+					<Column id="email">Email</Column>
+					<Column id="orcid">ORCID</Column>
 					<Column defaultWidth={50} id="actions">
 						Actions
 					</Column>
@@ -185,13 +181,12 @@ export function AdminInstitutionsTableContent(
 									<span title={row.name}>{row.name}</span>
 								</Cell>
 								<Cell>
-									{row.countries[0]?.id ? countriesById.get(row.countries[0].id)?.name : undefined}
+									{row.institutions[0]?.id
+										? institutionsById.get(row.institutions[0].id)?.name
+										: undefined}
 								</Cell>
-								<Cell>{row.types}</Cell>
-								<Cell>{row.url[0] ? row.url[0] : undefined}</Cell>
-								<Cell>{row.ror}</Cell>
-								<Cell>{row.startDate != null ? dateTime(row.startDate) : undefined}</Cell>
-								<Cell>{row.endDate != null ? dateTime(row.endDate) : undefined}</Cell>
+								<Cell>{row.email}</Cell>
+								<Cell>{row.orcid}</Cell>
 								<Cell>
 									<div className="flex justify-end">
 										<DropdownMenuTrigger>
@@ -222,20 +217,20 @@ export function AdminInstitutionsTableContent(
 				<Pagination pagination={pagination} />
 			</div>
 
-			<CreateInstitutionDialog
-				key={createKey("create-institution", action?.item?.id)}
+			<CreatePersonDialog
+				key={createKey("create-person", action?.item?.id)}
 				action={action}
-				countriesById={countriesById}
+				institutionsById={institutionsById}
 				onClose={onDialogClose}
 			/>
-			<EditInstitutionDialog
-				key={createKey("edit-institution", action?.item?.id)}
+			<EditPersonDialog
+				key={createKey("edit-person", action?.item?.id)}
 				action={action}
-				countriesById={countriesById}
+				institutionsById={institutionsById}
 				onClose={onDialogClose}
 			/>
-			<DeleteInstitutionDialog
-				key={createKey("delete-institution", action?.item?.id)}
+			<DeletePersonDialog
+				key={createKey("delete-person", action?.item?.id)}
 				action={action}
 				onClose={onDialogClose}
 			/>
@@ -243,17 +238,17 @@ export function AdminInstitutionsTableContent(
 	);
 }
 
-interface DeleteInstitutionDialogProps {
+interface DeletePersonDialogProps {
 	action: Action | null;
 	onClose: () => void;
 }
 
-function DeleteInstitutionDialog(props: DeleteInstitutionDialogProps) {
+function DeletePersonDialog(props: DeletePersonDialogProps) {
 	const { action, onClose } = props;
 
 	const formId = useId();
 
-	const [formState, formAction] = useFormState(deleteInstitutionAction, undefined);
+	const [formState, formAction] = useFormState(deletePersonAction, undefined);
 
 	if (action?.kind !== "delete") return null;
 
@@ -312,22 +307,22 @@ function DeleteInstitutionDialog(props: DeleteInstitutionDialogProps) {
 	);
 }
 
-interface CreateInstitutionDialogProps {
+interface CreatePersonDialogProps {
 	action: Action | null;
-	countriesById: Map<Country["id"], Country>;
+	institutionsById: Map<Institution["id"], Institution>;
 	onClose: () => void;
 }
 
-function CreateInstitutionDialog(props: CreateInstitutionDialogProps) {
-	const { action, countriesById, onClose } = props;
+function CreatePersonDialog(props: CreatePersonDialogProps) {
+	const { action, institutionsById, onClose } = props;
 
 	const formId = useId();
 
-	const [formState, formAction] = useFormState(createInstitutionAction, undefined);
+	const [formState, formAction] = useFormState(createPersonAction, undefined);
 
 	if (action?.kind !== "create") return null;
 
-	const institution = action.item;
+	const person = action.item;
 
 	return (
 		<ModalOverlay isOpen={true} onOpenChange={onClose}>
@@ -342,13 +337,13 @@ function CreateInstitutionDialog(props: CreateInstitutionDialogProps) {
 								</DialogHeader>
 
 								<div>
-									<InstitutionEditForm
-										countriesById={countriesById}
+									<PersonEditForm
 										formAction={formAction}
 										formId={formId}
 										formState={formState}
-										institution={institution}
+										institutionsById={institutionsById}
 										onClose={close}
+										person={person}
 									/>
 								</div>
 
@@ -365,22 +360,22 @@ function CreateInstitutionDialog(props: CreateInstitutionDialogProps) {
 	);
 }
 
-interface EditInstitutionDialogProps {
+interface EditPersonDialogProps {
 	action: Action | null;
-	countriesById: Map<Country["id"], Country>;
+	institutionsById: Map<Institution["id"], Institution>;
 	onClose: () => void;
 }
 
-function EditInstitutionDialog(props: EditInstitutionDialogProps) {
-	const { action, countriesById, onClose } = props;
+function EditPersonDialog(props: EditPersonDialogProps) {
+	const { action, institutionsById, onClose } = props;
 
 	const formId = useId();
 
-	const [formState, formAction] = useFormState(updateInstitutionAction, undefined);
+	const [formState, formAction] = useFormState(updatePersonAction, undefined);
 
 	if (action?.kind !== "edit") return null;
 
-	const institution = action.item;
+	const person = action.item;
 
 	return (
 		<ModalOverlay isOpen={true} onOpenChange={onClose}>
@@ -395,13 +390,13 @@ function EditInstitutionDialog(props: EditInstitutionDialogProps) {
 								</DialogHeader>
 
 								<div>
-									<InstitutionEditForm
-										countriesById={countriesById}
+									<PersonEditForm
 										formAction={formAction}
 										formId={formId}
 										formState={formState}
-										institution={institution}
+										institutionsById={institutionsById}
 										onClose={close}
+										person={person}
 									/>
 								</div>
 
@@ -418,23 +413,21 @@ function EditInstitutionDialog(props: EditInstitutionDialogProps) {
 	);
 }
 
-interface InstitutionEditFormProps {
-	countriesById: Map<Country["id"], Country>;
+interface PersonEditFormProps {
+	institutionsById: Map<Institution["id"], Institution>;
 	formId: string;
 	formAction: (formData: FormData) => void;
-	formState: Awaited<ReturnType<typeof createInstitutionAction>> | undefined;
-	institution: Prisma.InstitutionGetPayload<{
+	formState: Awaited<ReturnType<typeof createPersonAction>> | undefined;
+	person: Prisma.PersonGetPayload<{
 		include: {
-			countries: { select: { id: true } };
+			institutions: { select: { id: true } };
 		};
 	}> | null;
 	onClose: () => void;
 }
 
-function InstitutionEditForm(props: InstitutionEditFormProps) {
-	const { countriesById, formId, formAction, formState, institution, onClose } = props;
-
-	const institutionTypes = Object.values(InstitutionType);
+function PersonEditForm(props: PersonEditFormProps) {
+	const { institutionsById, formId, formAction, formState, person, onClose } = props;
 
 	return (
 		<Form
@@ -446,58 +439,28 @@ function InstitutionEditForm(props: InstitutionEditFormProps) {
 			id={formId}
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
-			{institution != null ? <input name="id" type="hidden" value={institution.id} /> : null}
+			{person != null ? <input name="id" type="hidden" value={person.id} /> : null}
 
-			<TextInputField defaultValue={institution?.name} isRequired={true} label="Name" name="name" />
+			<TextInputField defaultValue={person?.name} isRequired={true} label="Name" name="name" />
 
-			{/* TODO: Multiple countries */}
+			{/* TODO: Multiple institutions */}
 			<SelectField
-				defaultSelectedKey={institution?.countries[0]?.id}
+				defaultSelectedKey={person?.institutions[0]?.id}
 				label="Country"
-				name="countries.0"
+				name="institutions.0"
 			>
-				{Array.from(countriesById.values()).map((country) => {
+				{Array.from(institutionsById.values()).map((institution) => {
 					return (
-						<SelectItem key={country.id} id={country.id} textValue={country.name}>
-							{country.name}
+						<SelectItem key={institution.id} id={institution.id} textValue={institution.name}>
+							{institution.name}
 						</SelectItem>
 					);
 				})}
 			</SelectField>
 
-			{/* TODO: Multiple types */}
-			<SelectField defaultSelectedKey={institution?.types[0]} label="Country" name="types.0">
-				{institutionTypes.map((type) => {
-					return (
-						<SelectItem key={type} id={type} textValue={type}>
-							{type}
-						</SelectItem>
-					);
-				})}
-			</SelectField>
+			<TextInputField defaultValue={person?.email ?? undefined} label="Email" name="email" />
 
-			{/* TODO: Multiple URLs */}
-			<TextInputField defaultValue={institution?.url[0] ?? undefined} label="URL" name="url.0" />
-
-			<DateInputField
-				defaultValue={
-					institution?.startDate
-						? parseAbsoluteToLocal(institution.startDate.toISOString())
-						: undefined
-				}
-				granularity="day"
-				label="Start date"
-				name="startDate"
-			/>
-
-			<DateInputField
-				defaultValue={
-					institution?.endDate ? parseAbsoluteToLocal(institution.endDate.toISOString()) : undefined
-				}
-				granularity="day"
-				label="End date"
-				name="endDate"
-			/>
+			<TextInputField defaultValue={person?.orcid ?? undefined} label="ORCID" name="orcid" />
 
 			<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
 				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}

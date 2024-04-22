@@ -76,3 +76,44 @@ export function updatePerson(params: UpdatePersonParams) {
 		},
 	});
 }
+
+interface DeletePersonParams {
+	id: string;
+}
+
+export function deletePerson(params: DeletePersonParams) {
+	const { id } = params;
+
+	return db.person.delete({
+		where: {
+			id,
+		},
+	});
+}
+
+interface CreateFullPersonParams {
+	name: string;
+	email?: string;
+	orcid?: string;
+	institutions?: Array<string>;
+}
+
+export function createFullPerson(params: CreateFullPersonParams) {
+	const { name, email, orcid, institutions } = params;
+
+	return db.person.create({
+		data: {
+			name,
+			email,
+			orcid,
+			institutions:
+				institutions != null && institutions.length > 0
+					? {
+							connect: institutions.map((id) => {
+								return { id };
+							}),
+						}
+					: undefined,
+		},
+	});
+}

@@ -267,6 +267,24 @@
 				},
 				"success": "Outreach erfolgreich aktualisiert."
 			},
+			"createPerson": {
+				"errors": {
+					"default": "Konnte Person nicht erstellen."
+				},
+				"success": "Person erfolgreich erstellt."
+			},
+			"deletePerson": {
+				"errors": {
+					"default": "Konnte Person nicht entfernen."
+				},
+				"success": "Person erfolgreich entfernt."
+			},
+			"updatePerson": {
+				"errors": {
+					"default": "Konnte Person nicht aktualisieren."
+				},
+				"success": "Person erfolgreich aktualisiert."
+			},
 			"createService": {
 				"errors": {
 					"default": "Konnte Service nicht erstellen."
