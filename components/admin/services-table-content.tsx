@@ -17,6 +17,8 @@ import { Fragment, type ReactNode, useId, useMemo, useState } from "react";
 import type { Key } from "react-aria-components";
 import { useFormState } from "react-dom";
 
+import { Pagination } from "@/components/admin/pagination";
+import { usePagination } from "@/components/admin/use-pagination";
 import { SubmitButton } from "@/components/submit-button";
 import {
 	DropdownMenu,
@@ -150,6 +152,8 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 		return items;
 	}, [services, sortDescriptor, countriesById]);
 
+	const pagination = usePagination({ items });
+
 	return (
 		<Fragment>
 			<div className="flex justify-end">
@@ -161,6 +165,10 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 					<PlusIcon aria-hidden={true} className="size-5 shrink-0" />
 					<span>Create</span>
 				</Button>
+			</div>
+
+			<div className="flex justify-end">
+				<Pagination pagination={pagination} />
 			</div>
 
 			<Table
@@ -191,7 +199,7 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 						Actions
 					</Column>
 				</TableHeader>
-				<TableBody items={items}>
+				<TableBody items={pagination.currentItems}>
 					{(row) => {
 						function onAction(key: Key) {
 							switch (key) {
@@ -248,6 +256,10 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 					}}
 				</TableBody>
 			</Table>
+
+			<div className="flex justify-end">
+				<Pagination pagination={pagination} />
+			</div>
 
 			<CreateServicesDialog
 				key={createKey("create-service", action?.item?.id)}
