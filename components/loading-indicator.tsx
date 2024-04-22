@@ -18,12 +18,10 @@ export function LoadingIndicator(props: LoadingIndicatorProps): ReactNode {
 		labelingProps["aria-label"] != null || labelingProps["aria-labelledby"] != null;
 
 	return (
-		<div className={cn("delay-500 duration-500 animate-in fade-in fill-mode-both", className)}>
-			<Loader2Icon
-				{...labelingProps}
-				aria-hidden={hasLabeling ? ariaHidden ?? undefined : true}
-				className="animate-spin"
-			/>
-		</div>
+		<Loader2Icon
+			{...labelingProps}
+			aria-hidden={hasLabeling ? ariaHidden ?? undefined : true}
+			className={cn("animate-spin", className)}
+		/>
 	);
 }
