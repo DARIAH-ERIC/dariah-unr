@@ -75,7 +75,9 @@ export function AdminReportsTableContent(props: AdminReportsTableContentProps): 
 					Year
 				</Column>
 				<Column id="status">Status</Column>
-				<Column id="comments">Comments</Column>
+				<Column defaultWidth="3fr" id="comments">
+					Comments
+				</Column>
 			</TableHeader>
 			<TableBody items={items}>
 				{(row) => {
@@ -85,7 +87,20 @@ export function AdminReportsTableContent(props: AdminReportsTableContentProps): 
 							<Cell>{row.year}</Cell>
 							<Cell>{row.status}</Cell>
 							<Cell>
-								<span>{JSON.stringify(row.comments, null, 2)}</span>
+								<div className="grid gap-y-2">
+									{row.comments
+										? Object.entries(row.comments).map(([field, comment]) => {
+												return (
+													<div key={field} className="grid gap-y-1">
+														<span className="text-2xs font-semibold uppercase tracking-wide text-neutral-600 dark:text-neutral-400">
+															{field}
+														</span>
+														<pre>{comment}</pre>
+													</div>
+												);
+											})
+										: null}
+								</div>
 							</Cell>
 						</Row>
 					);
