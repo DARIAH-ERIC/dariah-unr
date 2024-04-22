@@ -158,6 +158,53 @@ export function updateInstitution(params: UpdateInstitutionParams) {
 			countries:
 				countries != null && countries.length > 0
 					? {
+							set: countries.map((id) => {
+								return { id };
+							}),
+						}
+					: undefined,
+		},
+	});
+}
+
+interface DeleteInstitutionParams {
+	id: string;
+}
+
+export function deleteInstitution(params: DeleteInstitutionParams) {
+	const { id } = params;
+
+	return db.institution.delete({
+		where: {
+			id,
+		},
+	});
+}
+
+interface CreateFullInstitutionParams {
+	endDate?: Date;
+	name: string;
+	ror?: string;
+	startDate?: Date;
+	types?: Institution["types"];
+	url?: Institution["url"];
+	countries?: Array<string>;
+}
+
+export function createFullInstitution(params: CreateFullInstitutionParams) {
+	const { endDate, name, ror, startDate, types, url, countries } = params;
+
+	return db.institution.create({
+		data: {
+			endDate,
+			name,
+			ror,
+			startDate,
+			types,
+			url,
+			countries:
+				countries != null && countries.length > 0
+					? {
 							connect: countries.map((id) => {
 								return { id };
 							}),

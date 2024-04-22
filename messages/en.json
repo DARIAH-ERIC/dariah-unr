@@ -231,6 +231,24 @@
 	},
 	"actions": {
 		"admin": {
+			"createInstitution": {
+				"errors": {
+					"default": "Could not create institution."
+				},
+				"success": "Successfully created institution."
+			},
+			"deleteInstitution": {
+				"errors": {
+					"default": "Could not delete institution."
+				},
+				"success": "Successfully deleted institution."
+			},
+			"updateInstitution": {
+				"errors": {
+					"default": "Failed to update institution."
+				},
+				"success": "Successfully updated institution."
+			},
 			"createOutreach": {
 				"errors": {
 					"default": "Could not create outreach."

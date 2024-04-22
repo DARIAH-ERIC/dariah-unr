@@ -1,8 +1,8 @@
 "use client";
 
-import { keyByToMap } from "@acdh-oeaw/lib";
+import { isNonNullable, keyByToMap } from "@acdh-oeaw/lib";
 import { parseAbsoluteToLocal } from "@internationalized/date";
-import { type Country, OutreachType, type Prisma } from "@prisma/client";
+import { type Country, InstitutionType, type Prisma } from "@prisma/client";
 import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useFormatter } from "next-intl";
 import { Fragment, type ReactNode, useId, useMemo, useState } from "react";
@@ -28,6 +28,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
+	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
@@ -35,9 +36,9 @@ import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success"
 import { IconButton } from "@/components/ui/icon-button";
 import { Modal, ModalOverlay } from "@/components/ui/modal";
 import { Cell, Column, Row, Table, TableBody, TableHeader } from "@/components/ui/table";
-import { createOutreachAction } from "@/lib/actions/admin/create-outreach";
-import { deleteOutreachAction } from "@/lib/actions/admin/delete-outreach";
-import { updateOutreachAction } from "@/lib/actions/admin/update-outreach";
+import { createInstitutionAction } from "@/lib/actions/admin/create-institution";
+import { deleteInstitutionAction } from "@/lib/actions/admin/delete-institution";
+import { updateInstitutionAction } from "@/lib/actions/admin/update-institution";
 import { createKey } from "@/lib/create-key";
 
 type Action =
@@ -47,36 +48,38 @@ type Action =
 	  }
 	| {
 			kind: "delete";
-			item: Prisma.OutreachGetPayload<{
+			item: Prisma.InstitutionGetPayload<{
 				include: {
-					country: { select: { id: true } };
+					countries: { select: { id: true } };
 				};
 			}>;
 	  }
 	| {
 			kind: "edit";
-			item: Prisma.OutreachGetPayload<{
+			item: Prisma.InstitutionGetPayload<{
 				include: {
-					country: { select: { id: true } };
+					countries: { select: { id: true } };
 				};
 			}>;
 	  };
 
-interface AdminOutreachTableContentProps {
+interface AdminInstitutionsTableContentProps {
 	countries: Array<Country>;
-	outreach: Array<
-		Prisma.OutreachGetPayload<{
+	institutions: Array<
+		Prisma.InstitutionGetPayload<{
 			include: {
-				country: { select: { id: true } };
+				countries: { select: { id: true } };
 			};
 		}>
 	>;
 }
 
-export function AdminOutreachTableContent(props: AdminOutreachTableContentProps): ReactNode {
-	const { countries, outreach } = props;
+export function AdminInstitutionsTableContent(
+	props: AdminInstitutionsTableContentProps,
+): ReactNode {
+	const { countries, institutions } = props;
 
-	const { dateTime } = useFormatter();
+	const { dateTime, list } = useFormatter();
 
 	const countriesById = useMemo(() => {
 		return keyByToMap(countries, (country) => {
@@ -96,12 +99,12 @@ export function AdminOutreachTableContent(props: AdminOutreachTableContentProps)
 	});
 
 	const items = useMemo(() => {
-		const items = outreach.slice().sort((a, z) => {
+		const items = institutions.slice().sort((a, z) => {
 			if (sortDescriptor.column === "country") {
-				const idA = a.country?.id;
+				const idA = a.countries[0]?.id;
 				const countryA = idA ? countriesById.get(idA)?.name ?? "" : "";
 
-				const idZ = z.country?.id;
+				const idZ = z.countries[0]?.id;
 				const countryZ = idZ ? countriesById.get(idZ)?.name ?? "" : "";
 
 				return countryA.localeCompare(countryZ);
@@ -115,7 +118,7 @@ export function AdminOutreachTableContent(props: AdminOutreachTableContentProps)
 			items.reverse();
 		}
 		return items;
-	}, [outreach, sortDescriptor, countriesById]);
+	}, [institutions, sortDescriptor, countriesById]);
 
 	const pagination = usePagination({ items });
 
@@ -137,7 +140,7 @@ export function AdminOutreachTableContent(props: AdminOutreachTableContentProps)
 			</div>
 
 			<Table
-				aria-label="Outreach"
+				aria-label="Services"
 				className="w-full"
 				// @ts-expect-error It's fine.
 				onSortChange={setSortDescriptor}
@@ -152,10 +155,11 @@ export function AdminOutreachTableContent(props: AdminOutreachTableContentProps)
 					<Column allowsSorting={true} id="country">
 						Country
 					</Column>
+					<Column id="types">Types</Column>
+					<Column id="url">URL</Column>
+					<Column id="ror">ROR</Column>
 					<Column id="startDate">Start date</Column>
 					<Column id="endDate">End date</Column>
-					<Column id="type">Type</Column>
-					<Column id="url">URL</Column>
 					<Column defaultWidth={50} id="actions">
 						Actions
 					</Column>
@@ -181,13 +185,14 @@ export function AdminOutreachTableContent(props: AdminOutreachTableContentProps)
 								<Cell>
 									<span title={row.name}>{row.name}</span>
 								</Cell>
-								<Cell>{row.country?.id ? countriesById.get(row.country.id)?.name : undefined}</Cell>
+								<Cell>
+									{row.countries[0]?.id ? countriesById.get(row.countries[0].id)?.name : undefined}
+								</Cell>
+								<Cell>{row.types}</Cell>
+								<Cell>{row.url[0] ? row.url[0] : undefined}</Cell>
+								<Cell>{row.ror}</Cell>
 								<Cell>{row.startDate != null ? dateTime(row.startDate) : undefined}</Cell>
 								<Cell>{row.endDate != null ? dateTime(row.endDate) : undefined}</Cell>
-								<Cell>{row.type}</Cell>
-								<Cell>
-									<span title={row.url}>{row.url}</span>
-								</Cell>
 								<Cell>
 									<div className="flex justify-end">
 										<DropdownMenuTrigger>
@@ -218,20 +223,20 @@ export function AdminOutreachTableContent(props: AdminOutreachTableContentProps)
 				<Pagination pagination={pagination} />
 			</div>
 
-			<CreateOutreachDialog
-				key={createKey("create-outreach", action?.item?.id)}
+			<CreateInstitutionDialog
+				key={createKey("create-institution", action?.item?.id)}
 				action={action}
 				countriesById={countriesById}
 				onClose={onDialogClose}
 			/>
-			<EditOutreachDialog
-				key={createKey("edit-outreach", action?.item?.id)}
+			<EditInstitutionDialog
+				key={createKey("edit-institution", action?.item?.id)}
 				action={action}
 				countriesById={countriesById}
 				onClose={onDialogClose}
 			/>
-			<DeleteOutreachDialog
-				key={createKey("delete-outreach", action?.item?.id)}
+			<DeleteInstitutionDialog
+				key={createKey("delete-institution", action?.item?.id)}
 				action={action}
 				onClose={onDialogClose}
 			/>
@@ -239,17 +244,17 @@ export function AdminOutreachTableContent(props: AdminOutreachTableContentProps)
 	);
 }
 
-interface DeleteOutreachDialogProps {
+interface DeleteInstitutionDialogProps {
 	action: Action | null;
 	onClose: () => void;
 }
 
-function DeleteOutreachDialog(props: DeleteOutreachDialogProps) {
+function DeleteInstitutionDialog(props: DeleteInstitutionDialogProps) {
 	const { action, onClose } = props;
 
 	const formId = useId();
 
-	const [formState, formAction] = useFormState(deleteOutreachAction, undefined);
+	const [formState, formAction] = useFormState(deleteInstitutionAction, undefined);
 
 	if (action?.kind !== "delete") return null;
 
@@ -261,7 +266,7 @@ function DeleteOutreachDialog(props: DeleteOutreachDialogProps) {
 						return (
 							<Fragment>
 								<DialogHeader>
-									<DialogTitle>Delete outreach</DialogTitle>
+									<DialogTitle>Delete institution</DialogTitle>
 									<DialogDescription>
 										Are you sure you want to delete &quot;{action.item.name}&quot;?
 									</DialogDescription>
@@ -308,22 +313,22 @@ function DeleteOutreachDialog(props: DeleteOutreachDialogProps) {
 	);
 }
 
-interface CreateOutreachDialogProps {
+interface CreateInstitutionDialogProps {
 	action: Action | null;
 	countriesById: Map<Country["id"], Country>;
 	onClose: () => void;
 }
 
-function CreateOutreachDialog(props: CreateOutreachDialogProps) {
+function CreateInstitutionDialog(props: CreateInstitutionDialogProps) {
 	const { action, countriesById, onClose } = props;
 
 	const formId = useId();
 
-	const [formState, formAction] = useFormState(createOutreachAction, undefined);
+	const [formState, formAction] = useFormState(createInstitutionAction, undefined);
 
 	if (action?.kind !== "create") return null;
 
-	const outreach = action.item;
+	const institution = action.item;
 
 	return (
 		<ModalOverlay isOpen={true} onOpenChange={onClose}>
@@ -333,18 +338,18 @@ function CreateOutreachDialog(props: CreateOutreachDialogProps) {
 						return (
 							<Fragment>
 								<DialogHeader>
-									<DialogTitle>Create outreach</DialogTitle>
-									<DialogDescription>Please provide outreach details.</DialogDescription>
+									<DialogTitle>Create institution</DialogTitle>
+									<DialogDescription>Please provide institution details.</DialogDescription>
 								</DialogHeader>
 
 								<div>
-									<OutreachEditForm
+									<InstitutionEditForm
 										countriesById={countriesById}
 										formAction={formAction}
 										formId={formId}
 										formState={formState}
+										institution={institution}
 										onClose={close}
-										outreach={outreach}
 									/>
 								</div>
 
@@ -361,22 +366,22 @@ function CreateOutreachDialog(props: CreateOutreachDialogProps) {
 	);
 }
 
-interface EditOutreachDialogProps {
+interface EditInstitutionDialogProps {
 	action: Action | null;
 	countriesById: Map<Country["id"], Country>;
 	onClose: () => void;
 }
 
-function EditOutreachDialog(props: EditOutreachDialogProps) {
+function EditInstitutionDialog(props: EditInstitutionDialogProps) {
 	const { action, countriesById, onClose } = props;
 
 	const formId = useId();
 
-	const [formState, formAction] = useFormState(updateOutreachAction, undefined);
+	const [formState, formAction] = useFormState(updateInstitutionAction, undefined);
 
 	if (action?.kind !== "edit") return null;
 
-	const outreach = action.item;
+	const institution = action.item;
 
 	return (
 		<ModalOverlay isOpen={true} onOpenChange={onClose}>
@@ -386,18 +391,18 @@ function EditOutreachDialog(props: EditOutreachDialogProps) {
 						return (
 							<Fragment>
 								<DialogHeader>
-									<DialogTitle>Update outreach</DialogTitle>
-									<DialogDescription>Please provide outreach details.</DialogDescription>
+									<DialogTitle>Update institution</DialogTitle>
+									<DialogDescription>Please provide institution details.</DialogDescription>
 								</DialogHeader>
 
 								<div>
-									<OutreachEditForm
+									<InstitutionEditForm
 										countriesById={countriesById}
 										formAction={formAction}
 										formId={formId}
 										formState={formState}
+										institution={institution}
 										onClose={close}
-										outreach={outreach}
 									/>
 								</div>
 
@@ -414,23 +419,23 @@ function EditOutreachDialog(props: EditOutreachDialogProps) {
 	);
 }
 
-interface OutreachEditFormProps {
+interface InstitutionEditFormProps {
 	countriesById: Map<Country["id"], Country>;
 	formId: string;
 	formAction: (formData: FormData) => void;
-	formState: Awaited<ReturnType<typeof createOutreachAction>> | undefined;
-	outreach: Prisma.OutreachGetPayload<{
+	formState: Awaited<ReturnType<typeof createInstitutionAction>> | undefined;
+	institution: Prisma.InstitutionGetPayload<{
 		include: {
-			country: { select: { id: true } };
+			countries: { select: { id: true } };
 		};
 	}> | null;
 	onClose: () => void;
 }
 
-function OutreachEditForm(props: OutreachEditFormProps) {
-	const { countriesById, formId, formAction, formState, outreach, onClose } = props;
+function InstitutionEditForm(props: InstitutionEditFormProps) {
+	const { countriesById, formId, formAction, formState, institution, onClose } = props;
 
-	const outreachTypes = Object.values(OutreachType);
+	const institutionTypes = Object.values(InstitutionType);
 
 	return (
 		<Form
@@ -442,11 +447,16 @@ function OutreachEditForm(props: OutreachEditFormProps) {
 			id={formId}
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
-			{outreach != null ? <input name="id" type="hidden" value={outreach.id} /> : null}
+			{institution != null ? <input name="id" type="hidden" value={institution.id} /> : null}
 
-			<TextInputField defaultValue={outreach?.name} isRequired={true} label="Name" name="name" />
+			<TextInputField defaultValue={institution?.name} isRequired={true} label="Name" name="name" />
 
-			<SelectField defaultSelectedKey={outreach?.country?.id} label="Country" name="country">
+			{/* TODO: Multiple countries */}
+			<SelectField
+				defaultSelectedKey={institution?.countries[0]?.id}
+				label="Country"
+				name="countries.0"
+			>
 				{Array.from(countriesById.values()).map((country) => {
 					return (
 						<SelectItem key={country.id} id={country.id} textValue={country.name}>
@@ -456,13 +466,9 @@ function OutreachEditForm(props: OutreachEditFormProps) {
 				})}
 			</SelectField>
 
-			<SelectField
-				defaultSelectedKey={outreach?.country?.id}
-				isRequired={true}
-				label="Type"
-				name="type"
-			>
-				{outreachTypes.map((type) => {
+			{/* TODO: Multiple types */}
+			<SelectField defaultSelectedKey={institution?.types[0]} label="Country" name="types.0">
+				{institutionTypes.map((type) => {
 					return (
 						<SelectItem key={type} id={type} textValue={type}>
 							{type}
@@ -471,11 +477,14 @@ function OutreachEditForm(props: OutreachEditFormProps) {
 				})}
 			</SelectField>
 
-			<TextInputField defaultValue={outreach?.url} isRequired={true} label="URL" name="url" />
+			{/* TODO: Multiple URLs */}
+			<TextInputField defaultValue={institution?.url[0] ?? undefined} label="URL" name="url.0" />
 
 			<DateInputField
 				defaultValue={
-					outreach?.startDate ? parseAbsoluteToLocal(outreach.startDate.toISOString()) : undefined
+					institution?.startDate
+						? parseAbsoluteToLocal(institution.startDate.toISOString())
+						: undefined
 				}
 				granularity="day"
 				label="Start date"
@@ -484,7 +493,7 @@ function OutreachEditForm(props: OutreachEditFormProps) {
 
 			<DateInputField
 				defaultValue={
-					outreach?.endDate ? parseAbsoluteToLocal(outreach.endDate.toISOString()) : undefined
+					institution?.endDate ? parseAbsoluteToLocal(institution.endDate.toISOString()) : undefined
 				}
 				granularity="day"
 				label="End date"
@@ -503,3 +512,166 @@ function OutreachEditForm(props: OutreachEditFormProps) {
 		</Form>
 	);
 }
+
+// interface UpdateInstitutionFormDialogProps {
+// 	countriesById: Map<Country["id"], Country>;
+// 	institution: Prisma.InstitutionGetPayload<{
+// 		include: {
+// 			countries: { select: { id: true } };
+// 		};
+// 	}>;
+// }
+
+// function UpdateInstitutionFormDialog(props: UpdateInstitutionFormDialogProps) {
+// 	const { countriesById, institution } = props;
+
+// 	const formId = useId();
+
+// 	const [formState, formAction] = useFormState(updateInstitutionAction, undefined);
+
+// 	const institutionTypes = Object.values(InstitutionType);
+
+// 	return (
+// 		<ModalOverlay>
+// 			<Modal isDismissable={true}>
+// 				<Dialog>
+// 					{({ close }) => {
+// 						return (
+// 							<Fragment>
+// 								<DialogHeader>
+// 									<DialogTitle>Update institution</DialogTitle>
+// 									<DialogDescription>Please provide institution details.</DialogDescription>
+// 								</DialogHeader>
+
+// 								<div>
+// 									<Form
+// 										action={(formData) => {
+// 											formAction(formData);
+// 											close();
+// 										}}
+// 										className="grid gap-y-6"
+// 										id={formId}
+// 										validationErrors={
+// 											formState?.status === "error" ? formState.fieldErrors : undefined
+// 										}
+// 									>
+// 										<input name="id" type="hidden" value={institution.id} />
+
+// 										<TextInputField
+// 											defaultValue={institution.name}
+// 											isRequired={true}
+// 											label="Name"
+// 											name="name"
+// 										/>
+
+// 										<TextInputField
+// 											defaultValue={institution.ror ?? undefined}
+// 											label="ROR"
+// 											name="ror"
+// 											type="url"
+// 										/>
+
+// 										<DateInputField
+// 											defaultValue={
+// 												institution.startDate != null
+// 													? parseAbsoluteToLocal(institution.startDate.toISOString())
+// 													: undefined
+// 											}
+// 											granularity="day"
+// 											label="Start date"
+// 											name="startDate"
+// 										/>
+
+// 										<DateInputField
+// 											defaultValue={
+// 												institution.endDate != null
+// 													? parseAbsoluteToLocal(institution.endDate.toISOString())
+// 													: undefined
+// 											}
+// 											granularity="day"
+// 											label="End date"
+// 											name="endDate"
+// 										/>
+
+// 										{institution.types.map((type, index) => {
+// 											return (
+// 												<SelectField
+// 													key={type}
+// 													defaultSelectedKey={type}
+// 													isRequired={true}
+// 													label="Type"
+// 													name={`types.${index}`}
+// 												>
+// 													{institutionTypes.map((institutionType) => {
+// 														return (
+// 															<SelectItem
+// 																key={institutionType}
+// 																id={institutionType}
+// 																textValue={institutionType}
+// 															>
+// 																{institutionType}
+// 															</SelectItem>
+// 														);
+// 													})}
+// 												</SelectField>
+// 											);
+// 										})}
+
+// 										{institution.url.map((url, index) => {
+// 											return (
+// 												<TextInputField
+// 													key={index}
+// 													defaultValue={url}
+// 													isRequired={true}
+// 													label="URL"
+// 													name={`url.${index}`}
+// 												/>
+// 											);
+// 										})}
+
+// 										{institution.countries.map((country, index) => {
+// 											return (
+// 												<SelectField
+// 													key={country.id}
+// 													defaultSelectedKey={country.id}
+// 													isRequired={true}
+// 													label="Country"
+// 													name={`countries.${index}`}
+// 												>
+// 													{Array.from(countriesById.values()).map((country) => {
+// 														return (
+// 															<SelectItem key={country.id} id={country.id} textValue={country.name}>
+// 																{country.name}
+// 															</SelectItem>
+// 														);
+// 													})}
+// 												</SelectField>
+// 											);
+// 										})}
+
+// 										<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
+// 											{formState?.status === "success" && formState.message.length > 0
+// 												? formState.message
+// 												: null}
+// 										</FormSuccessMessage>
+
+// 										<FormErrorMessage key={createKey("form-error", formState?.timestamp)}>
+// 											{formState?.status === "error" && formState.formErrors.length > 0
+// 												? formState.formErrors
+// 												: null}
+// 										</FormErrorMessage>
+// 									</Form>
+// 								</div>
+
+// 								<DialogFooter>
+// 									<DialogCancelButton>Cancel</DialogCancelButton>
+// 									<SubmitButton form={formId}>Update</SubmitButton>
+// 								</DialogFooter>
+// 							</Fragment>
+// 						);
+// 					}}
+// 				</Dialog>
+// 			</Modal>
+// 		</ModalOverlay>
+// 	);
+// }

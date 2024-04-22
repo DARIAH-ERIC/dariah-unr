@@ -164,7 +164,7 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 						Actions
 					</Column>
 				</TableHeader>
-				<TableBody items={items}>
+				<TableBody items={pagination.currentItems}>
 					{(row) => {
 						function onAction(key: Key) {
 							switch (key) {

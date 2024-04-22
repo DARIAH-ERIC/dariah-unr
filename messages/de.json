@@ -231,6 +231,24 @@
 	},
 	"actions": {
 		"admin": {
+			"createInstitution": {
+				"errors": {
+					"default": "Konnte Institution nicht erstellen."
+				},
+				"success": "Institution erfolgreich erstellt."
+			},
+			"deleteInstitution": {
+				"errors": {
+					"default": "Konnte Institution nicht entfernen."
+				},
+				"success": "Institution erfolgreich entfernt."
+			},
+			"updateInstitution": {
+				"errors": {
+					"default": "Konnte Institution nicht aktualisieren."
+				},
+				"success": "Institution erfolgreich aktualisiert."
+			},
 			"createOutreach": {
 				"errors": {
 					"default": "Konnte Outreach nicht erstellen."
