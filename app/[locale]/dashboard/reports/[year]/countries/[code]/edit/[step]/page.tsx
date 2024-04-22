@@ -7,6 +7,7 @@ import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "
 import { type ReactNode, Suspense } from "react";
 
 import { AppLink } from "@/components/app-link";
+import { Delay } from "@/components/delay";
 import { FormDescription } from "@/components/form-description";
 import { FormTitle } from "@/components/form-title";
 import { ConfirmationForm } from "@/components/forms/confirmation-form";
@@ -20,6 +21,7 @@ import { ReportSummary } from "@/components/forms/report-summary";
 import { ServiceReportsForm } from "@/components/forms/service-reports-form";
 import { SoftwareForm } from "@/components/forms/software-form";
 import { Link } from "@/components/link";
+import { LoadingIndicator } from "@/components/loading-indicator";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import type { Locale } from "@/config/i18n.config";
@@ -654,9 +656,9 @@ function FormPlaceholder(props: FormPlaceholderProps): ReactNode {
 		<Suspense
 			fallback={
 				<div className="grid place-items-center py-16">
-					{/* FIXME: LoadingIndicator component. */}
-					<Loader2Icon aria-hidden={true} className="size-5 shrink-0 animate-spin" />
-					<span className="sr-only">Loading...</span>
+					<Delay>
+						<LoadingIndicator aria-label="Loading..." className="size-5 shrink-0" />
+					</Delay>
 				</div>
 			}
 		>
