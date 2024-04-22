@@ -235,7 +235,7 @@ async function ingest() {
 				status: getEnumValue<any>(row.Status?.value),
 				technicalContact: row["technical contact"],
 				technicalReadinessLevel: getNumberValue(row.TRL),
-				type: getEnumValue<any>(row["Service type"]?.value),
+				type: getEnumValue<any>(row["Service Type"]?.value),
 				url: row.accessibleAT ? [row.accessibleAT] : undefined,
 				valueProposition: row["Value proposition"],
 				countries,

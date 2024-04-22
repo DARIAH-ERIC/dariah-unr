@@ -1,7 +1,7 @@
 "use client";
 
 import { keyByToMap } from "@acdh-oeaw/lib";
-import type { Institution, Prisma } from "@prisma/client";
+import { type Country, type Prisma, UserRole, UserStatus } from "@prisma/client";
 import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { Fragment, type ReactNode, useId, useMemo, useState } from "react";
 import type { Key } from "react-aria-components";
@@ -25,6 +25,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
+	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
@@ -32,9 +33,9 @@ import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success"
 import { IconButton } from "@/components/ui/icon-button";
 import { Modal, ModalOverlay } from "@/components/ui/modal";
 import { Cell, Column, Row, Table, TableBody, TableHeader } from "@/components/ui/table";
-import { createPersonAction } from "@/lib/actions/admin/create-person";
-import { deletePersonAction } from "@/lib/actions/admin/delete-person";
-import { updatePersonAction } from "@/lib/actions/admin/update-person";
+import { createUserAction } from "@/lib/actions/admin/create-user";
+import { deleteUserAction } from "@/lib/actions/admin/delete-user";
+import { updateUserAction } from "@/lib/actions/admin/update-user";
 import { createKey } from "@/lib/create-key";
 
 type Action =
@@ -44,46 +45,38 @@ type Action =
 	  }
 	| {
 			kind: "delete";
-			item: Prisma.PersonGetPayload<{
+			item: Prisma.UserGetPayload<{
 				include: {
-					institutions: { select: { id: true } };
+					country: { select: { id: true } };
 				};
 			}>;
 	  }
 	| {
 			kind: "edit";
-			item: Prisma.PersonGetPayload<{
+			item: Prisma.UserGetPayload<{
 				include: {
-					institutions: { select: { id: true } };
+					country: { select: { id: true } };
 				};
 			}>;
 	  };
 
-interface AdminPersonsTableContentProps {
-	institutions: Array<
-		Prisma.InstitutionGetPayload<{
-			include: {
-				countries: { select: { id: true } };
-			};
-		}>
-	>;
-	persons: Array<
-		Prisma.PersonGetPayload<{
-			include: {
-				institutions: { select: { id: true } };
-			};
+interface AdminUsersTableContentProps {
+	countries: Array<Country>;
+	users: Array<
+		Prisma.UserGetPayload<{
+			include: { country: { select: { id: true } } };
 		}>
 	>;
 }
 
-export function AdminPersonsTableContent(props: AdminPersonsTableContentProps): ReactNode {
-	const { institutions, persons } = props;
+export function AdminUsersTableContent(props: AdminUsersTableContentProps): ReactNode {
+	const { countries, users } = props;
 
-	const institutionsById = useMemo(() => {
-		return keyByToMap(institutions, (institution) => {
-			return institution.id;
+	const countriesById = useMemo(() => {
+		return keyByToMap(countries, (country) => {
+			return country.id;
 		});
-	}, [institutions]);
+	}, [countries]);
 
 	const [action, setAction] = useState<Action | null>(null);
 
@@ -97,15 +90,15 @@ export function AdminPersonsTableContent(props: AdminPersonsTableContentProps): 
 	});
 
 	const items = useMemo(() => {
-		const items = persons.slice().sort((a, z) => {
-			if (sortDescriptor.column === "institution") {
-				const idA = a.institutions[0]?.id;
-				const institutionA = idA ? institutionsById.get(idA)?.name ?? "" : "";
+		const items = users.slice().sort((a, z) => {
+			if (sortDescriptor.column === "country") {
+				const idA = a.country?.id;
+				const countryA = idA ? countriesById.get(idA)?.name ?? "" : "";
 
-				const idZ = z.institutions[0]?.id;
-				const institutionZ = idZ ? institutionsById.get(idZ)?.name ?? "" : "";
+				const idZ = z.country?.id;
+				const countryZ = idZ ? countriesById.get(idZ)?.name ?? "" : "";
 
-				return institutionA.localeCompare(institutionZ);
+				return countryA.localeCompare(countryZ);
 			}
 
 			// @ts-expect-error It's fine.
@@ -116,7 +109,7 @@ export function AdminPersonsTableContent(props: AdminPersonsTableContentProps): 
 			items.reverse();
 		}
 		return items;
-	}, [persons, sortDescriptor, institutionsById]);
+	}, [users, sortDescriptor, countriesById]);
 
 	const pagination = usePagination({ items });
 
@@ -150,11 +143,12 @@ export function AdminPersonsTableContent(props: AdminPersonsTableContentProps): 
 					<Column allowsSorting={true} defaultWidth="2fr" id="name" isRowHeader={true}>
 						Name
 					</Column>
-					<Column allowsSorting={true} id="institution">
-						Institution
+					<Column allowsSorting={true} id="country">
+						Country
 					</Column>
 					<Column id="email">Email</Column>
-					<Column id="orcid">ORCID</Column>
+					<Column id="role">Role</Column>
+					<Column id="status">Status</Column>
 					<Column defaultWidth={50} id="actions">
 						Actions
 					</Column>
@@ -178,15 +172,12 @@ export function AdminPersonsTableContent(props: AdminPersonsTableContentProps): 
 						return (
 							<Row>
 								<Cell>
-									<span title={row.name}>{row.name}</span>
+									<span title={row.name ?? undefined}>{row.name}</span>
 								</Cell>
-								<Cell>
-									{row.institutions[0]?.id
-										? institutionsById.get(row.institutions[0].id)?.name
-										: undefined}
-								</Cell>
+								<Cell>{row.country?.id ? countriesById.get(row.country.id)?.name : undefined}</Cell>
 								<Cell>{row.email}</Cell>
-								<Cell>{row.orcid}</Cell>
+								<Cell>{row.role}</Cell>
+								<Cell>{row.status}</Cell>
 								<Cell>
 									<div className="flex justify-end">
 										<DropdownMenuTrigger>
@@ -217,20 +208,20 @@ export function AdminPersonsTableContent(props: AdminPersonsTableContentProps): 
 				<Pagination pagination={pagination} />
 			</div>
 
-			<CreatePersonDialog
-				key={createKey("create-person", action?.item?.id)}
+			<CreateUserDialog
+				key={createKey("create-user", action?.item?.id)}
 				action={action}
-				institutionsById={institutionsById}
+				countriesById={countriesById}
 				onClose={onDialogClose}
 			/>
-			<EditPersonDialog
-				key={createKey("edit-person", action?.item?.id)}
+			<EditUserDialog
+				key={createKey("edit-user", action?.item?.id)}
 				action={action}
-				institutionsById={institutionsById}
+				countriesById={countriesById}
 				onClose={onDialogClose}
 			/>
-			<DeletePersonDialog
-				key={createKey("delete-person", action?.item?.id)}
+			<DeleteUserDialog
+				key={createKey("delete-user", action?.item?.id)}
 				action={action}
 				onClose={onDialogClose}
 			/>
@@ -238,17 +229,17 @@ export function AdminPersonsTableContent(props: AdminPersonsTableContentProps): 
 	);
 }
 
-interface DeletePersonDialogProps {
+interface DeleteUserDialogProps {
 	action: Action | null;
 	onClose: () => void;
 }
 
-function DeletePersonDialog(props: DeletePersonDialogProps) {
+function DeleteUserDialog(props: DeleteUserDialogProps) {
 	const { action, onClose } = props;
 
 	const formId = useId();
 
-	const [formState, formAction] = useFormState(deletePersonAction, undefined);
+	const [formState, formAction] = useFormState(deleteUserAction, undefined);
 
 	if (action?.kind !== "delete") return null;
 
@@ -260,7 +251,7 @@ function DeletePersonDialog(props: DeletePersonDialogProps) {
 						return (
 							<Fragment>
 								<DialogHeader>
-									<DialogTitle>Delete person</DialogTitle>
+									<DialogTitle>Delete user</DialogTitle>
 									<DialogDescription>
 										Are you sure you want to delete &quot;{action.item.name}&quot;?
 									</DialogDescription>
@@ -307,22 +298,22 @@ function DeletePersonDialog(props: DeletePersonDialogProps) {
 	);
 }
 
-interface CreatePersonDialogProps {
+interface CreateUserDialogProps {
 	action: Action | null;
-	institutionsById: Map<Institution["id"], Institution>;
+	countriesById: Map<Country["id"], Country>;
 	onClose: () => void;
 }
 
-function CreatePersonDialog(props: CreatePersonDialogProps) {
-	const { action, institutionsById, onClose } = props;
+function CreateUserDialog(props: CreateUserDialogProps) {
+	const { action, countriesById, onClose } = props;
 
 	const formId = useId();
 
-	const [formState, formAction] = useFormState(createPersonAction, undefined);
+	const [formState, formAction] = useFormState(createUserAction, undefined);
 
 	if (action?.kind !== "create") return null;
 
-	const person = action.item;
+	const user = action.item;
 
 	return (
 		<ModalOverlay isOpen={true} onOpenChange={onClose}>
@@ -332,18 +323,18 @@ function CreatePersonDialog(props: CreatePersonDialogProps) {
 						return (
 							<Fragment>
 								<DialogHeader>
-									<DialogTitle>Create person</DialogTitle>
-									<DialogDescription>Please provide person details.</DialogDescription>
+									<DialogTitle>Create user</DialogTitle>
+									<DialogDescription>Please provide user details.</DialogDescription>
 								</DialogHeader>
 
 								<div>
-									<PersonEditForm
+									<UserEditForm
+										countriesById={countriesById}
 										formAction={formAction}
 										formId={formId}
 										formState={formState}
-										institutionsById={institutionsById}
 										onClose={close}
-										person={person}
+										user={user}
 									/>
 								</div>
 
@@ -360,22 +351,22 @@ function CreatePersonDialog(props: CreatePersonDialogProps) {
 	);
 }
 
-interface EditPersonDialogProps {
+interface EditUserDialogProps {
 	action: Action | null;
-	institutionsById: Map<Institution["id"], Institution>;
+	countriesById: Map<Country["id"], Country>;
 	onClose: () => void;
 }
 
-function EditPersonDialog(props: EditPersonDialogProps) {
-	const { action, institutionsById, onClose } = props;
+function EditUserDialog(props: EditUserDialogProps) {
+	const { action, countriesById, onClose } = props;
 
 	const formId = useId();
 
-	const [formState, formAction] = useFormState(updatePersonAction, undefined);
+	const [formState, formAction] = useFormState(updateUserAction, undefined);
 
 	if (action?.kind !== "edit") return null;
 
-	const person = action.item;
+	const user = action.item;
 
 	return (
 		<ModalOverlay isOpen={true} onOpenChange={onClose}>
@@ -385,18 +376,18 @@ function EditPersonDialog(props: EditPersonDialogProps) {
 						return (
 							<Fragment>
 								<DialogHeader>
-									<DialogTitle>Update person</DialogTitle>
-									<DialogDescription>Please provide person details.</DialogDescription>
+									<DialogTitle>Update user</DialogTitle>
+									<DialogDescription>Please provide user details.</DialogDescription>
 								</DialogHeader>
 
 								<div>
-									<PersonEditForm
+									<UserEditForm
+										countriesById={countriesById}
 										formAction={formAction}
 										formId={formId}
 										formState={formState}
-										institutionsById={institutionsById}
 										onClose={close}
-										person={person}
+										user={user}
 									/>
 								</div>
 
@@ -413,21 +404,24 @@ function EditPersonDialog(props: EditPersonDialogProps) {
 	);
 }
 
-interface PersonEditFormProps {
-	institutionsById: Map<Institution["id"], Institution>;
+interface UserEditFormProps {
+	countriesById: Map<Country["id"], Country>;
 	formId: string;
 	formAction: (formData: FormData) => void;
-	formState: Awaited<ReturnType<typeof createPersonAction>> | undefined;
-	person: Prisma.PersonGetPayload<{
+	formState: Awaited<ReturnType<typeof createUserAction>> | undefined;
+	user: Prisma.UserGetPayload<{
 		include: {
-			institutions: { select: { id: true } };
+			country: { select: { id: true } };
 		};
 	}> | null;
 	onClose: () => void;
 }
 
-function PersonEditForm(props: PersonEditFormProps) {
-	const { institutionsById, formId, formAction, formState, person, onClose } = props;
+function UserEditForm(props: UserEditFormProps) {
+	const { countriesById, formId, formAction, formState, user, onClose } = props;
+
+	const userRoles = Object.values(UserRole);
+	const userStatuses = Object.values(UserStatus);
 
 	return (
 		<Form
@@ -439,28 +433,46 @@ function PersonEditForm(props: PersonEditFormProps) {
 			id={formId}
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
-			{person != null ? <input name="id" type="hidden" value={person.id} /> : null}
+			{user != null ? <input name="id" type="hidden" value={user.id} /> : null}
 
-			<TextInputField defaultValue={person?.name} isRequired={true} label="Name" name="name" />
+			<TextInputField defaultValue={user?.name ?? undefined} label="Name" name="name" />
 
-			{/* TODO: Multiple institutions */}
-			<SelectField
-				defaultSelectedKey={person?.institutions[0]?.id}
-				label="Country"
-				name="institutions.0"
-			>
-				{Array.from(institutionsById.values()).map((institution) => {
+			<SelectField defaultSelectedKey={user?.country?.id} label="Country" name="country">
+				{Array.from(countriesById.values()).map((country) => {
 					return (
-						<SelectItem key={institution.id} id={institution.id} textValue={institution.name}>
-							{institution.name}
+						<SelectItem key={country.id} id={country.id} textValue={country.name}>
+							{country.name}
 						</SelectItem>
 					);
 				})}
 			</SelectField>
 
-			<TextInputField defaultValue={person?.email ?? undefined} label="Email" name="email" />
+			<TextInputField
+				defaultValue={user?.email ?? undefined}
+				isReadOnly={true}
+				label="Email"
+				name="email"
+			/>
 
-			<TextInputField defaultValue={person?.orcid ?? undefined} label="ORCID" name="orcid" />
+			<SelectField defaultSelectedKey={user?.role} label="Role" name="role">
+				{userRoles.map((role) => {
+					return (
+						<SelectItem key={role} id={role} textValue={role}>
+							{role}
+						</SelectItem>
+					);
+				})}
+			</SelectField>
+
+			<SelectField defaultSelectedKey={user?.status} label="Status" name="status">
+				{userStatuses.map((status) => {
+					return (
+						<SelectItem key={status} id={status} textValue={status}>
+							{status}
+						</SelectItem>
+					);
+				})}
+			</SelectField>
 
 			<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
 				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}

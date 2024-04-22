@@ -1,6 +1,7 @@
 "use server";
 
 import { log } from "@acdh-oeaw/lib";
+import { UserRole, UserStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
@@ -9,11 +10,11 @@ import { updateUser } from "@/lib/data/user";
 import { getFormData } from "@/lib/get-form-data";
 
 const formSchema = z.object({
-	id: z.string().min(1),
+	id: z.string(),
 	name: z.string().optional(),
-	role: z.enum(["admin", "contributor"]),
-	status: z.enum(["verified", "unverified"]),
-	countryId: z.string().optional(),
+	role: z.enum(Object.values(UserRole) as [UserRole, ...Array<UserRole>]),
+	status: z.enum(Object.values(UserStatus) as [UserStatus, ...Array<UserStatus>]),
+	country: z.string().optional(),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -37,7 +38,7 @@ export async function updateUserAction(
 	previousFormState: FormState | undefined,
 	formData: FormData,
 ): Promise<FormState> {
-	const t = await getTranslations("actions.updateUsers");
+	const t = await getTranslations("actions.admin.updateUser");
 
 	const input = getFormData(formData);
 	const result = formSchema.safeParse(input);
@@ -52,10 +53,16 @@ export async function updateUserAction(
 		};
 	}
 
-	const { id, name, role, status, countryId } = result.data;
+	const { id, name, role, status, country: countryId } = result.data;
 
 	try {
-		await updateUser({ id, name, role, status, countryId });
+		await updateUser({
+			id,
+			name,
+			role,
+			status,
+			countryId,
+		});
 
 		revalidatePath("/[locale]/dashboard/admin/users", "page");
 

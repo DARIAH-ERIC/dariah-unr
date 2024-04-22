@@ -320,6 +320,24 @@
 					"default": "Konnte Software nicht aktualisieren."
 				},
 				"success": "Software erfolgreich aktualisiert."
+			},
+			"createUser": {
+				"errors": {
+					"default": "Konnte User nicht erstellen."
+				},
+				"success": "User erfolgreich erstellt."
+			},
+			"deleteUser": {
+				"errors": {
+					"default": "Konnte User nicht entfernen."
+				},
+				"success": "User erfolgreich entfernt."
+			},
+			"updateUser": {
+				"errors": {
+					"default": "Konnte User nicht aktualisieren."
+				},
+				"success": "User erfolgreich aktualisiert."
 			}
 		},
 		"createOutreach": {

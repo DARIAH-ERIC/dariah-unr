@@ -456,12 +456,7 @@ function OutreachEditForm(props: OutreachEditFormProps) {
 				})}
 			</SelectField>
 
-			<SelectField
-				defaultSelectedKey={outreach?.country?.id}
-				isRequired={true}
-				label="Type"
-				name="type"
-			>
+			<SelectField defaultSelectedKey={outreach?.type} isRequired={true} label="Type" name="type">
 				{outreachTypes.map((type) => {
 					return (
 						<SelectItem key={type} id={type} textValue={type}>

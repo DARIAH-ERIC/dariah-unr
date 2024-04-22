@@ -320,6 +320,24 @@
 					"default": "Failed to update software."
 				},
 				"success": "Successfully updated software."
+			},
+			"createUser": {
+				"errors": {
+					"default": "Could not create user."
+				},
+				"success": "Successfully created user."
+			},
+			"deleteUser": {
+				"errors": {
+					"default": "Could not delete user."
+				},
+				"success": "Successfully deleted user."
+			},
+			"updateUser": {
+				"errors": {
+					"default": "Failed to update user."
+				},
+				"success": "Successfully updated user."
 			}
 		},
 		"createOutreach": {
