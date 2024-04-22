@@ -12,6 +12,8 @@ import { Fragment, type ReactNode, useId, useMemo, useState } from "react";
 import type { Key } from "react-aria-components";
 import { useFormState } from "react-dom";
 
+import { Pagination } from "@/components/admin/pagination";
+import { usePagination } from "@/components/admin/use-pagination";
 import { SubmitButton } from "@/components/submit-button";
 import {
 	DropdownMenu,
@@ -116,6 +118,8 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 		return items;
 	}, [software, sortDescriptor, countriesById]);
 
+	const pagination = usePagination({ items });
+
 	return (
 		<Fragment>
 			<div className="flex justify-end">
@@ -127,6 +131,10 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 					<PlusIcon aria-hidden={true} className="size-5 shrink-0" />
 					<span>Create</span>
 				</Button>
+			</div>
+
+			<div className="flex justify-end">
+				<Pagination pagination={pagination} />
 			</div>
 
 			<Table
@@ -214,6 +222,10 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 					}}
 				</TableBody>
 			</Table>
+
+			<div className="flex justify-end">
+				<Pagination pagination={pagination} />
+			</div>
 
 			<CreateSoftwareDialog
 				key={createKey("create-software", action?.item?.id)}
