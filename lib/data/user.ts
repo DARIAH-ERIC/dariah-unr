@@ -40,20 +40,24 @@ export function getUsers() {
 		orderBy: {
 			name: "asc",
 		},
+		include: {
+			country: {
+				select: { id: true },
+			},
+		},
 	});
 }
 
 interface UpdateUserParams {
 	id: string;
 	name?: string;
-	email?: string;
 	role: User["role"];
 	status: User["status"];
 	countryId?: string;
 }
 
 export function updateUser(params: UpdateUserParams) {
-	const { id, name, email, role, status, countryId } = params;
+	const { id, name, role, status, countryId } = params;
 
 	return db.user.update({
 		where: {
@@ -61,7 +65,47 @@ export function updateUser(params: UpdateUserParams) {
 		},
 		data: {
 			name,
-			email,
+			role,
+			status,
+			country:
+				countryId != null
+					? {
+							connect: {
+								id: countryId,
+							},
+						}
+					: undefined,
+		},
+	});
+}
+
+interface DeleteUserParams {
+	id: string;
+}
+
+export function deleteUser(params: DeleteUserParams) {
+	const { id } = params;
+
+	return db.user.delete({
+		where: {
+			id,
+		},
+	});
+}
+
+interface CreateFullUserParams {
+	name?: string;
+	role: User["role"];
+	status: User["status"];
+	countryId?: string;
+}
+
+export function createFullUser(params: CreateFullUserParams) {
+	const { name, role, status, countryId } = params;
+
+	return db.user.create({
+		data: {
+			name,
 			role,
 			status,
 			country:

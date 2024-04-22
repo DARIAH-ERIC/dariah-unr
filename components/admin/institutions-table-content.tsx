@@ -1,13 +1,10 @@
 "use client";
 
 import { keyByToMap } from "@acdh-oeaw/lib";
-import {
-	type Country,
-	type Prisma,
-	SoftwareMarketplaceStatus,
-	SoftwareStatus,
-} from "@prisma/client";
+import { parseAbsoluteToLocal } from "@internationalized/date";
+import { type Country, InstitutionType, type Prisma } from "@prisma/client";
 import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
+import { useFormatter } from "next-intl";
 import { Fragment, type ReactNode, useId, useMemo, useState } from "react";
 import type { Key } from "react-aria-components";
 import { useFormState } from "react-dom";
@@ -15,13 +12,13 @@ import { useFormState } from "react-dom";
 import { Pagination } from "@/components/admin/pagination";
 import { usePagination } from "@/components/admin/use-pagination";
 import { SubmitButton } from "@/components/submit-button";
+import { DateInputField } from "@/components/ui/blocks/date-input-field";
 import {
 	DropdownMenu,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/blocks/dropdown-menu";
 import { SelectField, SelectItem } from "@/components/ui/blocks/select-field";
-import { TextAreaField } from "@/components/ui/blocks/text-area-field";
 import { TextInputField } from "@/components/ui/blocks/text-input-field";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,9 +35,9 @@ import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success"
 import { IconButton } from "@/components/ui/icon-button";
 import { Modal, ModalOverlay } from "@/components/ui/modal";
 import { Cell, Column, Row, Table, TableBody, TableHeader } from "@/components/ui/table";
-import { createSoftwareAction } from "@/lib/actions/admin/create-software";
-import { deleteSoftwareAction } from "@/lib/actions/admin/delete-software";
-import { updateSoftwareAction } from "@/lib/actions/admin/update-software";
+import { createInstitutionAction } from "@/lib/actions/admin/create-institution";
+import { deleteInstitutionAction } from "@/lib/actions/admin/delete-institution";
+import { updateInstitutionAction } from "@/lib/actions/admin/update-institution";
 import { createKey } from "@/lib/create-key";
 
 type Action =
@@ -50,7 +47,7 @@ type Action =
 	  }
 	| {
 			kind: "delete";
-			item: Prisma.SoftwareGetPayload<{
+			item: Prisma.InstitutionGetPayload<{
 				include: {
 					countries: { select: { id: true } };
 				};
@@ -58,17 +55,17 @@ type Action =
 	  }
 	| {
 			kind: "edit";
-			item: Prisma.SoftwareGetPayload<{
+			item: Prisma.InstitutionGetPayload<{
 				include: {
 					countries: { select: { id: true } };
 				};
 			}>;
 	  };
 
-interface AdminSoftwareTableContentProps {
+interface AdminInstitutionsTableContentProps {
 	countries: Array<Country>;
-	software: Array<
-		Prisma.SoftwareGetPayload<{
+	institutions: Array<
+		Prisma.InstitutionGetPayload<{
 			include: {
 				countries: { select: { id: true } };
 			};
@@ -76,8 +73,12 @@ interface AdminSoftwareTableContentProps {
 	>;
 }
 
-export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps): ReactNode {
-	const { countries, software } = props;
+export function AdminInstitutionsTableContent(
+	props: AdminInstitutionsTableContentProps,
+): ReactNode {
+	const { countries, institutions } = props;
+
+	const { dateTime } = useFormatter();
 
 	const countriesById = useMemo(() => {
 		return keyByToMap(countries, (country) => {
@@ -97,7 +98,7 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 	});
 
 	const items = useMemo(() => {
-		const items = software.slice().sort((a, z) => {
+		const items = institutions.slice().sort((a, z) => {
 			if (sortDescriptor.column === "country") {
 				const idA = a.countries[0]?.id;
 				const countryA = idA ? countriesById.get(idA)?.name ?? "" : "";
@@ -116,7 +117,7 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 			items.reverse();
 		}
 		return items;
-	}, [software, sortDescriptor, countriesById]);
+	}, [institutions, sortDescriptor, countriesById]);
 
 	const pagination = usePagination({ items });
 
@@ -138,7 +139,7 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 			</div>
 
 			<Table
-				aria-label="Software"
+				aria-label="Services"
 				className="w-full"
 				// @ts-expect-error It's fine.
 				onSortChange={setSortDescriptor}
@@ -153,13 +154,11 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 					<Column allowsSorting={true} id="country">
 						Country
 					</Column>
-					<Column allowsSorting={true} id="status">
-						Status
-					</Column>
+					<Column id="types">Types</Column>
 					<Column id="url">URL</Column>
-					<Column id="marketplaceId">Marketplace ID</Column>
-					<Column id="marketplaceStatus">Marketplace status</Column>
-					<Column id="comment">Comment</Column>
+					<Column id="ror">ROR</Column>
+					<Column id="startDate">Start date</Column>
+					<Column id="endDate">End date</Column>
 					<Column defaultWidth={50} id="actions">
 						Actions
 					</Column>
@@ -188,15 +187,11 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 								<Cell>
 									{row.countries[0]?.id ? countriesById.get(row.countries[0].id)?.name : undefined}
 								</Cell>
-								<Cell>{row.status}</Cell>
-								<Cell>
-									<span title={row.url[0] ?? undefined}>{row.url[0]}</span>
-								</Cell>
-								<Cell>{row.marketplaceId}</Cell>
-								<Cell>{row.marketplaceStatus}</Cell>
-								<Cell>
-									<span title={row.comment ?? undefined}>{row.comment}</span>
-								</Cell>
+								<Cell>{row.types}</Cell>
+								<Cell>{row.url[0] ? row.url[0] : undefined}</Cell>
+								<Cell>{row.ror}</Cell>
+								<Cell>{row.startDate != null ? dateTime(row.startDate) : undefined}</Cell>
+								<Cell>{row.endDate != null ? dateTime(row.endDate) : undefined}</Cell>
 								<Cell>
 									<div className="flex justify-end">
 										<DropdownMenuTrigger>
@@ -227,20 +222,20 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 				<Pagination pagination={pagination} />
 			</div>
 
-			<CreateSoftwareDialog
-				key={createKey("create-software", action?.item?.id)}
+			<CreateInstitutionDialog
+				key={createKey("create-institution", action?.item?.id)}
 				action={action}
 				countriesById={countriesById}
 				onClose={onDialogClose}
 			/>
-			<EditSoftwareDialog
-				key={createKey("edit-software", action?.item?.id)}
+			<EditInstitutionDialog
+				key={createKey("edit-institution", action?.item?.id)}
 				action={action}
 				countriesById={countriesById}
 				onClose={onDialogClose}
 			/>
-			<DeleteSoftwareDialog
-				key={createKey("delete-software", action?.item?.id)}
+			<DeleteInstitutionDialog
+				key={createKey("delete-institution", action?.item?.id)}
 				action={action}
 				onClose={onDialogClose}
 			/>
@@ -248,17 +243,17 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 	);
 }
 
-interface DeleteSoftwareDialogProps {
+interface DeleteInstitutionDialogProps {
 	action: Action | null;
 	onClose: () => void;
 }
 
-function DeleteSoftwareDialog(props: DeleteSoftwareDialogProps) {
+function DeleteInstitutionDialog(props: DeleteInstitutionDialogProps) {
 	const { action, onClose } = props;
 
 	const formId = useId();
 
-	const [formState, formAction] = useFormState(deleteSoftwareAction, undefined);
+	const [formState, formAction] = useFormState(deleteInstitutionAction, undefined);
 
 	if (action?.kind !== "delete") return null;
 
@@ -270,7 +265,7 @@ function DeleteSoftwareDialog(props: DeleteSoftwareDialogProps) {
 						return (
 							<Fragment>
 								<DialogHeader>
-									<DialogTitle>Delete software</DialogTitle>
+									<DialogTitle>Delete institution</DialogTitle>
 									<DialogDescription>
 										Are you sure you want to delete &quot;{action.item.name}&quot;?
 									</DialogDescription>
@@ -317,22 +312,22 @@ function DeleteSoftwareDialog(props: DeleteSoftwareDialogProps) {
 	);
 }
 
-interface CreateSoftwareDialogProps {
+interface CreateInstitutionDialogProps {
 	action: Action | null;
 	countriesById: Map<Country["id"], Country>;
 	onClose: () => void;
 }
 
-function CreateSoftwareDialog(props: CreateSoftwareDialogProps) {
+function CreateInstitutionDialog(props: CreateInstitutionDialogProps) {
 	const { action, countriesById, onClose } = props;
 
 	const formId = useId();
 
-	const [formState, formAction] = useFormState(createSoftwareAction, undefined);
+	const [formState, formAction] = useFormState(createInstitutionAction, undefined);
 
 	if (action?.kind !== "create") return null;
 
-	const software = action.item;
+	const institution = action.item;
 
 	return (
 		<ModalOverlay isOpen={true} onOpenChange={onClose}>
@@ -342,18 +337,18 @@ function CreateSoftwareDialog(props: CreateSoftwareDialogProps) {
 						return (
 							<Fragment>
 								<DialogHeader>
-									<DialogTitle>Create software</DialogTitle>
-									<DialogDescription>Please provide software details.</DialogDescription>
+									<DialogTitle>Create institution</DialogTitle>
+									<DialogDescription>Please provide institution details.</DialogDescription>
 								</DialogHeader>
 
 								<div>
-									<SoftwareEditForm
+									<InstitutionEditForm
 										countriesById={countriesById}
 										formAction={formAction}
 										formId={formId}
 										formState={formState}
+										institution={institution}
 										onClose={close}
-										software={software}
 									/>
 								</div>
 
@@ -370,22 +365,22 @@ function CreateSoftwareDialog(props: CreateSoftwareDialogProps) {
 	);
 }
 
-interface EditSoftwareDialogProps {
+interface EditInstitutionDialogProps {
 	action: Action | null;
 	countriesById: Map<Country["id"], Country>;
 	onClose: () => void;
 }
 
-function EditSoftwareDialog(props: EditSoftwareDialogProps) {
+function EditInstitutionDialog(props: EditInstitutionDialogProps) {
 	const { action, countriesById, onClose } = props;
 
 	const formId = useId();
 
-	const [formState, formAction] = useFormState(updateSoftwareAction, undefined);
+	const [formState, formAction] = useFormState(updateInstitutionAction, undefined);
 
 	if (action?.kind !== "edit") return null;
 
-	const software = action.item;
+	const institution = action.item;
 
 	return (
 		<ModalOverlay isOpen={true} onOpenChange={onClose}>
@@ -395,18 +390,18 @@ function EditSoftwareDialog(props: EditSoftwareDialogProps) {
 						return (
 							<Fragment>
 								<DialogHeader>
-									<DialogTitle>Update software</DialogTitle>
-									<DialogDescription>Please provide software details.</DialogDescription>
+									<DialogTitle>Update institution</DialogTitle>
+									<DialogDescription>Please provide institution details.</DialogDescription>
 								</DialogHeader>
 
 								<div>
-									<SoftwareEditForm
+									<InstitutionEditForm
 										countriesById={countriesById}
 										formAction={formAction}
 										formId={formId}
 										formState={formState}
+										institution={institution}
 										onClose={close}
-										software={software}
 									/>
 								</div>
 
@@ -423,14 +418,12 @@ function EditSoftwareDialog(props: EditSoftwareDialogProps) {
 	);
 }
 
-interface SoftwareEditFormProps {
+interface InstitutionEditFormProps {
 	countriesById: Map<Country["id"], Country>;
 	formId: string;
 	formAction: (formData: FormData) => void;
-	formState:
-		| Awaited<ReturnType<typeof createSoftwareAction | typeof updateSoftwareAction>>
-		| undefined;
-	software: Prisma.SoftwareGetPayload<{
+	formState: Awaited<ReturnType<typeof createInstitutionAction>> | undefined;
+	institution: Prisma.InstitutionGetPayload<{
 		include: {
 			countries: { select: { id: true } };
 		};
@@ -438,11 +431,10 @@ interface SoftwareEditFormProps {
 	onClose: () => void;
 }
 
-function SoftwareEditForm(props: SoftwareEditFormProps) {
-	const { countriesById, formId, formAction, formState, software, onClose } = props;
+function InstitutionEditForm(props: InstitutionEditFormProps) {
+	const { countriesById, formId, formAction, formState, institution, onClose } = props;
 
-	const softwareStatuses = Object.values(SoftwareStatus);
-	const softwareMarketplaceStatuses = Object.values(SoftwareMarketplaceStatus);
+	const institutionTypes = Object.values(InstitutionType);
 
 	return (
 		<Form
@@ -454,13 +446,13 @@ function SoftwareEditForm(props: SoftwareEditFormProps) {
 			id={formId}
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
-			{software != null ? <input name="id" type="hidden" value={software.id} /> : null}
+			{institution != null ? <input name="id" type="hidden" value={institution.id} /> : null}
 
-			<TextInputField defaultValue={software?.name} isRequired={true} label="Name" name="name" />
+			<TextInputField defaultValue={institution?.name} isRequired={true} label="Name" name="name" />
 
 			{/* TODO: Multiple countries */}
 			<SelectField
-				defaultSelectedKey={software?.countries[0]?.id}
+				defaultSelectedKey={institution?.countries[0]?.id}
 				label="Country"
 				name="countries.0"
 			>
@@ -473,44 +465,39 @@ function SoftwareEditForm(props: SoftwareEditFormProps) {
 				})}
 			</SelectField>
 
-			<SelectField defaultSelectedKey={software?.status ?? undefined} label="Status" name="status">
-				{softwareStatuses.map((softwareStatus) => {
+			{/* TODO: Multiple types */}
+			<SelectField defaultSelectedKey={institution?.types[0]} label="Country" name="types.0">
+				{institutionTypes.map((type) => {
 					return (
-						<SelectItem key={softwareStatus} id={softwareStatus} textValue={softwareStatus}>
-							{softwareStatus}
+						<SelectItem key={type} id={type} textValue={type}>
+							{type}
 						</SelectItem>
 					);
 				})}
 			</SelectField>
 
 			{/* TODO: Multiple URLs */}
-			<TextInputField defaultValue={software?.url[0] ?? undefined} label="URL" name="url.0" />
+			<TextInputField defaultValue={institution?.url[0] ?? undefined} label="URL" name="url.0" />
 
-			<TextInputField
-				defaultValue={software?.marketplaceId ?? undefined}
-				label="Marketplace ID"
-				name="marketplaceId"
+			<DateInputField
+				defaultValue={
+					institution?.startDate
+						? parseAbsoluteToLocal(institution.startDate.toISOString())
+						: undefined
+				}
+				granularity="day"
+				label="Start date"
+				name="startDate"
 			/>
 
-			<SelectField
-				defaultSelectedKey={software?.marketplaceStatus ?? undefined}
-				label="Marketplace status"
-				name="marketplaceStatus"
-			>
-				{softwareMarketplaceStatuses.map((softwareMarketplaceStatus) => {
-					return (
-						<SelectItem
-							key={softwareMarketplaceStatus}
-							id={softwareMarketplaceStatus}
-							textValue={softwareMarketplaceStatus}
-						>
-							{softwareMarketplaceStatus}
-						</SelectItem>
-					);
-				})}
-			</SelectField>
-
-			<TextAreaField defaultValue={software?.comment ?? undefined} label="Comment" name="comment" />
+			<DateInputField
+				defaultValue={
+					institution?.endDate ? parseAbsoluteToLocal(institution.endDate.toISOString()) : undefined
+				}
+				granularity="day"
+				label="End date"
+				name="endDate"
+			/>
 
 			<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
 				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}

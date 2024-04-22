@@ -1,19 +1,24 @@
 "use server";
 
 import { log } from "@acdh-oeaw/lib";
+import { InstitutionType } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
-import { updateUser } from "@/lib/data/user";
+import { createFullInstitution as createInstitution } from "@/lib/data/institution";
 import { getFormData } from "@/lib/get-form-data";
 
 const formSchema = z.object({
-	id: z.string().min(1),
-	name: z.string().optional(),
-	role: z.enum(["admin", "contributor"]),
-	status: z.enum(["verified", "unverified"]),
-	countryId: z.string().optional(),
+	name: z.string(),
+	types: z
+		.array(z.enum(Object.values(InstitutionType) as [InstitutionType, ...Array<InstitutionType>]))
+		.optional(),
+	url: z.array(z.string()).optional(),
+	ror: z.string().optional(),
+	startDate: z.coerce.date().optional(),
+	endDate: z.coerce.date().optional(),
+	countries: z.array(z.string()).optional(),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -33,11 +38,11 @@ interface FormSuccess extends FormReturnValue {
 
 type FormState = FormErrors | FormSuccess;
 
-export async function updateUserAction(
+export async function createInstitutionAction(
 	previousFormState: FormState | undefined,
 	formData: FormData,
 ): Promise<FormState> {
-	const t = await getTranslations("actions.updateUsers");
+	const t = await getTranslations("actions.admin.createInstitution");
 
 	const input = getFormData(formData);
 	const result = formSchema.safeParse(input);
@@ -52,12 +57,20 @@ export async function updateUserAction(
 		};
 	}
 
-	const { id, name, role, status, countryId } = result.data;
+	const { name, endDate, ror, startDate, url, types, countries } = result.data;
 
 	try {
-		await updateUser({ id, name, role, status, countryId });
+		await createInstitution({
+			name,
+			endDate,
+			ror,
+			startDate,
+			url,
+			types,
+			countries,
+		});
 
-		revalidatePath("/[locale]/dashboard/admin/users", "page");
+		revalidatePath("/[locale]/dashboard/admin/institutions", "page");
 
 		return {
 			status: "success" as const,

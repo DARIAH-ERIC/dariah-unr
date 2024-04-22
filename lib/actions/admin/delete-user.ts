@@ -5,15 +5,11 @@ import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
-import { updateUser } from "@/lib/data/user";
+import { deleteUser } from "@/lib/data/user";
 import { getFormData } from "@/lib/get-form-data";
 
 const formSchema = z.object({
-	id: z.string().min(1),
-	name: z.string().optional(),
-	role: z.enum(["admin", "contributor"]),
-	status: z.enum(["verified", "unverified"]),
-	countryId: z.string().optional(),
+	id: z.string(),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -33,11 +29,11 @@ interface FormSuccess extends FormReturnValue {
 
 type FormState = FormErrors | FormSuccess;
 
-export async function updateUserAction(
+export async function deleteUserAction(
 	previousFormState: FormState | undefined,
 	formData: FormData,
 ): Promise<FormState> {
-	const t = await getTranslations("actions.updateUsers");
+	const t = await getTranslations("actions.admin.deleteUser");
 
 	const input = getFormData(formData);
 	const result = formSchema.safeParse(input);
@@ -52,10 +48,10 @@ export async function updateUserAction(
 		};
 	}
 
-	const { id, name, role, status, countryId } = result.data;
+	const { id } = result.data;
 
 	try {
-		await updateUser({ id, name, role, status, countryId });
+		await deleteUser({ id });
 
 		revalidatePath("/[locale]/dashboard/admin/users", "page");
 

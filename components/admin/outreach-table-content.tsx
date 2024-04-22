@@ -9,6 +9,8 @@ import { Fragment, type ReactNode, useId, useMemo, useState } from "react";
 import type { Key } from "react-aria-components";
 import { useFormState } from "react-dom";
 
+import { Pagination } from "@/components/admin/pagination";
+import { usePagination } from "@/components/admin/use-pagination";
 import { SubmitButton } from "@/components/submit-button";
 import { DateInputField } from "@/components/ui/blocks/date-input-field";
 import {
@@ -115,6 +117,8 @@ export function AdminOutreachTableContent(props: AdminOutreachTableContentProps)
 		return items;
 	}, [outreach, sortDescriptor, countriesById]);
 
+	const pagination = usePagination({ items });
+
 	return (
 		<Fragment>
 			<div className="flex justify-end">
@@ -126,6 +130,10 @@ export function AdminOutreachTableContent(props: AdminOutreachTableContentProps)
 					<PlusIcon aria-hidden={true} className="size-5 shrink-0" />
 					<span>Create</span>
 				</Button>
+			</div>
+
+			<div className="flex justify-end">
+				<Pagination pagination={pagination} />
 			</div>
 
 			<Table
@@ -152,7 +160,7 @@ export function AdminOutreachTableContent(props: AdminOutreachTableContentProps)
 						Actions
 					</Column>
 				</TableHeader>
-				<TableBody items={items}>
+				<TableBody items={pagination.currentItems}>
 					{(row) => {
 						function onAction(key: Key) {
 							switch (key) {
@@ -205,6 +213,10 @@ export function AdminOutreachTableContent(props: AdminOutreachTableContentProps)
 					}}
 				</TableBody>
 			</Table>
+
+			<div className="flex justify-end">
+				<Pagination pagination={pagination} />
+			</div>
 
 			<CreateOutreachDialog
 				key={createKey("create-outreach", action?.item?.id)}
@@ -444,12 +456,7 @@ function OutreachEditForm(props: OutreachEditFormProps) {
 				})}
 			</SelectField>
 
-			<SelectField
-				defaultSelectedKey={outreach?.country?.id}
-				isRequired={true}
-				label="Type"
-				name="type"
-			>
+			<SelectField defaultSelectedKey={outreach?.type} isRequired={true} label="Type" name="type">
 				{outreachTypes.map((type) => {
 					return (
 						<SelectItem key={type} id={type} textValue={type}>

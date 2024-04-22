@@ -1,12 +1,7 @@
 "use client";
 
 import { keyByToMap } from "@acdh-oeaw/lib";
-import {
-	type Country,
-	type Prisma,
-	SoftwareMarketplaceStatus,
-	SoftwareStatus,
-} from "@prisma/client";
+import { type Country, type Prisma, UserRole, UserStatus } from "@prisma/client";
 import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { Fragment, type ReactNode, useId, useMemo, useState } from "react";
 import type { Key } from "react-aria-components";
@@ -21,7 +16,6 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/blocks/dropdown-menu";
 import { SelectField, SelectItem } from "@/components/ui/blocks/select-field";
-import { TextAreaField } from "@/components/ui/blocks/text-area-field";
 import { TextInputField } from "@/components/ui/blocks/text-input-field";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,6 +25,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
+	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
@@ -38,9 +33,9 @@ import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success"
 import { IconButton } from "@/components/ui/icon-button";
 import { Modal, ModalOverlay } from "@/components/ui/modal";
 import { Cell, Column, Row, Table, TableBody, TableHeader } from "@/components/ui/table";
-import { createSoftwareAction } from "@/lib/actions/admin/create-software";
-import { deleteSoftwareAction } from "@/lib/actions/admin/delete-software";
-import { updateSoftwareAction } from "@/lib/actions/admin/update-software";
+import { createUserAction } from "@/lib/actions/admin/create-user";
+import { deleteUserAction } from "@/lib/actions/admin/delete-user";
+import { updateUserAction } from "@/lib/actions/admin/update-user";
 import { createKey } from "@/lib/create-key";
 
 type Action =
@@ -50,34 +45,32 @@ type Action =
 	  }
 	| {
 			kind: "delete";
-			item: Prisma.SoftwareGetPayload<{
+			item: Prisma.UserGetPayload<{
 				include: {
-					countries: { select: { id: true } };
+					country: { select: { id: true } };
 				};
 			}>;
 	  }
 	| {
 			kind: "edit";
-			item: Prisma.SoftwareGetPayload<{
+			item: Prisma.UserGetPayload<{
 				include: {
-					countries: { select: { id: true } };
+					country: { select: { id: true } };
 				};
 			}>;
 	  };
 
-interface AdminSoftwareTableContentProps {
+interface AdminUsersTableContentProps {
 	countries: Array<Country>;
-	software: Array<
-		Prisma.SoftwareGetPayload<{
-			include: {
-				countries: { select: { id: true } };
-			};
+	users: Array<
+		Prisma.UserGetPayload<{
+			include: { country: { select: { id: true } } };
 		}>
 	>;
 }
 
-export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps): ReactNode {
-	const { countries, software } = props;
+export function AdminUsersTableContent(props: AdminUsersTableContentProps): ReactNode {
+	const { countries, users } = props;
 
 	const countriesById = useMemo(() => {
 		return keyByToMap(countries, (country) => {
@@ -97,12 +90,12 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 	});
 
 	const items = useMemo(() => {
-		const items = software.slice().sort((a, z) => {
+		const items = users.slice().sort((a, z) => {
 			if (sortDescriptor.column === "country") {
-				const idA = a.countries[0]?.id;
+				const idA = a.country?.id;
 				const countryA = idA ? countriesById.get(idA)?.name ?? "" : "";
 
-				const idZ = z.countries[0]?.id;
+				const idZ = z.country?.id;
 				const countryZ = idZ ? countriesById.get(idZ)?.name ?? "" : "";
 
 				return countryA.localeCompare(countryZ);
@@ -116,7 +109,7 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 			items.reverse();
 		}
 		return items;
-	}, [software, sortDescriptor, countriesById]);
+	}, [users, sortDescriptor, countriesById]);
 
 	const pagination = usePagination({ items });
 
@@ -138,7 +131,7 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 			</div>
 
 			<Table
-				aria-label="Software"
+				aria-label="Services"
 				className="w-full"
 				// @ts-expect-error It's fine.
 				onSortChange={setSortDescriptor}
@@ -153,13 +146,9 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 					<Column allowsSorting={true} id="country">
 						Country
 					</Column>
-					<Column allowsSorting={true} id="status">
-						Status
-					</Column>
-					<Column id="url">URL</Column>
-					<Column id="marketplaceId">Marketplace ID</Column>
-					<Column id="marketplaceStatus">Marketplace status</Column>
-					<Column id="comment">Comment</Column>
+					<Column id="email">Email</Column>
+					<Column id="role">Role</Column>
+					<Column id="status">Status</Column>
 					<Column defaultWidth={50} id="actions">
 						Actions
 					</Column>
@@ -183,20 +172,12 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 						return (
 							<Row>
 								<Cell>
-									<span title={row.name}>{row.name}</span>
+									<span title={row.name ?? undefined}>{row.name}</span>
 								</Cell>
-								<Cell>
-									{row.countries[0]?.id ? countriesById.get(row.countries[0].id)?.name : undefined}
-								</Cell>
+								<Cell>{row.country?.id ? countriesById.get(row.country.id)?.name : undefined}</Cell>
+								<Cell>{row.email}</Cell>
+								<Cell>{row.role}</Cell>
 								<Cell>{row.status}</Cell>
-								<Cell>
-									<span title={row.url[0] ?? undefined}>{row.url[0]}</span>
-								</Cell>
-								<Cell>{row.marketplaceId}</Cell>
-								<Cell>{row.marketplaceStatus}</Cell>
-								<Cell>
-									<span title={row.comment ?? undefined}>{row.comment}</span>
-								</Cell>
 								<Cell>
 									<div className="flex justify-end">
 										<DropdownMenuTrigger>
@@ -227,20 +208,20 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 				<Pagination pagination={pagination} />
 			</div>
 
-			<CreateSoftwareDialog
-				key={createKey("create-software", action?.item?.id)}
+			<CreateUserDialog
+				key={createKey("create-user", action?.item?.id)}
 				action={action}
 				countriesById={countriesById}
 				onClose={onDialogClose}
 			/>
-			<EditSoftwareDialog
-				key={createKey("edit-software", action?.item?.id)}
+			<EditUserDialog
+				key={createKey("edit-user", action?.item?.id)}
 				action={action}
 				countriesById={countriesById}
 				onClose={onDialogClose}
 			/>
-			<DeleteSoftwareDialog
-				key={createKey("delete-software", action?.item?.id)}
+			<DeleteUserDialog
+				key={createKey("delete-user", action?.item?.id)}
 				action={action}
 				onClose={onDialogClose}
 			/>
@@ -248,17 +229,17 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 	);
 }
 
-interface DeleteSoftwareDialogProps {
+interface DeleteUserDialogProps {
 	action: Action | null;
 	onClose: () => void;
 }
 
-function DeleteSoftwareDialog(props: DeleteSoftwareDialogProps) {
+function DeleteUserDialog(props: DeleteUserDialogProps) {
 	const { action, onClose } = props;
 
 	const formId = useId();
 
-	const [formState, formAction] = useFormState(deleteSoftwareAction, undefined);
+	const [formState, formAction] = useFormState(deleteUserAction, undefined);
 
 	if (action?.kind !== "delete") return null;
 
@@ -270,7 +251,7 @@ function DeleteSoftwareDialog(props: DeleteSoftwareDialogProps) {
 						return (
 							<Fragment>
 								<DialogHeader>
-									<DialogTitle>Delete software</DialogTitle>
+									<DialogTitle>Delete user</DialogTitle>
 									<DialogDescription>
 										Are you sure you want to delete &quot;{action.item.name}&quot;?
 									</DialogDescription>
@@ -317,22 +298,22 @@ function DeleteSoftwareDialog(props: DeleteSoftwareDialogProps) {
 	);
 }
 
-interface CreateSoftwareDialogProps {
+interface CreateUserDialogProps {
 	action: Action | null;
 	countriesById: Map<Country["id"], Country>;
 	onClose: () => void;
 }
 
-function CreateSoftwareDialog(props: CreateSoftwareDialogProps) {
+function CreateUserDialog(props: CreateUserDialogProps) {
 	const { action, countriesById, onClose } = props;
 
 	const formId = useId();
 
-	const [formState, formAction] = useFormState(createSoftwareAction, undefined);
+	const [formState, formAction] = useFormState(createUserAction, undefined);
 
 	if (action?.kind !== "create") return null;
 
-	const software = action.item;
+	const user = action.item;
 
 	return (
 		<ModalOverlay isOpen={true} onOpenChange={onClose}>
@@ -342,18 +323,18 @@ function CreateSoftwareDialog(props: CreateSoftwareDialogProps) {
 						return (
 							<Fragment>
 								<DialogHeader>
-									<DialogTitle>Create software</DialogTitle>
-									<DialogDescription>Please provide software details.</DialogDescription>
+									<DialogTitle>Create user</DialogTitle>
+									<DialogDescription>Please provide user details.</DialogDescription>
 								</DialogHeader>
 
 								<div>
-									<SoftwareEditForm
+									<UserEditForm
 										countriesById={countriesById}
 										formAction={formAction}
 										formId={formId}
 										formState={formState}
 										onClose={close}
-										software={software}
+										user={user}
 									/>
 								</div>
 
@@ -370,22 +351,22 @@ function CreateSoftwareDialog(props: CreateSoftwareDialogProps) {
 	);
 }
 
-interface EditSoftwareDialogProps {
+interface EditUserDialogProps {
 	action: Action | null;
 	countriesById: Map<Country["id"], Country>;
 	onClose: () => void;
 }
 
-function EditSoftwareDialog(props: EditSoftwareDialogProps) {
+function EditUserDialog(props: EditUserDialogProps) {
 	const { action, countriesById, onClose } = props;
 
 	const formId = useId();
 
-	const [formState, formAction] = useFormState(updateSoftwareAction, undefined);
+	const [formState, formAction] = useFormState(updateUserAction, undefined);
 
 	if (action?.kind !== "edit") return null;
 
-	const software = action.item;
+	const user = action.item;
 
 	return (
 		<ModalOverlay isOpen={true} onOpenChange={onClose}>
@@ -395,18 +376,18 @@ function EditSoftwareDialog(props: EditSoftwareDialogProps) {
 						return (
 							<Fragment>
 								<DialogHeader>
-									<DialogTitle>Update software</DialogTitle>
-									<DialogDescription>Please provide software details.</DialogDescription>
+									<DialogTitle>Update user</DialogTitle>
+									<DialogDescription>Please provide user details.</DialogDescription>
 								</DialogHeader>
 
 								<div>
-									<SoftwareEditForm
+									<UserEditForm
 										countriesById={countriesById}
 										formAction={formAction}
 										formId={formId}
 										formState={formState}
 										onClose={close}
-										software={software}
+										user={user}
 									/>
 								</div>
 
@@ -423,26 +404,24 @@ function EditSoftwareDialog(props: EditSoftwareDialogProps) {
 	);
 }
 
-interface SoftwareEditFormProps {
+interface UserEditFormProps {
 	countriesById: Map<Country["id"], Country>;
 	formId: string;
 	formAction: (formData: FormData) => void;
-	formState:
-		| Awaited<ReturnType<typeof createSoftwareAction | typeof updateSoftwareAction>>
-		| undefined;
-	software: Prisma.SoftwareGetPayload<{
+	formState: Awaited<ReturnType<typeof createUserAction>> | undefined;
+	user: Prisma.UserGetPayload<{
 		include: {
-			countries: { select: { id: true } };
+			country: { select: { id: true } };
 		};
 	}> | null;
 	onClose: () => void;
 }
 
-function SoftwareEditForm(props: SoftwareEditFormProps) {
-	const { countriesById, formId, formAction, formState, software, onClose } = props;
+function UserEditForm(props: UserEditFormProps) {
+	const { countriesById, formId, formAction, formState, user, onClose } = props;
 
-	const softwareStatuses = Object.values(SoftwareStatus);
-	const softwareMarketplaceStatuses = Object.values(SoftwareMarketplaceStatus);
+	const userRoles = Object.values(UserRole);
+	const userStatuses = Object.values(UserStatus);
 
 	return (
 		<Form
@@ -454,16 +433,11 @@ function SoftwareEditForm(props: SoftwareEditFormProps) {
 			id={formId}
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
-			{software != null ? <input name="id" type="hidden" value={software.id} /> : null}
+			{user != null ? <input name="id" type="hidden" value={user.id} /> : null}
 
-			<TextInputField defaultValue={software?.name} isRequired={true} label="Name" name="name" />
+			<TextInputField defaultValue={user?.name ?? undefined} label="Name" name="name" />
 
-			{/* TODO: Multiple countries */}
-			<SelectField
-				defaultSelectedKey={software?.countries[0]?.id}
-				label="Country"
-				name="countries.0"
-			>
+			<SelectField defaultSelectedKey={user?.country?.id} label="Country" name="country">
 				{Array.from(countriesById.values()).map((country) => {
 					return (
 						<SelectItem key={country.id} id={country.id} textValue={country.name}>
@@ -473,44 +447,32 @@ function SoftwareEditForm(props: SoftwareEditFormProps) {
 				})}
 			</SelectField>
 
-			<SelectField defaultSelectedKey={software?.status ?? undefined} label="Status" name="status">
-				{softwareStatuses.map((softwareStatus) => {
-					return (
-						<SelectItem key={softwareStatus} id={softwareStatus} textValue={softwareStatus}>
-							{softwareStatus}
-						</SelectItem>
-					);
-				})}
-			</SelectField>
-
-			{/* TODO: Multiple URLs */}
-			<TextInputField defaultValue={software?.url[0] ?? undefined} label="URL" name="url.0" />
-
 			<TextInputField
-				defaultValue={software?.marketplaceId ?? undefined}
-				label="Marketplace ID"
-				name="marketplaceId"
+				defaultValue={user?.email ?? undefined}
+				isReadOnly={true}
+				label="Email"
+				name="email"
 			/>
 
-			<SelectField
-				defaultSelectedKey={software?.marketplaceStatus ?? undefined}
-				label="Marketplace status"
-				name="marketplaceStatus"
-			>
-				{softwareMarketplaceStatuses.map((softwareMarketplaceStatus) => {
+			<SelectField defaultSelectedKey={user?.role} label="Role" name="role">
+				{userRoles.map((role) => {
 					return (
-						<SelectItem
-							key={softwareMarketplaceStatus}
-							id={softwareMarketplaceStatus}
-							textValue={softwareMarketplaceStatus}
-						>
-							{softwareMarketplaceStatus}
+						<SelectItem key={role} id={role} textValue={role}>
+							{role}
 						</SelectItem>
 					);
 				})}
 			</SelectField>
 
-			<TextAreaField defaultValue={software?.comment ?? undefined} label="Comment" name="comment" />
+			<SelectField defaultSelectedKey={user?.status} label="Status" name="status">
+				{userStatuses.map((status) => {
+					return (
+						<SelectItem key={status} id={status} textValue={status}>
+							{status}
+						</SelectItem>
+					);
+				})}
+			</SelectField>
 
 			<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
 				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}

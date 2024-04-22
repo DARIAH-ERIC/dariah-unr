@@ -231,6 +231,24 @@
 	},
 	"actions": {
 		"admin": {
+			"createInstitution": {
+				"errors": {
+					"default": "Could not create institution."
+				},
+				"success": "Successfully created institution."
+			},
+			"deleteInstitution": {
+				"errors": {
+					"default": "Could not delete institution."
+				},
+				"success": "Successfully deleted institution."
+			},
+			"updateInstitution": {
+				"errors": {
+					"default": "Failed to update institution."
+				},
+				"success": "Successfully updated institution."
+			},
 			"createOutreach": {
 				"errors": {
 					"default": "Could not create outreach."
@@ -248,6 +266,24 @@
 					"default": "Failed to update outreach."
 				},
 				"success": "Successfully updated outreach."
+			},
+			"createPerson": {
+				"errors": {
+					"default": "Could not create person."
+				},
+				"success": "Successfully created person."
+			},
+			"deletePerson": {
+				"errors": {
+					"default": "Could not delete person."
+				},
+				"success": "Successfully deleted person."
+			},
+			"updatePerson": {
+				"errors": {
+					"default": "Failed to update person."
+				},
+				"success": "Successfully updated person."
 			},
 			"createService": {
 				"errors": {
@@ -284,6 +320,24 @@
 					"default": "Failed to update software."
 				},
 				"success": "Successfully updated software."
+			},
+			"createUser": {
+				"errors": {
+					"default": "Could not create user."
+				},
+				"success": "Successfully created user."
+			},
+			"deleteUser": {
+				"errors": {
+					"default": "Could not delete user."
+				},
+				"success": "Successfully deleted user."
+			},
+			"updateUser": {
+				"errors": {
+					"default": "Failed to update user."
+				},
+				"success": "Successfully updated user."
 			}
 		},
 		"createOutreach": {

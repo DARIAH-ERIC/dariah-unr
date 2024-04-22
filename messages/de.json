@@ -231,6 +231,24 @@
 	},
 	"actions": {
 		"admin": {
+			"createInstitution": {
+				"errors": {
+					"default": "Konnte Institution nicht erstellen."
+				},
+				"success": "Institution erfolgreich erstellt."
+			},
+			"deleteInstitution": {
+				"errors": {
+					"default": "Konnte Institution nicht entfernen."
+				},
+				"success": "Institution erfolgreich entfernt."
+			},
+			"updateInstitution": {
+				"errors": {
+					"default": "Konnte Institution nicht aktualisieren."
+				},
+				"success": "Institution erfolgreich aktualisiert."
+			},
 			"createOutreach": {
 				"errors": {
 					"default": "Konnte Outreach nicht erstellen."
@@ -248,6 +266,24 @@
 					"default": "Konnte Outreach nicht aktualisieren."
 				},
 				"success": "Outreach erfolgreich aktualisiert."
+			},
+			"createPerson": {
+				"errors": {
+					"default": "Konnte Person nicht erstellen."
+				},
+				"success": "Person erfolgreich erstellt."
+			},
+			"deletePerson": {
+				"errors": {
+					"default": "Konnte Person nicht entfernen."
+				},
+				"success": "Person erfolgreich entfernt."
+			},
+			"updatePerson": {
+				"errors": {
+					"default": "Konnte Person nicht aktualisieren."
+				},
+				"success": "Person erfolgreich aktualisiert."
 			},
 			"createService": {
 				"errors": {
@@ -284,6 +320,24 @@
 					"default": "Konnte Software nicht aktualisieren."
 				},
 				"success": "Software erfolgreich aktualisiert."
+			},
+			"createUser": {
+				"errors": {
+					"default": "Konnte User nicht erstellen."
+				},
+				"success": "User erfolgreich erstellt."
+			},
+			"deleteUser": {
+				"errors": {
+					"default": "Konnte User nicht entfernen."
+				},
+				"success": "User erfolgreich entfernt."
+			},
+			"updateUser": {
+				"errors": {
+					"default": "Konnte User nicht aktualisieren."
+				},
+				"success": "User erfolgreich aktualisiert."
 			}
 		},
 		"createOutreach": {

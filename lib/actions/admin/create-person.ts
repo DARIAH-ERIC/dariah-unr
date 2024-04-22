@@ -5,15 +5,14 @@ import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
-import { updateUser } from "@/lib/data/user";
+import { createFullPerson as createPerson } from "@/lib/data/person";
 import { getFormData } from "@/lib/get-form-data";
 
 const formSchema = z.object({
-	id: z.string().min(1),
-	name: z.string().optional(),
-	role: z.enum(["admin", "contributor"]),
-	status: z.enum(["verified", "unverified"]),
-	countryId: z.string().optional(),
+	name: z.string(),
+	email: z.string().optional(),
+	orcid: z.string().optional(),
+	institutions: z.array(z.string()).optional(),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -33,11 +32,11 @@ interface FormSuccess extends FormReturnValue {
 
 type FormState = FormErrors | FormSuccess;
 
-export async function updateUserAction(
+export async function createPersonAction(
 	previousFormState: FormState | undefined,
 	formData: FormData,
 ): Promise<FormState> {
-	const t = await getTranslations("actions.updateUsers");
+	const t = await getTranslations("actions.admin.createPerson");
 
 	const input = getFormData(formData);
 	const result = formSchema.safeParse(input);
@@ -52,12 +51,17 @@ export async function updateUserAction(
 		};
 	}
 
-	const { id, name, role, status, countryId } = result.data;
+	const { name, email, orcid, institutions } = result.data;
 
 	try {
-		await updateUser({ id, name, role, status, countryId });
+		await createPerson({
+			name,
+			email,
+			orcid,
+			institutions,
+		});
 
-		revalidatePath("/[locale]/dashboard/admin/users", "page");
+		revalidatePath("/[locale]/dashboard/admin/persons", "page");
 
 		return {
 			status: "success" as const,

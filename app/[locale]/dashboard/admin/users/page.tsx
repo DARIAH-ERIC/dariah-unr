@@ -3,7 +3,7 @@ import { useTranslations } from "next-intl";
 import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
 import { type ReactNode, Suspense } from "react";
 
-import { AdminUsersFormContent } from "@/components/admin/users-form-content";
+import { AdminUsersTableContent } from "@/components/admin/users-table-content";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import type { Locale } from "@/config/i18n.config";
@@ -62,5 +62,5 @@ function DashboardAdminUsersContent() {
 async function AdminUsersForm() {
 	const [countries, users] = await Promise.all([getCountries(), getUsers()]);
 
-	return <AdminUsersFormContent countries={countries} users={users} />;
+	return <AdminUsersTableContent countries={countries} users={users} />;
 }
