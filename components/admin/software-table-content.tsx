@@ -1,6 +1,6 @@
 "use client";
 
-import { keyByToMap } from "@acdh-oeaw/lib";
+import { groupByToMap, keyByToMap } from "@acdh-oeaw/lib";
 import {
 	type Country,
 	type Prisma,
@@ -244,6 +244,8 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 				action={action}
 				onClose={onDialogClose}
 			/>
+
+			<SoftwareStatistics software={software} />
 		</Fragment>
 	);
 }
@@ -522,5 +524,49 @@ function SoftwareEditForm(props: SoftwareEditFormProps) {
 					: null}
 			</FormErrorMessage>
 		</Form>
+	);
+}
+
+interface SoftwareStatisticsProps {
+	software: Array<
+		Prisma.SoftwareGetPayload<{
+			include: {
+				countries: { select: { id: true } };
+			};
+		}>
+	>;
+}
+
+function SoftwareStatistics(props: SoftwareStatisticsProps) {
+	const { software } = props;
+
+	const softwareByStatus = useMemo(() => {
+		return groupByToMap(software, (item) => {
+			return item.status;
+		});
+	}, [software]);
+
+	return (
+		<div className="grid gap-y-2 text-sm text-neutral-700 dark:text-neutral-300">
+			<p>There are currently {software.length} software entries in the database.</p>
+			<dl className="grid gap-y-2">
+				<div>
+					<dt className="text-xs font-semibold uppercase tracking-wide">Grouped by status</dt>
+					<dd>
+						<ul>
+							{Object.values(SoftwareStatus).map((status) => {
+								return (
+									<li key={status}>
+										<span>
+											{status}: {softwareByStatus.get(status)?.length ?? 0}
+										</span>
+									</li>
+								);
+							})}
+						</ul>
+					</dd>
+				</div>
+			</dl>
+		</div>
 	);
 }
