@@ -1,6 +1,6 @@
 "use client";
 
-import { keyByToMap } from "@acdh-oeaw/lib";
+import { groupByToMap, keyByToMap } from "@acdh-oeaw/lib";
 import {
 	type Country,
 	type Institution,
@@ -304,6 +304,8 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 				action={action}
 				onClose={onDialogClose}
 			/>
+
+			<ServiceStatistics serviceSizesById={serviceSizesById} services={services} />
 		</Fragment>
 	);
 }
@@ -744,5 +746,96 @@ function ServicesEditForm(props: ServicesEditFormProps) {
 					: null}
 			</FormErrorMessage>
 		</Form>
+	);
+}
+
+interface ServiceStatisticsProps {
+	services: Array<
+		Prisma.ServiceGetPayload<{
+			include: {
+				countries: { select: { id: true } };
+				institutions: { select: { role: true; institution: { select: { id: true } } } };
+				size: { select: { id: true } };
+			};
+		}>
+	>;
+	serviceSizesById: Map<ServiceSize["id"], Pick<ServiceSize, "id" | "type">>;
+}
+
+function ServiceStatistics(props: ServiceStatisticsProps) {
+	const { services, serviceSizesById } = props;
+
+	const servicesBySize = useMemo(() => {
+		return groupByToMap(services, (service) => {
+			return service.size.id;
+		});
+	}, [services]);
+
+	const servicesByStatus = useMemo(() => {
+		return groupByToMap(services, (service) => {
+			return service.status;
+		});
+	}, [services]);
+
+	const servicesByType = useMemo(() => {
+		return groupByToMap(services, (service) => {
+			return service.type;
+		});
+	}, [services]);
+
+	return (
+		<div className="grid gap-y-2 text-sm text-neutral-700 dark:text-neutral-300">
+			<p>There are currently {services.length} services in the database.</p>
+			<dl className="grid gap-y-2">
+				<div>
+					<dt className="text-xs font-semibold uppercase tracking-wide">Grouped by status</dt>
+					<dd>
+						<ul>
+							{Array.from(serviceSizesById.values()).map((size) => {
+								return (
+									<li key={size.id}>
+										<span>
+											{size.type}: {servicesBySize.get(size.id)?.length ?? 0}
+										</span>
+									</li>
+								);
+							})}
+						</ul>
+					</dd>
+				</div>
+				<div>
+					<dt className="text-xs font-semibold uppercase tracking-wide">Grouped by status</dt>
+					<dd>
+						<ul>
+							{Object.values(ServiceStatus).map((status) => {
+								return (
+									<li key={status}>
+										<span>
+											{status}: {servicesByStatus.get(status)?.length ?? 0}
+										</span>
+									</li>
+								);
+							})}
+						</ul>
+					</dd>
+				</div>
+				<div>
+					<dt className="text-xs font-semibold uppercase tracking-wide">Grouped by type</dt>
+					<dd>
+						<ul>
+							{Object.values(ServiceType).map((type) => {
+								return (
+									<li key={type}>
+										<span>
+											{type}: {servicesByType.get(type)?.length ?? 0}
+										</span>
+									</li>
+								);
+							})}
+						</ul>
+					</dd>
+				</div>
+			</dl>
+		</div>
 	);
 }
