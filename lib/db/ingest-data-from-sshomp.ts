@@ -90,12 +90,34 @@ export async function ingestDataFromSshomp() {
 			continue;
 		}
 
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const resourceType = entry.properties.find((property: any) => {
-			return property.type.code === "resource-category";
-		})?.concept?.label;
+		const resourceTypes = entry.properties
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			.filter((property: any) => {
+				return property.type.code === "resource-category";
+			})
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			.map((property: any) => {
+				return property.concept.label as string;
+			});
 
-		if (resourceType === "Software") {
+		if (resourceTypes.includes("Software")) {
+			/**
+			 * Because of a bug in the initial script, which did not correctly handle multiple
+			 * resource categories on a sshomp item, some software items ended up in the service table.
+			 * Log these out here to aid manual cleanup.
+			 */
+			const service = await db.service.findFirst({
+				where: {
+					marketplaceId: id,
+				},
+				select: {
+					id: true,
+				},
+			});
+			if (service != null) {
+				log.error(`Software "${name}" also exists in the service table with id "${service.id}".`);
+			}
+
 			const software = await db.software.findFirst({
 				where: {
 					marketplaceId: id,
