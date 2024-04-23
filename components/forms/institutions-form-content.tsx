@@ -66,7 +66,7 @@ export function InstitutionsFormContent(props: InstitutionsFormContentProps): Re
 					return (
 						<Group
 							key={institution.id}
-							className="grid content-start gap-x-4 gap-y-3 sm:grid-cols-[1fr_auto]"
+							className="grid content-start gap-x-4 gap-y-3 sm:grid-cols-[1fr_auto_auto]"
 						>
 							<input name={`institutions.${index}.id`} type="hidden" value={institution.id} />
 
@@ -75,6 +75,13 @@ export function InstitutionsFormContent(props: InstitutionsFormContentProps): Re
 								isReadOnly={true}
 								label="Name"
 								name={`institutions.${index}.name`}
+							/>
+
+							<TextInputField
+								defaultValue={institution.types.join(", ")}
+								isReadOnly={true}
+								label="Type"
+								// name={`institutions.${index}.types`}
 							/>
 
 							<RadioGroupField

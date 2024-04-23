@@ -40,7 +40,10 @@ export function getPartnerInstitutionsByCountry(params: GetPartnerInstitutionsBy
 			},
 			endDate: null,
 			types: {
-				has: InstitutionType.partner_institution,
+				hasSome: [
+					InstitutionType.partner_institution,
+					InstitutionType.national_coordinating_institution,
+				],
 			},
 		},
 		orderBy: {
