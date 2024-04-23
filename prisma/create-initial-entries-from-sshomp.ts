@@ -186,11 +186,11 @@ async function createEntriesFromSshomp() {
 								return { id: country.id };
 							}),
 						},
-						size: {
-							connect: {
-								id: serviceSizeSmall.id,
-							},
-						},
+						// size: {
+						// 	connect: {
+						// 		id: serviceSizeSmall.id,
+						// 	},
+						// },
 					},
 				});
 				log.info(`Updated service "${name}".`);

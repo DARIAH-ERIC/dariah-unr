@@ -190,11 +190,11 @@ export async function ingestDataFromSshomp() {
 								return { id: country.id };
 							}),
 						},
-						size: {
-							connect: {
-								id: serviceSizeSmall.id,
-							},
-						},
+						// size: {
+						// 	connect: {
+						// 		id: serviceSizeSmall.id,
+						// 	},
+						// },
 					},
 				});
 
