@@ -10,9 +10,9 @@ import { createFullOutreach as createOutreach } from "@/lib/data/outreach";
 import { getFormData } from "@/lib/get-form-data";
 
 const formSchema = z.object({
-	name: z.string(),
+	name: z.string().min(1),
 	type: z.enum(Object.values(OutreachType) as [OutreachType, ...Array<OutreachType>]),
-	url: z.string().min(1),
+	url: z.string().url(),
 	country: z.string().optional(),
 	startDate: z.coerce.date().optional(),
 	endDate: z.coerce.date().optional(),

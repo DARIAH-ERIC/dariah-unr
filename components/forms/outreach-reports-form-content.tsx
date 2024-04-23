@@ -11,12 +11,14 @@ import {
 	type Report,
 } from "@prisma/client";
 import { useListData } from "@react-stately/data";
-import { Fragment, type ReactNode, useId, useState } from "react";
+import { PlusIcon } from "lucide-react";
+import { Fragment, type ReactNode, useId } from "react";
 import { Group } from "react-aria-components";
 import { useFormState } from "react-dom";
 
 import { SubmitButton } from "@/components/submit-button";
 import { ContextualHelp } from "@/components/ui/blocks/contextual-help";
+import { DateInputField } from "@/components/ui/blocks/date-input-field";
 import { NumberInputField } from "@/components/ui/blocks/number-input-field";
 import { SelectField, SelectItem } from "@/components/ui/blocks/select-field";
 import { TextAreaField } from "@/components/ui/blocks/text-area-field";
@@ -38,7 +40,14 @@ import { Modal, ModalOverlay } from "@/components/ui/modal";
 import { createOutreachAction } from "@/lib/actions/create-outreach";
 import { updateOutreachReportsAction } from "@/lib/actions/update-outreach-reports";
 import { createKey } from "@/lib/create-key";
+import { getFormData } from "@/lib/get-form-data";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
+
+interface AddedOutreach {
+	_id: string;
+	name: string;
+	url: string;
+}
 
 interface OutreachReportWithKpis
 	extends Prisma.OutreachReportGetPayload<{ include: { kpis: true; outreach: true } }> {}
@@ -56,7 +65,7 @@ interface OutreachReportsFormContentProps {
 export function OutreachReportsFormContent(props: OutreachReportsFormContentProps): ReactNode {
 	const {
 		comments,
-		// countryId,
+		countryId,
 		outreachReports,
 		outreachs,
 		// previousOutreachReports,
@@ -127,6 +136,8 @@ export function OutreachReportsFormContent(props: OutreachReportsFormContentProp
 					);
 				})}
 			</section>
+
+			<AddedOutreachsSection key={formState?.timestamp} country={countryId} />
 
 			<TextAreaField defaultValue={comments} label="Comment" name="comment" />
 
@@ -239,7 +250,36 @@ const defaultSocialMediaOutreachKpis: Array<{ _id: string; unit: OutreachKpi["un
 	{ _id: crypto.randomUUID(), unit: "impressions" },
 ];
 
-function CreateOutreachFormDialog(): ReactNode {
+interface AddedOutreachsSectionProps {
+	country: string;
+}
+
+function AddedOutreachsSection(props: AddedOutreachsSectionProps): ReactNode {
+	const { country } = props;
+
+	return (
+		<section className="grid gap-y-6">
+			<div className="flex items-center gap-x-2">
+				<DialogTrigger>
+					<Button>
+						<PlusIcon aria-hidden={true} className="size-4 shrink-0" />
+						Add outreach
+					</Button>
+
+					<CreateOutreachFormDialog country={country} />
+				</DialogTrigger>
+			</div>
+		</section>
+	);
+}
+
+interface CreateOutreachFormDialogProps {
+	country: string;
+}
+
+function CreateOutreachFormDialog(props: CreateOutreachFormDialogProps): ReactNode {
+	const { country } = props;
+
 	const formId = useId();
 
 	const outreachTypes = Object.values(OutreachType);
@@ -268,7 +308,7 @@ function CreateOutreachFormDialog(): ReactNode {
 										className="grid gap-y-4"
 										id={formId}
 									>
-										<input name="_id" type="hidden" value={crypto.randomUUID()} />
+										<input name="country" type="hidden" value={country} />
 
 										<TextInputField autoFocus={true} isRequired={true} label="Name" name="name" />
 
@@ -283,6 +323,8 @@ function CreateOutreachFormDialog(): ReactNode {
 												);
 											})}
 										</SelectField>
+
+										<DateInputField granularity="day" label="Start date" name="startDate" />
 									</Form>
 								</div>
 
