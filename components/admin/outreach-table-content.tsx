@@ -91,31 +91,55 @@ export function AdminOutreachTableContent(props: AdminOutreachTableContentProps)
 	}
 
 	const [sortDescriptor, setSortDescriptor] = useState({
-		column: "name",
-		direction: "ascending",
+		column: "name" as "country" | "endDate" | "name" | "startDate" | "type",
+		direction: "ascending" as "ascending" | "descending",
 	});
 
 	const items = useMemo(() => {
-		const items = outreach.slice().sort((a, z) => {
-			if (sortDescriptor.column === "country") {
-				const idA = a.country?.id;
-				const countryA = idA ? countriesById.get(idA)?.name ?? "" : "";
+		const items = outreach.toSorted((a, z) => {
+			switch (sortDescriptor.column) {
+				case "country": {
+					const idA = a.country?.id;
+					const countryA = idA ? countriesById.get(idA)?.name ?? "" : "";
 
-				const idZ = z.country?.id;
-				const countryZ = idZ ? countriesById.get(idZ)?.name ?? "" : "";
+					const idZ = z.country?.id;
+					const countryZ = idZ ? countriesById.get(idZ)?.name ?? "" : "";
 
-				return countryA.localeCompare(countryZ);
+					return countryA.localeCompare(countryZ);
+				}
+
+				case "type": {
+					const typeA = a.type;
+					const typeZ = z.type;
+
+					return typeA.localeCompare(typeZ);
+				}
+
+				case "startDate":
+				case "endDate": {
+					const dateA = a[sortDescriptor.column]?.getDate() ?? 0;
+					const dateZ = z[sortDescriptor.column]?.getDate() ?? 0;
+
+					return dateA - dateZ;
+				}
+
+				default: {
+					// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+					const valueA = a[sortDescriptor.column] ?? "";
+					// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+					const valueZ = z[sortDescriptor.column] ?? "";
+
+					return valueA.localeCompare(valueZ);
+				}
 			}
-
-			// @ts-expect-error It's fine.
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-			return a[sortDescriptor.column].localeCompare(z[sortDescriptor.column]);
 		});
+
 		if (sortDescriptor.direction === "descending") {
 			items.reverse();
 		}
+
 		return items;
-	}, [outreach, sortDescriptor, countriesById]);
+	}, [sortDescriptor, outreach, countriesById]);
 
 	const pagination = usePagination({ items });
 
@@ -142,7 +166,6 @@ export function AdminOutreachTableContent(props: AdminOutreachTableContentProps)
 				// @ts-expect-error It's fine.
 				onSortChange={setSortDescriptor}
 				selectionMode="none"
-				// @ts-expect-error It's fine.
 				sortDescriptor={sortDescriptor}
 			>
 				<TableHeader>
@@ -152,9 +175,15 @@ export function AdminOutreachTableContent(props: AdminOutreachTableContentProps)
 					<Column allowsSorting={true} id="country">
 						Country
 					</Column>
-					<Column id="startDate">Start date</Column>
-					<Column id="endDate">End date</Column>
-					<Column id="type">Type</Column>
+					<Column allowsSorting={true} id="startDate">
+						Start date
+					</Column>
+					<Column allowsSorting={true} id="endDate">
+						End date
+					</Column>
+					<Column allowsSorting={true} id="type">
+						Type
+					</Column>
 					<Column id="url">URL</Column>
 					<Column defaultWidth={50} id="actions">
 						Actions

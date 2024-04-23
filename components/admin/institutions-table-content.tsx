@@ -93,31 +93,55 @@ export function AdminInstitutionsTableContent(
 	}
 
 	const [sortDescriptor, setSortDescriptor] = useState({
-		column: "name",
-		direction: "ascending",
+		column: "name" as "country" | "endDate" | "name" | "startDate" | "types",
+		direction: "ascending" as "ascending" | "descending",
 	});
 
 	const items = useMemo(() => {
-		const items = institutions.slice().sort((a, z) => {
-			if (sortDescriptor.column === "country") {
-				const idA = a.countries[0]?.id;
-				const countryA = idA ? countriesById.get(idA)?.name ?? "" : "";
+		const items = institutions.toSorted((a, z) => {
+			switch (sortDescriptor.column) {
+				case "country": {
+					const idA = a.countries[0]?.id;
+					const countryA = idA ? countriesById.get(idA)?.name ?? "" : "";
 
-				const idZ = z.countries[0]?.id;
-				const countryZ = idZ ? countriesById.get(idZ)?.name ?? "" : "";
+					const idZ = z.countries[0]?.id;
+					const countryZ = idZ ? countriesById.get(idZ)?.name ?? "" : "";
 
-				return countryA.localeCompare(countryZ);
+					return countryA.localeCompare(countryZ);
+				}
+
+				case "types": {
+					const typeA = a.types[0] ?? "";
+					const typeZ = z.types[0] ?? "";
+
+					return typeA.localeCompare(typeZ);
+				}
+
+				case "startDate":
+				case "endDate": {
+					const dateA = a[sortDescriptor.column]?.getDate() ?? 0;
+					const dateZ = z[sortDescriptor.column]?.getDate() ?? 0;
+
+					return dateA - dateZ;
+				}
+
+				default: {
+					// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+					const valueA = a[sortDescriptor.column] ?? "";
+					// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+					const valueZ = z[sortDescriptor.column] ?? "";
+
+					return valueA.localeCompare(valueZ);
+				}
 			}
-
-			// @ts-expect-error It's fine.
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-			return a[sortDescriptor.column].localeCompare(z[sortDescriptor.column]);
 		});
+
 		if (sortDescriptor.direction === "descending") {
 			items.reverse();
 		}
+
 		return items;
-	}, [institutions, sortDescriptor, countriesById]);
+	}, [sortDescriptor, institutions, countriesById]);
 
 	const pagination = usePagination({ items });
 
@@ -144,7 +168,6 @@ export function AdminInstitutionsTableContent(
 				// @ts-expect-error It's fine.
 				onSortChange={setSortDescriptor}
 				selectionMode="none"
-				// @ts-expect-error It's fine.
 				sortDescriptor={sortDescriptor}
 			>
 				<TableHeader>
@@ -154,11 +177,17 @@ export function AdminInstitutionsTableContent(
 					<Column allowsSorting={true} id="country">
 						Country
 					</Column>
-					<Column id="types">Types</Column>
+					<Column allowsSorting={true} id="types">
+						Types
+					</Column>
 					<Column id="url">URL</Column>
 					<Column id="ror">ROR</Column>
-					<Column id="startDate">Start date</Column>
-					<Column id="endDate">End date</Column>
+					<Column allowsSorting={true} id="startDate">
+						Start date
+					</Column>
+					<Column allowsSorting={true} id="endDate">
+						End date
+					</Column>
 					<Column defaultWidth={50} id="actions">
 						Actions
 					</Column>

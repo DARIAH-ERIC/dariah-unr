@@ -27,35 +27,44 @@ export function AdminReportsTableContent(props: AdminReportsTableContentProps): 
 	}, [countries]);
 
 	const [sortDescriptor, setSortDescriptor] = useState({
-		column: "country",
-		direction: "ascending",
+		column: "country" as "country" | "status" | "year",
+		direction: "ascending" as "ascending" | "descending",
 	});
 
 	const items = useMemo(() => {
-		const items = reports.slice().sort((a, z) => {
-			if (sortDescriptor.column === "country") {
-				const idA = a.country.id;
-				const countryA = idA ? countriesById.get(idA)?.name ?? "" : "";
+		const items = reports.toSorted((a, z) => {
+			switch (sortDescriptor.column) {
+				case "country": {
+					const idA = a.country.id;
+					const countryA = idA ? countriesById.get(idA)?.name ?? "" : "";
 
-				const idZ = z.country.id;
-				const countryZ = idZ ? countriesById.get(idZ)?.name ?? "" : "";
+					const idZ = z.country.id;
+					const countryZ = idZ ? countriesById.get(idZ)?.name ?? "" : "";
 
-				return countryA.localeCompare(countryZ);
+					return countryA.localeCompare(countryZ);
+				}
+
+				case "year": {
+					return a.year - z.year;
+				}
+
+				default: {
+					// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+					const valueA = a[sortDescriptor.column] ?? "";
+					// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+					const valueZ = z[sortDescriptor.column] ?? "";
+
+					return valueA.localeCompare(valueZ);
+				}
 			}
-
-			if (sortDescriptor.column === "year") {
-				return a.year - z.year;
-			}
-
-			// @ts-expect-error It's fine.
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-			return a[sortDescriptor.column].localeCompare(z[sortDescriptor.column]);
 		});
+
 		if (sortDescriptor.direction === "descending") {
 			items.reverse();
 		}
+
 		return items;
-	}, [reports, sortDescriptor, countriesById]);
+	}, [sortDescriptor, reports, countriesById]);
 
 	return (
 		<Table
@@ -64,7 +73,6 @@ export function AdminReportsTableContent(props: AdminReportsTableContentProps): 
 			// @ts-expect-error It's fine.
 			onSortChange={setSortDescriptor}
 			selectionMode="none"
-			// @ts-expect-error It's fine.
 			sortDescriptor={sortDescriptor}
 		>
 			<TableHeader>
@@ -74,7 +82,9 @@ export function AdminReportsTableContent(props: AdminReportsTableContentProps): 
 				<Column allowsSorting={true} id="year">
 					Year
 				</Column>
-				<Column id="status">Status</Column>
+				<Column allowsSorting={true} id="status">
+					Status
+				</Column>
 				<Column defaultWidth="3fr" id="comments">
 					Comments
 				</Column>
