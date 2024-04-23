@@ -788,7 +788,7 @@ function ServiceStatistics(props: ServiceStatisticsProps) {
 			<p>There are currently {services.length} services in the database.</p>
 			<dl className="grid gap-y-2">
 				<div>
-					<dt className="text-xs font-semibold uppercase tracking-wide">Grouped by status</dt>
+					<dt className="text-xs font-semibold uppercase tracking-wide">Grouped by size</dt>
 					<dd>
 						<ul>
 							{Array.from(serviceSizesById.values()).map((size) => {
