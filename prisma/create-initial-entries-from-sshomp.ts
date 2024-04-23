@@ -84,12 +84,17 @@ async function createEntriesFromSshomp() {
 			continue;
 		}
 
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const resourceType = entry.properties.find((property: any) => {
-			return property.type.code === "resource-category";
-		})?.concept?.label;
+		const resourceTypes = entry.properties
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			.filter((property: any) => {
+				return property.type.code === "resource-category";
+			})
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			.map((property: any) => {
+				return property.concept.label as string;
+			});
 
-		if (resourceType === "Software") {
+		if (resourceTypes.includes("Software")) {
 			const software = await db.software.findFirst({
 				where: {
 					/**
