@@ -86,19 +86,32 @@ export function getSocialMediaByCountry(params: GetSocialMediaByCountryParams) {
 }
 
 interface CreateOutreachParams {
-	name: string;
-	url: string;
+	name: Outreach["name"];
 	type: Outreach["type"];
+	url: Outreach["url"];
+	country?: string;
+	startDate?: Outreach["startDate"];
+	endDate?: Outreach["endDate"];
 }
 
 export function createOutreach(params: CreateOutreachParams) {
-	const { name, url, type } = params;
+	const { name, type, url, country, startDate, endDate } = params;
 
 	return db.outreach.create({
 		data: {
 			name,
-			url,
 			type,
+			url,
+			startDate,
+			endDate,
+			country:
+				country != null
+					? {
+							connect: {
+								id: country,
+							},
+						}
+					: undefined,
 		},
 	});
 }

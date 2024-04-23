@@ -43,7 +43,7 @@ export default function DashboardAdminOutreachPage(
 	const t = useTranslations("DashboardAdminOutreachPage");
 
 	return (
-		<MainContent className="container grid !max-w-screen-2xl gap-y-8 py-8">
+		<MainContent className="container grid !max-w-screen-2xl content-start gap-y-8 py-8">
 			<PageTitle>{t("title")}</PageTitle>
 
 			<DashboardAdminOutreachPageContent />

@@ -43,7 +43,7 @@ export default function DashboardAdminInstitutionsPage(
 	const t = useTranslations("DashboardAdminInstitutionsPage");
 
 	return (
-		<MainContent className="container grid content-start gap-y-8 py-8">
+		<MainContent className="container grid !max-w-screen-2xl content-start gap-y-8 py-8">
 			<PageTitle>{t("title")}</PageTitle>
 
 			<DashboardAdminInstitutionsContent />

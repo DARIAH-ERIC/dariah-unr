@@ -11,8 +11,11 @@ import { getFormData } from "@/lib/get-form-data";
 
 const formSchema = z.object({
 	name: z.string().min(1),
-	url: z.string().url(),
 	type: z.enum(Object.values(OutreachType) as [OutreachType, ...Array<OutreachType>]),
+	url: z.string().url(),
+	country: z.string().optional(),
+	startDate: z.coerce.date().optional(),
+	endDate: z.coerce.date().optional(),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -51,12 +54,12 @@ export async function createOutreachAction(
 		};
 	}
 
-	const { name, url, type } = result.data;
+	const { name, url, type, country, startDate, endDate } = result.data;
 
 	try {
-		await createOutreach({ name, url, type });
+		await createOutreach({ name, url, type, country, startDate, endDate });
 
-		revalidatePath("/[locale]/dashboard/admin/users", "page");
+		revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/outreach", "page");
 
 		return {
 			status: "success" as const,
