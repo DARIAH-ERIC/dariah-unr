@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import type { FieldProps } from "@/components/ui/blocks/field";
+import { RequiredIndicator } from "@/components/ui/blocks/required-indicator";
 import { FieldDescription } from "@/components/ui/field-description";
 import { FieldError } from "@/components/ui/field-error";
 import { Label } from "@/components/ui/label";
@@ -25,7 +26,12 @@ export function SelectField<T extends object>(props: SelectFieldProps<T>): React
 
 	return (
 		<Select<T> {...rest}>
-			{label != null ? <Label>{label}</Label> : null}
+			{label != null ? (
+				<Label>
+					{label}
+					<RequiredIndicator isVisible={props.isRequired} />
+				</Label>
+			) : null}
 			<SelectTrigger>
 				<SelectValue />
 			</SelectTrigger>
