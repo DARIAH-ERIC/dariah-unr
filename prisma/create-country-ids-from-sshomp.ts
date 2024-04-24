@@ -12,7 +12,10 @@ async function createCountryIdsFromSshomp() {
 				code,
 			},
 		});
+
 		assert(country != null, "Missing country.");
+
+		if (country.marketplaceId != null) continue;
 
 		await db.country.update({
 			where: {
@@ -54,6 +57,7 @@ function getSshompActors() {
 		["cz", { id: 3804, name: "LINDAT/CLARIAH-CZ" }],
 		["de", { id: 2868, name: "DARIAH-DE" }],
 		["dk", { id: 9560, name: "DARIAH-DK" }],
+		["es", { id: 11803, name: "CLARIAH-ES" }],
 		["fr", { id: 10860, name: "DARIAH-FR" }],
 		["gr", { id: 3502, name: "DARIAH-GR / DYAS" }],
 		["hr", { id: 3403, name: "DARIAH-HR" }],
