@@ -92,31 +92,40 @@ export function AdminPersonsTableContent(props: AdminPersonsTableContentProps): 
 	}
 
 	const [sortDescriptor, setSortDescriptor] = useState({
-		column: "name",
-		direction: "ascending",
+		column: "name" as "institution" | "name",
+		direction: "ascending" as "ascending" | "descending",
 	});
 
 	const items = useMemo(() => {
-		const items = persons.slice().sort((a, z) => {
-			if (sortDescriptor.column === "institution") {
-				const idA = a.institutions[0]?.id;
-				const institutionA = idA ? institutionsById.get(idA)?.name ?? "" : "";
+		const items = persons.toSorted((a, z) => {
+			switch (sortDescriptor.column) {
+				case "institution": {
+					const idA = a.institutions[0]?.id;
+					const institutionA = idA ? institutionsById.get(idA)?.name ?? "" : "";
 
-				const idZ = z.institutions[0]?.id;
-				const institutionZ = idZ ? institutionsById.get(idZ)?.name ?? "" : "";
+					const idZ = z.institutions[0]?.id;
+					const institutionZ = idZ ? institutionsById.get(idZ)?.name ?? "" : "";
 
-				return institutionA.localeCompare(institutionZ);
+					return institutionA.localeCompare(institutionZ);
+				}
+
+				default: {
+					// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+					const valueA = a[sortDescriptor.column] ?? "";
+					// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+					const valueZ = z[sortDescriptor.column] ?? "";
+
+					return valueA.localeCompare(valueZ);
+				}
 			}
-
-			// @ts-expect-error It's fine.
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-			return a[sortDescriptor.column].localeCompare(z[sortDescriptor.column]);
 		});
+
 		if (sortDescriptor.direction === "descending") {
 			items.reverse();
 		}
+
 		return items;
-	}, [persons, sortDescriptor, institutionsById]);
+	}, [sortDescriptor, persons, institutionsById]);
 
 	const pagination = usePagination({ items });
 
@@ -143,7 +152,6 @@ export function AdminPersonsTableContent(props: AdminPersonsTableContentProps): 
 				// @ts-expect-error It's fine.
 				onSortChange={setSortDescriptor}
 				selectionMode="none"
-				// @ts-expect-error It's fine.
 				sortDescriptor={sortDescriptor}
 			>
 				<TableHeader>

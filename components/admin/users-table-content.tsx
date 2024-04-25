@@ -85,31 +85,38 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 	}
 
 	const [sortDescriptor, setSortDescriptor] = useState({
-		column: "name",
-		direction: "ascending",
+		column: "name" as "country" | "name" | "role" | "status",
+		direction: "ascending" as "ascending" | "descending",
 	});
 
 	const items = useMemo(() => {
-		const items = users.slice().sort((a, z) => {
-			if (sortDescriptor.column === "country") {
-				const idA = a.country?.id;
-				const countryA = idA ? countriesById.get(idA)?.name ?? "" : "";
+		const items = users.toSorted((a, z) => {
+			switch (sortDescriptor.column) {
+				case "country": {
+					const idA = a.country?.id;
+					const countryA = idA ? countriesById.get(idA)?.name ?? "" : "";
 
-				const idZ = z.country?.id;
-				const countryZ = idZ ? countriesById.get(idZ)?.name ?? "" : "";
+					const idZ = z.country?.id;
+					const countryZ = idZ ? countriesById.get(idZ)?.name ?? "" : "";
 
-				return countryA.localeCompare(countryZ);
+					return countryA.localeCompare(countryZ);
+				}
+
+				default: {
+					const valueA = a[sortDescriptor.column] ?? "";
+					const valueZ = z[sortDescriptor.column] ?? "";
+
+					return valueA.localeCompare(valueZ);
+				}
 			}
-
-			// @ts-expect-error It's fine.
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-			return a[sortDescriptor.column].localeCompare(z[sortDescriptor.column]);
 		});
+
 		if (sortDescriptor.direction === "descending") {
 			items.reverse();
 		}
+
 		return items;
-	}, [users, sortDescriptor, countriesById]);
+	}, [sortDescriptor, users, countriesById]);
 
 	const pagination = usePagination({ items });
 
@@ -136,7 +143,6 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 				// @ts-expect-error It's fine.
 				onSortChange={setSortDescriptor}
 				selectionMode="none"
-				// @ts-expect-error It's fine.
 				sortDescriptor={sortDescriptor}
 			>
 				<TableHeader>
@@ -147,8 +153,12 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 						Country
 					</Column>
 					<Column id="email">Email</Column>
-					<Column id="role">Role</Column>
-					<Column id="status">Status</Column>
+					<Column allowsSorting={true} id="role">
+						Role
+					</Column>
+					<Column allowsSorting={true} id="status">
+						Status
+					</Column>
 					<Column defaultWidth={50} id="actions">
 						Actions
 					</Column>

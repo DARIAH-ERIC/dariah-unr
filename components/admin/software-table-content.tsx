@@ -92,31 +92,38 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 	}
 
 	const [sortDescriptor, setSortDescriptor] = useState({
-		column: "name",
-		direction: "ascending",
+		column: "name" as "country" | "marketplaceStatus" | "name" | "status",
+		direction: "ascending" as "ascending" | "descending",
 	});
 
 	const items = useMemo(() => {
-		const items = software.slice().sort((a, z) => {
-			if (sortDescriptor.column === "country") {
-				const idA = a.countries[0]?.id;
-				const countryA = idA ? countriesById.get(idA)?.name ?? "" : "";
+		const items = software.toSorted((a, z) => {
+			switch (sortDescriptor.column) {
+				case "country": {
+					const idA = a.countries[0]?.id;
+					const countryA = idA ? countriesById.get(idA)?.name ?? "" : "";
 
-				const idZ = z.countries[0]?.id;
-				const countryZ = idZ ? countriesById.get(idZ)?.name ?? "" : "";
+					const idZ = z.countries[0]?.id;
+					const countryZ = idZ ? countriesById.get(idZ)?.name ?? "" : "";
 
-				return countryA.localeCompare(countryZ);
+					return countryA.localeCompare(countryZ);
+				}
+
+				default: {
+					const valueA = a[sortDescriptor.column] ?? "";
+					const valueZ = z[sortDescriptor.column] ?? "";
+
+					return valueA.localeCompare(valueZ);
+				}
 			}
-
-			// @ts-expect-error It's fine.
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-			return a[sortDescriptor.column].localeCompare(z[sortDescriptor.column]);
 		});
+
 		if (sortDescriptor.direction === "descending") {
 			items.reverse();
 		}
+
 		return items;
-	}, [software, sortDescriptor, countriesById]);
+	}, [sortDescriptor, software, countriesById]);
 
 	const pagination = usePagination({ items });
 
@@ -143,7 +150,6 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 				// @ts-expect-error It's fine.
 				onSortChange={setSortDescriptor}
 				selectionMode="none"
-				// @ts-expect-error It's fine.
 				sortDescriptor={sortDescriptor}
 			>
 				<TableHeader>
@@ -158,7 +164,9 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 					</Column>
 					<Column id="url">URL</Column>
 					<Column id="marketplaceId">Marketplace ID</Column>
-					<Column id="marketplaceStatus">Marketplace status</Column>
+					<Column allowsSorting={true} id="marketplaceStatus">
+						Marketplace status
+					</Column>
 					<Column id="comment">Comment</Column>
 					<Column defaultWidth={50} id="actions">
 						Actions
