@@ -1,11 +1,16 @@
 import type { Country, Report } from "@prisma/client";
 import { getFormatter } from "next-intl/server";
+import { useMemo } from "react";
 
 import { Confetti } from "@/components/confetti";
 import { Summary } from "@/components/forms/summary";
 import { Link } from "@/components/link";
+import { LinkButton } from "@/components/ui/link-button";
 import { getCurrentUser } from "@/lib/auth/session";
-import { calculateOperationalCost } from "@/lib/calculate-operational-cost";
+import {
+	calculateOperationalCost,
+	type CalculateOperationalCostParamsResult,
+} from "@/lib/calculate-operational-cost";
 import { createHref } from "@/lib/create-href";
 
 interface ReportSummaryProps {
@@ -67,6 +72,30 @@ export async function ReportSummary(props: ReportSummaryProps) {
 					further to do.
 				</div>
 			)}
+
+			<div>
+				<DownloadLink calculation={calculation} />
+			</div>
 		</section>
+	);
+}
+
+interface DownloadLinkProps {
+	calculation: CalculateOperationalCostParamsResult;
+}
+
+function DownloadLink(props: DownloadLinkProps) {
+	const { calculation } = props;
+
+	const data = useMemo(() => {
+		return (
+			"data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(calculation, null, 2))
+		);
+	}, [calculation]);
+
+	return (
+		<LinkButton download="dariah-report.json" href={data}>
+			Download report as JSON
+		</LinkButton>
 	);
 }
