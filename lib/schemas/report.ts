@@ -1,5 +1,5 @@
 import { SoftwareStatus } from "@prisma/client";
-import { string, z } from "zod";
+import { z } from "zod";
 
 import { nonEmptyString } from "@/lib/schemas/utils";
 
@@ -29,29 +29,21 @@ export type EventReportSchema = z.infer<typeof eventReportSchema>;
 
 export const institutionStatusSchema = z.object({
 	id: z.string(),
-	name: string(),
+	name: z.string(),
 	status: z.enum(["active", "inactive"]),
 });
 
 export type InstitutionStatusSchema = z.infer<typeof institutionStatusSchema>;
 
 export const partnerInstitutionSchema = z.object({
-	name: string(),
+	name: z.string(),
 });
 
 export type PartnerInstitutionSchema = z.infer<typeof partnerInstitutionSchema>;
 
-export const softwareStatusSchema = z.object({
-	id: z.string(),
-	name: string(),
-	status: z.enum(Object.values(SoftwareStatus) as [SoftwareStatus, ...Array<SoftwareStatus>]),
-});
-
-export type SoftwareStatusSchema = z.infer<typeof softwareStatusSchema>;
-
 export const softwareSchema = z.object({
-	name: string(),
-	url: z.array(string()),
+	name: z.string(),
+	url: z.array(z.string()),
 });
 
 export type SoftwareSchema = z.infer<typeof softwareSchema>;
