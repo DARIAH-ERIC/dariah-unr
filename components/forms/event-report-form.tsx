@@ -19,7 +19,7 @@ export async function EventReportForm(props: EventReportFormProps) {
 
 	return (
 		<EventReportFormContent
-			comments={comments?.eventReport}
+			comments={comments?.eventReports}
 			eventReport={eventReport}
 			previousEventReport={previousEventReport}
 			previousReportId={previousReportId}

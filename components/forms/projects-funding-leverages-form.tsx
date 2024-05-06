@@ -19,7 +19,7 @@ export async function ProjectsFundingLeveragesForm(props: ProjectsFundingLeverag
 
 	return (
 		<ProjectsFundingLeveragesFormContent
-			comments={comments?.projectsFundingLeverages}
+			comments={comments?.projectFundingLeverages}
 			previousProjectsFundingLeverages={previousProjectsFundingLeverages}
 			previousReportId={previousReportId}
 			projectsFundingLeverages={projectsFundingLeverages}
