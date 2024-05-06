@@ -5,10 +5,10 @@ import { nonEmptyString } from "@/lib/schemas/utils";
 
 export const reportCommentsSchema = z.object({
 	contributions: z.string().optional(),
-	eventReport: z.string().optional(),
+	eventReports: z.string().optional(),
 	institutions: z.string().optional(),
-	outreachReports: z.string().optional(),
-	projectsFundingLeverages: z.string().optional(),
+	outreach: z.string().optional(),
+	projectFundingLeverages: z.string().optional(),
 	publications: z.string().optional(),
 	researchPolicyDevelopments: z.string().optional(),
 	serviceReports: z.string().optional(),
