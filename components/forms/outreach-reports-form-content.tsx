@@ -40,7 +40,6 @@ import { Modal, ModalOverlay } from "@/components/ui/modal";
 import { createOutreachAction } from "@/lib/actions/create-outreach";
 import { updateOutreachReportsAction } from "@/lib/actions/update-outreach-reports";
 import { createKey } from "@/lib/create-key";
-import { getFormData } from "@/lib/get-form-data";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
 
 interface AddedOutreach {
@@ -53,7 +52,7 @@ interface OutreachReportWithKpis
 	extends Prisma.OutreachReportGetPayload<{ include: { kpis: true; outreach: true } }> {}
 
 interface OutreachReportsFormContentProps {
-	comments: ReportCommentsSchema["outreachReports"];
+	comments: ReportCommentsSchema["outreach"];
 	countryId: Country["id"];
 	outreachReports: Array<OutreachReportWithKpis>;
 	outreachs: Array<Outreach>;

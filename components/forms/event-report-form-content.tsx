@@ -17,7 +17,7 @@ import { createKey } from "@/lib/create-key";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
 
 interface EventReportFormContentProps {
-	comments: ReportCommentsSchema["eventReport"];
+	comments: ReportCommentsSchema["eventReports"];
 	eventReport: EventReport | null;
 	previousEventReport: EventReport | null;
 	previousReportId: Report["id"] | undefined;
