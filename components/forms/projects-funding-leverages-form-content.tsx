@@ -44,7 +44,7 @@ interface AddedProjectsFundingLeverage {
 }
 
 interface ProjectsFundingLeveragesFormContentProps {
-	comments: ReportCommentsSchema["projectsFundingLeverages"];
+	comments: ReportCommentsSchema["projectFundingLeverages"];
 	previousProjectsFundingLeverages: Array<ProjectsFundingLeverage> | null;
 	previousReportId: Report["id"] | undefined;
 	projectsFundingLeverages: Array<ProjectsFundingLeverage>;
