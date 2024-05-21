@@ -10,7 +10,9 @@ import { createFullUser as createUser } from "@/lib/data/user";
 import { getFormData } from "@/lib/get-form-data";
 
 const formSchema = z.object({
-	name: z.string().optional(),
+	email: z.string().email(),
+	password: z.string().min(8).max(72),
+	name: z.string(),
 	role: z.enum(Object.values(UserRole) as [UserRole, ...Array<UserRole>]),
 	status: z.enum(Object.values(UserStatus) as [UserStatus, ...Array<UserStatus>]),
 	country: z.string().optional(),
@@ -52,10 +54,12 @@ export async function createUserAction(
 		};
 	}
 
-	const { name, role, status, country: countryId } = result.data;
+	const { email, password, name, role, status, country: countryId } = result.data;
 
 	try {
 		await createUser({
+			email,
+			password,
 			name,
 			role,
 			status,

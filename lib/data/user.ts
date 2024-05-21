@@ -94,18 +94,22 @@ export function deleteUser(params: DeleteUserParams) {
 }
 
 interface CreateFullUserParams {
-	name?: string;
+	email: string;
+	name: string;
+	password: string;
 	role: User["role"];
 	status: User["status"];
 	countryId?: string;
 }
 
-export function createFullUser(params: CreateFullUserParams) {
-	const { name, role, status, countryId } = params;
+export async function createFullUser(params: CreateFullUserParams) {
+	const { email, password, name, role, status, countryId } = params;
 
 	return db.user.create({
 		data: {
+			email,
 			name,
+			password: await hash(password, 10),
 			role,
 			status,
 			country:
