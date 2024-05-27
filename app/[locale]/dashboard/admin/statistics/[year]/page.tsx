@@ -133,10 +133,14 @@ async function AdminStatistics(props: AdminStatisticsProps) {
 		kpis: new Map<string, number>(),
 	};
 
+	let totalContributions = 0;
+
 	reports.forEach((report) => {
 		events.small += report.eventReport?.smallMeetings ?? 0;
 		events.medium += report.eventReport?.mediumMeetings ?? 0;
 		events.large += report.eventReport?.largeMeetings ?? 0;
+
+		totalContributions += report.contributionsCount ?? 0;
 
 		report.serviceReports.forEach((serviceReport) => {
 			serviceReport.kpis.forEach((kpi) => {
@@ -178,7 +182,7 @@ async function AdminStatistics(props: AdminStatisticsProps) {
 
 	return (
 		<AdminStatisticsContent
-			contributionsCount={contributionsCount}
+			contributionsCount={{ count: totalContributions, byRole: contributionsCount }}
 			events={events}
 			institutionsCount={institutionsCount}
 			outreach={{

@@ -3,7 +3,7 @@ import { useFormatter } from "next-intl";
 import { MainContent } from "@/components/main-content";
 
 interface AdminStatisticsContentProps {
-	contributionsCount: Record<string, number>;
+	contributionsCount: { count: number; byRole: Record<string, number> };
 	events: { small: number; medium: number; large: number };
 	institutionsCount: Record<string, number>;
 	outreach: { count: Record<string, number>; kpis: Record<string, number> };
@@ -46,9 +46,14 @@ export function AdminStatisticsContent(props: AdminStatisticsContentProps) {
 				</div>
 
 				<div>
+					<dt>Total contributions</dt>
+					<dd>{contributionsCount.count}</dd>
+				</div>
+
+				<div>
 					<dt>Contributions by role</dt>
 					<dd>
-						{Object.entries(contributionsCount).map(([role, count]) => {
+						{Object.entries(contributionsCount.byRole).map(([role, count]) => {
 							return (
 								<div key={role}>
 									{role}: {count}
