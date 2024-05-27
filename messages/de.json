@@ -111,6 +111,12 @@
 		},
 		"title": "SSH Open Marketplace Import"
 	},
+	"DashboardAdminStatisticsPage": {
+		"meta": {
+			"title": "Statistiken"
+		},
+		"title": "Statistiken"
+	},
 	"DashboardAdminUsersPage": {
 		"meta": {
 			"title": "Benutzer*innen"

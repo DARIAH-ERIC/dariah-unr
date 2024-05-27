@@ -40,3 +40,9 @@ export const dashboardCountryReportEditStepPageParams = z.object({
 export type DashboardCountryReportEditStepPageParams = z.infer<
 	typeof dashboardCountryReportEditStepPageParams
 >;
+
+export const dashboardAdminStatisticsPageParams = z.object({
+	year: z.coerce.number().int().positive().min(2020),
+});
+
+export type DashboardAdminStatisticsPageParams = z.infer<typeof dashboardAdminStatisticsPageParams>;
