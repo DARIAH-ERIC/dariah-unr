@@ -570,7 +570,7 @@ async function DashboardCountryReportEditStepPageContent(
 					</FormDescription>
 
 					<FormPlaceholder>
-						<ReportSummary countryId={country.id} reportId={report.id} />
+						<ReportSummary countryId={country.id} reportId={report.id} year={year} />
 					</FormPlaceholder>
 
 					<Navigation code={code} previous="confirm" year={year} />

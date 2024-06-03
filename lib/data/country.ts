@@ -48,3 +48,20 @@ export function getCountries() {
 		},
 	});
 }
+
+interface GetCountyIdByCountyCodeParams {
+	id: string;
+}
+
+export function getCountyCodeByCountyId(params: GetCountyIdByCountyCodeParams) {
+	const { id } = params;
+
+	return db.country.findUnique({
+		where: {
+			id,
+		},
+		select: {
+			code: true,
+		},
+	});
+}
