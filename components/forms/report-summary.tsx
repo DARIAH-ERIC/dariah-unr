@@ -88,20 +88,40 @@ export async function ReportSummary(props: ReportSummaryProps) {
 				return {
 					name: o.name,
 					type: o.type,
-					kpi: outreachReports.filter((r) => {
-						return r.outreachId === o.id;
-					}),
+					kpi: outreachReports
+						.filter((r) => {
+							return r.outreachId === o.id;
+						})
+						.flatMap((r) => {
+							return r.kpis.map((k) => {
+								return { unit: k.unit, value: k.value };
+							});
+						}),
 				};
 			}),
 		},
 		projectFunding: {
 			count: projectsFundingLeverages.length,
-			items: projectsFundingLeverages,
+			items: projectsFundingLeverages.map((p) => {
+				return {
+					name: p.name,
+					amount: p.amount,
+					funders: p.funders,
+					scope: p.scope,
+					startDate: p.startDate?.toISOString().slice(0, 10),
+					projectMonths: p.projectMonths,
+				};
+			}),
 		},
 		publications: {
 			count: publications.length,
 			items: publications.map((p) => {
-				return p.citation;
+				return {
+					creators: p.creators.join(", "),
+					title: p.title,
+					kind: p.kind,
+					url: p.url ?? null,
+				};
 			}),
 		},
 		services: {
@@ -109,9 +129,15 @@ export async function ReportSummary(props: ReportSummaryProps) {
 			items: services.map((s) => {
 				return {
 					name: s.name,
-					kpi: serviceReports.filter((r) => {
-						return r.serviceId === s.id;
-					}),
+					kpi: serviceReports
+						.filter((r) => {
+							return r.serviceId === s.id;
+						})
+						.flatMap((r) => {
+							return r.kpis.map((k) => {
+								return { unit: k.unit, value: k.value };
+							});
+						}),
 				};
 			}),
 		},
