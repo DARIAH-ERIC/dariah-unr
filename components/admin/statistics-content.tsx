@@ -1,6 +1,8 @@
 import { useFormatter } from "next-intl";
+import { Suspense } from "react";
 
 import { MainContent } from "@/components/main-content";
+import { getCollectionItems, getCollectionsByCountryCode } from "@/lib/zotero";
 
 interface AdminStatisticsContentProps {
 	contributionsCount: { count: number; byRole: Record<string, number> };
@@ -8,7 +10,6 @@ interface AdminStatisticsContentProps {
 	institutionsCount: Record<string, number>;
 	outreach: { count: Record<string, number>; kpis: Record<string, number> };
 	projectFundingLeverages: number;
-	publicationsCount: number;
 	services: { count: Record<string, number>; kpis: Record<string, number> };
 	year: number;
 }
@@ -20,7 +21,6 @@ export function AdminStatisticsContent(props: AdminStatisticsContentProps) {
 		institutionsCount,
 		outreach,
 		projectFundingLeverages,
-		publicationsCount,
 		services,
 		year,
 	} = props;
@@ -124,10 +124,9 @@ export function AdminStatisticsContent(props: AdminStatisticsContentProps) {
 					</dd>
 				</div>
 
-				<div>
-					<dt>Publications in zotero</dt>
-					<dd>{publicationsCount}</dd>
-				</div>
+				<Suspense fallback={<div>Fetching publications from zotero...</div>}>
+					<PublicationsCount year={year} />
+				</Suspense>
 
 				<div>
 					<dt>Project funding leverage</dt>
@@ -137,5 +136,43 @@ export function AdminStatisticsContent(props: AdminStatisticsContentProps) {
 				</div>
 			</dl>
 		</MainContent>
+	);
+}
+
+interface PublicationsCountProps {
+	year: number;
+}
+
+async function PublicationsCount(props: PublicationsCountProps) {
+	const { year } = props;
+
+	let publicationsCount = 0;
+
+	const collectionsByCountryCode = await getCollectionsByCountryCode();
+	for (const collection of collectionsByCountryCode.values()) {
+		const items = await getCollectionItems(collection.key);
+		const publications = items.filter((item) => {
+			/**
+			 * Filter publications by publication year client-side, because the zotero api does
+			 * not allow that. Note that the `parsedDate` field is just a string field, so parsing
+			 * as a ISO8601 date is not guaranteed to work.
+			 */
+			try {
+				const date = new Date(item.data.date);
+				if (date.getUTCFullYear() === year) return true;
+				return false;
+			} catch {
+				return false;
+			}
+		});
+
+		publicationsCount += publications.length;
+	}
+
+	return (
+		<div>
+			<dt>Publications in zotero</dt>
+			<dd>{publicationsCount}</dd>
+		</div>
 	);
 }
