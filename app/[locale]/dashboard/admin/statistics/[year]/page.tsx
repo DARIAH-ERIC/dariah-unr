@@ -2,7 +2,7 @@ import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
-import { type ReactNode, Suspense, useMemo } from "react";
+import { type ReactNode, Suspense } from "react";
 
 import { AdminStatisticsContent } from "@/components/admin/statistics-content";
 import { MainContent } from "@/components/main-content";
@@ -18,7 +18,6 @@ import {
 } from "@/lib/data/stats";
 import { getReportYears } from "@/lib/get-report-years";
 import { dashboardAdminStatisticsPageParams } from "@/lib/schemas/dashboard";
-import { getCollectionItems, getCollectionsByCountryCode } from "@/lib/zotero";
 
 interface DashboardAdminStatisticsPageProps {
 	params: {
@@ -157,29 +156,6 @@ async function AdminStatistics(props: AdminStatisticsProps) {
 		});
 	});
 
-	let publicationsCount = 0;
-
-	const collectionsByCountryCode = await getCollectionsByCountryCode();
-	for (const collection of collectionsByCountryCode.values()) {
-		const items = await getCollectionItems(collection.key);
-		const publications = items.filter((item) => {
-			/**
-			 * Filter publications by publication year client-side, because the zotero api does
-			 * not allow that. Note that the `parsedDate` field is just a string field, so parsing
-			 * as a ISO8601 date is not guaranteed to work.
-			 */
-			try {
-				const date = new Date(item.data.date);
-				if (date.getUTCFullYear() === year) return true;
-				return false;
-			} catch {
-				return false;
-			}
-		});
-
-		publicationsCount += publications.length;
-	}
-
 	return (
 		<AdminStatisticsContent
 			contributionsCount={{ count: totalContributions, byRole: contributionsCount }}
@@ -194,7 +170,6 @@ async function AdminStatistics(props: AdminStatisticsProps) {
 				kpis: Object.fromEntries(outreach.kpis.entries()),
 			}}
 			projectFundingLeverages={projectFundingLeverages}
-			publicationsCount={publicationsCount}
 			services={{
 				count: Object.fromEntries(
 					servicesCount.map(({ _count, status }) => {
