@@ -12,7 +12,7 @@ import { nonEmptyString } from "@/lib/schemas/utils";
 
 const formSchema = z.object({
 	comment: z.string().optional(),
-	eventReport: eventReportSchema,
+	eventReport: eventReportSchema.optional(),
 	eventReportId: nonEmptyString(z.string().optional()),
 	reportId: z.string(),
 });

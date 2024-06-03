@@ -39,24 +39,6 @@ export function getSoftwareByCountry(params: GetSoftwareByCountryParams) {
 	});
 }
 
-interface UpdateSoftwareStatusParams {
-	id: Software["id"];
-	status: Software["status"];
-}
-
-export function updateSoftwareStatus(params: UpdateSoftwareStatusParams) {
-	const { id, status } = params;
-
-	return db.software.update({
-		where: {
-			id,
-		},
-		data: {
-			status,
-		},
-	});
-}
-
 interface CreateSoftwareParams {
 	name: Software["name"];
 	url: Software["url"];

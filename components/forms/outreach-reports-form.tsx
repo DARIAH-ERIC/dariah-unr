@@ -23,7 +23,7 @@ export async function OutreachReportsForm(props: OutreachReportsFormProps) {
 
 	return (
 		<OutreachReportsFormContent
-			comments={comments?.outreachReports}
+			comments={comments?.outreach}
 			countryId={countryId}
 			outreachReports={outreachReports}
 			outreachs={outreachs}

@@ -6,20 +6,22 @@ import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
 import { getReportComments, updateReportComments } from "@/lib/data/report";
-import { createSoftware, updateSoftwareStatus } from "@/lib/data/software";
+import { createSoftware } from "@/lib/data/software";
 import { getFormData } from "@/lib/get-form-data";
-import {
-	type ReportCommentsSchema,
-	softwareSchema,
-	softwareStatusSchema,
-} from "@/lib/schemas/report";
+import { type ReportCommentsSchema, softwareSchema } from "@/lib/schemas/report";
 
 const formSchema = z.object({
 	addedSoftware: z.array(softwareSchema).optional().default([]),
 	comment: z.string().optional(),
 	countryId: z.string(),
 	reportId: z.string(),
-	software: z.array(softwareStatusSchema),
+	software: z.array(
+		z.object({
+			id: z.string(),
+			name: z.string(),
+			url: z.array(z.string()),
+		}),
+	),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -61,10 +63,6 @@ export async function updateSoftwareAction(
 	const { addedSoftware, comment, countryId, reportId, software: softwares } = result.data;
 
 	try {
-		for (const software of softwares) {
-			await updateSoftwareStatus({ status: software.status, id: software.id });
-		}
-
 		for (const software of addedSoftware) {
 			// FIXME: avoid creating software again when form is re-submitted
 			await createSoftware({ ...software, countryId });

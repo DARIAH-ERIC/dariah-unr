@@ -27,7 +27,7 @@ export async function PublicationsForm(props: PublicationsFormProps) {
 		.filter((item) => {
 			/**
 			 * Filter publications by publication year client-side, because the zotero api does
-			 * not allow that. Not that the `parsedDate` field is just a string field, so parsing
+			 * not allow that. Note that the `parsedDate` field is just a string field, so parsing
 			 * as a ISO8601 date is not guaranteed to work.
 			 */
 			try {
