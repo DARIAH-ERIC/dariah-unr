@@ -8,14 +8,27 @@ import { ReportDownloadLink } from "@/components/report-download-link";
 import { getCurrentUser } from "@/lib/auth/session";
 import { calculateOperationalCost } from "@/lib/calculate-operational-cost";
 import { createHref } from "@/lib/create-href";
+import { getContributionsByCountry } from "@/lib/data/contributions";
+import { getCountyCodeByCountyId } from "@/lib/data/country";
+import { getPartnerInstitutionsByCountry } from "@/lib/data/institution";
+import { getOutreachByCountry } from "@/lib/data/outreach";
+import {
+	getOutreachReports,
+	getProjectsFundingLeverages,
+	getServiceReports,
+} from "@/lib/data/report";
+import { getServicesByCountry } from "@/lib/data/service";
+import { getSoftwareByCountry } from "@/lib/data/software";
+import { getPublications } from "@/lib/zotero";
 
 interface ReportSummaryProps {
 	countryId: Country["id"];
 	reportId: Report["id"];
+	year: number;
 }
 
 export async function ReportSummary(props: ReportSummaryProps) {
-	const { countryId, reportId } = props;
+	const { countryId, reportId, year } = props;
 
 	const user = await getCurrentUser();
 	const { number } = await getFormatter();
@@ -24,8 +37,95 @@ export async function ReportSummary(props: ReportSummaryProps) {
 
 	const isAboveThreshold = calculation.operationalCost >= calculation.operationalCostThreshold;
 
+	const [
+		projectsFundingLeverages,
+		softwares,
+		countryCode,
+		outreachs,
+		outreachReports,
+		services,
+		serviceReports,
+		contributions,
+		institutions,
+	] = await Promise.all([
+		getProjectsFundingLeverages({ reportId }),
+		getSoftwareByCountry({ countryId }),
+		getCountyCodeByCountyId({ id: countryId }),
+		getOutreachByCountry({ countryId }),
+		getOutreachReports({ reportId }),
+		getServicesByCountry({ countryId }),
+		getServiceReports({ reportId }),
+		getContributionsByCountry({ countryId }),
+		getPartnerInstitutionsByCountry({ countryId }),
+	]);
+
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const publications = await getPublications({ countryCode: countryCode!.code, year });
+
+	const report = {
+		contributors: {
+			count: calculation.count.contributions,
+			items: contributions.map((c) => {
+				return { name: c.person.name, role: c.role.name };
+			}),
+		},
+		events: {
+			count: calculation.count.events,
+		},
+		institutions: {
+			count: calculation.count.institutions,
+			items: institutions.map((i) => {
+				return { name: i.name };
+			}),
+		},
+		operationalCost: {
+			threshold: calculation.operationalCostThreshold,
+			cost: calculation.operationalCost,
+		},
+		outreach: {
+			count: outreachs.length,
+			items: outreachs.map((o) => {
+				return {
+					name: o.name,
+					type: o.type,
+					kpi: outreachReports.filter((r) => {
+						return r.outreachId === o.id;
+					}),
+				};
+			}),
+		},
+		projectFunding: {
+			count: projectsFundingLeverages.length,
+			items: projectsFundingLeverages,
+		},
+		publications: {
+			count: publications.length,
+			items: publications.map((p) => {
+				return p.citation;
+			}),
+		},
+		services: {
+			count: services.length,
+			items: services.map((s) => {
+				return {
+					name: s.name,
+					kpi: serviceReports.filter((r) => {
+						return r.serviceId === s.id;
+					}),
+				};
+			}),
+		},
+		software: {
+			count: softwares.length,
+			items: softwares.map((s) => {
+				return { name: s.name };
+			}),
+		},
+	};
+
 	return (
 		<section className="grid gap-y-8">
+			<pre>{JSON.stringify(report, null, 2)}</pre>
 			<Summary calculation={calculation} />
 
 			<hr />
@@ -70,7 +170,7 @@ export async function ReportSummary(props: ReportSummaryProps) {
 			)}
 
 			<div>
-				<ReportDownloadLink calculation={calculation} />
+				<ReportDownloadLink calculation={report} />
 			</div>
 		</section>
 	);

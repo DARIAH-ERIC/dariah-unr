@@ -3,10 +3,9 @@
 import { useEffect, useState } from "react";
 
 import { LinkButton } from "@/components/ui/link-button";
-import type { CalculateOperationalCostParamsResult } from "@/lib/calculate-operational-cost";
 
 interface ReportDownloadLinkProps {
-	calculation: CalculateOperationalCostParamsResult;
+	calculation: object;
 }
 
 export function ReportDownloadLink(props: ReportDownloadLinkProps) {

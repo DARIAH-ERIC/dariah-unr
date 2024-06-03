@@ -52,10 +52,26 @@ export async function calculateOperationalCost(
 	const report = await getReportById({ id: reportId });
 	if (report == null) notFound();
 
-	const institutions = await getPartnerInstitutionsCountByCountry({ countryId });
+	const [
+		contributions,
+		institutions,
+		services,
+		serviceReports,
+		roles,
+		eventSizes,
+		outreachTypeValues,
+	] = await Promise.all([
+		getContributionsByCountry({ countryId }),
+		getPartnerInstitutionsCountByCountry({ countryId }),
+		getServicesByCountry({ countryId }),
+		getServiceReports({ reportId }),
+		getRoles(),
+		getEventSizes(),
+		getOutreachTypeValues(),
+	]);
+
 	const institutionsCount = institutions._count.id;
 
-	const contributions = await getContributionsByCountry({ countryId });
 	const contributionsCount = report.contributionsCount ?? 0 + contributions.length;
 	const contributionsByRole = groupByToMap(contributions, (contribution) => {
 		return contribution.role.id;
@@ -77,8 +93,6 @@ export async function calculateOperationalCost(
 		small: 7_000,
 		large: 170_000,
 	};
-	const services = await getServicesByCountry({ countryId });
-	const serviceReports = await getServiceReports({ reportId });
 	const serviceReportsByServiceId = keyByToMap(serviceReports, (serviceReport) => {
 		return serviceReport.service.id;
 	});
@@ -96,17 +110,14 @@ export async function calculateOperationalCost(
 		return "medium";
 	});
 
-	const roles = await getRoles();
 	const rolesByName = keyByToMap(roles, (role) => {
 		return role.name;
 	});
 
-	const eventSizes = await getEventSizes();
 	const eventSizesByType = keyByToMap(eventSizes, (eventSize) => {
 		return eventSize.type;
 	});
 
-	const outreachTypeValues = await getOutreachTypeValues();
 	const outreachTypeValuesByType = keyByToMap(outreachTypeValues, (outreachTypeValue) => {
 		return outreachTypeValue.type;
 	});
@@ -167,7 +178,7 @@ export async function calculateOperationalCost(
 		serviceSmallCost +
 		serviceCoreCost;
 
-	return {
+	const calculation = {
 		count: {
 			institutions: institutionsCount,
 			contributions: contributionsCount,
@@ -197,4 +208,6 @@ export async function calculateOperationalCost(
 		operationalCost,
 		operationalCostThreshold: report.operationalCostThreshold ?? 0,
 	};
+
+	return calculation;
 }
