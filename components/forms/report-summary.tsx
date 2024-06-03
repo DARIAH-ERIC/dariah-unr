@@ -125,7 +125,6 @@ export async function ReportSummary(props: ReportSummaryProps) {
 
 	return (
 		<section className="grid gap-y-8">
-			<pre>{JSON.stringify(report, null, 2)}</pre>
 			<Summary calculation={calculation} />
 
 			<hr />
