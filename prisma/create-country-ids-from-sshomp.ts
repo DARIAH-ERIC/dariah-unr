@@ -46,7 +46,7 @@ function getSshompActors() {
 	/**
 	 * Map country codes to ssh open marketplace actor ids.
 	 *
-	 * Note: "Bosnia and Herzegovina", "Cyprus", "Malta", "Serbia", and "Spain" are currently not
+	 * Note: "Bosnia and Herzegovina", "Cyprus", "Malta", and "Serbia" are currently not
 	 * represented in the ssh open marketplace.
 	 */
 	const actors = new Map([
