@@ -228,7 +228,7 @@ seed()
 	.then(() => {
 		log.success("Successfully seeded database.");
 	})
-	.catch((error) => {
+	.catch((error: unknown) => {
 		log.error("Failed to seed database.\n", error);
 		process.exitCode = 1;
 	})

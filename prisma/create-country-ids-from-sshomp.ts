@@ -32,7 +32,7 @@ createCountryIdsFromSshomp()
 	.then(() => {
 		log.success("Successfully updated ssh open marketplace ids for countries in the database.");
 	})
-	.catch((error) => {
+	.catch((error: unknown) => {
 		log.error("Failed to update ssh open marketplace ids for countries in the database.\n", error);
 		process.exitCode = 1;
 	})

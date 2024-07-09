@@ -24,10 +24,10 @@ async function createReportYear() {
 
 createReportYear()
 	.then(() => {
-		log.success(`Successfully created reports for ${year} in the database.`);
+		log.success(`Successfully created reports for ${String(year)} in the database.`);
 	})
-	.catch((error) => {
-		log.error(`Failed to create reports for ${year} in the database.\n`, error);
+	.catch((error: unknown) => {
+		log.error(`Failed to create reports for ${String(year)} in the database.\n`, error);
 		process.exitCode = 1;
 	})
 	.finally(() => {

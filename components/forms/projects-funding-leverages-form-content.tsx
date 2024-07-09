@@ -80,7 +80,7 @@ export function ProjectsFundingLeveragesFormContent(
 							className="grid content-start gap-x-4 gap-y-3 sm:grid-cols-3 md:grid-cols-6"
 						>
 							<input
-								name={`projectsFundingLeverages.${index}.id`}
+								name={`projectsFundingLeverages.${String(index)}.id`}
 								type="hidden"
 								value={projectsFundingLeverage.id}
 							/>
@@ -89,7 +89,7 @@ export function ProjectsFundingLeveragesFormContent(
 								defaultValue={projectsFundingLeverage.name}
 								isReadOnly={true}
 								label="Name"
-								name={`projectsFundingLeverages.${index}.name`}
+								name={`projectsFundingLeverages.${String(index)}.name`}
 							/>
 
 							<DateInputField
@@ -101,35 +101,35 @@ export function ProjectsFundingLeveragesFormContent(
 								granularity="day"
 								isReadOnly={true}
 								label="Start date"
-								name={`projectsFundingLeverages.${index}.startDate`}
+								name={`projectsFundingLeverages.${String(index)}.startDate`}
 							/>
 
 							<NumberInputField
 								defaultValue={projectsFundingLeverage.projectMonths ?? undefined}
 								isReadOnly={true}
 								label="Project months"
-								name={`projectsFundingLeverages.${index}.projectMonths`}
+								name={`projectsFundingLeverages.${String(index)}.projectMonths`}
 							/>
 
 							<NumberInputField
 								defaultValue={projectsFundingLeverage.amount ?? undefined}
 								isReadOnly={true}
 								label="Total amount"
-								name={`projectsFundingLeverages.${index}.amount`}
+								name={`projectsFundingLeverages.${String(index)}.amount`}
 							/>
 
 							<TextInputField
 								defaultValue={projectsFundingLeverage.funders ?? undefined}
 								isReadOnly={true}
 								label="Funder"
-								name={`projectsFundingLeverages.${index}.funders`}
+								name={`projectsFundingLeverages.${String(index)}.funders`}
 							/>
 
 							<TextInputField
 								defaultValue={projectsFundingLeverage.scope ?? undefined}
 								isReadOnly={true}
 								label="Scope"
-								name={`projectsFundingLeverages.${index}.scope`}
+								name={`projectsFundingLeverages.${String(index)}.scope`}
 							/>
 						</Group>
 					);
@@ -176,7 +176,7 @@ function AddedProjectsFundingLeveragesSection(): ReactNode {
 							defaultValue={addedProjectsFundingLeverage.name}
 							isReadOnly={true}
 							label="Name"
-							name={`addedProjectsFundingLeverages.${index}.name`}
+							name={`addedProjectsFundingLeverages.${String(index)}.name`}
 						/>
 
 						<DateInputField
@@ -184,35 +184,35 @@ function AddedProjectsFundingLeveragesSection(): ReactNode {
 							granularity="day"
 							isReadOnly={true}
 							label="Start date"
-							name={`addedProjectsFundingLeverages.${index}.startDate`}
+							name={`addedProjectsFundingLeverages.${String(index)}.startDate`}
 						/>
 
 						<NumberInputField
 							defaultValue={addedProjectsFundingLeverage.projectMonths}
 							isReadOnly={true}
 							label="Project months"
-							name={`addedProjectsFundingLeverages.${index}.projectMonths`}
+							name={`addedProjectsFundingLeverages.${String(index)}.projectMonths`}
 						/>
 
 						<NumberInputField
 							defaultValue={addedProjectsFundingLeverage.amount}
 							isReadOnly={true}
 							label="Total amount"
-							name={`addedProjectsFundingLeverages.${index}.amount`}
+							name={`addedProjectsFundingLeverages.${String(index)}.amount`}
 						/>
 
 						<TextInputField
 							defaultValue={addedProjectsFundingLeverage.funders}
 							isReadOnly={true}
 							label="Funders"
-							name={`addedProjectsFundingLeverages.${index}.funders`}
+							name={`addedProjectsFundingLeverages.${String(index)}.funders`}
 						/>
 
 						<TextInputField
 							defaultValue={addedProjectsFundingLeverage.scope}
 							isReadOnly={true}
 							label="Scope"
-							name={`addedProjectsFundingLeverages.${index}.scope`}
+							name={`addedProjectsFundingLeverages.${String(index)}.scope`}
 						/>
 					</Group>
 				);

@@ -492,7 +492,7 @@ ingest()
 	.then(() => {
 		log.success("Successfully ingested data into database.");
 	})
-	.catch((error) => {
+	.catch((error: unknown) => {
 		log.error("Failed to ingest data into database.\n", error);
 		process.exitCode = 1;
 	})

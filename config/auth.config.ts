@@ -1,10 +1,10 @@
 export const publicRoutes: Array<RegExp | string> = [
 	"/",
-	new RegExp("^/api/.*"),
+	/^\/api\/.*/,
 	/** Auth routes are always treated as public. */
-	// new RegExp("^/auth/.*"),
+	// /^\/auth\/.*/,
 	"/contact",
-	new RegExp("^/documentation(/.*)?"),
+	/^\/documentation(\/.*)?/,
 	"/imprint",
 	"/keystatic",
 	"/opengraph-image",

@@ -87,7 +87,7 @@ createAnnualValues()
 	.then(() => {
 		log.success("Successfully updated annual values in the database.");
 	})
-	.catch((error) => {
+	.catch((error: unknown) => {
 		log.error("Failed to update annual values in the database.\n", error);
 		process.exitCode = 1;
 	})

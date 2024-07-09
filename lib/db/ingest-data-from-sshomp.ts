@@ -37,10 +37,10 @@ export async function ingestDataFromSshomp() {
 			}),
 		});
 
-		log.info(`Fetching page ${page}.`);
+		log.info(`Fetching page ${String(page)}.`);
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const data = (await request(url, { responseType: "json" })) as any;
-		log.info(`Processing ${data.count} entries.`);
+		log.info(`Processing ${String(data.count)} entries.`);
 
 		entries.push(...data.items);
 		page++;

@@ -68,26 +68,30 @@ export function InstitutionsFormContent(props: InstitutionsFormContentProps): Re
 							key={institution.id}
 							className="grid content-start gap-x-4 gap-y-3 sm:grid-cols-[1fr_auto_auto]"
 						>
-							<input name={`institutions.${index}.id`} type="hidden" value={institution.id} />
+							<input
+								name={`institutions.${String(index)}.id`}
+								type="hidden"
+								value={institution.id}
+							/>
 
 							<TextInputField
 								defaultValue={institution.name}
 								isReadOnly={true}
 								label="Name"
-								name={`institutions.${index}.name`}
+								name={`institutions.${String(index)}.name`}
 							/>
 
 							<TextInputField
 								defaultValue={institution.types.join(", ")}
 								isReadOnly={true}
 								label="Type"
-								// name={`institutions.${index}.types`}
+								// name={`institutions.${String(index)}.types`}
 							/>
 
 							<RadioGroupField
 								defaultValue="active"
 								label="Status"
-								name={`institutions.${index}.status`}
+								name={`institutions.${String(index)}.status`}
 								orientation="horizontal"
 							>
 								<Radio value="active">Still active</Radio>
@@ -136,7 +140,7 @@ function AddedInstitutionsSection(): ReactNode {
 							defaultValue={institution.name}
 							isReadOnly={true}
 							label="Name"
-							name={`addedInstitutions.${index}.name`}
+							name={`addedInstitutions.${String(index)}.name`}
 						/>
 					</Group>
 				);

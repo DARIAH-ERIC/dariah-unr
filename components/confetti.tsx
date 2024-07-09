@@ -1,5 +1,6 @@
 "use client";
 
+// eslint-disable-next-line import-x/no-named-as-default
 import confetti, { type Options } from "canvas-confetti";
 import { type ReactNode, useEffect } from "react";
 

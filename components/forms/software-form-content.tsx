@@ -56,20 +56,20 @@ export function SoftwareFormContent(props: SoftwareFormContentProps): ReactNode 
 							key={software.id}
 							className="grid content-start gap-x-4 gap-y-3 sm:grid-cols-[1fr_1fr]"
 						>
-							<input name={`software.${index}.id`} type="hidden" value={software.id} />
+							<input name={`software.${String(index)}.id`} type="hidden" value={software.id} />
 
 							<TextInputField
 								defaultValue={software.name}
 								isReadOnly={true}
 								label="Name"
-								name={`software.${index}.name`}
+								name={`software.${String(index)}.name`}
 							/>
 
 							<TextInputField
 								defaultValue={software.url[0]}
 								isReadOnly={true}
 								label="URL"
-								name={`software.${index}.url.0`}
+								name={`software.${String(index)}.url.0`}
 							/>
 						</Group>
 					);

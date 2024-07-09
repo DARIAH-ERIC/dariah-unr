@@ -56,7 +56,7 @@ const headers = { "Zotero-API-Version": "3" };
 export function createZoteroCollectionUrl() {
 	const url = createUrl({
 		baseUrl,
-		pathname: `/groups/${groupId}/collections`,
+		pathname: `/groups/${String(groupId)}/collections`,
 	});
 
 	return url;
@@ -65,7 +65,7 @@ export function createZoteroCollectionUrl() {
 export async function getCollectionsByCountryCode() {
 	const url = createUrl({
 		baseUrl,
-		pathname: `/groups/${groupId}/collections`,
+		pathname: `/groups/${String(groupId)}/collections`,
 	});
 
 	const collections = (await request(url, {
@@ -83,7 +83,7 @@ export async function getCollectionsByCountryCode() {
 export async function getCollectionItems(id: string) {
 	const url = createUrl({
 		baseUrl,
-		pathname: `/groups/${groupId}/collections/${id}/items`,
+		pathname: `/groups/${String(groupId)}/collections/${id}/items`,
 		searchParams: createUrlSearchParams({
 			/** Exclude notes. */
 			itemType: "-note",

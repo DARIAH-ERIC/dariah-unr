@@ -24,7 +24,7 @@ createAdminUser()
 	.then(() => {
 		log.success("Successfully created admin user in the database.");
 	})
-	.catch((error) => {
+	.catch((error: unknown) => {
 		log.error("Failed to create admin user in the database.\n", error);
 		process.exitCode = 1;
 	})
