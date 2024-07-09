@@ -1,4 +1,5 @@
 import { createUrl } from "@acdh-oeaw/lib";
+import { jsonLdScriptProps } from "react-schemaorg";
 
 import { env } from "@/config/env.config";
 import { locales } from "@/config/i18n.config";
@@ -124,12 +125,14 @@ test.describe("should add json+ld metadata", () => {
 		const metadata = await page.locator('script[type="application/ld+json"]').textContent();
 		// eslint-disable-next-line playwright/prefer-web-first-assertions
 		expect(metadata).toBe(
-			JSON.stringify({
-				"@context": "https://schema.org",
-				"@type": "WebSite",
-				name: "DARIAH Unified National Reporting",
-				description: "Key performance indicators for DARIAH member countries.",
-			}),
+			JSON.stringify(
+				jsonLdScriptProps({
+					"@context": "https://schema.org",
+					"@type": "WebSite",
+					name: "DARIAH Unified National Reporting",
+					description: "Key performance indicators for DARIAH member countries.",
+				}),
+			),
 		);
 	});
 
@@ -140,12 +143,14 @@ test.describe("should add json+ld metadata", () => {
 		const metadata = await page.locator('script[type="application/ld+json"]').textContent();
 		// eslint-disable-next-line playwright/prefer-web-first-assertions
 		expect(metadata).toBe(
-			JSON.stringify({
-				"@context": "https://schema.org",
-				"@type": "WebSite",
-				name: "DARIAH Unified National Reporting",
-				description: "Wichtige Leistungsindikatoren für DARIAH-Mitgliedsländer.",
-			}),
+			JSON.stringify(
+				jsonLdScriptProps({
+					"@context": "https://schema.org",
+					"@type": "WebSite",
+					name: "DARIAH Unified National Reporting",
+					description: "Wichtige Leistungsindikatoren für DARIAH-Mitgliedsländer.",
+				}),
+			),
 		);
 	});
 });

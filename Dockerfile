@@ -14,12 +14,10 @@ WORKDIR /app
 USER node
 
 COPY --chown=node:node .npmrc package.json pnpm-lock.yaml ./
-RUN sed -i "s/use-node-version/# use-node-version/" .npmrc
 
 RUN pnpm fetch
 
 COPY --chown=node:node ./ ./
-RUN sed -i "s/use-node-version/# use-node-version/" .npmrc
 
 ARG NEXT_PUBLIC_APP_BASE_URL
 ARG NEXT_PUBLIC_BOTS
@@ -32,12 +30,17 @@ ARG NEXT_PUBLIC_MATOMO_BASE_URL
 ARG NEXT_PUBLIC_MATOMO_ID
 ARG NEXT_PUBLIC_REDMINE_ID
 
-RUN pnpm install --frozen-lockfile --offline
+# disable validation for runtime environment variables
+ENV ENV_VALIDATION=public
 
 ENV BUILD_MODE=standalone
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
+RUN pnpm install --frozen-lockfile --offline
+
+# mount secrets which need to be available at build time
+# RUN --mount=type=secret,id=MY_SECRET,uid=1000 MY_SECRET=$(cat /run/secrets/MY_SECRET) pnpm run build
 RUN --mount=type=secret,id=AUTH_SECRET,uid=1000 \
 		--mount=type=secret,id=EMAIL_CONTACT_ADDRESS,uid=1000 \
 		--mount=type=secret,id=EMAIL_SMTP_PORT,uid=1000 \
