@@ -33,11 +33,11 @@ ARG NEXT_PUBLIC_REDMINE_ID
 # disable validation for runtime environment variables
 ENV ENV_VALIDATION=public
 
+RUN pnpm install --frozen-lockfile --offline
+
 ENV BUILD_MODE=standalone
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-
-RUN pnpm install --frozen-lockfile --offline
 
 # mount secrets which need to be available at build time
 # RUN --mount=type=secret,id=MY_SECRET,uid=1000 MY_SECRET=$(cat /run/secrets/MY_SECRET) pnpm run build
