@@ -90,7 +90,6 @@ jobs:
         run: pnpm run build
         env:
           AUTH_SECRET: "${{ secrets.K8S_SECRET_AUTH_SECRET }}"
-          AUTH_URL: "http://localhost:3000/api/auth"
           DATABASE_DIRECT_URL: "postgresql://dariah-unr:dariah-unr@localhost:5432/dariah-unr?schema=public"
           DATABASE_TEST_USER_COUNTRY_CODE:
             "${{ secrets.K8S_SECRET_DATABASE_TEST_USER_COUNTRY_CODE }}"
@@ -115,7 +114,6 @@ jobs:
         run: pnpm run test:e2e
         env:
           AUTH_SECRET: "${{ secrets.K8S_SECRET_AUTH_SECRET }}"
-          AUTH_URL: "http://localhost:3000/api/auth"
           DATABASE_DIRECT_URL: "postgresql://dariah-unr:dariah-unr@localhost:5432/dariah-unr?schema=public"
           DATABASE_TEST_USER_COUNTRY_CODE:
             "${{ secrets.K8S_SECRET_DATABASE_TEST_USER_COUNTRY_CODE }}"
