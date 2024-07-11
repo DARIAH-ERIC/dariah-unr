@@ -84,10 +84,18 @@ export function ServiceReportsFormContent(props: ServiceReportsFormContentProps)
 
 					return (
 						<Group key={service.id} className="grid content-start gap-y-6">
-							<input name={`serviceReports.${index}.service.id`} type="hidden" value={service.id} />
+							<input
+								name={`serviceReports.${String(index)}.service.id`}
+								type="hidden"
+								value={service.id}
+							/>
 
 							{serviceReport?.id != null ? (
-								<input name={`serviceReports.${index}.id`} type="hidden" value={serviceReport.id} />
+								<input
+									name={`serviceReports.${String(index)}.id`}
+									type="hidden"
+									value={serviceReport.id}
+								/>
 							) : null}
 
 							<div className="grid gap-x-4 gap-y-3 sm:grid-cols-[1fr_1fr]">
@@ -95,21 +103,21 @@ export function ServiceReportsFormContent(props: ServiceReportsFormContentProps)
 									defaultValue={service.name}
 									isReadOnly={true}
 									label="Name"
-									name={`serviceReports.${index}.service.name`}
+									name={`serviceReports.${String(index)}.service.name`}
 								/>
 
 								<TextInputField
 									defaultValue={service.url[0]}
 									isReadOnly={true}
 									label="URL"
-									name={`serviceReports.${index}.service.url.0`}
+									name={`serviceReports.${String(index)}.service.url.0`}
 								/>
 							</div>
 
 							<ServiceKpiList
 								key={formState?.timestamp}
 								kpis={kpis}
-								name={`serviceReports.${index}`}
+								name={`serviceReports.${String(index)}`}
 							/>
 
 							<hr />
@@ -178,14 +186,18 @@ function ServiceKpiList(props: ServiceKpiListProps): ReactNode {
 							<li key={kpi.id ?? kpi._id}>
 								<Group className="grid gap-y-3">
 									{kpi.id != null ? (
-										<input name={`${prefix}.kpis.${index}.id`} type="hidden" value={kpi.id} />
+										<input
+											name={`${prefix}.kpis.${String(index)}.id`}
+											type="hidden"
+											value={kpi.id}
+										/>
 									) : null}
 
 									<SelectField
 										defaultSelectedKey={kpi.unit ?? 0}
 										isRequired={true}
 										label="Unit"
-										name={`${prefix}.kpis.${index}.unit`}
+										name={`${prefix}.kpis.${String(index)}.unit`}
 									>
 										{serviceKpiTypes.map((type) => {
 											return (
@@ -200,7 +212,7 @@ function ServiceKpiList(props: ServiceKpiListProps): ReactNode {
 										defaultValue={kpi.value ?? 0}
 										isRequired={true}
 										label="Value"
-										name={`${prefix}.kpis.${index}.value`}
+										name={`${prefix}.kpis.${String(index)}.value`}
 									/>
 								</Group>
 							</li>

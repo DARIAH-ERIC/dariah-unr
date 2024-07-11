@@ -63,7 +63,7 @@ export function EventReportFormContent(props: EventReportFormContentProps): Reac
 				defaultValue={eventReport?.smallMeetings ?? undefined}
 				description={
 					previousEventReport != null
-						? `Previous year: ${previousEventReport.smallMeetings}.`
+						? `Previous year: ${String(previousEventReport.smallMeetings)}.`
 						: undefined
 				}
 				label="Small meetings"
@@ -74,7 +74,7 @@ export function EventReportFormContent(props: EventReportFormContentProps): Reac
 				defaultValue={eventReport?.mediumMeetings ?? undefined}
 				description={
 					previousEventReport != null
-						? `Previous year: ${previousEventReport.mediumMeetings}.`
+						? `Previous year: ${String(previousEventReport.mediumMeetings)}.`
 						: undefined
 				}
 				label="Medium meetings"
@@ -85,7 +85,7 @@ export function EventReportFormContent(props: EventReportFormContentProps): Reac
 				defaultValue={eventReport?.largeMeetings ?? undefined}
 				description={
 					previousEventReport != null
-						? `Previous year: ${previousEventReport.largeMeetings}.`
+						? `Previous year: ${String(previousEventReport.largeMeetings)}.`
 						: undefined
 				}
 				label="Large meetings"

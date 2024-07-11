@@ -376,7 +376,8 @@
 			"errors": {
 				"DatabaseError": "Failed to create user.",
 				"DatabaseUserExistsError": "User already exists in the database.",
-				"InvalidInputError": "Invalid input."
+				"InvalidInputError": "Invalid input.",
+				"SignUpNotAllowedError": "Sign up is currently not allowed."
 			},
 			"success": "Successfully registered."
 		},

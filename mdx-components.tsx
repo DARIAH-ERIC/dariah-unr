@@ -1,16 +1,15 @@
-import type { MDXComponents } from "mdx/types";
-
 import { Callout } from "@/components/callout";
 import { Link } from "@/components/link";
 
-const shared = {
+const components = {
 	a: Link,
 	Callout,
-} as MDXComponents;
+};
 
-export function useMDXComponents(components?: MDXComponents): MDXComponents {
-	return {
-		...shared,
-		...components,
-	};
+declare global {
+	type MDXProvidedComponents = typeof components;
+}
+
+export function useMDXComponents(): MDXProvidedComponents {
+	return components;
 }

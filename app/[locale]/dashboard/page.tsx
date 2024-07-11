@@ -112,7 +112,7 @@ async function DashboardPageContent() {
 
 						redirect(
 							createHref({
-								pathname: `/dashboard/reports/${year}/countries/${country.code}/edit/welcome`,
+								pathname: `/dashboard/reports/${String(year)}/countries/${country.code}/edit/welcome`,
 							}),
 						);
 					}}
@@ -122,7 +122,7 @@ async function DashboardPageContent() {
 			) : (
 				<LinkButton
 					href={createHref({
-						pathname: `/dashboard/reports/${year}/countries/${country.code}/edit/welcome`,
+						pathname: `/dashboard/reports/${String(year)}/countries/${country.code}/edit/welcome`,
 					})}
 				>
 					{t("edit-page-for-year", { year })}

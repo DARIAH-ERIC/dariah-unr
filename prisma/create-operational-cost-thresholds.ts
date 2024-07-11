@@ -45,7 +45,7 @@ createOperationalCostThresholds()
 	.then(() => {
 		log.success("Successfully updated operational cost thresholds in the database.");
 	})
-	.catch((error) => {
+	.catch((error: unknown) => {
 		log.error("Failed to update operational cost thresholds in the database.\n", error);
 		process.exitCode = 1;
 	})

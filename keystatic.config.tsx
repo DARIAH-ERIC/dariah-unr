@@ -35,7 +35,7 @@ function createComponents(assetPath: `/${string}/`, components?: Array<"Callout"
 	return pick(allComponents, components);
 }
 
-// eslint-disable-next-line import/no-default-export
+// eslint-disable-next-line import-x/no-default-export
 export default config({
 	ui: {
 		brand: {

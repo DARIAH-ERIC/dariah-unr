@@ -36,10 +36,10 @@ async function createEntriesFromSshomp() {
 			}),
 		});
 
-		log.info(`Fetching page ${page}.`);
+		log.info(`Fetching page ${String(page)}.`);
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const data = (await request(url, { responseType: "json" })) as any;
-		log.info(`Processing ${data.count} entries.`);
+		log.info(`Processing ${String(data.count)} entries.`);
 
 		entries.push(...data.items);
 		page++;
@@ -58,7 +58,7 @@ async function createEntriesFromSshomp() {
 		});
 
 		if (reviewers == null || reviewers.length === 0) {
-			log.warn(`No reviewer found for ${name}.`);
+			log.warn(`No reviewer found for ${String(name)}.`);
 			continue;
 		}
 
@@ -80,7 +80,7 @@ async function createEntriesFromSshomp() {
 		}
 
 		if (countries.length === 0) {
-			log.warn(`Unknown actor id for ${name}.`);
+			log.warn(`Unknown actor id for ${String(name)}.`);
 			continue;
 		}
 
@@ -122,7 +122,7 @@ async function createEntriesFromSshomp() {
 						},
 					},
 				});
-				log.info(`Created software "${name}".`);
+				log.info(`Created software "${String(name)}".`);
 			} else {
 				await db.software.update({
 					where: {
@@ -140,7 +140,7 @@ async function createEntriesFromSshomp() {
 						},
 					},
 				});
-				log.info(`Updated software "${name}".`);
+				log.info(`Updated software "${String(name)}".`);
 			}
 		} else {
 			const service = await db.service.findFirst({
@@ -175,7 +175,7 @@ async function createEntriesFromSshomp() {
 						},
 					},
 				});
-				log.info(`Created service "${name}".`);
+				log.info(`Created service "${String(name)}".`);
 			} else {
 				await db.service.update({
 					where: {
@@ -198,7 +198,7 @@ async function createEntriesFromSshomp() {
 						// },
 					},
 				});
-				log.info(`Updated service "${name}".`);
+				log.info(`Updated service "${String(name)}".`);
 			}
 		}
 	}
@@ -208,7 +208,7 @@ createEntriesFromSshomp()
 	.then(() => {
 		log.success("Successfully updated ssh open marketplace software and services in the database.");
 	})
-	.catch((error) => {
+	.catch((error: unknown) => {
 		log.error(
 			"Failed to update ssh open marketplace software and services in the database.\n",
 			error,

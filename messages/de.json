@@ -376,7 +376,8 @@
 			"errors": {
 				"DatabaseError": "Konnte Benutzer*in nicht anlegen.",
 				"DatabaseUserExistsError": "Benutzer*in ist bereits in der Datenbank vorhanden.",
-				"InvalidInputError": "Ungültige Eingabe."
+				"InvalidInputError": "Ungültige Eingabe.",
+				"SignUpNotAllowedError": "Registrierung ist zur Zeit nicht erlaubt."
 			},
 			"success": "Erfolgreich registriert."
 		},

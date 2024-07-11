@@ -413,6 +413,10 @@ async function ingest() {
 	for (const _row of projectsFundingLeverages?.rows ?? []) {
 		const row = _row as any;
 		const year = Number(row.Year.value) as 2022;
+		if (!(year in ids.reports)) {
+			console.error(`Missing year ${String(year)} in reports.`);
+			continue;
+		}
 		const report = ids.reports[year].get(row.Country[0].id);
 		await db.projectsFundingLeverage.create({
 			data: {
@@ -492,7 +496,7 @@ ingest()
 	.then(() => {
 		log.success("Successfully ingested data into database.");
 	})
-	.catch((error) => {
+	.catch((error: unknown) => {
 		log.error("Failed to ingest data into database.\n", error);
 		process.exitCode = 1;
 	})

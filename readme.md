@@ -6,8 +6,12 @@ application for key performance indicators.
 
 prerequisites:
 
-- [Node.js v20](https://nodejs.org/en/download)
-- [pnpm](https://pnpm.io/installation)
+- [node.js v20](https://nodejs.org/en/download)
+- [pnpm v9](https://pnpm.io/installation)
+
+> [!TIP]
+>
+> you can use `pnpm` to install the required node.js version with `pnpm env use 20 --global`
 
 set required environment variables in `.env.local`:
 

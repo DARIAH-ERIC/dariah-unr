@@ -94,14 +94,14 @@ export function OutreachReportsFormContent(props: OutreachReportsFormContentProp
 					return (
 						<Group key={outreach.id} className="grid content-start gap-y-6">
 							<input
-								name={`outreachReports.${index}.outreach.id`}
+								name={`outreachReports.${String(index)}.outreach.id`}
 								type="hidden"
 								value={outreach.id}
 							/>
 
 							{outreachReport?.id != null ? (
 								<input
-									name={`outreachReports.${index}.id`}
+									name={`outreachReports.${String(index)}.id`}
 									type="hidden"
 									value={outreachReport.id}
 								/>
@@ -112,21 +112,21 @@ export function OutreachReportsFormContent(props: OutreachReportsFormContentProp
 									defaultValue={outreach.name}
 									isReadOnly={true}
 									label="Name"
-									name={`outreachReports.${index}.outreach.name`}
+									name={`outreachReports.${String(index)}.outreach.name`}
 								/>
 
 								<TextInputField
 									defaultValue={outreach.url}
 									isReadOnly={true}
 									label="URL"
-									name={`outreachReports.${index}.outreach.url`}
+									name={`outreachReports.${String(index)}.outreach.url`}
 								/>
 							</div>
 
 							<OutreachKpiList
 								key={formState?.timestamp}
 								kpis={kpis}
-								name={`outreachReports.${index}`}
+								name={`outreachReports.${String(index)}`}
 								outreachType={outreach.type}
 							/>
 
@@ -186,14 +186,18 @@ function OutreachKpiList(props: OutreachKpiListProps): ReactNode {
 							<li key={kpi.id ?? kpi._id}>
 								<Group className="grid gap-y-3">
 									{kpi.id != null ? (
-										<input name={`${prefix}.kpis.${index}.id`} type="hidden" value={kpi.id} />
+										<input
+											name={`${prefix}.kpis.${String(index)}.id`}
+											type="hidden"
+											value={kpi.id}
+										/>
 									) : null}
 
 									<SelectField
 										defaultSelectedKey={kpi.unit}
 										isRequired={true}
 										label="Unit"
-										name={`${prefix}.kpis.${index}.unit`}
+										name={`${prefix}.kpis.${String(index)}.unit`}
 									>
 										{outreachKpiTypes.map((type) => {
 											return (
@@ -208,7 +212,7 @@ function OutreachKpiList(props: OutreachKpiListProps): ReactNode {
 										defaultValue={kpi.value ?? 0}
 										isRequired={true}
 										label="Value"
-										name={`${prefix}.kpis.${index}.value`}
+										name={`${prefix}.kpis.${String(index)}.value`}
 									/>
 								</Group>
 							</li>

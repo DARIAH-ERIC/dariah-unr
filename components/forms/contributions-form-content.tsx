@@ -112,7 +112,7 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 				defaultValue={contributionsCount ?? undefined}
 				description={
 					previousContributionsCount != null
-						? `Previous year: ${previousContributionsCount}.`
+						? `Previous year: ${String(previousContributionsCount)}.`
 						: undefined
 				}
 				label="Total contributors to national node"
@@ -229,13 +229,21 @@ function ContributionsByRole(props: ContributionsByRoleProps): ReactNode {
 
 					return (
 						<li key={contribution._id}>
-							<input name={`addedContributions.${index}.personId`} type="hidden" value={personId} />
+							<input
+								name={`addedContributions.${String(index)}.personId`}
+								type="hidden"
+								value={personId}
+							/>
 
-							<input name={`addedContributions.${index}.roleId`} type="hidden" value={role.id} />
+							<input
+								name={`addedContributions.${String(index)}.roleId`}
+								type="hidden"
+								value={role.id}
+							/>
 
 							{workingGroupId != null ? (
 								<input
-									name={`addedContributions.${index}.workingGroupId`}
+									name={`addedContributions.${String(index)}.workingGroupId`}
 									type="hidden"
 									value={workingGroupId}
 								/>
@@ -243,7 +251,9 @@ function ContributionsByRole(props: ContributionsByRoleProps): ReactNode {
 
 							<TextInputField
 								defaultValue={
-									workingGroup != null ? `${person?.name} (${workingGroup.name})` : person?.name
+									workingGroup != null
+										? `${String(person?.name)} (${workingGroup.name})`
+										: person?.name
 								}
 								isReadOnly={true}
 								label="Name"

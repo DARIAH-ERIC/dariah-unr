@@ -36,7 +36,7 @@ createTestUser()
 	.then(() => {
 		log.success("Successfully created test user in the database.");
 	})
-	.catch((error) => {
+	.catch((error: unknown) => {
 		log.error("Failed to create test user in the database.\n", error);
 		process.exitCode = 1;
 	})

@@ -1,0 +1,7 @@
+html {
+	/**
+	 * Overwrite overflow: hidden set by tailwind preset, which breaks react aria components
+	 * overlay positioning.
+	 */
+	overflow: unset;
+}

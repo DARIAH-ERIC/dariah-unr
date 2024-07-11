@@ -5,6 +5,7 @@ import { AuthError } from "next-auth";
 import { getTranslations } from "next-intl/server";
 import { type z, ZodError } from "zod";
 
+import { env } from "@/config/env.config";
 import { signIn, signOut } from "@/lib/auth";
 import { createUser, getUserByEmail } from "@/lib/data/user";
 import { type SignInFormSchema, type SignUpFormSchema, signUpFormSchema } from "@/lib/schemas/auth";
@@ -100,6 +101,15 @@ export async function signUpAction(
 	formData: FormData,
 ): Promise<SignUpFormState> {
 	const t = await getTranslations("actions.signUp");
+
+	if (env.AUTH_SIGN_UP !== "enabled") {
+		return {
+			status: "error" as const,
+			formErrors: [t("errors.SignUpNotAllowedError")],
+			fieldErrors: {},
+			timestamp: Date.now(),
+		};
+	}
 
 	try {
 		const { email, name, password, redirectTo } = signUpFormSchema.parse(

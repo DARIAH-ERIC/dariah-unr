@@ -1,4 +1,5 @@
 import { createUrl } from "@acdh-oeaw/lib";
+import { jsonLdScriptProps } from "react-schemaorg";
 
 import { env } from "@/config/env.config";
 import { locales } from "@/config/i18n.config";
@@ -16,7 +17,7 @@ test("should set a canonical url", async ({ page }) => {
 	}
 });
 
-/** FIXME: @see https://github.com/vercel/next.js/issues/45620 */
+/** FIXME: @see https://github.com/vercel/next	.js/issues/45620 */
 test.fixme("should set document title on not-found page", async ({ page }) => {
 	await page.goto("/unknown");
 	await expect(page).toHaveTitle("Page not found | DARIAH Unified National Reporting");
@@ -124,12 +125,12 @@ test.describe("should add json+ld metadata", () => {
 		const metadata = await page.locator('script[type="application/ld+json"]').textContent();
 		// eslint-disable-next-line playwright/prefer-web-first-assertions
 		expect(metadata).toBe(
-			JSON.stringify({
+			jsonLdScriptProps({
 				"@context": "https://schema.org",
 				"@type": "WebSite",
 				name: "DARIAH Unified National Reporting",
 				description: "Key performance indicators for DARIAH member countries.",
-			}),
+			}).dangerouslySetInnerHTML?.__html,
 		);
 	});
 
@@ -140,12 +141,12 @@ test.describe("should add json+ld metadata", () => {
 		const metadata = await page.locator('script[type="application/ld+json"]').textContent();
 		// eslint-disable-next-line playwright/prefer-web-first-assertions
 		expect(metadata).toBe(
-			JSON.stringify({
+			jsonLdScriptProps({
 				"@context": "https://schema.org",
 				"@type": "WebSite",
 				name: "DARIAH Unified National Reporting",
 				description: "Wichtige Leistungsindikatoren für DARIAH-Mitgliedsländer.",
-			}),
+			}).dangerouslySetInnerHTML?.__html,
 		);
 	});
 });

@@ -9,6 +9,7 @@ export interface I18n {
 }
 
 export async function createI18n(_page: Page, locale = defaultLocale): Promise<I18n> {
+	// @ts-expect-error @see https://github.com/microsoft/TypeScript/issues/58975
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	const _messages = await import(`@/messages/${locale}.json`, { with: { type: "json" } });
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access

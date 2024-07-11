@@ -623,7 +623,7 @@ function Navigation(props: NavigationProps): ReactNode {
 				<AppLink
 					className="mr-auto gap-x-2 font-medium"
 					href={createHref({
-						pathname: `/dashboard/reports/${year}/countries/${code}/edit/${previous}`,
+						pathname: `/dashboard/reports/${String(year)}/countries/${code}/edit/${previous}`,
 					})}
 				>
 					<ChevronLeftIcon aria-hidden={true} className="size-4 shrink-0" />
@@ -634,7 +634,7 @@ function Navigation(props: NavigationProps): ReactNode {
 				<AppLink
 					className="ml-auto gap-x-2 font-medium"
 					href={createHref({
-						pathname: `/dashboard/reports/${year}/countries/${code}/edit/${next}`,
+						pathname: `/dashboard/reports/${String(year)}/countries/${code}/edit/${next}`,
 					})}
 				>
 					{t("next")}
