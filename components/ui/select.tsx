@@ -206,7 +206,7 @@ export interface SelectListBoxItemProps<T extends object>
 
 export const SelectListBoxItem = forwardRef(function SelectListBoxItem<T extends object>(
 	props: SelectListBoxItemProps<T>,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaSelectListBoxItem>>,
+	forwardedRef: ForwardedRef<ElementRef<typeof AriaSelectListBoxItem<T>>>,
 ) {
 	const { children, className, ...rest } = props;
 
