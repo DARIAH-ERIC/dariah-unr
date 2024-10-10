@@ -43,7 +43,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Lint commit messages
-        uses: acdh-oeaw/commitlint-action@v1
+        uses: acdh-oeaw/commitlint-action@v2
 
       - name: Format
         run: pnpm run format:check
