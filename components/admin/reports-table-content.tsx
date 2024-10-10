@@ -97,7 +97,7 @@ export function AdminReportsTableContent(props: AdminReportsTableContentProps): 
 							<Cell>{row.year}</Cell>
 							<Cell>{row.status}</Cell>
 							<Cell>
-								<div className="grid gap-y-2">
+								<div className="grid select-text gap-y-2 overflow-x-auto">
 									{row.comments
 										? Object.entries(row.comments).map(([field, comment]) => {
 												return (
