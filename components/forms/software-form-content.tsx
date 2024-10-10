@@ -1,6 +1,6 @@
 "use client";
 
-import { type Country, type Report, type Software, SoftwareStatus } from "@prisma/client";
+import type { Country, Report, Software } from "@prisma/client";
 import type { ReactNode } from "react";
 import { Group } from "react-aria-components";
 import { useFormState } from "react-dom";
@@ -18,12 +18,6 @@ import { createHref } from "@/lib/create-href";
 import { createKey } from "@/lib/create-key";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
 
-interface AddedSoftware {
-	_id: string;
-	name: string;
-	url: string;
-}
-
 interface SoftwareFormContentProps {
 	comments: ReportCommentsSchema["software"];
 	countryId: Country["id"];
@@ -34,8 +28,6 @@ interface SoftwareFormContentProps {
 
 export function SoftwareFormContent(props: SoftwareFormContentProps): ReactNode {
 	const { comments, countryId, reportId, softwares, sshompBaseUrl } = props;
-
-	const softwareStatuses = Object.values(SoftwareStatus);
 
 	const [formState, formAction] = useFormState(updateSoftwareAction, undefined);
 

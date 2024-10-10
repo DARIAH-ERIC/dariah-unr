@@ -60,7 +60,7 @@ export async function updateSoftwareAction(
 		};
 	}
 
-	const { addedSoftware, comment, countryId, reportId, software: softwares } = result.data;
+	const { addedSoftware, comment, countryId, reportId } = result.data;
 
 	try {
 		for (const software of addedSoftware) {

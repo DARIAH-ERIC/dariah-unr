@@ -101,10 +101,10 @@ export function AdminPersonsTableContent(props: AdminPersonsTableContentProps): 
 			switch (sortDescriptor.column) {
 				case "institution": {
 					const idA = a.institutions[0]?.id;
-					const institutionA = idA ? institutionsById.get(idA)?.name ?? "" : "";
+					const institutionA = idA ? (institutionsById.get(idA)?.name ?? "") : "";
 
 					const idZ = z.institutions[0]?.id;
-					const institutionZ = idZ ? institutionsById.get(idZ)?.name ?? "" : "";
+					const institutionZ = idZ ? (institutionsById.get(idZ)?.name ?? "") : "";
 
 					return institutionA.localeCompare(institutionZ);
 				}

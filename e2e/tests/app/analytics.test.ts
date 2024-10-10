@@ -9,7 +9,6 @@ test.describe("analytics service", () => {
 		return env.NEXT_PUBLIC_MATOMO_BASE_URL == null || env.NEXT_PUBLIC_MATOMO_ID == null;
 	}, "Analytics service disabled.");
 
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const baseUrl = String(createUrl({ baseUrl: env.NEXT_PUBLIC_MATOMO_BASE_URL!, pathname: "/**" }));
 
 	test("should track page views", async ({ page }) => {

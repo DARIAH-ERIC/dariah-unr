@@ -135,10 +135,10 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 			switch (sortDescriptor.column) {
 				case "country": {
 					const idA = a.countries[0]?.id;
-					const countryA = idA ? countriesById.get(idA)?.name ?? "" : "";
+					const countryA = idA ? (countriesById.get(idA)?.name ?? "") : "";
 
 					const idZ = z.countries[0]?.id;
-					const countryZ = idZ ? countriesById.get(idZ)?.name ?? "" : "";
+					const countryZ = idZ ? (countriesById.get(idZ)?.name ?? "") : "";
 
 					return countryA.localeCompare(countryZ);
 				}

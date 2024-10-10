@@ -2,7 +2,7 @@
 
 import { parseAbsoluteToLocal, parseDate } from "@internationalized/date";
 import { ProjectScope, type ProjectsFundingLeverage, type Report } from "@prisma/client";
-import { type ListData, useListData } from "@react-stately/data";
+import { useListData } from "@react-stately/data";
 import { PlusIcon } from "lucide-react";
 import { Fragment, type ReactNode, useId } from "react";
 import { Group } from "react-aria-components";

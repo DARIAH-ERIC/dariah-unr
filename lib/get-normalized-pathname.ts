@@ -7,7 +7,7 @@ export function getNormalizedPathname(pathname: string) {
 	}
 
 	const match = pathname.match(`^/(${locales.join("|")})/(.*)`);
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
 	let result = match ? "/" + match[2]! : pathname;
 
 	if (result !== "/") {

@@ -112,9 +112,7 @@ export async function signUpAction(
 	}
 
 	try {
-		const { email, name, password, redirectTo } = signUpFormSchema.parse(
-			Object.fromEntries(formData),
-		);
+		const { email, name, password } = signUpFormSchema.parse(Object.fromEntries(formData));
 
 		/**
 		 * Don't rely on unique constraint validation error, but explicitly check

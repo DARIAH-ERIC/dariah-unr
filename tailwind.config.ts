@@ -6,6 +6,7 @@ import reactAriaComponentsPlugin from "tailwindcss-react-aria-components";
 
 const designTokensPreset = createDesignTokenPreset();
 
+// eslint-disable-next-line @typescript-eslint/unbound-method
 const basePlugin = createPlugin(({ addBase }) => {
 	addBase({
 		':root, [data-ui-color-scheme="light"]': {

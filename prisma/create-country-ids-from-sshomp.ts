@@ -1,4 +1,4 @@
-import { assert, createUrl, createUrlSearchParams, log, request } from "@acdh-oeaw/lib";
+import { assert, log } from "@acdh-oeaw/lib";
 import { PrismaClient } from "@prisma/client";
 
 const db = new PrismaClient();
@@ -37,7 +37,9 @@ createCountryIdsFromSshomp()
 		process.exitCode = 1;
 	})
 	.finally(() => {
-		return db.$disconnect();
+		db.$disconnect().catch((error: unknown) => {
+			log.error(String(error));
+		});
 	});
 
 // ------------------------------------------------------------------------------------------------

@@ -341,7 +341,6 @@ async function ingest() {
 			await db.outreachKpi.create({
 				data: {
 					unit: "impressions",
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					value: getNumberValue(row["Number of Interactions"])!,
 					outreachReport: { connect: { id: record.id } },
 				},
@@ -351,7 +350,6 @@ async function ingest() {
 			await db.outreachKpi.create({
 				data: {
 					unit: "subscribers",
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					value: getNumberValue(row["Number of unique or registered users"])!,
 					outreachReport: { connect: { id: record.id } },
 				},
@@ -361,7 +359,6 @@ async function ingest() {
 			await db.outreachKpi.create({
 				data: {
 					unit: "posts",
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					value: getNumberValue(row["Number of registered items"])!,
 					outreachReport: { connect: { id: record.id } },
 				},
@@ -371,7 +368,6 @@ async function ingest() {
 			await db.outreachKpi.create({
 				data: {
 					unit: "unique_visitors",
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					value: getNumberValue(row.Users)!,
 					outreachReport: { connect: { id: record.id } },
 				},
@@ -381,7 +377,6 @@ async function ingest() {
 			await db.outreachKpi.create({
 				data: {
 					unit: "page_views",
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					value: getNumberValue(row["Page Views"])!,
 					outreachReport: { connect: { id: record.id } },
 				},
@@ -391,7 +386,6 @@ async function ingest() {
 			await db.outreachKpi.create({
 				data: {
 					unit: "engagement",
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					value: getNumberValue(row.Sessions)!,
 					outreachReport: { connect: { id: record.id } },
 				},
@@ -463,7 +457,6 @@ async function ingest() {
 			await db.serviceKpi.create({
 				data: {
 					unit: "visits",
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					value: getNumberValue(row["Number of Interactions"])!,
 					serviceReport: { connect: { id: record.id } },
 				},
@@ -473,7 +466,6 @@ async function ingest() {
 			await db.serviceKpi.create({
 				data: {
 					unit: "unique_users",
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					value: getNumberValue(row["Number of unique or registered users"])!,
 					serviceReport: { connect: { id: record.id } },
 				},
@@ -483,7 +475,6 @@ async function ingest() {
 			await db.serviceKpi.create({
 				data: {
 					unit: "items",
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					value: getNumberValue(row["Number of registered items"])!,
 					serviceReport: { connect: { id: record.id } },
 				},
@@ -501,7 +492,9 @@ ingest()
 		process.exitCode = 1;
 	})
 	.finally(() => {
-		return db.$disconnect();
+		db.$disconnect().catch((error: unknown) => {
+			log.error(String(error));
+		});
 	});
 
 // ------------------------------------------------------------------------------------------------
@@ -618,6 +611,7 @@ function getCountryCode(value: string) {
 	return code;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 function getEnumValue<T extends string>(value: string | undefined): T {
 	return value?.replace(/[\s/]/g, "_").toLowerCase() as T;
 }

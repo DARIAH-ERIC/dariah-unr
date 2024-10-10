@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax */
+
 import { log } from "@acdh-oeaw/lib";
 import { createEnv } from "@acdh-oeaw/validate-env/next";
 import { z } from "zod";
@@ -20,6 +22,7 @@ export const env = createEnv({
 			BASEROW_PASSWORD: z.string().min(1).optional(),
 			BUILD_MODE: z.enum(["export", "standalone"]).default("standalone"),
 			BUNDLE_ANALYZER: z.enum(["disabled", "enabled"]).default("disabled"),
+			CI: z.unknown().transform(Boolean).optional(),
 			DATABASE_ADMIN_USER_EMAIL: z.string().email().optional(),
 			DATABASE_ADMIN_USER_NAME: z.string().min(1).optional(),
 			/** bcrypt supports max. 72 characters. */
@@ -71,6 +74,7 @@ export const env = createEnv({
 		BASEROW_PASSWORD: process.env.BASEROW_PASSWORD,
 		BUILD_MODE: process.env.BUILD_MODE,
 		BUNDLE_ANALYZER: process.env.BUNDLE_ANALYZER,
+		CI: process.env.CI,
 		DATABASE_ADMIN_USER_EMAIL: process.env.DATABASE_ADMIN_USER_EMAIL,
 		DATABASE_ADMIN_USER_NAME: process.env.DATABASE_ADMIN_USER_NAME,
 		DATABASE_ADMIN_USER_PASSWORD: process.env.DATABASE_ADMIN_USER_PASSWORD,

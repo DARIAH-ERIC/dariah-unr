@@ -1,4 +1,4 @@
-import type { Country, InstitutionServiceRole, Prisma, Service } from "@prisma/client";
+import type { Country, InstitutionServiceRole, Service } from "@prisma/client";
 
 import { db } from "@/lib/db";
 

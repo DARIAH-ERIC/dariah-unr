@@ -42,12 +42,6 @@ import { updateOutreachReportsAction } from "@/lib/actions/update-outreach-repor
 import { createKey } from "@/lib/create-key";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
 
-interface AddedOutreach {
-	_id: string;
-	name: string;
-	url: string;
-}
-
 interface OutreachReportWithKpis
 	extends Prisma.OutreachReportGetPayload<{ include: { kpis: true; outreach: true } }> {}
 
@@ -288,7 +282,7 @@ function CreateOutreachFormDialog(props: CreateOutreachFormDialogProps): ReactNo
 	const outreachTypes = Object.values(OutreachType);
 
 	// FIXME: only close dialog when submit was successful.
-	const [formState, formAction] = useFormState(createOutreachAction, undefined);
+	const [_formState, formAction] = useFormState(createOutreachAction, undefined);
 
 	return (
 		<ModalOverlay>

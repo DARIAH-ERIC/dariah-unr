@@ -1,5 +1,4 @@
-import { assert } from "@acdh-oeaw/lib";
-import { ChevronLeftIcon, ChevronRightIcon, Loader2Icon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 import { useTranslations } from "next-intl";

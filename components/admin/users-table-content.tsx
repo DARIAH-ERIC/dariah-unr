@@ -25,7 +25,6 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
@@ -94,10 +93,10 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 			switch (sortDescriptor.column) {
 				case "country": {
 					const idA = a.country?.id;
-					const countryA = idA ? countriesById.get(idA)?.name ?? "" : "";
+					const countryA = idA ? (countriesById.get(idA)?.name ?? "") : "";
 
 					const idZ = z.country?.id;
-					const countryZ = idZ ? countriesById.get(idZ)?.name ?? "" : "";
+					const countryZ = idZ ? (countriesById.get(idZ)?.name ?? "") : "";
 
 					return countryA.localeCompare(countryZ);
 				}

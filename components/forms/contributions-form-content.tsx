@@ -1,8 +1,8 @@
 "use client";
 
-import { groupBy, groupByToMap, keyByToMap } from "@acdh-oeaw/lib";
+import { groupByToMap, keyByToMap } from "@acdh-oeaw/lib";
 import type { Country, Person, Prisma, Report, Role, WorkingGroup } from "@prisma/client";
-import { type ListData, useListData } from "@react-stately/data";
+import { useListData } from "@react-stately/data";
 import { PlusIcon } from "lucide-react";
 import { Fragment, type ReactNode, useId } from "react";
 import { useFormState } from "react-dom";
@@ -76,7 +76,7 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 		return person.id;
 	});
 
-	const rolesById = keyByToMap(roles, (role) => {
+	const _rolesById = keyByToMap(roles, (role) => {
 		return role.id;
 	});
 

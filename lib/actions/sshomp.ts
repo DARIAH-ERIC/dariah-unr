@@ -23,8 +23,8 @@ interface FormSuccess extends FormReturnValue {
 type FormState = FormErrors | FormSuccess;
 
 export async function ingestDataFromSshompAction(
-	previousFormState: FormState | undefined,
-	formData: FormData,
+	_previousFormState: FormState | undefined,
+	_formData: FormData,
 ): Promise<FormState> {
 	const t = await getTranslations("actions.ingestDataFromSshomp");
 
