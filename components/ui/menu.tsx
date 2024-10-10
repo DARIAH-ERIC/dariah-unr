@@ -94,7 +94,7 @@ export interface MenuItemProps<T extends object> extends AriaMenuItemProps<T>, M
 
 export const MenuItem = forwardRef(function MenuItem<T extends object>(
 	props: MenuItemProps<T>,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaMenuItem>>,
+	forwardedRef: ForwardedRef<ElementRef<typeof AriaMenuItem<T>>>,
 ) {
 	const { children, className, ...rest } = props;
 
