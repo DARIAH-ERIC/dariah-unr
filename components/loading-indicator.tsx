@@ -20,7 +20,7 @@ export function LoadingIndicator(props: LoadingIndicatorProps): ReactNode {
 	return (
 		<Loader2Icon
 			{...labelingProps}
-			aria-hidden={hasLabeling ? ariaHidden ?? undefined : true}
+			aria-hidden={hasLabeling ? (ariaHidden ?? undefined) : true}
 			className={cn("animate-spin", className)}
 		/>
 	);

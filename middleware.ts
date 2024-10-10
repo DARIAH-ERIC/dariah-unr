@@ -4,7 +4,6 @@ import createI18nMiddleware from "next-intl/middleware";
 
 import { defaultLocale, locales } from "@/config/i18n.config";
 import { config as authConfig } from "@/lib/auth/config";
-import { getNormalizedPathname } from "@/lib/get-normalized-pathname";
 
 /**
  * Next.js currently only supports the "edge" runtime in middleware, which is not
@@ -24,7 +23,6 @@ export default authMiddleware((request) => {
 	 */
 	if (request.nextUrl.pathname.startsWith("/api/")) return;
 
-	// eslint-disable-next-line consistent-return
 	return i18nMiddleware(request);
 });
 

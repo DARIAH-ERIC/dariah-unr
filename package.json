@@ -32,7 +32,7 @@
 		"format:fix": "pnpm run format:check --write",
 		"lint:check": "run-p --continue-on-error \"lint:*:check\"",
 		"lint:fix": "run-p --continue-on-error \"lint:*:fix\"",
-		"lint:code:check": "eslint . --cache --ignore-path ./.gitignore",
+		"lint:code:check": "eslint . --cache",
 		"lint:code:fix": "pnpm run lint:code:check --fix",
 		"lint:styles:check": "stylelint \"./**/*.css\" --cache --ignore-path ./.gitignore",
 		"lint:styles:fix": "pnpm run lint:styles:check --fix",
@@ -45,11 +45,11 @@
 		"test:db:push": "dotenv -c test -- prisma db push --force-reset",
 		"test:unit": "vitest run",
 		"test:unit:ui": "vitest run --ui",
-		"test:e2e": "playwright test",
+		"test:e2e": "dotenv -c test -- playwright test",
 		"test:e2e:codegen": "playwright codegen",
 		"test:e2e:install": "playwright install --with-deps",
-		"test:e2e:ui": "playwright test --ui",
-		"test:e2e:update-snapshots": "playwright test --update-snapshots",
+		"test:e2e:ui": "dotenv -c test -- playwright test --ui",
+		"test:e2e:update-snapshots": "dotenv -c test -- playwright test --update-snapshots",
 		"types:check": "tsc --noEmit",
 		"validate": "run-p format:check lint:check types:check test:unit test:e2e"
 	},
@@ -63,18 +63,18 @@
 		"@mdx-js/mdx": "^3.0.1",
 		"@react-aria/utils": "^3.25.3",
 		"@react-stately/data": "^3.11.7",
-		"@sentry/nextjs": "^8.15.0",
+		"@sentry/nextjs": "^8.33.1",
 		"bcrypt": "^5.1.1",
 		"canvas-confetti": "^1.9.3",
 		"client-only": "^0.0.1",
 		"cva": "^1.0.0-beta.1",
-		"dset": "^3.1.3",
+		"dset": "^3.1.4",
 		"fast-glob": "^3.3.2",
-		"lucide-react": "^0.403.0",
+		"lucide-react": "^0.451.0",
 		"next": "^14.2.15",
 		"next-auth": "^5.0.0-beta.22",
 		"next-intl": "^3.21.1",
-		"nodemailer": "^6.9.14",
+		"nodemailer": "^6.9.15",
 		"react": "^18.3.1",
 		"react-aria-components": "^1.4.0",
 		"react-dom": "^18.3.1",
@@ -82,54 +82,55 @@
 		"rehype-slug": "^6.0.0",
 		"remark-smartypants": "^3.0.2",
 		"server-only": "^0.0.1",
-		"sharp": "^0.33.4",
-		"shiki": "^1.10.3",
+		"sharp": "^0.33.5",
+		"shiki": "^1.22.0",
 		"valibot": "^0.42.1",
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
-		"@acdh-oeaw/commitlint-config": "^1.0.0",
-		"@acdh-oeaw/eslint-config": "^1.0.9",
-		"@acdh-oeaw/eslint-config-next": "^1.0.13",
-		"@acdh-oeaw/eslint-config-playwright": "^1.0.9",
-		"@acdh-oeaw/eslint-config-react": "^1.0.10",
+		"@acdh-oeaw/commitlint-config": "^2.0.0",
+		"@acdh-oeaw/eslint-config": "^2.0.2",
+		"@acdh-oeaw/eslint-config-next": "^2.0.7",
+		"@acdh-oeaw/eslint-config-playwright": "^2.0.3",
+		"@acdh-oeaw/eslint-config-react": "^2.0.3",
+		"@acdh-oeaw/eslint-config-tailwindcss": "^2.0.2",
 		"@acdh-oeaw/prettier-config": "^2.0.0",
-		"@acdh-oeaw/stylelint-config": "^2.0.1",
+		"@acdh-oeaw/stylelint-config": "^2.0.4",
 		"@acdh-oeaw/tailwindcss-preset": "^0.0.22",
-		"@acdh-oeaw/tsconfig": "^1.1.1",
-		"@commitlint/cli": "^18.6.1",
-		"@faker-js/faker": "^8.4.1",
+		"@acdh-oeaw/tsconfig": "^1.2.0",
+		"@commitlint/cli": "^19.5.0",
+		"@faker-js/faker": "^9.0.3",
 		"@mdx-js/loader": "^3.0.1",
 		"@next/bundle-analyzer": "^14.2.15",
 		"@next/eslint-plugin-next": "^14.2.15",
 		"@next/mdx": "^14.2.15",
-		"@playwright/test": "^1.45.1",
+		"@playwright/test": "^1.48.0",
 		"@prisma/client": "^5.20.0",
 		"@react-aria/optimize-locales-plugin": "^1.1.2",
 		"@react-types/shared": "^3.25.0",
-		"@shikijs/rehype": "^1.10.3",
+		"@shikijs/rehype": "^1.22.0",
 		"@types/bcrypt": "^5.0.2",
 		"@types/canvas-confetti": "^1.6.4",
 		"@types/hast": "^3.0.4",
 		"@types/mdx": "^2.0.13",
 		"@types/node": "^22.7.5",
-		"@types/nodemailer": "^6.4.15",
+		"@types/nodemailer": "^6.4.16",
 		"@types/react": "^18.3.11",
 		"@types/react-dom": "^18.3.0",
-		"@vitest/ui": "^2.0.1",
-		"axe-core": "^4.9.1",
-		"axe-playwright": "^2.0.1",
+		"@vitest/ui": "^2.1.2",
+		"axe-core": "^4.10.0",
+		"axe-playwright": "^2.0.3",
 		"ci-info": "^4.0.0",
-		"dotenv": "^16.4.5",
 		"dotenv-cli": "^7.4.2",
-		"dotenv-expand": "^11.0.6",
-		"eslint": "^8.57.0",
-		"eslint-plugin-tailwindcss": "^3.17.4",
+		"eslint": "^9.12.0",
+		"eslint-config-flat-gitignore": "^0.3.0",
+		"eslint-plugin-check-file": "^2.8.0",
+		"globals": "^15.11.0",
 		"is-ci": "^3.0.1",
-		"lint-staged": "^15.2.7",
-		"npm-run-all2": "^6.2.2",
-		"postcss": "^8.4.39",
-		"prettier": "^3.3.2",
+		"lint-staged": "^15.2.10",
+		"npm-run-all2": "^6.2.3",
+		"postcss": "^8.4.47",
+		"prettier": "^3.3.3",
 		"prisma": "^5.20.0",
 		"prisma-dbml-generator": "^0.12.0",
 		"remark-frontmatter": "^5.0.0",
@@ -138,26 +139,19 @@
 		"remark-smartypants": "^3.0.2",
 		"schema-dts": "^1.1.2",
 		"simple-git-hooks": "^2.11.1",
-		"stylelint": "^16.6.1",
-		"tailwindcss": "^3.4.4",
-		"tailwindcss-react-aria-components": "^1.1.3",
-		"tsx": "^4.16.2",
-		"typescript": "^5.5.3",
-		"vite-tsconfig-paths": "^4.3.2",
-		"vitest": "^2.0.1",
-		"vitest-mock-extended": "^1.3.1"
+		"stylelint": "^16.9.0",
+		"tailwindcss": "^3.4.13",
+		"tailwindcss-react-aria-components": "^1.1.6",
+		"tsx": "^4.19.1",
+		"typescript": "^5.6.3",
+		"vite-tsconfig-paths": "^5.0.1",
+		"vitest": "^2.1.2",
+		"vitest-mock-extended": "^2.0.2"
 	},
 	"pnpm": {
 		"overrides": {
-			"@commitlint/config-conventional": "$@commitlint/cli",
 			"@prisma/generator-helper": "$prisma",
 			"@prisma/internals": "$prisma"
-		},
-		"updateConfig": {
-			"ignoreDependencies": [
-				"@commitlint/cli",
-				"eslint"
-			]
 		}
 	},
 	"browserslist": {
@@ -174,48 +168,6 @@
 	},
 	"commitlint": {
 		"extends": "@acdh-oeaw/commitlint-config"
-	},
-	"eslintConfig": {
-		"extends": [
-			"@acdh-oeaw/eslint-config",
-			"@acdh-oeaw/eslint-config/strict",
-			"@acdh-oeaw/eslint-config-react",
-			"@acdh-oeaw/eslint-config-next",
-			"@acdh-oeaw/eslint-config-playwright",
-			"plugin:eslint-plugin-tailwindcss/recommended"
-		],
-		"rules": {
-			"arrow-body-style": [
-				"error",
-				"always"
-			],
-			"prefer-arrow-callback": [
-				"error",
-				{
-					"allowNamedFunctions": true
-				}
-			],
-			"@typescript-eslint/no-unused-vars": "off",
-			"react/jsx-boolean-value": [
-				"error",
-				"always"
-			],
-			"react/jsx-no-useless-fragment": "error",
-			"react/jsx-sort-props": [
-				"error",
-				{
-					"reservedFirst": true
-				}
-			]
-		},
-		"settings": {
-			"tailwindcss": {
-				"callees": [
-					"cn",
-					"variants"
-				]
-			}
-		}
 	},
 	"lint-staged": {
 		"*.@(js|ts|tsx)": [

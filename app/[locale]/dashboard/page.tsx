@@ -1,4 +1,3 @@
-import { assert } from "@acdh-oeaw/lib";
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 import { useTranslations } from "next-intl";

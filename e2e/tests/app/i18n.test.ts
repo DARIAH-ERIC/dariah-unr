@@ -59,7 +59,7 @@ test.describe("i18n", () => {
 		 * - [locale]
 		 *   - layout.tsx
 		 *   - not-found.tsx
-		 *   - [...404]
+		 *   - [...notfound]
 		 *     - page.tsx
 		 *   - (index)
 		 *     - layout.tsx (pass-through)

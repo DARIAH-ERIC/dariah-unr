@@ -1,7 +1,7 @@
 "use client";
 
 import type { Report, ResearchPolicyDevelopment } from "@prisma/client";
-import { type ListData, useListData } from "@react-stately/data";
+import { useListData } from "@react-stately/data";
 import type { ReactNode } from "react";
 import { useFormState } from "react-dom";
 

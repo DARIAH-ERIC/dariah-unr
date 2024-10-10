@@ -34,7 +34,7 @@ interface GetServicesCountParams {
 }
 
 export function getServicesCount(params: GetServicesCountParams) {
-	const { year } = params;
+	const { year: _year } = params;
 
 	return db.service.groupBy({
 		by: "status",

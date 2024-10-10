@@ -132,11 +132,8 @@ export async function calculateOperationalCost(
 	const largeServicesCount = servicesBySize.get("large")?.length ?? 0;
 	const coreServicesCount = servicesBySize.get("core")?.length ?? 0;
 
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const ncRole = rolesByName.get("National Coordinator")!;
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const jrcRole = rolesByName.get("JRC member")!;
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const wgRole = rolesByName.get("WG chair")!;
 
 	const ncCost = (contributionsByRole.get(ncRole.id)?.length ?? 0) * ncRole.annualValue;
@@ -151,11 +148,11 @@ export async function calculateOperationalCost(
 
 	const websiteCost =
 		(outreachsByType.get("national_website")?.length ?? 0) > 0
-			? outreachTypeValuesByType.get("national_website")?.annualValue ?? 0
+			? (outreachTypeValuesByType.get("national_website")?.annualValue ?? 0)
 			: 0;
 	const socialMediaCost =
 		(outreachsByType.get("social_media")?.length ?? 0) > 0
-			? outreachTypeValuesByType.get("social_media")?.annualValue ?? 0
+			? (outreachTypeValuesByType.get("social_media")?.annualValue ?? 0)
 			: 0;
 	const serviceLargeCost = (serviceSizesByType.get("large")?.annualValue ?? 0) * largeServicesCount;
 	const serviceMediumCost =

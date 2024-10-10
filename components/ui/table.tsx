@@ -77,7 +77,7 @@ export function Column(props: ColumnProps) {
 }
 
 export function TableHeader<T extends object>(props: TableHeaderProps<T>) {
-	const { selectionBehavior, selectionMode, allowsDragging } = useTableOptions();
+	const { allowsDragging } = useTableOptions();
 
 	return (
 		<AriaTableHeader
@@ -99,7 +99,7 @@ const rowStyles = variants({
 });
 
 export function Row<T extends object>({ id, columns, children, ...otherProps }: RowProps<T>) {
-	const { selectionBehavior, allowsDragging } = useTableOptions();
+	const { allowsDragging } = useTableOptions();
 
 	return (
 		<AriaRow id={id} {...otherProps} className={rowStyles()}>

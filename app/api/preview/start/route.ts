@@ -1,4 +1,5 @@
 import { cookies, draftMode } from "next/headers";
+// eslint-disable-next-line no-restricted-imports
 import { redirect } from "next/navigation";
 
 import { rewriteUrl } from "@/lib/rewrite-url";

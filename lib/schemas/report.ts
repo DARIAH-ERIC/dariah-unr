@@ -1,4 +1,3 @@
-import { SoftwareStatus } from "@prisma/client";
 import { z } from "zod";
 
 import { nonEmptyString } from "@/lib/schemas/utils";

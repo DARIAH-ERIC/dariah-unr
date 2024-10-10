@@ -59,7 +59,6 @@ export async function ReportSummary(props: ReportSummaryProps) {
 		getPartnerInstitutionsByCountry({ countryId }),
 	]);
 
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const publications = await getPublications({ countryCode: countryCode!.code, year });
 
 	const report = {

@@ -92,7 +92,9 @@ createAnnualValues()
 		process.exitCode = 1;
 	})
 	.finally(() => {
-		return db.$disconnect();
+		db.$disconnect().catch((error: unknown) => {
+			log.error(String(error));
+		});
 	});
 
 // ------------------------------------------------------------------------------------------------

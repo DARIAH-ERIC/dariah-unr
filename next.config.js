@@ -70,7 +70,7 @@ const plugins = [
 			automaticVercelMonitors: true,
 			disableLogger: true,
 			hideSourceMaps: true,
-			silent: !process.env.CI,
+			silent: !env.CI,
 			/**
 			 * Uncomment to route browser requests to Sentry through a Next.js rewrite to circumvent
 			 * ad-blockers.

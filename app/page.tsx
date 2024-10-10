@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { redirect } from "next/navigation";
 
 import { defaultLocale } from "@/config/i18n.config";

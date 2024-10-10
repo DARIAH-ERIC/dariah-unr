@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+
 import { test as base } from "@playwright/test";
 
 import { defaultLocale, type Locale } from "@/config/i18n.config";

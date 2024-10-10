@@ -1,4 +1,3 @@
-import { assert } from "@acdh-oeaw/lib";
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -9,7 +8,6 @@ import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import type { Locale } from "@/config/i18n.config";
 import { getCurrentUser } from "@/lib/auth/session";
-import { getCountryCodes as _getCountryCodes } from "@/lib/data/country";
 import { getReportByCountryCode } from "@/lib/data/report";
 import { getCountryCodes as getStaticCountryCodes } from "@/lib/get-country-codes";
 import { getReportYears } from "@/lib/get-report-years";
