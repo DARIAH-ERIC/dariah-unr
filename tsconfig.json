@@ -2,10 +2,14 @@
 	"$schema": "https://json.schemastore.org/tsconfig",
 	"extends": "@acdh-oeaw/tsconfig",
 	"compilerOptions": {
+		"esModuleInterop": true,
+		"module": "esnext",
+		"moduleResolution": "bundler",
 		"paths": {
 			"@/*": ["./*"]
 		},
-		"plugins": [{ "name": "next" }]
+		"plugins": [{ "name": "next" }],
+		"resolveJsonModule": true
 	},
 	"include": ["./**/*.ts", "./**/*.tsx", ".next/types/**/*.ts", "./**/*.js"],
 	"exclude": ["node_modules", "out"],

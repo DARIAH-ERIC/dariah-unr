@@ -1,4 +1,3 @@
-import type { MiddlewareConfig } from "next/server";
 import NextAuth from "next-auth";
 import createI18nMiddleware from "next-intl/middleware";
 
@@ -26,7 +25,7 @@ export default authMiddleware((request) => {
 	return i18nMiddleware(request);
 });
 
-export const config: MiddlewareConfig = {
+export const config = {
 	matcher: [
 		"/",
 		/**
