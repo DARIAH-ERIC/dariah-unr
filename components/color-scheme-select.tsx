@@ -19,7 +19,7 @@ interface ColorSchemeSelectProps {
 	label: string;
 }
 
-export function ColorSchemeSelect(props: ColorSchemeSelectProps): ReactNode {
+export default function ColorSchemeSelect(props: ColorSchemeSelectProps): ReactNode {
 	const { items, label } = props;
 
 	const { colorSchemeState, setColorScheme } = useColorScheme();

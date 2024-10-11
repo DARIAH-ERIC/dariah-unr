@@ -7,7 +7,7 @@ import type { ColorScheme } from "@/lib/color-scheme-script";
 const ColorSchemeSelect = dynamic(
 	() => {
 		return import("@/components/color-scheme-select").then((module) => {
-			return module.ColorSchemeSelect;
+			return module.default;
 		});
 	},
 	{
