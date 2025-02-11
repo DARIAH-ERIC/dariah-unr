@@ -152,7 +152,7 @@ async function DashboardCountryReportEditStepPageContent(
 					<FormTitle>{t("confirm-information")}</FormTitle>
 					<FormDescription>
 						<p>
-							Do you wish to confirm your 2023 Unified National Report? The next screen will show
+							Do you wish to confirm your {year} Unified National Report? The next screen will show
 							you a summary of the information and provide you a cost calculation.
 						</p>
 					</FormDescription>
@@ -563,7 +563,7 @@ async function DashboardCountryReportEditStepPageContent(
 						</p>
 
 						<p>
-							Please check the summary below to see if it represents your fully completed 2023
+							Please check the summary below to see if it represents your fully completed {year}
 							Unified National Report.
 						</p>
 					</FormDescription>

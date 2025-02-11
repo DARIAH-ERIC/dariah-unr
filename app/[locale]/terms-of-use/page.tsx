@@ -92,7 +92,7 @@ export default function TermsOfUsePage(props: TermsOfUsePageProps): ReactNode {
 
 				<p>
 					The administrative contact for this AUP is:{" "}
-					<a href="mailto:unr2023@dariah.eu">unr2023@dariah.eu</a>.
+					<a href={`mailto:unr2024@dariah.eu`}>unr2024@dariah.eu</a>.
 				</p>
 
 				<p>
