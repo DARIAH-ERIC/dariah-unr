@@ -7,7 +7,7 @@
 		"node": "22.x",
 		"pnpm": "9.x"
 	},
-	"packageManager": "pnpm@9.12.1",
+	"packageManager": "pnpm@9.15.5",
 	"scripts": {
 		"analyze": "BUNDLE_ANALYZER=\"enabled\" next build --no-lint",
 		"build": "next build",
@@ -130,7 +130,7 @@
 		"lint-staged": "^15.2.10",
 		"npm-run-all2": "^6.2.3",
 		"postcss": "^8.4.47",
-		"prettier": "^3.3.3",
+		"prettier": "^3.4.2",
 		"prisma": "^5.20.0",
 		"prisma-dbml-generator": "^0.12.0",
 		"remark-frontmatter": "^5.0.0",
