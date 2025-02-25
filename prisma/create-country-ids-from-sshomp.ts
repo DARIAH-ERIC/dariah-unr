@@ -69,6 +69,7 @@ function getSshompActors() {
 		["nl", { id: 9562, name: "CLARIAH-NL" }],
 		["pl", { id: 3752, name: "DARIAH-PL" }],
 		["pt", { id: 3553, name: "DARIAH-PT / ROSSIO" }],
+		["se", { id: 10722, name: "DARIAH-SE/Huminfra" }],
 		["si", { id: 9133, name: "DARIAH-SI" }],
 	]);
 
