@@ -18,6 +18,7 @@
 		"db:create-operational-cost-thresholds": "dotenv -c development -- tsx ./prisma/create-operational-cost-thresholds.ts",
 		"db:create-report-year": "dotenv -c development -- tsx ./prisma/create-report-year.ts",
 		"db:create-test-user": "dotenv -c development -- tsx ./prisma/create-test-user.ts",
+		"db:update-password": "dotenv -c development -- tsx ./prisma/update-password.ts",
 		"db:deploy": "dotenv -c development -- prisma migrate deploy",
 		"db:ingest": "dotenv -c development -- tsx ./prisma/ingest.ts",
 		"db:generate": "dotenv -c development -- prisma generate",
