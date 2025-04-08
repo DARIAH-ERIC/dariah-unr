@@ -2,19 +2,27 @@ import type { Contribution, Country, Person, Role, WorkingGroup } from "@prisma/
 
 import { db } from "@/lib/db";
 
-interface GetContributionsByCountryParams {
+interface GetContributionsByCountryAndYearParams {
 	countryId: Country["id"];
+	year: number;
 }
 
-export function getContributionsByCountry(params: GetContributionsByCountryParams) {
-	const { countryId } = params;
+export function getContributionsByCountryAndYear(params: GetContributionsByCountryAndYearParams) {
+	const { countryId, year } = params;
 
 	return db.contribution.findMany({
 		where: {
+			OR: [
+				{
+					endDate: null,
+				},
+				{
+					endDate: { gte: new Date(Date.UTC(year, 0, 1)) },
+				},
+			],
 			country: {
 				id: countryId,
 			},
-			endDate: null,
 		},
 		orderBy: {
 			startDate: "asc",

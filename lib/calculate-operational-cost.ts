@@ -2,7 +2,7 @@ import { groupByToMap, isNonEmptyString, keyByToMap } from "@acdh-oeaw/lib";
 import type { Country, Report } from "@prisma/client";
 import { notFound } from "next/navigation";
 
-import { getContributionsByCountry } from "@/lib/data/contributions";
+import { getContributionsByCountryAndYear } from "@/lib/data/contributions";
 import { getPartnerInstitutionsCountByCountry } from "@/lib/data/institution";
 import { getOutreachUrlsByCountry } from "@/lib/data/outreach";
 import {
@@ -51,6 +51,7 @@ export async function calculateOperationalCost(
 
 	const report = await getReportById({ id: reportId });
 	if (report == null) notFound();
+	const { year } = report;
 
 	const [
 		contributions,
@@ -61,7 +62,7 @@ export async function calculateOperationalCost(
 		eventSizes,
 		outreachTypeValues,
 	] = await Promise.all([
-		getContributionsByCountry({ countryId }),
+		getContributionsByCountryAndYear({ countryId, year }),
 		getPartnerInstitutionsCountByCountry({ countryId }),
 		getServicesByCountry({ countryId }),
 		getServiceReports({ reportId }),

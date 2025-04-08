@@ -1,7 +1,7 @@
 import type { Country, Report } from "@prisma/client";
 
 import { ContributionsFormContent } from "@/components/forms/contributions-form-content";
-import { getContributionsByCountry } from "@/lib/data/contributions";
+import { getContributionsByCountryAndYear } from "@/lib/data/contributions";
 import { getPersonsByCountry } from "@/lib/data/person";
 import { getRoles } from "@/lib/data/role";
 import { getWorkingGroups } from "@/lib/data/working-group";
@@ -20,7 +20,7 @@ export async function ContributionsForm(props: ContributionsFormProps) {
 	const { comments, contributionsCount, countryId, previousContributionsCount, reportId, year } =
 		props;
 
-	const contributions = await getContributionsByCountry({ countryId });
+	const contributions = await getContributionsByCountryAndYear({ countryId, year });
 	const persons = await getPersonsByCountry({ countryId });
 	const roles = await getRoles();
 	const workingGroups = await getWorkingGroups();
