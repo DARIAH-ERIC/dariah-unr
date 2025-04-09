@@ -89,6 +89,8 @@ export async function getCollectionItems(id: string) {
 			itemType: "-note",
 			/** Valid options are: "bib", "citation", "data". */
 			include: ["bib", "data"].join(","),
+			limit: 100,
+			sort: "date",
 		}),
 	});
 
