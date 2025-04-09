@@ -8,7 +8,7 @@ import { ReportDownloadLink } from "@/components/report-download-link";
 import { getCurrentUser } from "@/lib/auth/session";
 import { calculateOperationalCost } from "@/lib/calculate-operational-cost";
 import { createHref } from "@/lib/create-href";
-import { getContributionsByCountry } from "@/lib/data/contributions";
+import { getContributionsByCountryAndYear } from "@/lib/data/contributions";
 import { getCountyCodeByCountyId } from "@/lib/data/country";
 import { getPartnerInstitutionsByCountry } from "@/lib/data/institution";
 import { getOutreachByCountry } from "@/lib/data/outreach";
@@ -55,7 +55,7 @@ export async function ReportSummary(props: ReportSummaryProps) {
 		getOutreachReports({ reportId }),
 		getServicesByCountry({ countryId }),
 		getServiceReports({ reportId }),
-		getContributionsByCountry({ countryId }),
+		getContributionsByCountryAndYear({ countryId, year }),
 		getPartnerInstitutionsByCountry({ countryId }),
 	]);
 
