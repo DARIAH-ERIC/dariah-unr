@@ -99,17 +99,14 @@ export async function getCollectionItems(id: string) {
 	// let total: number;
 
 	do {
-		const response = (await request(url, {
-			headers,
-			responseType: "raw",
-		})) as Response;
+		const response = await fetch(url, { headers, cache: "force-cache" });
 
 		data.push(...((await response.json()) as Array<ZoteroItem>));
 
 		/**
 		 * Zotero returns pagination information in link header.
 		 *
-		 * @see https://www.zotero.org/support/dev/web_api/v3/basics?parameters_for_format_bib_includecontent_bib_includecontent_citation#sorting_and_pagination
+		 * @see https://www.zotero.org/support/dev/web_api/v3/basics#sorting_and_pagination
 		 */
 		const links = parseLinkHeader(response.headers.get("link"));
 
@@ -162,6 +159,7 @@ export async function getPublications(params: GetPublicationsParams) {
 					if (isNonEmptyString(creator.name)) return creator.name;
 					return [creator.firstName, creator.lastName].filter(isNonEmptyString).join(" ");
 				}),
+				/** Available because of `?include=bib`. */
 				citation: item.bib,
 			};
 		})
