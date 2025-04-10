@@ -55,6 +55,7 @@ export function EventReportFormContent(props: EventReportFormContentProps): Reac
 						? `Previous year: ${previousEventReport.dariahCommissionedEvent}.`
 						: undefined
 				}
+				isReadOnly={true}
 				label="Title of DARIAH commissioned event"
 				name="eventReport.dariahCommissionedEvent"
 			/>
