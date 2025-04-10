@@ -7,6 +7,7 @@ import {
 } from "@acdh-oeaw/lib";
 
 import { groupId } from "@/config/zotero.config";
+import { parseLinkHeader } from "@/lib/parse-link-header";
 
 type UrlString = string;
 type HtmlString = string;
@@ -81,25 +82,44 @@ export async function getCollectionsByCountryCode() {
 }
 
 export async function getCollectionItems(id: string) {
-	const url = createUrl({
+	let url: URL | string | undefined = createUrl({
 		baseUrl,
 		pathname: `/groups/${String(groupId)}/collections/${id}/items`,
 		searchParams: createUrlSearchParams({
 			/** Exclude notes. */
 			itemType: "-note",
-			/** Valid options are: "bib", "citation", "data". */
 			include: ["bib", "data"].join(","),
-			limit: 100,
-			sort: "date",
+			limit: 25,
+			sort: "title",
 		}),
 	});
 
-	const items = (await request(url, {
-		headers,
-		responseType: "json",
-	})) as Array<ZoteroItem>;
+	const data: Array<ZoteroItem> = [];
+	// let page = 1;
+	// let total: number;
 
-	return items;
+	do {
+		const response = (await request(url, {
+			headers,
+			responseType: "raw",
+		})) as Response;
+
+		data.push(...((await response.json()) as Array<ZoteroItem>));
+
+		/**
+		 * Zotero returns pagination information in link header.
+		 *
+		 * @see https://www.zotero.org/support/dev/web_api/v3/basics?parameters_for_format_bib_includecontent_bib_includecontent_citation#sorting_and_pagination
+		 */
+		const links = parseLinkHeader(response.headers.get("link"));
+
+		url = "next" in links ? links.next : undefined;
+
+		// total = Number(response.headers.get("total-results"));
+		// page++;
+	} while (url != null);
+
+	return data;
 }
 
 interface GetPublicationsParams {
@@ -118,8 +138,8 @@ export async function getPublications(params: GetPublicationsParams) {
 		.filter((item) => {
 			/**
 			 * Filter publications by publication year client-side, because the zotero api does
-			 * not allow that. Note that the `parsedDate` field is just a string field, so parsing
-			 * as a ISO8601 date is not guaranteed to work.
+			 * not allow that. Note that both the `data.date` and `meta.parsedDate` fields are just
+			 * string fields, so parsing as a ISO8601 date is not guaranteed to work.
 			 */
 			try {
 				const date = new Date(item.data.date);
