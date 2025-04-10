@@ -66,6 +66,9 @@ export async function getCollectionsByCountryCode() {
 	const url = createUrl({
 		baseUrl,
 		pathname: `/groups/${String(groupId)}/collections`,
+		searchParams: createUrlSearchParams({
+			limit: 50,
+		}),
 	});
 
 	const collections = (await request(url, {
