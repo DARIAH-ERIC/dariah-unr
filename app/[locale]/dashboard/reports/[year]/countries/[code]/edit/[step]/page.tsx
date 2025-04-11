@@ -250,7 +250,8 @@ async function DashboardCountryReportEditStepPageContent(
 						<p>
 							These are big, international events that are commissioned by DARIAH and serve to
 							fulfill a strategic interest. Examples include the Annual Event or the DARIAH
-							Innovation Forum. DARIAH staff will fill this section out for you, if relevant.
+							Innovation Forum. Do not fill out anything here, DARIAH staff will fill this section
+							out for you, if relevant.
 						</p>
 					</FormDescription>
 
