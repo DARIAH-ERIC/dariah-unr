@@ -14,21 +14,15 @@ import { createKey } from "@/lib/create-key";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
 
 interface PublicationsFormContentProps {
+	bibliography: string;
 	comments: ReportCommentsSchema["publications"];
-	publications: Array<{
-		id: string;
-		// title: string;
-		// kind: string;
-		// url?: string;
-		// creators: string;
-		citation: string;
-	}>;
 	reportId: Report["id"];
+	total: number;
 	year: number;
 }
 
 export function PublicationsFormContent(props: PublicationsFormContentProps): ReactNode {
-	const { comments, publications, reportId, year } = props;
+	const { bibliography, comments, reportId, total, year } = props;
 
 	const [formState, formAction] = useFormState(updatePublicationsAction, undefined);
 
@@ -40,23 +34,8 @@ export function PublicationsFormContent(props: PublicationsFormContentProps): Re
 		>
 			<input name="reportId" type="hidden" value={reportId} />
 
-			{publications.length > 0 ? (
-				<ul
-					className="grid max-w-screen-md gap-y-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300"
-					role="list"
-				>
-					{publications.map((publication) => {
-						const { id, citation } = publication;
-
-						return (
-							<li key={id}>
-								<article>
-									<span dangerouslySetInnerHTML={{ __html: citation }} />
-								</article>
-							</li>
-						);
-					})}
-				</ul>
+			{total > 0 ? (
+				<div dangerouslySetInnerHTML={{ __html: bibliography }} />
 			) : (
 				<div className="grid place-items-center py-6 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
 					No entries found for {year} in your zotero collection.

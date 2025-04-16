@@ -113,15 +113,8 @@ export async function ReportSummary(props: ReportSummaryProps) {
 			}),
 		},
 		publications: {
-			count: publications.length,
-			items: publications.map((p) => {
-				return {
-					creators: p.creators.join(", "),
-					title: p.title,
-					kind: p.kind,
-					url: p.url ?? null,
-				};
-			}),
+			count: publications.items.length,
+			items: publications.items,
 		},
 		services: {
 			count: services.length,
