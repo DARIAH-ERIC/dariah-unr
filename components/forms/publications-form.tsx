@@ -15,13 +15,14 @@ export async function PublicationsForm(props: PublicationsFormProps) {
 	const { comments, countryCode, reportId, year } = props;
 
 	// FIXME: handle fetch errors
-	const publications = await getPublications({ countryCode, year });
+	const { bibliography, items } = await getPublications({ countryCode, year });
 
 	return (
 		<PublicationsFormContent
+			bibliography={bibliography}
 			comments={comments?.publications}
-			publications={publications}
 			reportId={reportId}
+			total={items.length}
 			year={year}
 		/>
 	);

@@ -1,16 +1,8 @@
-import {
-	createUrl,
-	createUrlSearchParams,
-	isNonEmptyString,
-	keyByToMap,
-	request,
-} from "@acdh-oeaw/lib";
+import { createUrl, createUrlSearchParams, keyByToMap, request } from "@acdh-oeaw/lib";
 
 import { groupId } from "@/config/zotero.config";
+import { createBibliography } from "@/lib/create-bibliography";
 import { parseLinkHeader } from "@/lib/parse-link-header";
-
-type UrlString = string;
-type HtmlString = string;
 
 export interface ZoteroCollection {
 	key: string;
@@ -27,32 +19,20 @@ export interface ZoteroCollection {
 	};
 }
 
+/** In CSL-JSON format. */
 export interface ZoteroItem {
-	key: string;
-	version: number;
-	bib: HtmlString;
-	data: {
-		key: string;
-		itemType: string;
-		title: string;
-		creators?: Array<{
-			creatorType: string;
-			firstName?: string;
-			lastName?: string;
-			name?: string;
-		}>;
-		url?: UrlString;
-		date: string;
-		dateAdded: string;
-		dateModified: string;
-	};
-	meta: {
-		parsedDate: string;
+	id: string;
+	type: string;
+	issued: {
+		"date-parts": [[number] | [number, number, number]];
 	};
 }
 
 const baseUrl = "https://api.zotero.org";
-const headers = { "Zotero-API-Version": "3" };
+const headers = {
+	Accept: "application/json",
+	"Zotero-API-Version": "3",
+};
 
 export function createZoteroCollectionUrl() {
 	const url = createUrl({
@@ -89,22 +69,20 @@ export async function getCollectionItems(id: string) {
 		baseUrl,
 		pathname: `/groups/${String(groupId)}/collections/${id}/items`,
 		searchParams: createUrlSearchParams({
+			format: "csljson",
 			/** Exclude notes. */
 			itemType: "-note",
-			include: ["bib", "data"].join(","),
-			limit: 25,
-			sort: "title",
+			limit: 50,
 		}),
 	});
 
 	const data: Array<ZoteroItem> = [];
-	// let page = 1;
-	// let total: number;
 
 	do {
 		const response = await fetch(url, { headers, cache: "force-cache" });
+		const { items } = (await response.json()) as { items: Array<ZoteroItem> };
 
-		data.push(...((await response.json()) as Array<ZoteroItem>));
+		data.push(...items);
 
 		/**
 		 * Zotero returns pagination information in link header.
@@ -114,9 +92,6 @@ export async function getCollectionItems(id: string) {
 		const links = parseLinkHeader(response.headers.get("link"));
 
 		url = "next" in links ? links.next : undefined;
-
-		// total = Number(response.headers.get("total-results"));
-		// page++;
 	} while (url != null);
 
 	return data;
@@ -134,41 +109,28 @@ export async function getPublications(params: GetPublicationsParams) {
 	const collection = collectionsByCountryCode.get(countryCode);
 	const items = collection != null ? await getCollectionItems(collection.key) : [];
 
-	const publications = items
-		.filter((item) => {
-			/**
-			 * Filter publications by publication year client-side, because the zotero api does
-			 * not allow that. Note that both the `data.date` and `meta.parsedDate` fields are just
-			 * string fields, so parsing as a ISO8601 date is not guaranteed to work.
-			 */
-			try {
-				const date = new Date(item.data.date);
-				if (date.getUTCFullYear() === year) return true;
-				return false;
-			} catch {
-				return false;
-			}
-		})
-		.map((item) => {
-			const { title, itemType, url, creators = [] } = item.data;
+	const publications = items.filter((item) => {
+		/**
+		 * Filter publications by publication year client-side, because the zotero api does
+		 * not allow that. Note that both the `data.date` and `meta.parsedDate` fields are just
+		 * string fields, so parsing as a ISO8601 date is not guaranteed to work.
+		 */
+		try {
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			if (Number(item.issued?.["date-parts"]?.[0]?.[0]) === year) return true;
+			return false;
+		} catch {
+			return false;
+		}
+	});
 
-			// TODO: pick only relevant fields
-			return {
-				id: item.key,
-				title,
-				kind: itemType,
-				url,
-				creators: creators.map((creator) => {
-					if (isNonEmptyString(creator.name)) return creator.name;
-					return [creator.firstName, creator.lastName].filter(isNonEmptyString).join(" ");
-				}),
-				/** Available because of `?include=bib`. */
-				citation: item.bib,
-			};
-		})
-		.sort((a, z) => {
-			return a.citation.localeCompare(z.citation);
-		});
+	/**
+	 * We format citations outselves instead of requesting formatted html from the
+	 * zotero api via `?include=bib,data`, because the zotero api is dead slow
+	 * and this makes it even slower, i.e. it increases the chance of timeout errors
+	 * substantially.
+	 */
+	const bibliography = createBibliography(publications);
 
-	return publications;
+	return { bibliography, items: publications };
 }

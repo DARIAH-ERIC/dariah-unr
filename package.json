@@ -58,6 +58,8 @@
 		"@acdh-oeaw/lib": "^0.1.12",
 		"@acdh-oeaw/validate-env": "^0.0.3",
 		"@auth/prisma-adapter": "^2.7.0",
+		"@citation-js/core": "^0.7.18",
+		"@citation-js/plugin-csl": "^0.7.18",
 		"@internationalized/date": "^3.5.6",
 		"@keystatic/core": "^0.5.37",
 		"@keystatic/next": "^5.0.1",
