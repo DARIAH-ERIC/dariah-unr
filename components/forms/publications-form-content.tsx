@@ -35,7 +35,10 @@ export function PublicationsFormContent(props: PublicationsFormContentProps): Re
 			<input name="reportId" type="hidden" value={reportId} />
 
 			{total > 0 ? (
-				<div dangerouslySetInnerHTML={{ __html: bibliography }} />
+				<div
+					dangerouslySetInnerHTML={{ __html: bibliography }}
+					className="grid max-w-screen-md gap-y-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300"
+				/>
 			) : (
 				<div className="grid place-items-center py-6 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
 					No entries found for {year} in your zotero collection.
