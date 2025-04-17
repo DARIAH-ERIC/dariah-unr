@@ -24,7 +24,12 @@ export interface ZoteroItem {
 	id: string;
 	type: string;
 	issued: {
-		"date-parts": [[number] | [number, number, number]];
+		/** Even though CSL-JSON requires date parts to be numbers, the zotero api can also return strings. */
+		"date-parts": [
+			| [number | string]
+			| [number | string, number | string]
+			| [number | string, number | string, number | string],
+		];
 	};
 }
 
@@ -112,8 +117,7 @@ export async function getPublications(params: GetPublicationsParams) {
 	const publications = items.filter((item) => {
 		/**
 		 * Filter publications by publication year client-side, because the zotero api does
-		 * not allow that. Note that both the `data.date` and `meta.parsedDate` fields are just
-		 * string fields, so parsing as a ISO8601 date is not guaranteed to work.
+		 * not allow that.
 		 */
 		try {
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

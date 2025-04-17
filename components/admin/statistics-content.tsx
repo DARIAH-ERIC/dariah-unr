@@ -154,8 +154,7 @@ async function PublicationsCount(props: PublicationsCountProps) {
 		const publications = items.filter((item) => {
 			/**
 			 * Filter publications by publication year client-side, because the zotero api does
-			 * not allow that. Note that both the `data.date` and `meta.parsedDate` fields are just
-			 * string fields, so parsing as a ISO8601 date is not guaranteed to work.
+			 * not allow that.
 			 */
 			try {
 				// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
