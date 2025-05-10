@@ -1,6 +1,7 @@
 import { useFormatter } from "next-intl";
 import { Suspense } from "react";
 
+import { ErrorBoundary } from "@/components/error-boundary";
 import { MainContent } from "@/components/main-content";
 import { getCollectionItems, getCollectionsByCountryCode } from "@/lib/zotero";
 
@@ -124,9 +125,11 @@ export function AdminStatisticsContent(props: AdminStatisticsContentProps) {
 					</dd>
 				</div>
 
-				<Suspense fallback={<div>Fetching publications from zotero...</div>}>
-					<PublicationsCount year={year} />
-				</Suspense>
+				<ErrorBoundary fallback={<div>Failed to fetch publications from zotero.</div>}>
+					<Suspense fallback={<div>Fetching publications from zotero...</div>}>
+						<PublicationsCount year={year} />
+					</Suspense>
+				</ErrorBoundary>
 
 				<div>
 					<dt>Project funding leverage</dt>
