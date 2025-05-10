@@ -1,4 +1,4 @@
-import { createUrl, createUrlSearchParams, keyByToMap, request } from "@acdh-oeaw/lib";
+import { createUrl, createUrlSearchParams, keyByToMap } from "@acdh-oeaw/lib";
 
 import { groupId } from "@/config/zotero.config";
 import { createBibliography } from "@/lib/create-bibliography";
@@ -57,10 +57,16 @@ export async function getCollectionsByCountryCode() {
 		}),
 	});
 
-	const collections = (await request(url, {
+	const response = await fetch(url, {
 		headers,
-		responseType: "json",
-	})) as Array<ZoteroCollection>;
+		next: { revalidate: 60 * 60 /** 60 min */ },
+	});
+
+	if (!response.ok) {
+		throw new Error("Failed to fetch collections from Zotero API.");
+	}
+
+	const collections = (await response.json()) as Array<ZoteroCollection>;
 
 	const collectionsByCountryCode = keyByToMap(collections, (collection) => {
 		return collection.data.name.toLowerCase();
@@ -88,6 +94,11 @@ export async function getCollectionItems(id: string) {
 			headers,
 			next: { revalidate: 60 * 5 /** 5 min */ },
 		});
+
+		if (!response.ok) {
+			throw new Error("Failed to fetch collection items from Zotero API.");
+		}
+
 		const { items } = (await response.json()) as { items: Array<ZoteroItem> };
 
 		data.push(...items);
