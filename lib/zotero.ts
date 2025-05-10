@@ -84,7 +84,11 @@ export async function getCollectionItems(id: string) {
 	const data: Array<ZoteroItem> = [];
 
 	do {
-		const response = await fetch(url, { headers, cache: "force-cache" });
+		const response = await fetch(url, {
+			headers,
+			cache: "force-cache",
+			next: { revalidate: 60 * 5 /** 5 min */ },
+		});
 		const { items } = (await response.json()) as { items: Array<ZoteroItem> };
 
 		data.push(...items);
