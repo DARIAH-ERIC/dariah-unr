@@ -58,6 +58,8 @@ export async function ingestDataFromSshomp() {
 		/** Entries in sshomp can have leading whitespace in label. */
 		const name = (entry.label as string).trim();
 
+		const url = entry.accessibleAt;
+
 		// @ts-expect-error Missing types.
 		const reviewers = entry.contributors.filter((contributor) => {
 			return contributor.role.code === "reviewer";
@@ -134,6 +136,7 @@ export async function ingestDataFromSshomp() {
 						marketplaceId: id,
 						marketplaceStatus: "added_as_item",
 						status: "maintained",
+						url,
 						countries: {
 							connect: countries.map((country) => {
 								return { id: country.id };
@@ -152,6 +155,7 @@ export async function ingestDataFromSshomp() {
 					data: {
 						name,
 						marketplaceId: id,
+						url,
 						// marketplaceStatus: "added_as_item",
 						// status: "maintained",
 						countries: {
@@ -182,6 +186,7 @@ export async function ingestDataFromSshomp() {
 						marketplaceId: id,
 						marketplaceStatus: "yes",
 						status: "live",
+						url,
 						countries: {
 							connect: countries.map((country) => {
 								return { id: country.id };
@@ -207,6 +212,7 @@ export async function ingestDataFromSshomp() {
 						marketplaceId: id,
 						// marketplaceStatus: "yes",
 						// status: "live",
+						url,
 						countries: {
 							set: countries.map((country) => {
 								return { id: country.id };
