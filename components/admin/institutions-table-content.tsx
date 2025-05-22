@@ -495,7 +495,11 @@ function InstitutionEditForm(props: InstitutionEditFormProps) {
 			</SelectField>
 
 			{/* TODO: Multiple types */}
-			<SelectField defaultSelectedKey={institution?.types[0]} label="Country" name="types.0">
+			<SelectField
+				defaultSelectedKey={institution?.types[0]}
+				label="Institution Type"
+				name="types.0"
+			>
 				{institutionTypes.map((type) => {
 					return (
 						<SelectItem key={type} id={type} textValue={type}>
