@@ -82,10 +82,18 @@ FROM node:22-alpine AS serve
 # @see https://github.com/nodejs/docker-node/issues/2175
 RUN ln -s /usr/lib/libssl.so.3 /lib/libssl.so.3
 
+RUN corepack enable
+
 RUN mkdir /app && chown -R node:node /app
 WORKDIR /app
 
 USER node
+
+COPY --chown=node:node ./entrypoint.sh ./entrypoint.sh
+RUN chmod +x ./entrypoint.sh
+
+COPY --chown=node:node ./prisma/schema.prisma ./prisma/schema.prisma
+COPY --chown=node:node ./prisma/migrations ./prisma/migrations
 
 COPY --from=build --chown=node:node /app/next.config.js ./
 COPY --from=build --chown=node:node /app/public ./public
@@ -100,4 +108,5 @@ ENV NODE_ENV=production
 
 EXPOSE 3000
 
+ENTRYPOINT [ "./entrypoint.sh" ]
 CMD ["node", "server.js"]
