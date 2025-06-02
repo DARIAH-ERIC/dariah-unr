@@ -4,7 +4,7 @@ set -e
 
 echo "⏳ Waiting for database to be ready..."
 
-until nc -z -v -w30 localhost 5432
+until nc -z -v -w30 cronos2.arz.oeaw.ac.at 5432
 do
   echo "⏳ Waiting for DB connection..."
   sleep 2
