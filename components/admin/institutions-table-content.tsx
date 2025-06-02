@@ -217,7 +217,7 @@ export function AdminInstitutionsTableContent(
 									{row.countries[0]?.id ? countriesById.get(row.countries[0].id)?.name : undefined}
 								</Cell>
 								<Cell>{row.types}</Cell>
-								<Cell>{row.url[0] ? row.url[0] : undefined}</Cell>
+								<Cell>{row.url[0] ?? undefined}</Cell>
 								<Cell>{row.ror}</Cell>
 								<Cell>{row.startDate != null ? dateTime(row.startDate) : undefined}</Cell>
 								<Cell>{row.endDate != null ? dateTime(row.endDate) : undefined}</Cell>
