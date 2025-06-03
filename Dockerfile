@@ -11,6 +11,9 @@ FROM node:22-alpine AS build
 # @see https://github.com/nodejs/docker-node/issues/2175
 RUN ln -s /usr/lib/libssl.so.3 /lib/libssl.so.3
 
+ENV PNPM_HOME="/app/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+
 RUN corepack enable
 
 RUN mkdir /app && chown -R node:node /app
@@ -82,6 +85,9 @@ FROM node:22-alpine AS serve
 # @see https://github.com/nodejs/docker-node/issues/2175
 RUN ln -s /usr/lib/libssl.so.3 /lib/libssl.so.3
 
+ENV PNPM_HOME="/app/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+
 RUN corepack enable
 
 RUN mkdir /app && chown -R node:node /app
@@ -91,6 +97,9 @@ USER node
 
 COPY --chown=node:node ./entrypoint.sh ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh
+
+# Prisma CLI is used in entrypoint script to apply migrations.
+RUN pnpm add -g prisma@5
 
 COPY --chown=node:node ./prisma/schema.prisma ./prisma/schema.prisma
 COPY --chown=node:node ./prisma/migrations ./prisma/migrations
@@ -108,5 +117,5 @@ ENV NODE_ENV=production
 
 EXPOSE 3000
 
-ENTRYPOINT [ "./entrypoint.sh" ]
+ENTRYPOINT ["./entrypoint.sh"]
 CMD ["node", "server.js"]
