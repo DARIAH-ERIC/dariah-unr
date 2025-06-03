@@ -12,7 +12,7 @@ done
 
 echo "✅ Database is up! Running migrations..."
 
-pnpx prisma migrate deploy
+prisma migrate deploy
 
 echo "🚀 Starting app..."
 
