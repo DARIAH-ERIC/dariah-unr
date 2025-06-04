@@ -1,4 +1,5 @@
 import { ArrowUp } from "lucide-react";
+import type { Key } from "react";
 import {
 	Button,
 	Cell as AriaCell,
@@ -22,6 +23,7 @@ import {
 	useTableOptions,
 } from "react-aria-components";
 
+import { SelectField, SelectItem } from "@/components/ui/blocks/select-field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn, variants } from "@/lib/styles";
@@ -139,5 +141,30 @@ export function TableFilter(props: SearchInputProps) {
 			<Label className="sr-only">{label}</Label>
 			<Input onChange={filter} placeholder={placeholder} />
 		</AriaSearchField>
+	);
+}
+
+interface TableFilterSelectProps {
+	label: string;
+	items: Array<{ id: string; name: string }>;
+	filter: (key: Key) => void;
+}
+
+export function TableFilterSelect(props: TableFilterSelectProps) {
+	const { filter, items, label } = props;
+
+	return (
+		<SelectField className="w-64" label={label} onSelectionChange={filter} placement="bottom">
+			<SelectItem id="showall" textValue="show all">
+				Show all
+			</SelectItem>
+			{Array.from(items).map((item) => {
+				return (
+					<SelectItem key={item.id} id={item.id} textValue={item.name}>
+						{item.name}
+					</SelectItem>
+				);
+			})}
+		</SelectField>
 	);
 }

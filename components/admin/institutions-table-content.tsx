@@ -41,7 +41,7 @@ import {
 	Row,
 	Table,
 	TableBody,
-	TableFilter,
+	TableFilterSelect,
 	TableHeader,
 } from "@/components/ui/table";
 import { createInstitutionAction } from "@/lib/actions/admin/create-institution";
@@ -104,12 +104,13 @@ export function AdminInstitutionsTableContent(
 	const list = useListData({
 		initialItems: institutions,
 		filter: (item, filterText) => {
-			if (!filterText) return true;
+			if (!filterText || filterText === "showall") return true;
 			const { countries } = item;
-			const countryNames = countries.map((country) => {
-				return countriesById.get(country.id)?.name.toLowerCase();
-			});
-			return countryNames.includes(filterText.toLowerCase());
+			return countries
+				.map((country) => {
+					return country.id;
+				})
+				.includes(filterText);
 		},
 	});
 
@@ -183,12 +184,12 @@ export function AdminInstitutionsTableContent(
 				<Pagination pagination={pagination} />
 			</div>
 			<div className="flex justify-end">
-				<TableFilter
-					filter={(e) => {
-						list.setFilterText(e.target.value);
+				<TableFilterSelect
+					filter={(key) => {
+						list.setFilterText(String(key));
 					}}
+					items={Array.from(countriesById.values())}
 					label="Filter by Country"
-					placeholder="Country..."
 				/>
 			</div>
 
