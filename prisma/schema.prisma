@@ -71,6 +71,7 @@ model Country {
   id String @id @default(uuid()) @db.Uuid
 
   code          String
+	description   String?
   endDate       DateTime? @map(name: "end_date")
   logo          String?
   marketplaceId Int?      @map(name: "marketplace_id")
