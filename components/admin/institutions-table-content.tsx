@@ -167,6 +167,10 @@ export function AdminInstitutionsTableContent(
 
 	const pagination = usePagination({ items: items });
 
+	const countryFilterOptions = useMemo(() => {
+		return Array.from(countriesById.values());
+	}, [countriesById]);
+
 	return (
 		<Fragment>
 			<div className="flex justify-end">
@@ -188,7 +192,7 @@ export function AdminInstitutionsTableContent(
 					filter={(key) => {
 						list.setFilterText(String(key));
 					}}
-					items={Array.from(countriesById.values())}
+					items={countryFilterOptions}
 					label="Filter by Country"
 				/>
 			</div>
