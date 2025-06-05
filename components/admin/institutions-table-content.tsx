@@ -196,11 +196,12 @@ export function AdminInstitutionsTableContent(
 			</div>
 			<div className="flex justify-end">
 				<TableFilterSelect
-					filter={(key) => {
-						list.setFilterText(String(key));
-					}}
+					defaultSelectedKey={EMPTY_FILTER}
 					items={countryFilterOptions}
 					label="Filter by Country"
+					onSelectionChange={(key) => {
+						list.setFilterText(String(key));
+					}}
 				/>
 			</div>
 

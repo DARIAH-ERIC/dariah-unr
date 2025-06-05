@@ -1,5 +1,4 @@
 import { ArrowUp } from "lucide-react";
-import type { Key } from "react";
 import {
 	Button,
 	Cell as AriaCell,
@@ -10,6 +9,7 @@ import {
 	ColumnResizer,
 	composeRenderProps,
 	Group,
+	type Key,
 	ResizableTableContainer,
 	Row as AriaRow,
 	type RowProps,
@@ -145,16 +145,23 @@ export function TableFilter(props: SearchInputProps) {
 }
 
 interface TableFilterSelectProps {
+	defaultSelectedKey?: Key;
 	label: string;
 	items: Array<{ id: string; label: string }>;
-	filter: (key: Key) => void;
+	onSelectionChange: (key: Key) => void;
 }
 
 export function TableFilterSelect(props: TableFilterSelectProps) {
-	const { filter, items, label } = props;
+	const { defaultSelectedKey, onSelectionChange, items, label } = props;
 
 	return (
-		<SelectField className="w-64" label={label} onSelectionChange={filter} placement="bottom">
+		<SelectField
+			className="w-64"
+			defaultSelectedKey={defaultSelectedKey}
+			label={label}
+			onSelectionChange={onSelectionChange}
+			placement="bottom"
+		>
 			{items.map((item) => {
 				return (
 					<SelectItem key={item.id} id={item.id} textValue={item.label}>
