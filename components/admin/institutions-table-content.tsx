@@ -105,14 +105,14 @@ export function AdminInstitutionsTableContent(
 
 	const list = useListData({
 		initialItems: institutions,
-		filter: (item, filterText) => {
-			if (!filterText || filterText === EMPTY_FILTER) return true;
-			const { countries } = item;
-			return countries
-				.map((country) => {
-					return country.id;
-				})
-				.includes(filterText);
+		filter: (item, countryId) => {
+			if (!countryId || countryId === EMPTY_FILTER) {
+				return true;
+			}
+
+			return item.countries.some((country) => {
+				return country.id === countryId;
+			});
 		},
 	});
 
