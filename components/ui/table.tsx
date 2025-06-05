@@ -146,7 +146,7 @@ export function TableFilter(props: SearchInputProps) {
 
 interface TableFilterSelectProps {
 	label: string;
-	items: Array<{ id: string; name: string }>;
+	items: Array<{ id: string; label: string }>;
 	filter: (key: Key) => void;
 }
 
@@ -155,13 +155,10 @@ export function TableFilterSelect(props: TableFilterSelectProps) {
 
 	return (
 		<SelectField className="w-64" label={label} onSelectionChange={filter} placement="bottom">
-			<SelectItem id="showall" textValue="show all">
-				Show all
-			</SelectItem>
 			{items.map((item) => {
 				return (
-					<SelectItem key={item.id} id={item.id} textValue={item.name}>
-						{item.name}
+					<SelectItem key={item.id} id={item.id} textValue={item.label}>
+						{item.label}
 					</SelectItem>
 				);
 			})}

@@ -49,6 +49,8 @@ import { deleteInstitutionAction } from "@/lib/actions/admin/delete-institution"
 import { updateInstitutionAction } from "@/lib/actions/admin/update-institution";
 import { createKey } from "@/lib/create-key";
 
+const EMPTY_FILTER = "_all_";
+
 type Action =
 	| {
 			kind: "create";
@@ -104,7 +106,7 @@ export function AdminInstitutionsTableContent(
 	const list = useListData({
 		initialItems: institutions,
 		filter: (item, filterText) => {
-			if (!filterText || filterText === "showall") return true;
+			if (!filterText || filterText === EMPTY_FILTER) return true;
 			const { countries } = item;
 			return countries
 				.map((country) => {
@@ -168,7 +170,12 @@ export function AdminInstitutionsTableContent(
 	const pagination = usePagination({ items: items });
 
 	const countryFilterOptions = useMemo(() => {
-		return Array.from(countriesById.values());
+		return [
+			{ id: EMPTY_FILTER, label: "Show all" },
+			...Array.from(countriesById.values()).map((country) => {
+				return { id: country.id, label: country.name };
+			}),
+		];
 	}, [countriesById]);
 
 	return (
