@@ -158,7 +158,7 @@ export function TableFilterSelect(props: TableFilterSelectProps) {
 			<SelectItem id="showall" textValue="show all">
 				Show all
 			</SelectItem>
-			{Array.from(items).map((item) => {
+			{items.map((item) => {
 				return (
 					<SelectItem key={item.id} id={item.id} textValue={item.name}>
 						{item.name}
