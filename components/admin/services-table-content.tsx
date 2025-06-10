@@ -12,6 +12,7 @@ import {
 	ServiceStatus,
 	ServiceType,
 } from "@prisma/client";
+import { useListData } from "@react-stately/data";
 import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { Fragment, type ReactNode, useId, useMemo, useState } from "react";
 import type { Key } from "react-aria-components";
@@ -43,11 +44,21 @@ import { FormFieldsGroup } from "@/components/ui/form-fields-group";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
 import { IconButton } from "@/components/ui/icon-button";
 import { Modal, ModalOverlay } from "@/components/ui/modal";
-import { Cell, Column, Row, Table, TableBody, TableHeader } from "@/components/ui/table";
+import {
+	Cell,
+	Column,
+	Row,
+	Table,
+	TableBody,
+	TableFilterSelect,
+	TableHeader,
+} from "@/components/ui/table";
 import { createServiceAction } from "@/lib/actions/admin/create-service";
 import { deleteServiceAction } from "@/lib/actions/admin/delete-service";
 import { updateServiceAction } from "@/lib/actions/admin/update-service";
 import { createKey } from "@/lib/create-key";
+
+const EMPTY_FILTER = "_all_";
 
 type Action =
 	| {
@@ -125,13 +136,26 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 		setAction(null);
 	}
 
+	const list = useListData({
+		initialItems: services,
+		filter: (item, countryId) => {
+			if (!countryId || countryId === EMPTY_FILTER) {
+				return true;
+			}
+
+			return item.countries.some((country) => {
+				return country.id === countryId;
+			});
+		},
+	});
+
 	const [sortDescriptor, setSortDescriptor] = useState({
 		column: "name" as "country" | "marketplaceStatus" | "name" | "size" | "status" | "type",
 		direction: "ascending" as "ascending" | "descending",
 	});
 
 	const items = useMemo(() => {
-		const items = services.toSorted((a, z) => {
+		const items = [...list.items].toSorted((a, z) => {
 			switch (sortDescriptor.column) {
 				case "country": {
 					const idA = a.countries[0]?.id;
@@ -167,9 +191,18 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 		}
 
 		return items;
-	}, [sortDescriptor, services, countriesById, serviceSizesById]);
+	}, [sortDescriptor, list.items, countriesById, serviceSizesById]);
 
 	const pagination = usePagination({ items });
+
+	const countryFilterOptions = useMemo(() => {
+		return [
+			{ id: EMPTY_FILTER, label: "Show all" },
+			...Array.from(countriesById.values()).map((country) => {
+				return { id: country.id, label: country.name };
+			}),
+		];
+	}, [countriesById]);
 
 	return (
 		<Fragment>
@@ -186,6 +219,16 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 
 			<div className="flex justify-end">
 				<Pagination pagination={pagination} />
+			</div>
+			<div className="flex justify-end">
+				<TableFilterSelect
+					defaultSelectedKey={EMPTY_FILTER}
+					items={countryFilterOptions}
+					label="Filter by Country"
+					onSelectionChange={(key) => {
+						list.setFilterText(String(key));
+					}}
+				/>
 			</div>
 
 			<Table
