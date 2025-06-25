@@ -123,6 +123,12 @@
 		},
 		"title": "Benutzer*innen"
 	},
+	"DashboardAdminWorkingGroupsPage": {
+		"meta": {
+			"title": "Arbeitsgruppen"
+		},
+		"title": "Arbeitsgruppen"
+	},
 	"DashboardCountryReportEditStepPage": {
 		"meta": {
 			"title": "Bericht bearbeiten"
@@ -344,6 +350,24 @@
 					"default": "Konnte User nicht aktualisieren."
 				},
 				"success": "User erfolgreich aktualisiert."
+			},
+			"createWorkingGroup": {
+				"errors": {
+					"default": "Konnte Arbeitsgruppe nicht erstellen."
+				},
+				"success": "Arbeitsgruppe erfolgreich erstellt."
+			},
+			"deleteWorkingGroup": {
+				"errors": {
+					"default": "Konnte Arbeitsgruppe nicht entfernen."
+				},
+				"success": "Arbeitsgruppe erfolgreich entfernt."
+			},
+			"updateWorkingGroup": {
+				"errors": {
+					"default": "Konnte Arbeitsgruppe nicht aktualisieren."
+				},
+				"success": "Arbeitsgruppe erfolgreich aktualisiert."
 			}
 		},
 		"createOutreach": {

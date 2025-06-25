@@ -1,3 +1,5 @@
+import type { RoleType } from "@prisma/client";
+
 import { db } from "@/lib/db";
 
 export function getRoles() {
@@ -9,6 +11,14 @@ export function getRoles() {
 			annualValue: true,
 			id: true,
 			name: true,
+		},
+	});
+}
+
+export function getRoleByType(type: RoleType) {
+	return db.role.findFirst({
+		where: {
+			type,
 		},
 	});
 }

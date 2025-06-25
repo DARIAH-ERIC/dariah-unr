@@ -2,6 +2,10 @@ import type { Contribution, Country, Person, Role, WorkingGroup } from "@prisma/
 
 import { db } from "@/lib/db";
 
+export function getContributions() {
+	return db.contribution.findMany();
+}
+
 interface GetContributionsByCountryAndYearParams {
 	countryId: Country["id"];
 	year: number;

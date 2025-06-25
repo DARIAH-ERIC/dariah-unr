@@ -1,3 +1,5 @@
+import type { WorkingGroup } from "@prisma/client";
+
 import { db } from "@/lib/db";
 
 export function getWorkingGroups() {
@@ -5,9 +7,125 @@ export function getWorkingGroups() {
 		orderBy: {
 			name: "asc",
 		},
-		select: {
-			id: true,
-			name: true,
+		include: {
+			chairs: {
+				select: {
+					id: true,
+					startDate: true,
+					endDate: true,
+					personId: true,
+				},
+			},
+		},
+	});
+}
+
+interface CreateWorkingGroupParams {
+	name: WorkingGroup["name"];
+	chairs?: Array<{ personId: string; roleId?: string; endDate?: Date; startDate?: Date }>;
+	endDate?: WorkingGroup["endDate"];
+	startDate?: WorkingGroup["startDate"];
+}
+
+export function createWorkingGroup(params: CreateWorkingGroupParams) {
+	const { chairs, endDate, name, startDate } = params;
+
+	return db.workingGroup.create({
+		data: {
+			endDate,
+			name,
+			startDate,
+			chairs: {
+				create: chairs?.map((chair) => {
+					const { endDate, personId, roleId, startDate } = chair;
+					return {
+						endDate,
+						person: { connect: { id: personId } },
+						role: { connect: { id: roleId } },
+						startDate,
+					};
+				}),
+			},
+		},
+	});
+}
+
+interface UpdateWorkingGroupParams {
+	id: string;
+	name?: WorkingGroup["name"];
+	chairs?: Array<{
+		id?: string;
+		personId?: string;
+		roleId?: string;
+		endDate?: Date;
+		startDate?: Date;
+	}>;
+	endDate?: WorkingGroup["endDate"];
+	startDate?: WorkingGroup["startDate"];
+}
+
+export function updateWorkingGroup(params: UpdateWorkingGroupParams) {
+	const { id, chairs, endDate, name, startDate } = params;
+
+	return db.workingGroup.update({
+		where: {
+			id,
+		},
+		data: {
+			endDate,
+			name,
+			startDate,
+			chairs: {
+				deleteMany: {
+					id: {
+						notIn: chairs?.map((chair) => {
+							return chair.id ?? "";
+						}),
+					},
+				},
+				update: chairs
+					?.filter((chair) => {
+						return chair.id;
+					})
+					.map((chair) => {
+						const { id, endDate, personId, startDate } = chair;
+						return {
+							where: { id },
+							data: {
+								endDate,
+								person: { connect: { id: personId } },
+								startDate,
+							},
+						};
+					}),
+				create: chairs
+					?.filter((chair) => {
+						return !chair.id;
+					})
+					.map((chair) => {
+						const { endDate, personId, roleId, startDate } = chair;
+						return {
+							endDate,
+							person: { connect: { id: personId } },
+							role: { connect: { id: roleId } },
+							startDate,
+						};
+					}),
+			},
+		},
+	});
+}
+
+interface DeleteWorkingGroupParams {
+	id: string;
+}
+
+export function deleteWorkingGroup(params: DeleteWorkingGroupParams) {
+	const { id } = params;
+
+	return db.workingGroup.delete({
+		where: {
+			id,
 		},
 	});
 }

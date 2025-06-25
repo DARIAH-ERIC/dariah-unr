@@ -123,6 +123,12 @@
 		},
 		"title": "Users"
 	},
+	"DashboardAdminWorkingGroupsPage": {
+		"meta": {
+			"title": "Working groups"
+		},
+		"title": "Working groups"
+	},
 	"DashboardCountryReportEditStepPage": {
 		"meta": {
 			"title": "Edit report"
@@ -344,6 +350,24 @@
 					"default": "Failed to update user."
 				},
 				"success": "Successfully updated user."
+			},
+			"createWorkingGroup": {
+				"errors": {
+					"default": "Could not create working group."
+				},
+				"success": "Successfully created working group."
+			},
+			"deleteWorkingGroup": {
+				"errors": {
+					"default": "Could not delete working group."
+				},
+				"success": "Successfully deleted working group."
+			},
+			"updateWorkingGroup": {
+				"errors": {
+					"default": "Could not update working group."
+				},
+				"success": "Successfully updated working group."
 			}
 		},
 		"createOutreach": {
