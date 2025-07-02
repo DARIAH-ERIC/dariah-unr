@@ -2,6 +2,7 @@
 
 import { keyByToMap } from "@acdh-oeaw/lib";
 import type { Institution, Prisma } from "@prisma/client";
+import { useListData } from "@react-stately/data";
 import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { Fragment, type ReactNode, useId, useMemo, useState } from "react";
 import type { Key } from "react-aria-components";
@@ -63,7 +64,7 @@ interface AdminPersonsTableContentProps {
 	institutions: Array<
 		Prisma.InstitutionGetPayload<{
 			include: {
-				countries: { select: { id: true } };
+				countries: { select: { id: true; name: true } };
 			};
 		}>
 	>;
@@ -317,7 +318,14 @@ function DeletePersonDialog(props: DeletePersonDialogProps) {
 
 interface CreatePersonDialogProps {
 	action: Action | null;
-	institutionsById: Map<Institution["id"], Institution>;
+	institutionsById: Map<
+		Institution["id"],
+		Prisma.InstitutionGetPayload<{
+			include: {
+				countries: { select: { id: true; name: true } };
+			};
+		}>
+	>;
 	onClose: () => void;
 }
 
@@ -370,7 +378,14 @@ function CreatePersonDialog(props: CreatePersonDialogProps) {
 
 interface EditPersonDialogProps {
 	action: Action | null;
-	institutionsById: Map<Institution["id"], Institution>;
+	institutionsById: Map<
+		Institution["id"],
+		Prisma.InstitutionGetPayload<{
+			include: {
+				countries: { select: { id: true; name: true } };
+			};
+		}>
+	>;
 	onClose: () => void;
 }
 
@@ -422,7 +437,14 @@ function EditPersonDialog(props: EditPersonDialogProps) {
 }
 
 interface PersonEditFormProps {
-	institutionsById: Map<Institution["id"], Institution>;
+	institutionsById: Map<
+		Institution["id"],
+		Prisma.InstitutionGetPayload<{
+			include: {
+				countries: { select: { id: true; name: true } };
+			};
+		}>
+	>;
 	formId: string;
 	formAction: (formData: FormData) => void;
 	formState: Awaited<ReturnType<typeof createPersonAction>> | undefined;
@@ -436,6 +458,27 @@ interface PersonEditFormProps {
 
 function PersonEditForm(props: PersonEditFormProps) {
 	const { institutionsById, formId, formAction, formState, person, onClose } = props;
+
+	const list = useListData({
+		initialItems: Array.from(institutionsById.values()),
+		filter: (item, countryId) => {
+			return item.countries.some((country) => {
+				return country.id === countryId;
+			});
+		},
+		initialFilterText: institutionsById.get(person?.institutions[0]?.id ?? "")?.countries[0]?.id,
+	});
+
+	const institutionCountries = useMemo(() => {
+		return keyByToMap(
+			Array.from(institutionsById.values()).flatMap((institution) => {
+				return institution.countries;
+			}),
+			(country) => {
+				return country.id;
+			},
+		);
+	}, [institutionsById]);
 
 	return (
 		<Form
@@ -451,13 +494,36 @@ function PersonEditForm(props: PersonEditFormProps) {
 
 			<TextInputField defaultValue={person?.name} isRequired={true} label="Name" name="name" />
 
+			<SelectField
+				defaultSelectedKey={
+					institutionsById.get(person?.institutions[0]?.id ?? "")?.countries[0]?.id
+				}
+				label="Country of Institution"
+				onSelectionChange={(key) => {
+					list.setFilterText(String(key));
+				}}
+			>
+				{Array.from(institutionCountries.values()).map((institutionCountry) => {
+					return (
+						<SelectItem
+							key={institutionCountry.id}
+							id={institutionCountry.id}
+							textValue={institutionCountry.name}
+						>
+							{institutionCountry.name}
+						</SelectItem>
+					);
+				})}
+			</SelectField>
+
 			{/* TODO: Multiple institutions */}
 			<SelectField
 				defaultSelectedKey={person?.institutions[0]?.id}
+				isDisabled={list.items.length === 0}
 				label="Institution"
 				name="institutions.0"
 			>
-				{Array.from(institutionsById.values()).map((institution) => {
+				{list.items.map((institution) => {
 					return (
 						<SelectItem key={institution.id} id={institution.id} textValue={institution.name}>
 							{institution.name}
