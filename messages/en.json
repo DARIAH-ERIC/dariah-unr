@@ -69,6 +69,12 @@
 		},
 		"title": "Admin dashboard"
 	},
+	"DashboardAdminContributionsPage": {
+		"meta": {
+			"title": "Contributions"
+		},
+		"title": "Contributions"
+	},
 	"DashboardAdminInstitutionsPage": {
 		"meta": {
 			"title": "Institutions"
@@ -249,6 +255,24 @@
 	},
 	"actions": {
 		"admin": {
+			"createContribtion": {
+				"errors": {
+					"default": "Could not create contribution."
+				},
+				"success": "Successfully created contribution."
+			},
+			"deleteContribtion": {
+				"errors": {
+					"default": "Could not delete contribution."
+				},
+				"success": "Successfully deleted contribution."
+			},
+			"updateContribtion": {
+				"errors": {
+					"default": "Failed to update contribution."
+				},
+				"success": "Successfully updated contribution."
+			},
 			"createInstitution": {
 				"errors": {
 					"default": "Could not create institution."
