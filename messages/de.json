@@ -87,6 +87,12 @@
 		},
 		"title": "Personen"
 	},
+	"DashboardAdminProjectsFundingsPage": {
+		"meta": {
+			"title": "Projektfinanzierungen"
+		},
+		"title": "Projektfinanzierungen"
+	},
 	"DashboardAdminReportsPage": {
 		"meta": {
 			"title": "Berichte"
@@ -296,6 +302,24 @@
 					"default": "Konnte Person nicht aktualisieren."
 				},
 				"success": "Person erfolgreich aktualisiert."
+			},
+			"createProjectFunding": {
+				"errors": {
+					"default": "Konnte Projektfinanzierung nicht erstellen."
+				},
+				"success": "Projektfinanzierung erfolgreich erstellt."
+			},
+			"deleteProjectFunding": {
+				"errors": {
+					"default": "Konnte Projektfinanzierung nicht entfernen."
+				},
+				"success": "Projektfinanzierung erfolgreich entfernt."
+			},
+			"updateProjectFunding": {
+				"errors": {
+					"default": "Konnte Projektfinanzierung nicht aktualisieren."
+				},
+				"success": "Projektfinanzierung erfolgreich aktualisiert."
 			},
 			"createService": {
 				"errors": {

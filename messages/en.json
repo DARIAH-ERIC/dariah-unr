@@ -87,6 +87,12 @@
 		},
 		"title": "Persons"
 	},
+	"DashboardAdminProjectsFundingsPage": {
+		"meta": {
+			"title": "Projects Fundings"
+		},
+		"title": "Projects Fundings"
+	},
 	"DashboardAdminReportsPage": {
 		"meta": {
 			"title": "Reports"
@@ -296,6 +302,24 @@
 					"default": "Failed to update person."
 				},
 				"success": "Successfully updated person."
+			},
+			"createProjectFunding": {
+				"errors": {
+					"default": "Could not create project funding."
+				},
+				"success": "Successfully created project funding."
+			},
+			"deleteProjectFunding": {
+				"errors": {
+					"default": "Could not delete project funding."
+				},
+				"success": "Successfully deleted project funding."
+			},
+			"updateProjectFunding": {
+				"errors": {
+					"default": "Failed to update project funding."
+				},
+				"success": "Successfully updated project funding."
 			},
 			"createService": {
 				"errors": {
