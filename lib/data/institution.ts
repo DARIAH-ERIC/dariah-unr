@@ -127,6 +127,7 @@ export function getInstitutions() {
 			countries: {
 				select: {
 					id: true,
+					name: true,
 				},
 			},
 		},
