@@ -291,26 +291,6 @@ Table working_groups {
   updatedAt DateTime [not null]
 }
 
-Table accounts {
-  id String [pk]
-  access_token String
-  expires_at Int
-  id_token String
-  provider String [not null]
-  providerAccountId String [not null]
-  refresh_token String
-  scope String
-  session_state String
-  token_type String
-  type String [not null]
-  userId String [not null]
-  user users [not null]
-
-  indexes {
-    (provider, providerAccountId) [unique]
-  }
-}
-
 Table users {
   id String [pk]
   email String [unique]
@@ -321,7 +301,6 @@ Table users {
   role UserRole [not null, default: 'contributor']
   status UserStatus [not null, default: 'unverified']
   countryId String
-  accounts accounts [not null]
   country countries
 }
 
@@ -546,7 +525,5 @@ Ref: service_reports.reportId > reports.id [delete: Cascade]
 Ref: service_reports.serviceId > services.id [delete: Cascade]
 
 Ref: service_kpis.serviceReportId > service_reports.id [delete: Cascade]
-
-Ref: accounts.userId > users.id [delete: Cascade]
 
 Ref: users.countryId > countries.id
