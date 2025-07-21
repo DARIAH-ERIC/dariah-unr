@@ -117,6 +117,7 @@ export function ProjectsFundingLeveragesFormContent(
 
 							<NumberInputField
 								defaultValue={Number(projectsFundingLeverage.amount)}
+								formatOptions={{ minimumFractionDigits: 2, maximumFractionDigits: 2 }}
 								isReadOnly={true}
 								label="Total amount"
 								name={`projectsFundingLeverages.${String(index)}.amount`}
