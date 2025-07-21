@@ -12,7 +12,6 @@ const formSchema = z.object({
 	id: z.string().min(1),
 	name: z.string().optional(),
 	role: z.enum(["admin", "contributor"]),
-	status: z.enum(["verified", "unverified"]),
 	countryId: z.string().optional(),
 });
 
@@ -52,10 +51,10 @@ export async function updateUserAction(
 		};
 	}
 
-	const { id, name, role, status, countryId } = result.data;
+	const { id, name, role, countryId } = result.data;
 
 	try {
-		await updateUser({ id, name, role, status, countryId });
+		await updateUser({ id, name, role, countryId });
 
 		revalidatePath("/[locale]/dashboard/admin/users", "page");
 

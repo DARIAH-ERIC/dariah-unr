@@ -1,6 +1,6 @@
+import type { Country } from "@prisma/client";
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
-import { useTranslations } from "next-intl";
 import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 
@@ -10,11 +10,11 @@ import { PageTitle } from "@/components/page-title";
 import { SubmitButton } from "@/components/submit-button";
 import { LinkButton } from "@/components/ui/link-button";
 import type { Locale } from "@/config/i18n.config";
-import { getCurrentUser } from "@/lib/auth/session";
 import { createHref } from "@/lib/create-href";
 import { getCountryById } from "@/lib/data/country";
 import { createReportForCountryId, getReportByCountryId } from "@/lib/data/report";
 import { redirect } from "@/lib/navigation";
+import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 interface DashboardPageProps {
 	params: {
@@ -38,13 +38,30 @@ export async function generateMetadata(
 	return metadata;
 }
 
-export default function DashboardPage(props: DashboardPageProps): ReactNode {
+export default async function DashboardPage(
+	props: DashboardPageProps,
+): Promise<Promise<ReactNode>> {
 	const { params } = props;
 
 	const { locale } = params;
 	setRequestLocale(locale);
 
-	const t = useTranslations("DashboardPage");
+	const t = await getTranslations("DashboardPage");
+
+	const { user } = await assertAuthenticated();
+
+	const year = new Date().getUTCFullYear() - 1;
+	const { countryId } = user;
+
+	if (countryId == null) {
+		notFound();
+	}
+
+	const country = await getCountryById({ id: countryId });
+
+	if (country == null) {
+		notFound();
+	}
 
 	return (
 		<MainContent className="container grid content-start gap-y-4 py-8">
@@ -71,34 +88,22 @@ export default function DashboardPage(props: DashboardPageProps): ReactNode {
 				</p>
 			</PageLeadIn>
 
-			<DashboardPageContent />
+			<DashboardPageContent country={country} year={year} />
 		</MainContent>
 	);
 }
 
-async function DashboardPageContent() {
+interface DashboardPageContentProps {
+	country: Country;
+	year: number;
+}
+
+async function DashboardPageContent(props: DashboardPageContentProps) {
+	const { country, year } = props;
+
 	const t = await getTranslations("DashboardPageContent");
 
-	const user = await getCurrentUser();
-
-	if (user == null) {
-		redirect("/");
-	}
-
-	const year = new Date().getUTCFullYear() - 1;
-	const { countryId } = user;
-
-	if (countryId == null) {
-		notFound();
-	}
-
-	const country = await getCountryById({ id: countryId });
-
-	if (country == null) {
-		notFound();
-	}
-
-	const report = await getReportByCountryId({ countryId, year });
+	const report = await getReportByCountryId({ countryId: country.id, year });
 
 	return (
 		<div className="my-2">
@@ -107,7 +112,7 @@ async function DashboardPageContent() {
 					action={async () => {
 						"use server";
 
-						await createReportForCountryId({ countryId, year });
+						await createReportForCountryId({ countryId: country.id, year });
 
 						redirect(
 							createHref({

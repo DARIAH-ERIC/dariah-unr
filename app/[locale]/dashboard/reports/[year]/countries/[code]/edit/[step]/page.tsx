@@ -25,19 +25,19 @@ import { LoadingIndicator } from "@/components/loading-indicator";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import type { Locale } from "@/config/i18n.config";
-import { getCurrentUser } from "@/lib/auth/session";
 import { createHref } from "@/lib/create-href";
 import { getCountryByCode } from "@/lib/data/country";
 import { getReportByCountryCode } from "@/lib/data/report";
 import { getCountryCodes as getStaticCountryCodes } from "@/lib/get-country-codes";
 import { getReportYears } from "@/lib/get-report-years";
-import { redirect } from "@/lib/navigation";
 import {
 	type DashboardCountryReportEditStepPageParams,
 	dashboardCountryReportEditStepPageParams,
 	dashboardCountryReportSteps,
 } from "@/lib/schemas/dashboard";
 import { reportCommentsSchema } from "@/lib/schemas/report";
+import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
+import type { User } from "@/lib/server/auth/sessions";
 import { createZoteroCollectionUrl } from "@/lib/zotero";
 
 interface DashboardCountryReportEditStepPageProps {
@@ -94,15 +94,17 @@ export async function generateMetadata(
 	return metadata;
 }
 
-export default function DashboardCountryReportEditStepPage(
+export default async function DashboardCountryReportEditStepPage(
 	props: DashboardCountryReportEditStepPageProps,
-): ReactNode {
+): Promise<ReactNode> {
 	const { params } = props;
 
 	const { locale } = params;
 	setRequestLocale(locale);
 
-	const t = useTranslations("DashboardCountryReportEditStepPage");
+	const t = await getTranslations("DashboardCountryReportEditStepPage");
+
+	const { user } = await assertAuthenticated();
 
 	const result = dashboardCountryReportEditStepPageParams.safeParse(params);
 	if (!result.success) notFound();
@@ -112,26 +114,22 @@ export default function DashboardCountryReportEditStepPage(
 		<MainContent className="container grid content-start gap-8 py-8">
 			<PageTitle>{t("title")}</PageTitle>
 
-			<DashboardCountryReportEditStepPageContent code={code} step={step} year={year} />
+			<DashboardCountryReportEditStepPageContent code={code} step={step} user={user} year={year} />
 		</MainContent>
 	);
 }
 
 interface DashboardCountryReportEditStepPageContentProps
-	extends DashboardCountryReportEditStepPageParams {}
+	extends DashboardCountryReportEditStepPageParams {
+	user: User;
+}
 
 async function DashboardCountryReportEditStepPageContent(
 	props: DashboardCountryReportEditStepPageContentProps,
 ) {
-	const { code, step, year } = props;
+	const { code, step, user, year } = props;
 
 	const t = await getTranslations("DashboardCountryReportEditStepPageContent");
-
-	const user = await getCurrentUser();
-
-	if (user == null) {
-		redirect("/");
-	}
 
 	const country = await getCountryByCode({ code });
 	if (country == null) notFound();

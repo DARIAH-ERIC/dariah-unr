@@ -27,7 +27,6 @@ async function seed() {
 			email: testUser.email,
 			name: testUser.name,
 			password: await hash(testUser.password, 10),
-			status: "verified",
 		},
 	});
 

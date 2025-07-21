@@ -576,26 +576,32 @@ enum UserRole {
   national_coordinator
 }
 
-enum UserStatus {
-  unverified
-  verified
-}
-
 model User {
   id String @id @default(uuid()) @db.Uuid
 
-  email         String?    @unique
-  emailVerified DateTime?  @map("email_verified")
-  name          String?
-  image         String?
-  password      String?
-  role          UserRole   @default(contributor)
-  status        UserStatus @default(unverified)
+  email    String   @unique
+  name     String
+  password String
+  role     UserRole @default(contributor)
 
   countryId String? @map("country_id") @db.Uuid
 
-  country Country? @relation(fields: [countryId], references: [id])
-  // sessions       Session[]
+  country  Country?  @relation(fields: [countryId], references: [id])
+  sessions Session[]
 
   @@map(name: "users")
+}
+
+model Session {
+  id String @id
+
+  secretHash     Bytes    @map(name: "secret_hash") @db.ByteA
+  createdAt      DateTime @map(name: "created_at")
+  lastVerifiedAt DateTime @map(name: "last_verified_at")
+
+  userId String @map("user_id") @db.Uuid
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map(name: "sessions")
 }

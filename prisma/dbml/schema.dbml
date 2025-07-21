@@ -293,15 +293,22 @@ Table working_groups {
 
 Table users {
   id String [pk]
-  email String [unique]
-  emailVerified DateTime
-  name String
-  image String
-  password String
+  email String [unique, not null]
+  name String [not null]
+  password String [not null]
   role UserRole [not null, default: 'contributor']
-  status UserStatus [not null, default: 'unverified']
   countryId String
   country countries
+  sessions sessions [not null]
+}
+
+Table sessions {
+  id String [pk]
+  secretHash Bytes [not null]
+  createdAt DateTime [not null]
+  lastVerifiedAt DateTime [not null]
+  userId String [not null]
+  user users [not null]
 }
 
 Table BodyToRole {
@@ -485,11 +492,6 @@ Enum UserRole {
   national_coordinator
 }
 
-Enum UserStatus {
-  unverified
-  verified
-}
-
 Ref: contributions.countryId > countries.id
 
 Ref: contributions.personId > persons.id [delete: Cascade]
@@ -527,3 +529,5 @@ Ref: service_reports.serviceId > services.id [delete: Cascade]
 Ref: service_kpis.serviceReportId > service_reports.id [delete: Cascade]
 
 Ref: users.countryId > countries.id
+
+Ref: sessions.userId > users.id [delete: Cascade]
