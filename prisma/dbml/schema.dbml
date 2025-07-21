@@ -31,6 +31,7 @@ Table contributions {
 Table countries {
   id String [pk]
   code String [not null]
+  description String
   endDate DateTime
   logo String
   marketplaceId Int

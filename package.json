@@ -5,9 +5,9 @@
 	"type": "module",
 	"engines": {
 		"node": "22.x",
-		"pnpm": "9.x"
+		"pnpm": "10.x"
 	},
-	"packageManager": "pnpm@9.15.5",
+	"packageManager": "pnpm@10.11.0",
 	"scripts": {
 		"analyze": "BUNDLE_ANALYZER=\"enabled\" next build --no-lint",
 		"build": "next build",
@@ -147,6 +147,7 @@
 		"tailwindcss-react-aria-components": "^1.1.6",
 		"tsx": "^4.19.1",
 		"typescript": "^5.6.3",
+		"typescript-eslint": "^8.33.0",
 		"vite-tsconfig-paths": "^5.0.1",
 		"vitest": "^2.1.2",
 		"vitest-mock-extended": "^2.0.2"
@@ -155,7 +156,17 @@
 		"overrides": {
 			"@prisma/generator-helper": "$prisma",
 			"@prisma/internals": "$prisma"
-		}
+		},
+		"onlyBuiltDependencies": [
+			"@prisma/client",
+			"@prisma/engines",
+			"@sentry/cli",
+			"bcrypt",
+			"esbuild",
+			"prisma",
+			"sharp",
+			"simple-git-hooks"
+		]
 	},
 	"browserslist": {
 		"development": [

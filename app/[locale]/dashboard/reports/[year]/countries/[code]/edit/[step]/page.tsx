@@ -7,6 +7,7 @@ import { type ReactNode, Suspense } from "react";
 
 import { AppLink } from "@/components/app-link";
 import { Delay } from "@/components/delay";
+import { ErrorBoundary } from "@/components/error-boundary";
 import { FormDescription } from "@/components/form-description";
 import { FormTitle } from "@/components/form-title";
 import { ConfirmationForm } from "@/components/forms/confirmation-form";
@@ -399,14 +400,16 @@ async function DashboardCountryReportEditStepPageContent(
 						</p>
 					</FormDescription>
 
-					<FormPlaceholder>
-						<PublicationsForm
-							comments={comments}
-							countryCode={code}
-							reportId={report.id}
-							year={year}
-						/>
-					</FormPlaceholder>
+					<ErrorBoundary fallback={<div>Failed to fetch publications from zotero.</div>}>
+						<FormPlaceholder>
+							<PublicationsForm
+								comments={comments}
+								countryCode={code}
+								reportId={report.id}
+								year={year}
+							/>
+						</FormPlaceholder>
+					</ErrorBoundary>
 
 					<Navigation code={code} next="project-funding-leverage" previous="software" year={year} />
 				</section>

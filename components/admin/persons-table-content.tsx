@@ -454,7 +454,7 @@ function PersonEditForm(props: PersonEditFormProps) {
 			{/* TODO: Multiple institutions */}
 			<SelectField
 				defaultSelectedKey={person?.institutions[0]?.id}
-				label="Country"
+				label="Institution"
 				name="institutions.0"
 			>
 				{Array.from(institutionsById.values()).map((institution) => {

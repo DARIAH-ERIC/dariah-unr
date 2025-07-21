@@ -11,8 +11,9 @@ FROM node:22-alpine AS build
 # @see https://github.com/nodejs/docker-node/issues/2175
 RUN ln -s /usr/lib/libssl.so.3 /lib/libssl.so.3
 
-# @see https://github.com/nodejs/corepack/issues/612#issuecomment-2631462297
-ENV COREPACK_INTEGRITY_KEYS='{"npm":[{"expires":"2025-01-29T00:00:00.000Z","keyid":"SHA256:jl3bwswu80PjjokCgh0o2w5c2U4LhQAE57gj9cz1kzA","keytype":"ecdsa-sha2-nistp256","scheme":"ecdsa-sha2-nistp256","key":"MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE1Olb3zMAFFxXKHiIkQO5cJ3Yhl5i6UPp+IhuteBJbuHcA5UogKo0EWtlWwW6KSaKoTNEYL7JlCQiVnkhBktUgg=="},{"expires":null,"keyid":"SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U","keytype":"ecdsa-sha2-nistp256","scheme":"ecdsa-sha2-nistp256","key":"MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEY6Ya7W++7aUPzvMTrezH6Ycx3c+HOKYCcNGybJZSCJq/fd7Qa8uuAKtdIkUQtQiEKERhAmE5lMMJhP8OkDOa2g=="}]}'
+ENV PNPM_HOME="/app/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+
 RUN corepack enable
 
 RUN mkdir /app && chown -R node:node /app
@@ -84,10 +85,24 @@ FROM node:22-alpine AS serve
 # @see https://github.com/nodejs/docker-node/issues/2175
 RUN ln -s /usr/lib/libssl.so.3 /lib/libssl.so.3
 
+ENV PNPM_HOME="/app/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+
+RUN corepack enable
+
 RUN mkdir /app && chown -R node:node /app
 WORKDIR /app
 
 USER node
+
+COPY --chown=node:node ./entrypoint.sh ./entrypoint.sh
+RUN chmod +x ./entrypoint.sh
+
+# Prisma CLI is used in entrypoint script to apply migrations.
+RUN pnpm add -g prisma@5
+
+COPY --chown=node:node ./prisma/schema.prisma ./prisma/schema.prisma
+COPY --chown=node:node ./prisma/migrations ./prisma/migrations
 
 COPY --from=build --chown=node:node /app/next.config.js ./
 COPY --from=build --chown=node:node /app/public ./public
@@ -102,4 +117,5 @@ ENV NODE_ENV=production
 
 EXPOSE 3000
 
+ENTRYPOINT ["./entrypoint.sh"]
 CMD ["node", "server.js"]
