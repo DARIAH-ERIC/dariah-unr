@@ -459,25 +459,25 @@ interface PersonEditFormProps {
 function PersonEditForm(props: PersonEditFormProps) {
 	const { institutionsById, formId, formAction, formState, person, onClose } = props;
 
+	const defaultSelectedInstitutionId = person?.institutions[0]?.id;
+	const defaultSelectedCountryId = defaultSelectedInstitutionId
+		? institutionsById.get(defaultSelectedInstitutionId)?.countries[0]?.id
+		: undefined;
+
 	const list = useListData({
 		initialItems: Array.from(institutionsById.values()),
-		filter: (item, countryId) => {
+		filter(item, countryId) {
 			return item.countries.some((country) => {
 				return country.id === countryId;
 			});
 		},
-		initialFilterText: institutionsById.get(person?.institutions[0]?.id ?? "")?.countries[0]?.id,
+		initialFilterText: defaultSelectedCountryId,
 	});
 
 	const institutionCountries = useMemo(() => {
-		return keyByToMap(
-			Array.from(institutionsById.values()).flatMap((institution) => {
-				return institution.countries;
-			}),
-			(country) => {
-				return country.id;
-			},
-		);
+		return Array.from(institutionsById.values()).flatMap((institution) => {
+			return institution.countries;
+		});
 	}, [institutionsById]);
 
 	return (
@@ -495,15 +495,13 @@ function PersonEditForm(props: PersonEditFormProps) {
 			<TextInputField defaultValue={person?.name} isRequired={true} label="Name" name="name" />
 
 			<SelectField
-				defaultSelectedKey={
-					institutionsById.get(person?.institutions[0]?.id ?? "")?.countries[0]?.id
-				}
+				defaultSelectedKey={defaultSelectedCountryId}
 				label="Country of Institution"
 				onSelectionChange={(key) => {
 					list.setFilterText(String(key));
 				}}
 			>
-				{Array.from(institutionCountries.values()).map((institutionCountry) => {
+				{institutionCountries.map((institutionCountry) => {
 					return (
 						<SelectItem
 							key={institutionCountry.id}
@@ -518,7 +516,7 @@ function PersonEditForm(props: PersonEditFormProps) {
 
 			{/* TODO: Multiple institutions */}
 			<SelectField
-				defaultSelectedKey={person?.institutions[0]?.id}
+				defaultSelectedKey={defaultSelectedInstitutionId}
 				isDisabled={list.items.length === 0}
 				label="Institution"
 				name="institutions.0"
