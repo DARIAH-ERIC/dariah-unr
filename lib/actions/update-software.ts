@@ -9,6 +9,7 @@ import { getReportComments, updateReportComments } from "@/lib/data/report";
 import { createSoftware } from "@/lib/data/software";
 import { getFormData } from "@/lib/get-form-data";
 import { type ReportCommentsSchema, softwareSchema } from "@/lib/schemas/report";
+import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 const formSchema = z.object({
 	addedSoftware: z.array(softwareSchema).optional().default([]),
@@ -46,6 +47,8 @@ export async function updateSoftwareAction(
 	formData: FormData,
 ): Promise<FormState> {
 	const t = await getTranslations("actions.updateSoftware");
+
+	await assertAuthenticated();
 
 	const input = getFormData(formData);
 	const result = formSchema.safeParse(input);

@@ -8,6 +8,7 @@ import { z } from "zod";
 
 import { createFullOutreach as createOutreach } from "@/lib/data/outreach";
 import { getFormData } from "@/lib/get-form-data";
+import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 const formSchema = z.object({
 	name: z.string().min(1),
@@ -40,6 +41,8 @@ export async function createOutreachAction(
 	formData: FormData,
 ): Promise<FormState> {
 	const t = await getTranslations("actions.admin.createOutreach");
+
+	await assertAuthenticated(["admin"]);
 
 	const input = getFormData(formData);
 	const result = formSchema.safeParse(input);

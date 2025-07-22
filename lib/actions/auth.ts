@@ -1,6 +1,6 @@
 "use server";
 
-import { getFormDataValues } from "@acdh-oeaw/lib";
+import { getFormDataValues, log } from "@acdh-oeaw/lib";
 import { getTranslations } from "next-intl/server";
 import type { z } from "zod";
 
@@ -65,6 +65,8 @@ export async function signInAction(
 			redirectToPathname = redirectTo;
 		}
 	} catch (error) {
+		log.error(error);
+
 		if (error instanceof InvalidCredentialsError) {
 			return {
 				status: "error" as const,

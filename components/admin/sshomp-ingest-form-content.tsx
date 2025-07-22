@@ -7,7 +7,7 @@ import { SubmitButton } from "@/components/submit-button";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
-import { ingestDataFromSshompAction } from "@/lib/actions/sshomp";
+import { ingestDataFromSshompAction } from "@/lib/actions/admin/sshomp";
 import { createKey } from "@/lib/create-key";
 
 export function AdminSshompIngestFormContent(): ReactNode {

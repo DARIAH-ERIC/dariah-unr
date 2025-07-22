@@ -9,6 +9,7 @@ import { z } from "zod";
 import { updateInstitution } from "@/lib/data/institution";
 import { getFormData } from "@/lib/get-form-data";
 import { nonEmptyString } from "@/lib/schemas/utils";
+import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 const formSchema = z.object({
 	id: z.string().min(1),
@@ -45,6 +46,8 @@ export async function updateInstitutionAction(
 	formData: FormData,
 ): Promise<FormState> {
 	const t = await getTranslations("actions.updateInstitution");
+
+	await assertAuthenticated();
 
 	const input = getFormData(formData);
 	const result = formSchema.safeParse(input);

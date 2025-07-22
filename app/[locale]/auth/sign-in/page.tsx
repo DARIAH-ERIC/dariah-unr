@@ -1,5 +1,4 @@
 import type { Metadata, ResolvingMetadata } from "next";
-import { useTranslations } from "next-intl";
 import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 
@@ -7,7 +6,9 @@ import { MainContent } from "@/components/main-content";
 import { SignInForm } from "@/components/sign-in-form";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Locale } from "@/config/i18n.config";
+import { redirect } from "@/lib/navigation";
 import { authSignInPageSearchParams } from "@/lib/schemas/auth";
+import { getCurrentSession } from "@/lib/server/auth/get-current-session";
 
 interface AuthSignInPageProps {
 	params: {
@@ -32,15 +33,21 @@ export async function generateMetadata(
 	return metadata;
 }
 
-export default function AuthSignInPage(props: AuthSignInPageProps): ReactNode {
+export default async function AuthSignInPage(props: AuthSignInPageProps): Promise<ReactNode> {
 	const { params, searchParams } = props;
 
 	const { locale } = params;
 	setRequestLocale(locale);
 
-	const t = useTranslations("AuthSignInPage");
+	const t = await getTranslations("AuthSignInPage");
 
 	const { callbackUrl } = authSignInPageSearchParams.parse(searchParams);
+
+	const { session } = await getCurrentSession();
+
+	if (session != null) {
+		redirect("/dashboard");
+	}
 
 	return (
 		<MainContent className="container grid place-content-center py-8">

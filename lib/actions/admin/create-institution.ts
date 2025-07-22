@@ -8,6 +8,7 @@ import { z } from "zod";
 
 import { createFullInstitution as createInstitution } from "@/lib/data/institution";
 import { getFormData } from "@/lib/get-form-data";
+import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 const formSchema = z.object({
 	name: z.string(),
@@ -43,6 +44,8 @@ export async function createInstitutionAction(
 	formData: FormData,
 ): Promise<FormState> {
 	const t = await getTranslations("actions.admin.createInstitution");
+
+	await assertAuthenticated(["admin"]);
 
 	const input = getFormData(formData);
 	const result = formSchema.safeParse(input);
