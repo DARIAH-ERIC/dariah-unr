@@ -79,7 +79,7 @@ type Action =
 interface AdminContributionsTableContentProps {
 	countries: Array<Country>;
 	persons: Array<Person>;
-	roles: Array<Pick<Role, "id" | "name">>;
+	roles: Array<Pick<Role, "id" | "name" | "type">>;
 	workingGroups: Array<WorkingGroup>;
 	contributions: Array<
 		Prisma.ContributionGetPayload<{
@@ -416,7 +416,7 @@ interface CreateContributionDialogProps {
 	action: Action | null;
 	countriesById: Map<Country["id"], Country>;
 	personsById: Map<Person["id"], Person>;
-	rolesById: Map<Role["id"], Pick<Role, "id" | "name">>;
+	rolesById: Map<Role["id"], Pick<Role, "id" | "name" | "type">>;
 	workingGroupsById: Map<WorkingGroup["id"], WorkingGroup>;
 	onClose: () => void;
 }
@@ -475,7 +475,7 @@ interface EditContributionDialogProps {
 	action: Action | null;
 	countriesById: Map<Country["id"], Country>;
 	personsById: Map<Person["id"], Person>;
-	rolesById: Map<Role["id"], Pick<Role, "id" | "name">>;
+	rolesById: Map<Role["id"], Pick<Role, "id" | "name" | "type">>;
 	workingGroupsById: Map<WorkingGroup["id"], WorkingGroup>;
 	onClose: () => void;
 }
@@ -533,7 +533,7 @@ function EditContributionDialog(props: EditContributionDialogProps) {
 interface ContributionEditFormProps {
 	countriesById: Map<Country["id"], Country>;
 	personsById: Map<Person["id"], Person>;
-	rolesById: Map<Role["id"], Pick<Role, "id" | "name">>;
+	rolesById: Map<Role["id"], Pick<Role, "id" | "name" | "type">>;
 	workingGroupsById: Map<WorkingGroup["id"], WorkingGroup>;
 	formId: string;
 	formAction: (formData: FormData) => void;
@@ -561,6 +561,11 @@ function ContributionEditForm(props: ContributionEditFormProps) {
 		contribution,
 		onClose,
 	} = props;
+
+	const [selectedRoleId, setSelectedRowId] = useState(contribution?.roleId);
+	const selectedRole = useMemo(() => {
+		return selectedRoleId ? rolesById.get(selectedRoleId) : undefined;
+	}, [rolesById, selectedRoleId]);
 
 	return (
 		<Form
@@ -590,10 +595,13 @@ function ContributionEditForm(props: ContributionEditFormProps) {
 			</SelectField>
 
 			<SelectField
-				defaultSelectedKey={contribution?.roleId}
 				isRequired={true}
 				label="Role"
 				name="roleId"
+				onSelectionChange={(key) => {
+					setSelectedRowId(key as string);
+				}}
+				selectedKey={selectedRoleId}
 			>
 				{Array.from(rolesById.values()).map((role) => {
 					return (
@@ -606,6 +614,7 @@ function ContributionEditForm(props: ContributionEditFormProps) {
 
 			<SelectField
 				defaultSelectedKey={contribution?.workingGroup?.id}
+				isDisabled={selectedRole == null || !["wg_chair", "wg_member"].includes(selectedRole.type)}
 				label="Working Group"
 				name="workingGroupId"
 			>

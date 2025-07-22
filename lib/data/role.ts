@@ -11,6 +11,7 @@ export function getRoles() {
 			annualValue: true,
 			id: true,
 			name: true,
+			type: true,
 		},
 	});
 }
