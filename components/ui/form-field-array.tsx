@@ -1,36 +1,20 @@
 import type { ReactNode } from "react";
-import type { PressEvent } from "react-aria-components";
+import { Group, type GroupProps } from "react-aria-components";
 
-import { Button } from "@/components/ui/button";
-import { type VariantProps, variants } from "@/lib/styles";
+import { Button, type ButtonProps } from "@/components/ui/button";
 
-export const formStyles = variants({
-	base: [],
-});
-
-export type FormStyles = VariantProps<typeof formStyles>;
-
-export interface FormFieldArrayProps {
-	children: ReactNode;
-	className: string;
-}
+export interface FormFieldArrayProps extends GroupProps {}
 
 export function FormFieldArray(props: FormFieldArrayProps): ReactNode {
-	const { children, className } = props;
-	return <div className={className}>{children}</div>;
+	const { children, ...rest } = props;
+
+	return <Group {...rest}>{children}</Group>;
 }
 
-export interface FormFieldArrayButtonProps {
-	children: ReactNode;
-	className: string;
-	onPress: ((e: PressEvent) => void) | undefined;
-}
+export interface FormFieldArrayButtonProps extends ButtonProps {}
 
 export function FormFieldArrayButton(props: FormFieldArrayButtonProps): ReactNode {
-	const { children, className, onPress } = props;
-	return (
-		<Button className={className} onPress={onPress}>
-			{children}
-		</Button>
-	);
+	const { children, ...rest } = props;
+
+	return <Button {...rest}>{children}</Button>;
 }
