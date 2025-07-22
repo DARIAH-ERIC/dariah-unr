@@ -143,8 +143,8 @@ export function AdminInstitutionsTableContent(
 
 				case "startDate":
 				case "endDate": {
-					const dateA = a[sortDescriptor.column]?.getDate() ?? 0;
-					const dateZ = z[sortDescriptor.column]?.getDate() ?? 0;
+					const dateA = a[sortDescriptor.column]?.getTime() ?? 0;
+					const dateZ = z[sortDescriptor.column]?.getTime() ?? 0;
 
 					return dateA - dateZ;
 				}

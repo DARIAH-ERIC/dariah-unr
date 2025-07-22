@@ -97,24 +97,26 @@ export function AdminProjectsFundingsTableContent(
 				case "totalAmount": {
 					const amountA = a[sortDescriptor.column] ?? 0;
 					const amountZ = z[sortDescriptor.column] ?? 0;
+
 					return Number(amountA) - Number(amountZ);
 				}
+
 				case "projectMonths": {
 					const amountA = a[sortDescriptor.column] ?? 0;
 					const amountZ = z[sortDescriptor.column] ?? 0;
 
 					return amountA - amountZ;
 				}
+
 				case "startDate": {
-					const dateA = a[sortDescriptor.column]?.getDate() ?? 0;
-					const dateZ = z[sortDescriptor.column]?.getDate() ?? 0;
+					const dateA = a[sortDescriptor.column]?.getTime() ?? 0;
+					const dateZ = z[sortDescriptor.column]?.getTime() ?? 0;
 
 					return dateA - dateZ;
 				}
 
 				default: {
 					const valueA = a[sortDescriptor.column] ?? "";
-
 					const valueZ = z[sortDescriptor.column] ?? "";
 
 					return valueA.localeCompare(valueZ);

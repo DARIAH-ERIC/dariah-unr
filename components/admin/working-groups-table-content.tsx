@@ -140,14 +140,17 @@ export function AdminWorkingGroupsTableContent(
 				case "chairs": {
 					const idA = a.chairs[0]?.id;
 					const chairA = idA ? (personByChairId(idA)?.name ?? "") : "";
+
 					const idZ = z.chairs[0]?.id;
 					const chairZ = idZ ? (personByChairId(idZ)?.name ?? "") : "";
+
 					return chairA.localeCompare(chairZ);
 				}
+
 				case "startDate":
 				case "endDate": {
-					const dateA = a[sortDescriptor.column]?.getDate() ?? 0;
-					const dateZ = z[sortDescriptor.column]?.getDate() ?? 0;
+					const dateA = a[sortDescriptor.column]?.getTime() ?? 0;
+					const dateZ = z[sortDescriptor.column]?.getTime() ?? 0;
 
 					return dateA - dateZ;
 				}
