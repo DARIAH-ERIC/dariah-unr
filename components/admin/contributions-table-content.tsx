@@ -191,7 +191,7 @@ export function AdminContributionsTableContent(
 		return items;
 	}, [sortDescriptor, list.items]);
 
-	const pagination = usePagination({ items: items });
+	const pagination = usePagination({ items });
 
 	const countryFilterOptions = useMemo(() => {
 		return [
@@ -218,6 +218,7 @@ export function AdminContributionsTableContent(
 			<div className="flex justify-end">
 				<Pagination pagination={pagination} />
 			</div>
+
 			<div className="flex justify-end">
 				<TableFilterSelect
 					defaultSelectedKey={EMPTY_FILTER}
@@ -228,6 +229,7 @@ export function AdminContributionsTableContent(
 					}}
 				/>
 			</div>
+
 			<Table
 				aria-label="Services"
 				className="w-full"
@@ -586,6 +588,7 @@ function ContributionEditForm(props: ContributionEditFormProps) {
 					);
 				})}
 			</SelectField>
+
 			<SelectField
 				defaultSelectedKey={contribution?.roleId}
 				isRequired={true}
@@ -600,6 +603,7 @@ function ContributionEditForm(props: ContributionEditFormProps) {
 					);
 				})}
 			</SelectField>
+
 			<SelectField
 				defaultSelectedKey={contribution?.workingGroup?.id}
 				label="Working Group"
@@ -613,6 +617,7 @@ function ContributionEditForm(props: ContributionEditFormProps) {
 					);
 				})}
 			</SelectField>
+
 			<SelectField defaultSelectedKey={contribution?.country?.id} label="Country" name="countryId">
 				{Array.from(countriesById.values()).map((country) => {
 					return (
@@ -630,7 +635,7 @@ function ContributionEditForm(props: ContributionEditFormProps) {
 						: undefined
 				}
 				granularity="day"
-				isRequired={true}
+				// isRequired={true}
 				label="Start date"
 				name="startDate"
 			/>

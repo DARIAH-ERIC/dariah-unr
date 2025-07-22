@@ -1,6 +1,6 @@
 "use server";
 
-import { log } from "@acdh-oeaw/lib";
+import { assert, log } from "@acdh-oeaw/lib";
 import { parseZonedDateTime } from "@internationalized/date";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
@@ -39,8 +39,7 @@ const formSchema = z.object({
 		.array(
 			z.object({
 				id: z.string().optional(),
-				personId: z.string().optional(),
-				roleId: z.string().optional(),
+				personId: z.string(),
 				startDate: z.coerce
 					.string()
 					.transform((startDate) => {
@@ -105,12 +104,9 @@ export async function updateWorkingGroupAction(
 	}
 
 	const { id, name, endDate, startDate, chairs } = result.data;
-	const role = await getRoleByType("wg_chair");
-	const roleId = role?.id;
 
-	chairs?.map((chair) => {
-		chair.roleId = roleId!;
-	});
+	const role = await getRoleByType("wg_chair");
+	assert(role != null, 'Missing role "wg_chair".');
 
 	try {
 		await updateWorkingGroup({
@@ -118,7 +114,9 @@ export async function updateWorkingGroupAction(
 			name,
 			endDate,
 			startDate,
-			chairs,
+			chairs: chairs?.map((chair) => {
+				return { ...chair, roleId: role.id };
+			}),
 		});
 
 		revalidatePath("/[locale]/dashboard/admin/working-groups", "page");

@@ -167,7 +167,7 @@ export function AdminInstitutionsTableContent(
 		return items;
 	}, [sortDescriptor, list.items, countriesById]);
 
-	const pagination = usePagination({ items: items });
+	const pagination = usePagination({ items });
 
 	const countryFilterOptions = useMemo(() => {
 		return [

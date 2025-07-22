@@ -11,8 +11,8 @@ import { getFormData } from "@/lib/get-form-data";
 
 const formSchema = z.object({
 	id: z.string(),
-	personId: z.string().optional(),
-	roleId: z.string().optional(),
+	personId: z.string(),
+	roleId: z.string(),
 	workingGroupId: z.string().optional(),
 	startDate: z.coerce
 		.string()

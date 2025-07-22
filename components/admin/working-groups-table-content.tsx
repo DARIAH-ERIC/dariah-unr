@@ -94,7 +94,7 @@ export function AdminWorkingGroupsTableContent(
 		});
 	}, [persons]);
 
-	const personByChairId = useCallback(
+	const getPersonByChairId = useCallback(
 		(chairId: string) => {
 			const chairPersonId = chairsById.get(chairId)?.personId;
 			if (!chairPersonId) return;
@@ -139,10 +139,10 @@ export function AdminWorkingGroupsTableContent(
 			switch (sortDescriptor.column) {
 				case "chairs": {
 					const idA = a.chairs[0]?.id;
-					const chairA = idA ? (personByChairId(idA)?.name ?? "") : "";
+					const chairA = idA ? (getPersonByChairId(idA)?.name ?? "") : "";
 
 					const idZ = z.chairs[0]?.id;
-					const chairZ = idZ ? (personByChairId(idZ)?.name ?? "") : "";
+					const chairZ = idZ ? (getPersonByChairId(idZ)?.name ?? "") : "";
 
 					return chairA.localeCompare(chairZ);
 				}
@@ -171,9 +171,9 @@ export function AdminWorkingGroupsTableContent(
 		}
 
 		return items;
-	}, [sortDescriptor, workingGroups, personByChairId]);
+	}, [sortDescriptor, workingGroups, getPersonByChairId]);
 
-	const pagination = usePagination({ items: items });
+	const pagination = usePagination({ items });
 
 	return (
 		<Fragment>
@@ -241,7 +241,7 @@ export function AdminWorkingGroupsTableContent(
 								<Cell>
 									{row.chairs
 										.map((chair) => {
-											const chairPersonName = personByChairId(chair.id)?.name ?? "";
+											const chairPersonName = getPersonByChairId(chair.id)?.name ?? "";
 											const chairPeriod = getChairPeriod(chair.id);
 											return chairPeriod ? `${chairPersonName} (${chairPeriod})` : chairPersonName;
 										})
@@ -501,8 +501,12 @@ function WorkingGroupEditForm(props: WorkingGroupEditFormProps) {
 	const { control } = useForm<{ chairs: Array<ChairFormValues> }>({
 		defaultValues: {
 			chairs: workingGroup?.chairs.map((chair) => {
-				const { personId, startDate, endDate, id: contributionId } = chair;
-				return { ...{ personId, startDate, endDate }, contributionId };
+				return {
+					personId: chair.personId,
+					startDate: chair.startDate,
+					endDate: chair.endDate,
+					contributionId: chair.id,
+				};
 			}),
 		},
 	});
@@ -525,6 +529,7 @@ function WorkingGroupEditForm(props: WorkingGroupEditFormProps) {
 				label="Name"
 				name="name"
 			/>
+
 			<ChairFormFieldArray chairsById={chairsById} control={control} persons={persons} />
 
 			<DateInputField

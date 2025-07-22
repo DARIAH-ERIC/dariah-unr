@@ -165,8 +165,8 @@ export function updateContributionEndDate(params: UpdateContributionEndDateParam
 
 interface UpdateContributionParams {
 	id: Contribution["id"];
-	personId?: Contribution["personId"];
-	roleId?: Contribution["roleId"];
+	personId: Contribution["personId"];
+	roleId: Contribution["roleId"];
 	countryId?: Contribution["countryId"];
 	startDate?: Contribution["startDate"];
 	endDate?: Contribution["endDate"];

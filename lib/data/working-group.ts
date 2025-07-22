@@ -22,13 +22,13 @@ export function getWorkingGroups() {
 
 interface CreateWorkingGroupParams {
 	name: WorkingGroup["name"];
-	chairs?: Array<{ personId: string; roleId?: string; endDate?: Date; startDate?: Date }>;
+	chairs?: Array<{ personId: string; roleId: string; endDate?: Date; startDate?: Date }>;
 	endDate?: WorkingGroup["endDate"];
 	startDate?: WorkingGroup["startDate"];
 }
 
 export function createWorkingGroup(params: CreateWorkingGroupParams) {
-	const { chairs, endDate, name, startDate } = params;
+	const { chairs = [], endDate, name, startDate } = params;
 
 	return db.workingGroup.create({
 		data: {
@@ -36,8 +36,9 @@ export function createWorkingGroup(params: CreateWorkingGroupParams) {
 			name,
 			startDate,
 			chairs: {
-				create: chairs?.map((chair) => {
+				create: chairs.map((chair) => {
 					const { endDate, personId, roleId, startDate } = chair;
+
 					return {
 						endDate,
 						person: { connect: { id: personId } },
@@ -55,8 +56,8 @@ interface UpdateWorkingGroupParams {
 	name?: WorkingGroup["name"];
 	chairs?: Array<{
 		id?: string;
-		personId?: string;
-		roleId?: string;
+		personId: string;
+		roleId: string;
 		endDate?: Date;
 		startDate?: Date;
 	}>;
@@ -65,7 +66,7 @@ interface UpdateWorkingGroupParams {
 }
 
 export function updateWorkingGroup(params: UpdateWorkingGroupParams) {
-	const { id, chairs, endDate, name, startDate } = params;
+	const { id, chairs = [], endDate, name, startDate } = params;
 
 	return db.workingGroup.update({
 		where: {
@@ -78,17 +79,22 @@ export function updateWorkingGroup(params: UpdateWorkingGroupParams) {
 			chairs: {
 				deleteMany: {
 					id: {
-						notIn: chairs?.map((chair) => {
-							return chair.id ?? "";
-						}),
+						notIn: chairs
+							.filter((chair) => {
+								return chair.id;
+							})
+							.map((chair) => {
+								return chair.id!;
+							}),
 					},
 				},
 				update: chairs
-					?.filter((chair) => {
+					.filter((chair) => {
 						return chair.id;
 					})
 					.map((chair) => {
 						const { id, endDate, personId, startDate } = chair;
+
 						return {
 							where: { id },
 							data: {
@@ -99,11 +105,12 @@ export function updateWorkingGroup(params: UpdateWorkingGroupParams) {
 						};
 					}),
 				create: chairs
-					?.filter((chair) => {
+					.filter((chair) => {
 						return !chair.id;
 					})
 					.map((chair) => {
 						const { endDate, personId, roleId, startDate } = chair;
+
 						return {
 							endDate,
 							person: { connect: { id: personId } },
