@@ -95,9 +95,9 @@
 	},
 	"DashboardAdminProjectsFundingsPage": {
 		"meta": {
-			"title": "Projects Fundings"
+			"title": "Project fundings"
 		},
-		"title": "Projects Fundings"
+		"title": "Project fundings"
 	},
 	"DashboardAdminReportsPage": {
 		"meta": {
