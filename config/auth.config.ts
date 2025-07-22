@@ -1,13 +1,5 @@
-export const publicRoutes: Array<RegExp | string> = [
-	"/",
-	/^\/api\/.*/,
-	/** Auth routes are always treated as public. */
-	// /^\/auth\/.*/,
-	"/contact",
-	/^\/documentation(\/.*)?/,
-	"/imprint",
-	"/keystatic",
-	"/opengraph-image",
-	"/privacy-policy",
-	"/terms-of-use",
-];
+export const inactivityTimeoutSeconds = 60 * 60 * 24 * 7; /** 7 days. */
+export const activityCheckIntervalSeconds = 60 * 60; /** 1 hour. */
+
+export const sessionCookieName = "session";
+export const sessionCookieMaxAgeSeconds = 60 * 60 * 24 * 30; /** 30 days. */

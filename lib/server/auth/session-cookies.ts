@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 
+import { sessionCookieMaxAgeSeconds, sessionCookieName } from "@/config/auth.config";
 import { env } from "@/config/env.config";
-import { sessionCookieMaxAgeSeconds, sessionCookieName } from "@/lib/server/auth/auth.config";
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function getSessionToken(): Promise<string | null> {

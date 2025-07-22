@@ -2,11 +2,8 @@ import "server-only";
 
 import type { Session as DbSession, User as DbUser } from "@prisma/client";
 
+import { activityCheckIntervalSeconds, inactivityTimeoutSeconds } from "@/config/auth.config";
 import { db } from "@/lib/db";
-import {
-	activityCheckIntervalSeconds,
-	inactivityTimeoutSeconds,
-} from "@/lib/server/auth/auth.config";
 import { constantTimeEqual, generateSecureRandomString, hashSecret } from "@/lib/server/auth/utils";
 
 export type Session = Omit<DbSession, "secretHash"> & {

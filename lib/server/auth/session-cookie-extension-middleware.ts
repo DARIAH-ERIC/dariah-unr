@@ -1,5 +1,5 @@
+import { sessionCookieMaxAgeSeconds, sessionCookieName } from "@/config/auth.config";
 import { env } from "@/config/env.config";
-import { sessionCookieMaxAgeSeconds, sessionCookieName } from "@/lib/server/auth/auth.config";
 import type { Middleware } from "@/lib/server/compose-middlewares";
 
 export const sessionCookieExtensionMiddleware: Middleware =
