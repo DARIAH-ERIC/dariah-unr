@@ -1,7 +1,7 @@
 "use client";
 
 import { parseAbsoluteToLocal } from "@internationalized/date";
-import type { Prisma } from "@prisma/client";
+import { type Prisma, ProjectScope } from "@prisma/client";
 import { MoreHorizontalIcon, PencilIcon, Trash2Icon } from "lucide-react";
 import { useFormatter } from "next-intl";
 import { Fragment, type ReactNode, useId, useMemo, useState } from "react";
@@ -18,6 +18,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/blocks/dropdown-menu";
 import { NumberInputField } from "@/components/ui/blocks/number-input-field";
+import { SelectField, SelectItem } from "@/components/ui/blocks/select-field";
 import { TextInputField } from "@/components/ui/blocks/text-input-field";
 import {
 	Dialog,
@@ -131,7 +132,7 @@ export function AdminProjectsFundingsTableContent(
 		return items;
 	}, [sortDescriptor, projectsFundingLeverages]);
 
-	const pagination = usePagination({ items: items });
+	const pagination = usePagination({ items });
 
 	return (
 		<Fragment>
@@ -389,6 +390,8 @@ interface ProjectFundingLeverageEditFormProps {
 function ProjectFundingLeverageEditForm(props: ProjectFundingLeverageEditFormProps) {
 	const { formId, formAction, formState, projectFundingLeverage, onClose } = props;
 
+	const scopes = Object.values(ProjectScope);
+
 	return (
 		<Form
 			action={(formData) => {
@@ -402,33 +405,51 @@ function ProjectFundingLeverageEditForm(props: ProjectFundingLeverageEditFormPro
 			{projectFundingLeverage != null ? (
 				<input name="id" type="hidden" value={projectFundingLeverage.id} />
 			) : null}
+
 			<TextInputField
 				defaultValue={projectFundingLeverage?.name}
 				isRequired={true}
 				label="Name"
 				name="name"
 			/>
+
 			<NumberInputField
 				defaultValue={Number(projectFundingLeverage?.amount)}
 				formatOptions={{ minimumFractionDigits: 2, maximumFractionDigits: 2 }}
+				// isRequired={true}
 				label="Amount"
 				name="amount"
 			/>
+
 			<TextInputField
 				defaultValue={projectFundingLeverage?.funders ?? undefined}
+				isRequired={true}
 				label="Funder"
 				name="funders"
 			/>
+
 			<NumberInputField
 				defaultValue={projectFundingLeverage?.projectMonths ?? undefined}
+				// isRequired={true}
 				label="Project months"
 				name="projectMonths"
 			/>
-			<TextInputField
-				defaultValue={projectFundingLeverage?.scope ?? undefined}
+
+			<SelectField
+				defaultSelectedKey={projectFundingLeverage?.scope ?? undefined}
+				isRequired={true}
 				label="Scope"
 				name="scope"
-			/>
+			>
+				{scopes.map((scope) => {
+					return (
+						<SelectItem key={scope} id={scope} textValue={scope}>
+							{scope}
+						</SelectItem>
+					);
+				})}
+			</SelectField>
+
 			<DateInputField
 				defaultValue={
 					projectFundingLeverage?.startDate
@@ -436,12 +457,15 @@ function ProjectFundingLeverageEditForm(props: ProjectFundingLeverageEditFormPro
 						: undefined
 				}
 				granularity="day"
+				// isRequired={true}
 				label="Start date"
 				name="startDate"
 			/>
+
 			<NumberInputField
 				defaultValue={Number(projectFundingLeverage?.totalAmount)}
 				formatOptions={{ minimumFractionDigits: 2, maximumFractionDigits: 2 }}
+				// isRequired={true}
 				label="Total Amount"
 				name="totalAmount"
 			/>
