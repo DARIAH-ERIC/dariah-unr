@@ -142,7 +142,7 @@ export function AdminContributionsTableContent(
 	});
 
 	const [sortDescriptor, setSortDescriptor] = useState({
-		column: "name" as "person" | "role" | "workingGroup" | "country" | "startDate" | "endDate",
+		column: "person" as "person" | "role" | "workingGroup" | "country" | "startDate" | "endDate",
 		direction: "ascending" as "ascending" | "descending",
 	});
 
