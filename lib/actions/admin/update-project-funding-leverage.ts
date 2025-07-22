@@ -1,7 +1,6 @@
 "use server";
 
 import { log } from "@acdh-oeaw/lib";
-import { parseZonedDateTime } from "@internationalized/date";
 import { ProjectScope } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
@@ -18,17 +17,7 @@ const formSchema = z.object({
 	projectMonths: z.coerce.number().optional(),
 	scope: z.enum(Object.values(ProjectScope) as [ProjectScope, ...Array<ProjectScope>]).optional(),
 	totalAmount: z.coerce.number().optional(),
-	startDate: z.coerce
-		.string()
-		.transform((startDate) => {
-			try {
-				const zonedDateTime = parseZonedDateTime(startDate);
-				return zonedDateTime.toDate();
-			} catch {
-				return new Date(startDate);
-			}
-		})
-		.optional(),
+	startDate: z.coerce.date().optional(),
 });
 
 type FormSchema = z.infer<typeof formSchema>;

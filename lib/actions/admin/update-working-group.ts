@@ -1,7 +1,6 @@
 "use server";
 
 import { assert, log } from "@acdh-oeaw/lib";
-import { parseZonedDateTime } from "@internationalized/date";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
@@ -13,55 +12,15 @@ import { getFormData } from "@/lib/get-form-data";
 const formSchema = z.object({
 	id: z.string(),
 	name: z.string(),
-	startDate: z.coerce
-		.string()
-		.transform((startDate) => {
-			try {
-				const zonedDateTime = parseZonedDateTime(startDate);
-				return zonedDateTime.toDate();
-			} catch {
-				return new Date(startDate);
-			}
-		})
-		.optional(),
-	endDate: z.coerce
-		.string()
-		.transform((endDate) => {
-			try {
-				const zonedDateTime = parseZonedDateTime(endDate);
-				return zonedDateTime.toDate();
-			} catch {
-				return new Date(endDate);
-			}
-		})
-		.optional(),
+	startDate: z.coerce.date().optional(),
+	endDate: z.coerce.date().optional(),
 	chairs: z
 		.array(
 			z.object({
 				id: z.string().optional(),
 				personId: z.string(),
-				startDate: z.coerce
-					.string()
-					.transform((startDate) => {
-						try {
-							const zonedDateTime = parseZonedDateTime(startDate);
-							return zonedDateTime.toDate();
-						} catch {
-							return new Date(startDate);
-						}
-					})
-					.optional(),
-				endDate: z.coerce
-					.string()
-					.transform((endDate) => {
-						try {
-							const zonedDateTime = parseZonedDateTime(endDate);
-							return zonedDateTime.toDate();
-						} catch {
-							return new Date(endDate);
-						}
-					})
-					.optional(),
+				startDate: z.coerce.date().optional(),
+				endDate: z.coerce.date().optional(),
 			}),
 		)
 		.optional(),

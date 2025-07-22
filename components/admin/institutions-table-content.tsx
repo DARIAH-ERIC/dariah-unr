@@ -1,7 +1,6 @@
 "use client";
 
 import { keyByToMap } from "@acdh-oeaw/lib";
-import { parseAbsoluteToLocal } from "@internationalized/date";
 import { type Country, InstitutionType, type Prisma } from "@prisma/client";
 import { useListData } from "@react-stately/data";
 import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
@@ -48,6 +47,7 @@ import { createInstitutionAction } from "@/lib/actions/admin/create-institution"
 import { deleteInstitutionAction } from "@/lib/actions/admin/delete-institution";
 import { updateInstitutionAction } from "@/lib/actions/admin/update-institution";
 import { createKey } from "@/lib/create-key";
+import { toDateValue } from "@/lib/to-date-value";
 
 const EMPTY_FILTER = "_all_";
 
@@ -556,20 +556,14 @@ function InstitutionEditForm(props: InstitutionEditFormProps) {
 			<TextInputField defaultValue={institution?.url[0] ?? undefined} label="URL" name="url.0" />
 
 			<DateInputField
-				defaultValue={
-					institution?.startDate
-						? parseAbsoluteToLocal(institution.startDate.toISOString())
-						: undefined
-				}
+				defaultValue={institution?.startDate ? toDateValue(institution.startDate) : undefined}
 				granularity="day"
 				label="Start date"
 				name="startDate"
 			/>
 
 			<DateInputField
-				defaultValue={
-					institution?.endDate ? parseAbsoluteToLocal(institution.endDate.toISOString()) : undefined
-				}
+				defaultValue={institution?.endDate ? toDateValue(institution.endDate) : undefined}
 				granularity="day"
 				label="End date"
 				name="endDate"

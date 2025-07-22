@@ -89,7 +89,7 @@ interface CreateContributionParams {
 	countryId?: Country["id"];
 	personId: Person["id"];
 	roleId: Role["id"];
-	startDate: Contribution["startDate"];
+	startDate?: Contribution["startDate"];
 	endDate?: Contribution["startDate"];
 	workingGroupId?: WorkingGroup["id"];
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import { parseAbsoluteToLocal } from "@internationalized/date";
 import { type Prisma, ProjectScope } from "@prisma/client";
 import { MoreHorizontalIcon, PencilIcon, Trash2Icon } from "lucide-react";
 import { useFormatter } from "next-intl";
@@ -37,6 +36,7 @@ import { Cell, Column, Row, Table, TableBody, TableHeader } from "@/components/u
 import { deleteProjectFundingLeverageAction } from "@/lib/actions/admin/delete-project-funding-leverage";
 import { updateProjectFundingLeverageAction } from "@/lib/actions/admin/update-project-funding-leverage";
 import { createKey } from "@/lib/create-key";
+import { toDateValue } from "@/lib/to-date-value";
 
 type Action =
 	| {
@@ -453,7 +453,7 @@ function ProjectFundingLeverageEditForm(props: ProjectFundingLeverageEditFormPro
 			<DateInputField
 				defaultValue={
 					projectFundingLeverage?.startDate
-						? parseAbsoluteToLocal(projectFundingLeverage.startDate.toISOString())
+						? toDateValue(projectFundingLeverage.startDate)
 						: undefined
 				}
 				granularity="day"

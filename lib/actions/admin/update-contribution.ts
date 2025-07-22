@@ -1,7 +1,6 @@
 "use server";
 
 import { log } from "@acdh-oeaw/lib";
-import { parseZonedDateTime } from "@internationalized/date";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
@@ -14,28 +13,8 @@ const formSchema = z.object({
 	personId: z.string(),
 	roleId: z.string(),
 	workingGroupId: z.string().optional(),
-	startDate: z.coerce
-		.string()
-		.transform((startDate) => {
-			try {
-				const zonedDateTime = parseZonedDateTime(startDate);
-				return zonedDateTime.toDate();
-			} catch {
-				return new Date(startDate);
-			}
-		})
-		.optional(),
-	endDate: z.coerce
-		.string()
-		.transform((endDate) => {
-			try {
-				const zonedDateTime = parseZonedDateTime(endDate);
-				return zonedDateTime.toDate();
-			} catch {
-				return new Date(endDate);
-			}
-		})
-		.optional(),
+	startDate: z.coerce.date().optional(),
+	endDate: z.coerce.date().optional(),
 	countryId: z.string().optional(),
 });
 

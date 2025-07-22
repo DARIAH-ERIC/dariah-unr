@@ -1,7 +1,6 @@
 "use client";
 
 import { keyByToMap } from "@acdh-oeaw/lib";
-import { parseAbsoluteToLocal } from "@internationalized/date";
 import type { Contribution, Person, Prisma } from "@prisma/client";
 import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useFormatter } from "next-intl";
@@ -40,6 +39,7 @@ import { createWorkingGroupAction } from "@/lib/actions/admin/create-working-gro
 import { deleteWorkingGroupAction } from "@/lib/actions/admin/delete-working-group";
 import { updateWorkingGroupAction } from "@/lib/actions/admin/update-working-group";
 import { createKey } from "@/lib/create-key";
+import { toDateValue } from "@/lib/to-date-value";
 
 type Action =
 	| {
@@ -533,22 +533,14 @@ function WorkingGroupEditForm(props: WorkingGroupEditFormProps) {
 			<ChairFormFieldArray chairsById={chairsById} control={control} persons={persons} />
 
 			<DateInputField
-				defaultValue={
-					workingGroup?.startDate
-						? parseAbsoluteToLocal(workingGroup.startDate.toISOString())
-						: undefined
-				}
+				defaultValue={workingGroup?.startDate ? toDateValue(workingGroup.startDate) : undefined}
 				granularity="day"
 				label="Start date"
 				name="startDate"
 			/>
 
 			<DateInputField
-				defaultValue={
-					workingGroup?.endDate
-						? parseAbsoluteToLocal(workingGroup.endDate.toISOString())
-						: undefined
-				}
+				defaultValue={workingGroup?.endDate ? toDateValue(workingGroup.endDate) : undefined}
 				granularity="day"
 				label="End date"
 				name="endDate"

@@ -1,7 +1,6 @@
 "use client";
 
 import { keyByToMap } from "@acdh-oeaw/lib";
-import { parseAbsoluteToLocal } from "@internationalized/date";
 import type { Country, Person, Prisma, Role, WorkingGroup } from "@prisma/client";
 import { useListData } from "@react-stately/data";
 import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
@@ -47,6 +46,7 @@ import { createContributionAction } from "@/lib/actions/admin/create-contributio
 import { deleteContributionAction } from "@/lib/actions/admin/delete-contribution";
 import { updateContributionAction } from "@/lib/actions/admin/update-contribution";
 import { createKey } from "@/lib/create-key";
+import { toDateValue } from "@/lib/to-date-value";
 
 const EMPTY_FILTER = "_all_";
 
@@ -155,18 +155,21 @@ export function AdminContributionsTableContent(
 
 					return countryA.localeCompare(countryZ);
 				}
+
 				case "person": {
 					const personA = a.person.name;
 					const personZ = z.person.name;
 
 					return personA.localeCompare(personZ);
 				}
+
 				case "role": {
 					const roleA = a.role.name;
 					const roleZ = z.role.name;
 
 					return roleA.localeCompare(roleZ);
 				}
+
 				case "workingGroup": {
 					const workingGroupA = a.country?.name ?? "";
 					const workingGroupZ = z.country?.name ?? "";
@@ -639,9 +642,7 @@ function ContributionEditForm(props: ContributionEditFormProps) {
 
 			<DateInputField
 				defaultValue={
-					contribution?.startDate
-						? parseAbsoluteToLocal(contribution.startDate.toISOString())
-						: undefined
+					contribution?.startDate ? toDateValue(contribution.startDate.toISOString()) : undefined
 				}
 				granularity="day"
 				// isRequired={true}
@@ -650,11 +651,7 @@ function ContributionEditForm(props: ContributionEditFormProps) {
 			/>
 
 			<DateInputField
-				defaultValue={
-					contribution?.endDate
-						? parseAbsoluteToLocal(contribution.endDate.toISOString())
-						: undefined
-				}
+				defaultValue={contribution?.endDate ? toDateValue(contribution.endDate) : undefined}
 				granularity="day"
 				label="End date"
 				name="endDate"

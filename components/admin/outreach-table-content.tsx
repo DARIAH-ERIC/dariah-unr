@@ -1,7 +1,6 @@
 "use client";
 
 import { keyByToMap } from "@acdh-oeaw/lib";
-import { parseAbsoluteToLocal } from "@internationalized/date";
 import { type Country, OutreachType, type Prisma } from "@prisma/client";
 import { useListData } from "@react-stately/data";
 import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
@@ -48,6 +47,7 @@ import { createOutreachAction } from "@/lib/actions/admin/create-outreach";
 import { deleteOutreachAction } from "@/lib/actions/admin/delete-outreach";
 import { updateOutreachAction } from "@/lib/actions/admin/update-outreach";
 import { createKey } from "@/lib/create-key";
+import { toDateValue } from "@/lib/to-date-value";
 
 const EMPTY_FILTER = "_all_";
 
@@ -539,18 +539,14 @@ function OutreachEditForm(props: OutreachEditFormProps) {
 			<TextInputField defaultValue={outreach?.url} isRequired={true} label="URL" name="url" />
 
 			<DateInputField
-				defaultValue={
-					outreach?.startDate ? parseAbsoluteToLocal(outreach.startDate.toISOString()) : undefined
-				}
+				defaultValue={outreach?.startDate ? toDateValue(outreach.startDate) : undefined}
 				granularity="day"
 				label="Start date"
 				name="startDate"
 			/>
 
 			<DateInputField
-				defaultValue={
-					outreach?.endDate ? parseAbsoluteToLocal(outreach.endDate.toISOString()) : undefined
-				}
+				defaultValue={outreach?.endDate ? toDateValue(outreach.endDate) : undefined}
 				granularity="day"
 				label="End date"
 				name="endDate"

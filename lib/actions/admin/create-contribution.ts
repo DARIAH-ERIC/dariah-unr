@@ -13,7 +13,7 @@ const formSchema = z.object({
 	personId: z.coerce.string(),
 	roleId: z.coerce.string(),
 	workingGroupId: z.coerce.string().optional(),
-	startDate: z.coerce.date(),
+	startDate: z.coerce.date().optional(),
 	endDate: z.coerce.date().optional(),
 });
 

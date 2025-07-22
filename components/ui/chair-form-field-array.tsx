@@ -1,4 +1,3 @@
-import { parseAbsoluteToLocal } from "@internationalized/date";
 import type { Contribution, Person } from "@prisma/client";
 import { PlusIcon, TrashIcon } from "lucide-react";
 import { useId } from "react";
@@ -9,6 +8,7 @@ import { DateInputField } from "@/components/ui/blocks/date-input-field";
 import { SelectField, SelectItem } from "@/components/ui/blocks/select-field";
 import { FormFieldArray, FormFieldArrayButton } from "@/components/ui/form-field-array";
 import { IconButton } from "@/components/ui/icon-button";
+import { toDateValue } from "@/lib/to-date-value";
 
 export interface ChairFormValues {
 	contributionId?: string;
@@ -69,9 +69,7 @@ export function ChairFormFieldArray(props: ChairFormFieldArrayProps) {
 
 								<DateInputField
 									className="w-32 shrink-0"
-									defaultValue={
-										startDate ? parseAbsoluteToLocal(startDate.toISOString()) : undefined
-									}
+									defaultValue={startDate ? toDateValue(startDate) : undefined}
 									granularity="day"
 									label="Start date"
 									name={`chairs.${String(index)}.startDate`}
@@ -79,7 +77,7 @@ export function ChairFormFieldArray(props: ChairFormFieldArrayProps) {
 
 								<DateInputField
 									className="w-32 shrink-0"
-									defaultValue={endDate ? parseAbsoluteToLocal(endDate.toISOString()) : undefined}
+									defaultValue={endDate ? toDateValue(endDate) : undefined}
 									granularity="day"
 									label="End date"
 									name={`chairs.${String(index)}.endDate`}
