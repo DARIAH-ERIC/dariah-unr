@@ -46,7 +46,7 @@ export async function updateReportStatusAction(
 ): Promise<FormState> {
 	const t = await getTranslations("actions.updateReport");
 
-	await assertAuthenticated();
+	await assertAuthenticated(["admin", "national_coordinator"]);
 
 	const input = getFormData(formData);
 	const result = formSchema.safeParse(input);
