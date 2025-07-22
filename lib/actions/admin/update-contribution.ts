@@ -1,11 +1,12 @@
 "use server";
 
-import { log } from "@acdh-oeaw/lib";
+import { assert, log } from "@acdh-oeaw/lib";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
 import { updateContribution } from "@/lib/data/contributions";
+import { getRoleByTypes } from "@/lib/data/role";
 import { getFormData } from "@/lib/get-form-data";
 
 const formSchema = z.object({
@@ -57,6 +58,24 @@ export async function updateContributionAction(
 	const { id, endDate, startDate, personId, countryId, roleId, workingGroupId } = result.data;
 
 	try {
+		const workingGroupRoles = await getRoleByTypes(["wg_chair", "wg_member"]);
+		assert(workingGroupRoles.length > 0, 'Missing role "wg_chair" or "wg_member".');
+		const workingGroupRoleIds = workingGroupRoles.map((role) => {
+			return role.id;
+		});
+
+		if (workingGroupRoleIds.includes(roleId)) {
+			assert(
+				workingGroupId != null,
+				'Working group must be provided when role is "wg_chair" or "wg_member".',
+			);
+		} else {
+			assert(
+				workingGroupId == null,
+				'Working group must be empty when role is not "wg_chair" or "wg_member".',
+			);
+		}
+
 		await updateContribution({
 			id,
 			personId,

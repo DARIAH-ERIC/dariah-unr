@@ -23,3 +23,13 @@ export function getRoleByType(type: RoleType) {
 		},
 	});
 }
+
+export function getRoleByTypes(types: Array<RoleType>) {
+	return db.role.findMany({
+		where: {
+			type: {
+				in: types,
+			},
+		},
+	});
+}

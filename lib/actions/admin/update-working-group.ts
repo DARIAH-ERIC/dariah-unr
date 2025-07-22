@@ -64,17 +64,18 @@ export async function updateWorkingGroupAction(
 
 	const { id, name, endDate, startDate, chairs } = result.data;
 
-	const role = await getRoleByType("wg_chair");
-	assert(role != null, 'Missing role "wg_chair".');
-
 	try {
+		const workingGroupChairRole = await getRoleByType("wg_chair");
+		assert(workingGroupChairRole != null, 'Missing role "wg_chair".');
+		const workingGroupChairRoleId = workingGroupChairRole.id;
+
 		await updateWorkingGroup({
 			id,
 			name,
 			endDate,
 			startDate,
 			chairs: chairs?.map((chair) => {
-				return { ...chair, roleId: role.id };
+				return { ...chair, roleId: workingGroupChairRoleId };
 			}),
 		});
 
