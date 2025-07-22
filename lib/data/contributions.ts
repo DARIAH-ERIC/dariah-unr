@@ -120,7 +120,7 @@ export function createContribution(params: CreateContributionParams) {
 			endDate,
 			startDate,
 			workingGroup:
-				countryId != null
+				workingGroupId != null
 					? {
 							connect: {
 								id: workingGroupId,
