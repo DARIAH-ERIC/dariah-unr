@@ -1,6 +1,5 @@
 "use client";
 
-import { parseAbsoluteToLocal, parseDate } from "@internationalized/date";
 import { ProjectScope, type ProjectsFundingLeverage, type Report } from "@prisma/client";
 import { useListData } from "@react-stately/data";
 import { PlusIcon } from "lucide-react";
@@ -32,6 +31,7 @@ import { updateProjectsFundingLeveragesAction } from "@/lib/actions/update-proje
 import { createKey } from "@/lib/create-key";
 import { getFormData } from "@/lib/get-form-data";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
+import { toDateValue } from "@/lib/to-date-value";
 
 interface AddedProjectsFundingLeverage {
 	_id: string;
@@ -99,7 +99,7 @@ export function ProjectsFundingLeveragesFormContent(
 							<DateInputField
 								defaultValue={
 									projectsFundingLeverage.startDate != null
-										? parseAbsoluteToLocal(projectsFundingLeverage.startDate.toISOString())
+										? toDateValue(projectsFundingLeverage.startDate)
 										: undefined
 								}
 								granularity="day"
@@ -185,7 +185,7 @@ function AddedProjectsFundingLeveragesSection(): ReactNode {
 						/>
 
 						<DateInputField
-							defaultValue={parseDate(addedProjectsFundingLeverage.startDate)}
+							defaultValue={toDateValue(addedProjectsFundingLeverage.startDate)}
 							granularity="day"
 							isReadOnly={true}
 							label="Start date"

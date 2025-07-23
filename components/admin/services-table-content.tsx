@@ -12,13 +12,13 @@ import {
 	ServiceStatus,
 	ServiceType,
 } from "@prisma/client";
-import { useListData } from "@react-stately/data";
 import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { Fragment, type ReactNode, useId, useMemo, useState } from "react";
 import type { Key } from "react-aria-components";
 import { useFormState } from "react-dom";
 
 import { Pagination } from "@/components/admin/pagination";
+import { EMPTY_FILTER, useFilteredItems } from "@/components/admin/use-filtered-items";
 import { usePagination } from "@/components/admin/use-pagination";
 import { SubmitButton } from "@/components/submit-button";
 import {
@@ -57,8 +57,6 @@ import { createServiceAction } from "@/lib/actions/admin/create-service";
 import { deleteServiceAction } from "@/lib/actions/admin/delete-service";
 import { updateServiceAction } from "@/lib/actions/admin/update-service";
 import { createKey } from "@/lib/create-key";
-
-const EMPTY_FILTER = "_all_";
 
 type Action =
 	| {
@@ -136,17 +134,10 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 		setAction(null);
 	}
 
-	const list = useListData({
-		initialItems: services,
-		filter: (item, countryId) => {
-			if (!countryId || countryId === EMPTY_FILTER) {
-				return true;
-			}
-
-			return item.countries.some((country) => {
-				return country.id === countryId;
-			});
-		},
+	const [filteredItems, setCountryIdFilter] = useFilteredItems(services, (service, countryId) => {
+		return service.countries.some((country) => {
+			return country.id === countryId;
+		});
 	});
 
 	const [sortDescriptor, setSortDescriptor] = useState({
@@ -155,7 +146,7 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 	});
 
 	const items = useMemo(() => {
-		const items = [...list.items].toSorted((a, z) => {
+		const items = filteredItems.toSorted((a, z) => {
 			switch (sortDescriptor.column) {
 				case "country": {
 					const idA = a.countries[0]?.id;
@@ -191,7 +182,7 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 		}
 
 		return items;
-	}, [sortDescriptor, list.items, countriesById, serviceSizesById]);
+	}, [sortDescriptor, filteredItems, countriesById, serviceSizesById]);
 
 	const pagination = usePagination({ items });
 
@@ -226,7 +217,7 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 					items={countryFilterOptions}
 					label="Filter by Country"
 					onSelectionChange={(key) => {
-						list.setFilterText(String(key));
+						setCountryIdFilter(String(key));
 					}}
 				/>
 			</div>

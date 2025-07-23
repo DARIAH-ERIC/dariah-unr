@@ -60,6 +60,14 @@ function DashboardAdminPageContent() {
 				<li>
 					<Link
 						className="grid place-content-center rounded-md border border-neutral-200 px-8 py-4 font-medium text-neutral-700 transition hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
+						href={createHref({ pathname: "/dashboard/admin/contributions" })}
+					>
+						Go to contributions
+					</Link>
+				</li>
+				<li>
+					<Link
+						className="grid place-content-center rounded-md border border-neutral-200 px-8 py-4 font-medium text-neutral-700 transition hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
 						href={createHref({ pathname: "/dashboard/admin/institutions" })}
 					>
 						Go to institutions
@@ -79,6 +87,14 @@ function DashboardAdminPageContent() {
 						href={createHref({ pathname: "/dashboard/admin/persons" })}
 					>
 						Go to persons
+					</Link>
+				</li>
+				<li>
+					<Link
+						className="grid place-content-center rounded-md border border-neutral-200 px-8 py-4 font-medium text-neutral-700 transition hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
+						href={createHref({ pathname: "/dashboard/admin/projects-fundings" })}
+					>
+						Go to projects fundings
 					</Link>
 				</li>
 				<li>
@@ -111,6 +127,14 @@ function DashboardAdminPageContent() {
 						href={createHref({ pathname: "/dashboard/admin/users" })}
 					>
 						Go to users
+					</Link>
+				</li>
+				<li>
+					<Link
+						className="grid place-content-center rounded-md border border-neutral-200 px-8 py-4 font-medium text-neutral-700 transition hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
+						href={createHref({ pathname: "/dashboard/admin/working-groups" })}
+					>
+						Go to working groups
 					</Link>
 				</li>
 				<li>

@@ -101,10 +101,6 @@ export default function LocaleLayout(props: LocaleLayoutProps): ReactNode {
 
 				<ColorSchemeScript />
 
-				<AnalyticsScript baseUrl={env.NEXT_PUBLIC_MATOMO_BASE_URL} id={env.NEXT_PUBLIC_MATOMO_ID} />
-
-				<SkipLink targetId={id}>{t("skip-to-main-content")}</SkipLink>
-
 				{/**
 				 * @see https://react-spectrum.adobe.com/react-aria/ssr.html#optimizing-bundle-size
 				 *
@@ -115,6 +111,13 @@ export default function LocaleLayout(props: LocaleLayoutProps): ReactNode {
 				<Translations locale={locale} />
 
 				<Providers locale={locale} messages={pick(messages, ["Error"])}>
+					<AnalyticsScript
+						baseUrl={env.NEXT_PUBLIC_MATOMO_BASE_URL}
+						id={env.NEXT_PUBLIC_MATOMO_ID}
+					/>
+
+					<SkipLink targetId={id}>{t("skip-to-main-content")}</SkipLink>
+
 					<AppLayout>
 						<AppHeader />
 						{children}

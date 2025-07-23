@@ -1,9 +1,7 @@
 "use client";
 
 import { keyByToMap } from "@acdh-oeaw/lib";
-import { parseAbsoluteToLocal } from "@internationalized/date";
 import { type Country, InstitutionType, type Prisma } from "@prisma/client";
-import { useListData } from "@react-stately/data";
 import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useFormatter } from "next-intl";
 import { Fragment, type ReactNode, useId, useMemo, useState } from "react";
@@ -11,6 +9,7 @@ import type { Key } from "react-aria-components";
 import { useFormState } from "react-dom";
 
 import { Pagination } from "@/components/admin/pagination";
+import { EMPTY_FILTER, useFilteredItems } from "@/components/admin/use-filtered-items";
 import { usePagination } from "@/components/admin/use-pagination";
 import { SubmitButton } from "@/components/submit-button";
 import { DateInputField } from "@/components/ui/blocks/date-input-field";
@@ -48,8 +47,7 @@ import { createInstitutionAction } from "@/lib/actions/admin/create-institution"
 import { deleteInstitutionAction } from "@/lib/actions/admin/delete-institution";
 import { updateInstitutionAction } from "@/lib/actions/admin/update-institution";
 import { createKey } from "@/lib/create-key";
-
-const EMPTY_FILTER = "_all_";
+import { toDateValue } from "@/lib/to-date-value";
 
 type Action =
 	| {
@@ -103,18 +101,14 @@ export function AdminInstitutionsTableContent(
 		setAction(null);
 	}
 
-	const list = useListData({
-		initialItems: institutions,
-		filter: (item, countryId) => {
-			if (!countryId || countryId === EMPTY_FILTER) {
-				return true;
-			}
-
-			return item.countries.some((country) => {
+	const [filteredItems, setCountryIdFilter] = useFilteredItems(
+		institutions,
+		(institution, countryId) => {
+			return institution.countries.some((country) => {
 				return country.id === countryId;
 			});
 		},
-	});
+	);
 
 	const [sortDescriptor, setSortDescriptor] = useState({
 		column: "name" as "country" | "endDate" | "name" | "startDate" | "types",
@@ -122,7 +116,7 @@ export function AdminInstitutionsTableContent(
 	});
 
 	const items = useMemo(() => {
-		const items = [...list.items].toSorted((a, z) => {
+		const items = filteredItems.toSorted((a, z) => {
 			switch (sortDescriptor.column) {
 				case "country": {
 					const idA = a.countries[0]?.id;
@@ -143,8 +137,8 @@ export function AdminInstitutionsTableContent(
 
 				case "startDate":
 				case "endDate": {
-					const dateA = a[sortDescriptor.column]?.getDate() ?? 0;
-					const dateZ = z[sortDescriptor.column]?.getDate() ?? 0;
+					const dateA = a[sortDescriptor.column]?.getTime() ?? 0;
+					const dateZ = z[sortDescriptor.column]?.getTime() ?? 0;
 
 					return dateA - dateZ;
 				}
@@ -165,9 +159,9 @@ export function AdminInstitutionsTableContent(
 		}
 
 		return items;
-	}, [sortDescriptor, list.items, countriesById]);
+	}, [sortDescriptor, filteredItems, countriesById]);
 
-	const pagination = usePagination({ items: items });
+	const pagination = usePagination({ items });
 
 	const countryFilterOptions = useMemo(() => {
 		return [
@@ -200,7 +194,7 @@ export function AdminInstitutionsTableContent(
 					items={countryFilterOptions}
 					label="Filter by Country"
 					onSelectionChange={(key) => {
-						list.setFilterText(String(key));
+						setCountryIdFilter(String(key));
 					}}
 				/>
 			</div>
@@ -556,20 +550,14 @@ function InstitutionEditForm(props: InstitutionEditFormProps) {
 			<TextInputField defaultValue={institution?.url[0] ?? undefined} label="URL" name="url.0" />
 
 			<DateInputField
-				defaultValue={
-					institution?.startDate
-						? parseAbsoluteToLocal(institution.startDate.toISOString())
-						: undefined
-				}
+				defaultValue={institution?.startDate ? toDateValue(institution.startDate) : undefined}
 				granularity="day"
 				label="Start date"
 				name="startDate"
 			/>
 
 			<DateInputField
-				defaultValue={
-					institution?.endDate ? parseAbsoluteToLocal(institution.endDate.toISOString()) : undefined
-				}
+				defaultValue={institution?.endDate ? toDateValue(institution.endDate) : undefined}
 				granularity="day"
 				label="End date"
 				name="endDate"

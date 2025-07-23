@@ -69,6 +69,12 @@
 		},
 		"title": "Admin dashboard"
 	},
+	"DashboardAdminContributionsPage": {
+		"meta": {
+			"title": "Contributions"
+		},
+		"title": "Contributions"
+	},
 	"DashboardAdminInstitutionsPage": {
 		"meta": {
 			"title": "Institutionen"
@@ -86,6 +92,12 @@
 			"title": "Personen"
 		},
 		"title": "Personen"
+	},
+	"DashboardAdminProjectsFundingsPage": {
+		"meta": {
+			"title": "Projektfinanzierungen"
+		},
+		"title": "Projektfinanzierungen"
 	},
 	"DashboardAdminReportsPage": {
 		"meta": {
@@ -122,6 +134,12 @@
 			"title": "Benutzer*innen"
 		},
 		"title": "Benutzer*innen"
+	},
+	"DashboardAdminWorkingGroupsPage": {
+		"meta": {
+			"title": "Arbeitsgruppen"
+		},
+		"title": "Arbeitsgruppen"
 	},
 	"DashboardCountryReportEditStepPage": {
 		"meta": {
@@ -237,6 +255,24 @@
 	},
 	"actions": {
 		"admin": {
+			"createContribution": {
+				"errors": {
+					"default": "Konnte Contribution nicht erstellen."
+				},
+				"success": "Contribution erfolgreich erstellt."
+			},
+			"deleteContribution": {
+				"errors": {
+					"default": "Konnte Contribution nicht entfernen."
+				},
+				"success": "Contribution erfolgreich entfernt."
+			},
+			"updateContribution": {
+				"errors": {
+					"default": "Konnte Contribution nicht aktualisieren."
+				},
+				"success": "Contribution erfolgreich aktualisiert."
+			},
 			"createInstitution": {
 				"errors": {
 					"default": "Konnte Institution nicht erstellen."
@@ -291,6 +327,24 @@
 				},
 				"success": "Person erfolgreich aktualisiert."
 			},
+			"createProjectFunding": {
+				"errors": {
+					"default": "Konnte Projektfinanzierung nicht erstellen."
+				},
+				"success": "Projektfinanzierung erfolgreich erstellt."
+			},
+			"deleteProjectFunding": {
+				"errors": {
+					"default": "Konnte Projektfinanzierung nicht entfernen."
+				},
+				"success": "Projektfinanzierung erfolgreich entfernt."
+			},
+			"updateProjectFunding": {
+				"errors": {
+					"default": "Konnte Projektfinanzierung nicht aktualisieren."
+				},
+				"success": "Projektfinanzierung erfolgreich aktualisiert."
+			},
 			"createService": {
 				"errors": {
 					"default": "Konnte Service nicht erstellen."
@@ -344,6 +398,24 @@
 					"default": "Konnte User nicht aktualisieren."
 				},
 				"success": "User erfolgreich aktualisiert."
+			},
+			"createWorkingGroup": {
+				"errors": {
+					"default": "Konnte Arbeitsgruppe nicht erstellen."
+				},
+				"success": "Arbeitsgruppe erfolgreich erstellt."
+			},
+			"deleteWorkingGroup": {
+				"errors": {
+					"default": "Konnte Arbeitsgruppe nicht entfernen."
+				},
+				"success": "Arbeitsgruppe erfolgreich entfernt."
+			},
+			"updateWorkingGroup": {
+				"errors": {
+					"default": "Konnte Arbeitsgruppe nicht aktualisieren."
+				},
+				"success": "Arbeitsgruppe erfolgreich aktualisiert."
 			}
 		},
 		"createOutreach": {
