@@ -7,7 +7,6 @@ import {
 	SoftwareMarketplaceStatus,
 	SoftwareStatus,
 } from "@prisma/client";
-import { useListData } from "@react-stately/data";
 import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { Fragment, type ReactNode, useId, useMemo, useState } from "react";
 import type { Key } from "react-aria-components";
@@ -102,18 +101,21 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 		setAction(null);
 	}
 
-	const list = useListData({
-		initialItems: software,
-		filter: (item, countryId) => {
-			if (!countryId || countryId === EMPTY_FILTER) {
-				return true;
-			}
+	const [countryIdFilter, setCountryIdFilter] = useState<string | null>(null);
 
-			return item.countries.some((country) => {
-				return country.id === countryId;
+	const filteredItems = useMemo(() => {
+		const countryId = countryIdFilter;
+
+		if (!countryId || countryId === EMPTY_FILTER) {
+			return software;
+		}
+
+		return software.filter((item) => {
+			return item.countries.some((c) => {
+				return c.id === countryId;
 			});
-		},
-	});
+		});
+	}, [countryIdFilter, software]);
 
 	const [sortDescriptor, setSortDescriptor] = useState({
 		column: "name" as "country" | "marketplaceStatus" | "name" | "status",
@@ -121,7 +123,7 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 	});
 
 	const items = useMemo(() => {
-		const items = [...list.items].toSorted((a, z) => {
+		const items = filteredItems.toSorted((a, z) => {
 			switch (sortDescriptor.column) {
 				case "country": {
 					const idA = a.countries[0]?.id;
@@ -147,7 +149,7 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 		}
 
 		return items;
-	}, [sortDescriptor, list.items, countriesById]);
+	}, [sortDescriptor, filteredItems, countriesById]);
 
 	const pagination = usePagination({ items });
 
@@ -182,7 +184,7 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 					items={countryFilterOptions}
 					label="Filter by Country"
 					onSelectionChange={(key) => {
-						list.setFilterText(String(key));
+						setCountryIdFilter(String(key));
 					}}
 				/>
 			</div>

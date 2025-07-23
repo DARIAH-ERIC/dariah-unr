@@ -2,7 +2,6 @@
 
 import { keyByToMap } from "@acdh-oeaw/lib";
 import type { Country, Person, Prisma, Role, WorkingGroup } from "@prisma/client";
-import { useListData } from "@react-stately/data";
 import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useFormatter } from "next-intl";
 import { Fragment, type ReactNode, useId, useMemo, useState } from "react";
@@ -130,16 +129,19 @@ export function AdminContributionsTableContent(
 		setAction(null);
 	}
 
-	const list = useListData({
-		initialItems: contributions,
-		filter: (item, countryId) => {
-			if (!countryId || countryId === EMPTY_FILTER) {
-				return true;
-			}
+	const [countryIdFilter, setCountryIdFilter] = useState<string | null>(null);
 
-			return item.country?.id === countryId;
-		},
-	});
+	const filteredItems = useMemo(() => {
+		const countryId = countryIdFilter;
+
+		if (!countryId || countryId === EMPTY_FILTER) {
+			return contributions;
+		}
+
+		return contributions.filter((item) => {
+			return item.countryId === countryId;
+		});
+	}, [countryIdFilter, contributions]);
 
 	const [sortDescriptor, setSortDescriptor] = useState({
 		column: "person" as "person" | "role" | "workingGroup" | "country" | "startDate" | "endDate",
@@ -147,7 +149,7 @@ export function AdminContributionsTableContent(
 	});
 
 	const items = useMemo(() => {
-		const items = list.items.toSorted((a, z) => {
+		const items = filteredItems.toSorted((a, z) => {
 			switch (sortDescriptor.column) {
 				case "country": {
 					const countryA = a.country?.name ?? "";
@@ -192,7 +194,7 @@ export function AdminContributionsTableContent(
 		}
 
 		return items;
-	}, [sortDescriptor, list.items]);
+	}, [sortDescriptor, filteredItems]);
 
 	const pagination = usePagination({ items });
 
@@ -228,7 +230,7 @@ export function AdminContributionsTableContent(
 					items={countryFilterOptions}
 					label="Filter by Country"
 					onSelectionChange={(key) => {
-						list.setFilterText(String(key));
+						setCountryIdFilter(String(key));
 					}}
 				/>
 			</div>

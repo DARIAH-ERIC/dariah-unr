@@ -2,7 +2,6 @@
 
 import { keyByToMap } from "@acdh-oeaw/lib";
 import { type Country, OutreachType, type Prisma } from "@prisma/client";
-import { useListData } from "@react-stately/data";
 import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useFormatter } from "next-intl";
 import { Fragment, type ReactNode, useId, useMemo, useState } from "react";
@@ -101,16 +100,19 @@ export function AdminOutreachTableContent(props: AdminOutreachTableContentProps)
 		setAction(null);
 	}
 
-	const list = useListData({
-		initialItems: outreach,
-		filter: (item, countryId) => {
-			if (!countryId || countryId === EMPTY_FILTER) {
-				return true;
-			}
+	const [countryIdFilter, setCountryIdFilter] = useState<string | null>(null);
 
+	const filteredItems = useMemo(() => {
+		const countryId = countryIdFilter;
+
+		if (!countryId || countryId === EMPTY_FILTER) {
+			return outreach;
+		}
+
+		return outreach.filter((item) => {
 			return item.countryId === countryId;
-		},
-	});
+		});
+	}, [countryIdFilter, outreach]);
 
 	const [sortDescriptor, setSortDescriptor] = useState({
 		column: "name" as "country" | "endDate" | "name" | "startDate" | "type",
@@ -118,7 +120,7 @@ export function AdminOutreachTableContent(props: AdminOutreachTableContentProps)
 	});
 
 	const items = useMemo(() => {
-		const items = [...list.items].toSorted((a, z) => {
+		const items = filteredItems.toSorted((a, z) => {
 			switch (sortDescriptor.column) {
 				case "country": {
 					const idA = a.country?.id;
@@ -161,7 +163,7 @@ export function AdminOutreachTableContent(props: AdminOutreachTableContentProps)
 		}
 
 		return items;
-	}, [sortDescriptor, list.items, countriesById]);
+	}, [sortDescriptor, filteredItems, countriesById]);
 
 	const pagination = usePagination({ items });
 
@@ -196,7 +198,7 @@ export function AdminOutreachTableContent(props: AdminOutreachTableContentProps)
 					items={countryFilterOptions}
 					label="Filter by Country"
 					onSelectionChange={(key) => {
-						list.setFilterText(String(key));
+						setCountryIdFilter(String(key));
 					}}
 				/>
 			</div>

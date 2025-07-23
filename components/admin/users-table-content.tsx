@@ -2,7 +2,6 @@
 
 import { keyByToMap } from "@acdh-oeaw/lib";
 import { type Country, type Prisma, UserRole, UserStatus } from "@prisma/client";
-import { useListData } from "@react-stately/data";
 import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { Fragment, type ReactNode, useId, useMemo, useState } from "react";
 import type { Key } from "react-aria-components";
@@ -94,16 +93,19 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 		setAction(null);
 	}
 
-	const list = useListData({
-		initialItems: users,
-		filter: (item, countryId) => {
-			if (!countryId || countryId === EMPTY_FILTER) {
-				return true;
-			}
+	const [countryIdFilter, setCountryIdFilter] = useState<string | null>(null);
 
+	const filteredItems = useMemo(() => {
+		const countryId = countryIdFilter;
+
+		if (!countryId || countryId === EMPTY_FILTER) {
+			return users;
+		}
+
+		return users.filter((item) => {
 			return item.countryId === countryId;
-		},
-	});
+		});
+	}, [countryIdFilter, users]);
 
 	const [sortDescriptor, setSortDescriptor] = useState({
 		column: "name" as "country" | "name" | "role" | "status",
@@ -111,7 +113,7 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 	});
 
 	const items = useMemo(() => {
-		const items = [...list.items].toSorted((a, z) => {
+		const items = filteredItems.toSorted((a, z) => {
 			switch (sortDescriptor.column) {
 				case "country": {
 					const idA = a.country?.id;
@@ -137,7 +139,7 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 		}
 
 		return items;
-	}, [sortDescriptor, list.items, countriesById]);
+	}, [sortDescriptor, filteredItems, countriesById]);
 
 	const pagination = usePagination({ items });
 
@@ -172,7 +174,7 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 					items={countryFilterOptions}
 					label="Filter by Country"
 					onSelectionChange={(key) => {
-						list.setFilterText(String(key));
+						setCountryIdFilter(String(key));
 					}}
 				/>
 			</div>

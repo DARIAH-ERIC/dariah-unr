@@ -12,7 +12,6 @@ import {
 	ServiceStatus,
 	ServiceType,
 } from "@prisma/client";
-import { useListData } from "@react-stately/data";
 import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { Fragment, type ReactNode, useId, useMemo, useState } from "react";
 import type { Key } from "react-aria-components";
@@ -136,18 +135,21 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 		setAction(null);
 	}
 
-	const list = useListData({
-		initialItems: services,
-		filter: (item, countryId) => {
-			if (!countryId || countryId === EMPTY_FILTER) {
-				return true;
-			}
+	const [countryIdFilter, setCountryIdFilter] = useState<string | null>(null);
 
-			return item.countries.some((country) => {
-				return country.id === countryId;
+	const filteredItems = useMemo(() => {
+		const countryId = countryIdFilter;
+
+		if (!countryId || countryId === EMPTY_FILTER) {
+			return services;
+		}
+
+		return services.filter((item) => {
+			return item.countries.some((c) => {
+				return c.id === countryId;
 			});
-		},
-	});
+		});
+	}, [countryIdFilter, services]);
 
 	const [sortDescriptor, setSortDescriptor] = useState({
 		column: "name" as "country" | "marketplaceStatus" | "name" | "size" | "status" | "type",
@@ -155,7 +157,7 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 	});
 
 	const items = useMemo(() => {
-		const items = [...list.items].toSorted((a, z) => {
+		const items = filteredItems.toSorted((a, z) => {
 			switch (sortDescriptor.column) {
 				case "country": {
 					const idA = a.countries[0]?.id;
@@ -191,7 +193,7 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 		}
 
 		return items;
-	}, [sortDescriptor, list.items, countriesById, serviceSizesById]);
+	}, [sortDescriptor, filteredItems, countriesById, serviceSizesById]);
 
 	const pagination = usePagination({ items });
 
@@ -226,7 +228,7 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 					items={countryFilterOptions}
 					label="Filter by Country"
 					onSelectionChange={(key) => {
-						list.setFilterText(String(key));
+						setCountryIdFilter(String(key));
 					}}
 				/>
 			</div>

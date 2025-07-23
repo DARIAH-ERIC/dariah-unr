@@ -2,7 +2,6 @@
 
 import { keyByToMap } from "@acdh-oeaw/lib";
 import { type Country, InstitutionType, type Prisma } from "@prisma/client";
-import { useListData } from "@react-stately/data";
 import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useFormatter } from "next-intl";
 import { Fragment, type ReactNode, useId, useMemo, useState } from "react";
@@ -103,18 +102,21 @@ export function AdminInstitutionsTableContent(
 		setAction(null);
 	}
 
-	const list = useListData({
-		initialItems: institutions,
-		filter: (item, countryId) => {
-			if (!countryId || countryId === EMPTY_FILTER) {
-				return true;
-			}
+	const [countryIdFilter, setCountryIdFilter] = useState<string | null>(null);
 
-			return item.countries.some((country) => {
-				return country.id === countryId;
+	const filteredItems = useMemo(() => {
+		const countryId = countryIdFilter;
+
+		if (!countryId || countryId === EMPTY_FILTER) {
+			return institutions;
+		}
+
+		return institutions.filter((item) => {
+			return item.countries.some((c) => {
+				return c.id === countryId;
 			});
-		},
-	});
+		});
+	}, [countryIdFilter, institutions]);
 
 	const [sortDescriptor, setSortDescriptor] = useState({
 		column: "name" as "country" | "endDate" | "name" | "startDate" | "types",
@@ -122,7 +124,7 @@ export function AdminInstitutionsTableContent(
 	});
 
 	const items = useMemo(() => {
-		const items = [...list.items].toSorted((a, z) => {
+		const items = filteredItems.toSorted((a, z) => {
 			switch (sortDescriptor.column) {
 				case "country": {
 					const idA = a.countries[0]?.id;
@@ -165,7 +167,7 @@ export function AdminInstitutionsTableContent(
 		}
 
 		return items;
-	}, [sortDescriptor, list.items, countriesById]);
+	}, [sortDescriptor, filteredItems, countriesById]);
 
 	const pagination = usePagination({ items });
 
@@ -200,7 +202,7 @@ export function AdminInstitutionsTableContent(
 					items={countryFilterOptions}
 					label="Filter by Country"
 					onSelectionChange={(key) => {
-						list.setFilterText(String(key));
+						setCountryIdFilter(String(key));
 					}}
 				/>
 			</div>
