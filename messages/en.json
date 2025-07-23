@@ -63,6 +63,12 @@
 		},
 		"title": "Admin dashboard"
 	},
+	"DashboardAdminContributionsPage": {
+		"meta": {
+			"title": "Contributions"
+		},
+		"title": "Contributions"
+	},
 	"DashboardAdminInstitutionsPage": {
 		"meta": {
 			"title": "Institutions"
@@ -80,6 +86,12 @@
 			"title": "Persons"
 		},
 		"title": "Persons"
+	},
+	"DashboardAdminProjectsFundingsPage": {
+		"meta": {
+			"title": "Project fundings"
+		},
+		"title": "Project fundings"
 	},
 	"DashboardAdminReportsPage": {
 		"meta": {
@@ -116,6 +128,12 @@
 			"title": "Users"
 		},
 		"title": "Users"
+	},
+	"DashboardAdminWorkingGroupsPage": {
+		"meta": {
+			"title": "Working groups"
+		},
+		"title": "Working groups"
 	},
 	"DashboardCountryReportEditStepPage": {
 		"meta": {
@@ -225,6 +243,24 @@
 	},
 	"actions": {
 		"admin": {
+			"createContribtion": {
+				"errors": {
+					"default": "Could not create contribution."
+				},
+				"success": "Successfully created contribution."
+			},
+			"deleteContribtion": {
+				"errors": {
+					"default": "Could not delete contribution."
+				},
+				"success": "Successfully deleted contribution."
+			},
+			"updateContribtion": {
+				"errors": {
+					"default": "Failed to update contribution."
+				},
+				"success": "Successfully updated contribution."
+			},
 			"createInstitution": {
 				"errors": {
 					"default": "Could not create institution."
@@ -279,6 +315,24 @@
 				},
 				"success": "Successfully updated person."
 			},
+			"createProjectFunding": {
+				"errors": {
+					"default": "Could not create project funding."
+				},
+				"success": "Successfully created project funding."
+			},
+			"deleteProjectFunding": {
+				"errors": {
+					"default": "Could not delete project funding."
+				},
+				"success": "Successfully deleted project funding."
+			},
+			"updateProjectFunding": {
+				"errors": {
+					"default": "Failed to update project funding."
+				},
+				"success": "Successfully updated project funding."
+			},
 			"createService": {
 				"errors": {
 					"default": "Could not create service."
@@ -332,6 +386,24 @@
 					"default": "Failed to update user."
 				},
 				"success": "Successfully updated user."
+			},
+			"createWorkingGroup": {
+				"errors": {
+					"default": "Could not create working group."
+				},
+				"success": "Successfully created working group."
+			},
+			"deleteWorkingGroup": {
+				"errors": {
+					"default": "Could not delete working group."
+				},
+				"success": "Successfully deleted working group."
+			},
+			"updateWorkingGroup": {
+				"errors": {
+					"default": "Could not update working group."
+				},
+				"success": "Successfully updated working group."
 			}
 		},
 		"createOutreach": {

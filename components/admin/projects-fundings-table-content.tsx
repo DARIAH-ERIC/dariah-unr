@@ -1,24 +1,24 @@
 "use client";
 
-import { keyByToMap } from "@acdh-oeaw/lib";
-import { type Country, type Prisma, UserRole } from "@prisma/client";
-import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
+import { type Prisma, ProjectScope } from "@prisma/client";
+import { MoreHorizontalIcon, PencilIcon, Trash2Icon } from "lucide-react";
+import { useFormatter } from "next-intl";
 import { Fragment, type ReactNode, useId, useMemo, useState } from "react";
 import type { Key } from "react-aria-components";
 import { useFormState } from "react-dom";
 
 import { Pagination } from "@/components/admin/pagination";
-import { EMPTY_FILTER, useFilteredItems } from "@/components/admin/use-filtered-items";
 import { usePagination } from "@/components/admin/use-pagination";
 import { SubmitButton } from "@/components/submit-button";
+import { DateInputField } from "@/components/ui/blocks/date-input-field";
 import {
 	DropdownMenu,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/blocks/dropdown-menu";
+import { NumberInputField } from "@/components/ui/blocks/number-input-field";
 import { SelectField, SelectItem } from "@/components/ui/blocks/select-field";
 import { TextInputField } from "@/components/ui/blocks/text-input-field";
-import { Button } from "@/components/ui/button";
 import {
 	Dialog,
 	DialogCancelButton,
@@ -32,59 +32,46 @@ import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
 import { IconButton } from "@/components/ui/icon-button";
 import { Modal, ModalOverlay } from "@/components/ui/modal";
-import {
-	Cell,
-	Column,
-	Row,
-	Table,
-	TableBody,
-	TableFilterSelect,
-	TableHeader,
-} from "@/components/ui/table";
-import { createUserAction } from "@/lib/actions/admin/create-user";
-import { deleteUserAction } from "@/lib/actions/admin/delete-user";
-import { updateUserAction } from "@/lib/actions/admin/update-user";
+import { Cell, Column, Row, Table, TableBody, TableHeader } from "@/components/ui/table";
+import { deleteProjectFundingLeverageAction } from "@/lib/actions/admin/delete-project-funding-leverage";
+import { updateProjectFundingLeverageAction } from "@/lib/actions/admin/update-project-funding-leverage";
 import { createKey } from "@/lib/create-key";
+import { toDateValue } from "@/lib/to-date-value";
 
 type Action =
 	| {
-			kind: "create";
-			item: null;
-	  }
-	| {
 			kind: "delete";
-			item: Prisma.UserGetPayload<{
+			item: Prisma.ProjectsFundingLeverageGetPayload<{
 				include: {
-					country: { select: { id: true } };
+					report: { select: { id: true } };
 				};
 			}>;
 	  }
 	| {
 			kind: "edit";
-			item: Prisma.UserGetPayload<{
+			item: Prisma.ProjectsFundingLeverageGetPayload<{
 				include: {
-					country: { select: { id: true } };
+					report: { select: { id: true } };
 				};
 			}>;
 	  };
 
-interface AdminUsersTableContentProps {
-	countries: Array<Country>;
-	users: Array<
-		Prisma.UserGetPayload<{
-			include: { country: { select: { id: true } } };
+interface AdminProjectsFundingsTableContentProps {
+	projectsFundingLeverages: Array<
+		Prisma.ProjectsFundingLeverageGetPayload<{
+			include: {
+				report: { select: { id: true } };
+			};
 		}>
 	>;
 }
 
-export function AdminUsersTableContent(props: AdminUsersTableContentProps): ReactNode {
-	const { countries, users } = props;
+export function AdminProjectsFundingsTableContent(
+	props: AdminProjectsFundingsTableContentProps,
+): ReactNode {
+	const { projectsFundingLeverages } = props;
 
-	const countriesById = useMemo(() => {
-		return keyByToMap(countries, (country) => {
-			return country.id;
-		});
-	}, [countries]);
+	const { dateTime, number } = useFormatter();
 
 	const [action, setAction] = useState<Action | null>(null);
 
@@ -92,31 +79,46 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 		setAction(null);
 	}
 
-	const [filteredItems, setCountryIdFilter] = useFilteredItems(users, (user, countryId) => {
-		return user.countryId === countryId;
-	});
-
 	const [sortDescriptor, setSortDescriptor] = useState({
-		column: "name" as "country" | "name" | "role",
+		column: "name" as
+			| "amount"
+			| "funders"
+			| "name"
+			| "projectMonths"
+			| "scope"
+			| "startDate"
+			| "totalAmount",
 		direction: "ascending" as "ascending" | "descending",
 	});
 
 	const items = useMemo(() => {
-		const items = filteredItems.toSorted((a, z) => {
+		const items = projectsFundingLeverages.toSorted((a, z) => {
 			switch (sortDescriptor.column) {
-				case "country": {
-					const idA = a.country?.id;
-					const countryA = idA ? (countriesById.get(idA)?.name ?? "") : "";
+				case "amount":
+				case "totalAmount": {
+					const amountA = a[sortDescriptor.column] ?? 0;
+					const amountZ = z[sortDescriptor.column] ?? 0;
 
-					const idZ = z.country?.id;
-					const countryZ = idZ ? (countriesById.get(idZ)?.name ?? "") : "";
+					return Number(amountA) - Number(amountZ);
+				}
 
-					return countryA.localeCompare(countryZ);
+				case "projectMonths": {
+					const amountA = a[sortDescriptor.column] ?? 0;
+					const amountZ = z[sortDescriptor.column] ?? 0;
+
+					return amountA - amountZ;
+				}
+
+				case "startDate": {
+					const dateA = a[sortDescriptor.column]?.getTime() ?? 0;
+					const dateZ = z[sortDescriptor.column]?.getTime() ?? 0;
+
+					return dateA - dateZ;
 				}
 
 				default: {
-					const valueA = a[sortDescriptor.column];
-					const valueZ = z[sortDescriptor.column];
+					const valueA = a[sortDescriptor.column] ?? "";
+					const valueZ = z[sortDescriptor.column] ?? "";
 
 					return valueA.localeCompare(valueZ);
 				}
@@ -128,48 +130,18 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 		}
 
 		return items;
-	}, [sortDescriptor, filteredItems, countriesById]);
+	}, [sortDescriptor, projectsFundingLeverages]);
 
 	const pagination = usePagination({ items });
-
-	const countryFilterOptions = useMemo(() => {
-		return [
-			{ id: EMPTY_FILTER, label: "Show all" },
-			...Array.from(countriesById.values()).map((country) => {
-				return { id: country.id, label: country.name };
-			}),
-		];
-	}, [countriesById]);
 
 	return (
 		<Fragment>
 			<div className="flex justify-end">
-				<Button
-					onPress={() => {
-						setAction({ kind: "create", item: null });
-					}}
-				>
-					<PlusIcon aria-hidden={true} className="size-5 shrink-0" />
-					<span>Create</span>
-				</Button>
-			</div>
-
-			<div className="flex justify-end">
 				<Pagination pagination={pagination} />
-			</div>
-			<div className="flex justify-end">
-				<TableFilterSelect
-					defaultSelectedKey={EMPTY_FILTER}
-					items={countryFilterOptions}
-					label="Filter by Country"
-					onSelectionChange={(key) => {
-						setCountryIdFilter(String(key));
-					}}
-				/>
 			</div>
 
 			<Table
-				aria-label="Users"
+				aria-label="Project fundings"
 				className="w-full"
 				// @ts-expect-error It's fine.
 				onSortChange={setSortDescriptor}
@@ -180,12 +152,23 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 					<Column allowsSorting={true} defaultWidth="2fr" id="name" isRowHeader={true}>
 						Name
 					</Column>
-					<Column allowsSorting={true} id="country">
-						Country
+					<Column allowsSorting={true} id="amount">
+						Amount
 					</Column>
-					<Column id="email">Email</Column>
-					<Column allowsSorting={true} id="role">
-						Role
+					<Column allowsSorting={true} id="funders">
+						Funders
+					</Column>
+					<Column allowsSorting={true} id="projectMonths">
+						Project Months
+					</Column>
+					<Column allowsSorting={true} id="scope">
+						Scope
+					</Column>
+					<Column allowsSorting={true} id="startDate">
+						Start date
+					</Column>
+					<Column allowsSorting={true} id="totalAmount">
+						Total Amount
 					</Column>
 					<Column defaultWidth={50} id="actions">
 						Actions
@@ -212,9 +195,20 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 								<Cell>
 									<span title={row.name}>{row.name}</span>
 								</Cell>
-								<Cell>{row.country?.id ? countriesById.get(row.country.id)?.name : undefined}</Cell>
-								<Cell>{row.email}</Cell>
-								<Cell>{row.role}</Cell>
+								<Cell>
+									{row.amount != null
+										? number(Number(row.amount), { style: "currency", currency: "EUR" })
+										: undefined}
+								</Cell>
+								<Cell>{row.funders}</Cell>
+								<Cell>{row.projectMonths}</Cell>
+								<Cell>{row.scope}</Cell>
+								<Cell>{row.startDate != null ? dateTime(row.startDate) : undefined}</Cell>
+								<Cell>
+									{row.totalAmount != null
+										? number(Number(row.totalAmount), { style: "currency", currency: "EUR" })
+										: undefined}
+								</Cell>
 								<Cell>
 									<div className="flex justify-end">
 										<DropdownMenuTrigger>
@@ -245,20 +239,13 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 				<Pagination pagination={pagination} />
 			</div>
 
-			<CreateUserDialog
-				key={createKey("create-user", action?.item?.id)}
+			<EditProjectFundingLeverageDialog
+				key={createKey("edit-project-funding-leverage", action?.item.id)}
 				action={action}
-				countriesById={countriesById}
 				onClose={onDialogClose}
 			/>
-			<EditUserDialog
-				key={createKey("edit-user", action?.item?.id)}
-				action={action}
-				countriesById={countriesById}
-				onClose={onDialogClose}
-			/>
-			<DeleteUserDialog
-				key={createKey("delete-user", action?.item?.id)}
+			<DeleteProjectFundingLeverageDialog
+				key={createKey("delete-project-funding-leverage", action?.item.id)}
 				action={action}
 				onClose={onDialogClose}
 			/>
@@ -266,17 +253,17 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 	);
 }
 
-interface DeleteUserDialogProps {
+interface DeleteProjectFundingLeverageDialogProps {
 	action: Action | null;
 	onClose: () => void;
 }
 
-function DeleteUserDialog(props: DeleteUserDialogProps) {
+function DeleteProjectFundingLeverageDialog(props: DeleteProjectFundingLeverageDialogProps) {
 	const { action, onClose } = props;
 
 	const formId = useId();
 
-	const [formState, formAction] = useFormState(deleteUserAction, undefined);
+	const [formState, formAction] = useFormState(deleteProjectFundingLeverageAction, undefined);
 
 	if (action?.kind !== "delete") return null;
 
@@ -288,7 +275,7 @@ function DeleteUserDialog(props: DeleteUserDialogProps) {
 						return (
 							<Fragment>
 								<DialogHeader>
-									<DialogTitle>Delete user</DialogTitle>
+									<DialogTitle>Delete project funding</DialogTitle>
 									<DialogDescription>
 										Are you sure you want to delete &quot;{action.item.name}&quot;?
 									</DialogDescription>
@@ -335,75 +322,21 @@ function DeleteUserDialog(props: DeleteUserDialogProps) {
 	);
 }
 
-interface CreateUserDialogProps {
+interface EditProjectFundingLeverageDialogProps {
 	action: Action | null;
-	countriesById: Map<Country["id"], Country>;
 	onClose: () => void;
 }
 
-function CreateUserDialog(props: CreateUserDialogProps) {
-	const { action, countriesById, onClose } = props;
+function EditProjectFundingLeverageDialog(props: EditProjectFundingLeverageDialogProps) {
+	const { action, onClose } = props;
 
 	const formId = useId();
 
-	const [formState, formAction] = useFormState(createUserAction, undefined);
-
-	if (action?.kind !== "create") return null;
-
-	const user = action.item;
-
-	return (
-		<ModalOverlay isOpen={true} onOpenChange={onClose}>
-			<Modal isOpen={true} onOpenChange={onClose}>
-				<Dialog>
-					{({ close }) => {
-						return (
-							<Fragment>
-								<DialogHeader>
-									<DialogTitle>Create user</DialogTitle>
-									<DialogDescription>Please provide user details.</DialogDescription>
-								</DialogHeader>
-
-								<div>
-									<UserEditForm
-										countriesById={countriesById}
-										formAction={formAction}
-										formId={formId}
-										formState={formState}
-										onClose={close}
-										user={user}
-									/>
-								</div>
-
-								<DialogFooter>
-									<DialogCancelButton>Cancel</DialogCancelButton>
-									<SubmitButton form={formId}>Create</SubmitButton>
-								</DialogFooter>
-							</Fragment>
-						);
-					}}
-				</Dialog>
-			</Modal>
-		</ModalOverlay>
-	);
-}
-
-interface EditUserDialogProps {
-	action: Action | null;
-	countriesById: Map<Country["id"], Country>;
-	onClose: () => void;
-}
-
-function EditUserDialog(props: EditUserDialogProps) {
-	const { action, countriesById, onClose } = props;
-
-	const formId = useId();
-
-	const [formState, formAction] = useFormState(updateUserAction, undefined);
+	const [formState, formAction] = useFormState(updateProjectFundingLeverageAction, undefined);
 
 	if (action?.kind !== "edit") return null;
 
-	const user = action.item;
+	const projectFundingLeverage = action.item;
 
 	return (
 		<ModalOverlay isOpen={true} onOpenChange={onClose}>
@@ -413,18 +346,19 @@ function EditUserDialog(props: EditUserDialogProps) {
 						return (
 							<Fragment>
 								<DialogHeader>
-									<DialogTitle>Update user</DialogTitle>
-									<DialogDescription>Please provide user details.</DialogDescription>
+									<DialogTitle>Update project funding leverage</DialogTitle>
+									<DialogDescription>
+										Please provide project funding leverage details.
+									</DialogDescription>
 								</DialogHeader>
 
 								<div>
-									<UserEditForm
-										countriesById={countriesById}
+									<ProjectFundingLeverageEditForm
 										formAction={formAction}
 										formId={formId}
 										formState={formState}
 										onClose={close}
-										user={user}
+										projectFundingLeverage={projectFundingLeverage}
 									/>
 								</div>
 
@@ -441,23 +375,22 @@ function EditUserDialog(props: EditUserDialogProps) {
 	);
 }
 
-interface UserEditFormProps {
-	countriesById: Map<Country["id"], Country>;
-	formId: string;
-	formAction: (formData: FormData) => void;
-	formState: Awaited<ReturnType<typeof createUserAction>> | undefined;
-	user: Prisma.UserGetPayload<{
+interface ProjectFundingLeverageEditFormProps {
+	projectFundingLeverage: Prisma.ProjectsFundingLeverageGetPayload<{
 		include: {
-			country: { select: { id: true } };
+			report: { select: { id: true } };
 		};
 	}> | null;
+	formId: string;
+	formAction: (formData: FormData) => void;
+	formState: Awaited<ReturnType<typeof updateProjectFundingLeverageAction>> | undefined;
 	onClose: () => void;
 }
 
-function UserEditForm(props: UserEditFormProps) {
-	const { countriesById, formId, formAction, formState, user, onClose } = props;
+function ProjectFundingLeverageEditForm(props: ProjectFundingLeverageEditFormProps) {
+	const { formId, formAction, formState, projectFundingLeverage, onClose } = props;
 
-	const userRoles = Object.values(UserRole);
+	const scopes = Object.values(ProjectScope);
 
 	return (
 		<Form
@@ -469,36 +402,73 @@ function UserEditForm(props: UserEditFormProps) {
 			id={formId}
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
-			{user != null ? <input name="id" type="hidden" value={user.id} /> : null}
-
-			<TextInputField defaultValue={user?.name ?? undefined} label="Name" name="name" />
-
-			<SelectField defaultSelectedKey={user?.country?.id} label="Country" name="country">
-				{Array.from(countriesById.values()).map((country) => {
-					return (
-						<SelectItem key={country.id} id={country.id} textValue={country.name}>
-							{country.name}
-						</SelectItem>
-					);
-				})}
-			</SelectField>
+			{projectFundingLeverage != null ? (
+				<input name="id" type="hidden" value={projectFundingLeverage.id} />
+			) : null}
 
 			<TextInputField
-				defaultValue={user?.email ?? undefined}
-				isReadOnly={true}
-				label="Email"
-				name="email"
+				defaultValue={projectFundingLeverage?.name}
+				isRequired={true}
+				label="Name"
+				name="name"
 			/>
 
-			<SelectField defaultSelectedKey={user?.role} label="Role" name="role">
-				{userRoles.map((role) => {
+			<NumberInputField
+				defaultValue={Number(projectFundingLeverage?.amount)}
+				formatOptions={{ minimumFractionDigits: 2, maximumFractionDigits: 2 }}
+				// isRequired={true}
+				label="Amount"
+				name="amount"
+			/>
+
+			<TextInputField
+				defaultValue={projectFundingLeverage?.funders ?? undefined}
+				isRequired={true}
+				label="Funder"
+				name="funders"
+			/>
+
+			<NumberInputField
+				defaultValue={projectFundingLeverage?.projectMonths ?? undefined}
+				// isRequired={true}
+				label="Project months"
+				name="projectMonths"
+			/>
+
+			<SelectField
+				defaultSelectedKey={projectFundingLeverage?.scope ?? undefined}
+				isRequired={true}
+				label="Scope"
+				name="scope"
+			>
+				{scopes.map((scope) => {
 					return (
-						<SelectItem key={role} id={role} textValue={role}>
-							{role}
+						<SelectItem key={scope} id={scope} textValue={scope}>
+							{scope}
 						</SelectItem>
 					);
 				})}
 			</SelectField>
+
+			<DateInputField
+				defaultValue={
+					projectFundingLeverage?.startDate
+						? toDateValue(projectFundingLeverage.startDate)
+						: undefined
+				}
+				granularity="day"
+				// isRequired={true}
+				label="Start date"
+				name="startDate"
+			/>
+
+			<NumberInputField
+				defaultValue={Number(projectFundingLeverage?.totalAmount)}
+				formatOptions={{ minimumFractionDigits: 2, maximumFractionDigits: 2 }}
+				// isRequired={true}
+				label="Total Amount"
+				name="totalAmount"
+			/>
 
 			<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
 				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}

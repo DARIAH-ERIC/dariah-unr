@@ -2,9 +2,9 @@
 
 import { keyByToMap } from "@acdh-oeaw/lib";
 import type { Country, Prisma } from "@prisma/client";
-import { useListData } from "@react-stately/data";
 import { Fragment, type ReactNode, useMemo, useState } from "react";
 
+import { EMPTY_FILTER, useFilteredItems } from "@/components/admin/use-filtered-items";
 import {
 	Cell,
 	Column,
@@ -14,8 +14,6 @@ import {
 	TableFilterSelect,
 	TableHeader,
 } from "@/components/ui/table";
-
-const EMPTY_FILTER = "_all_";
 
 interface AdminReportsTableContentProps {
 	countries: Array<Country>;
@@ -37,15 +35,8 @@ export function AdminReportsTableContent(props: AdminReportsTableContentProps): 
 		});
 	}, [countries]);
 
-	const list = useListData({
-		initialItems: reports,
-		filter: (item, countryId) => {
-			if (!countryId || countryId === EMPTY_FILTER) {
-				return true;
-			}
-
-			return item.countryId === countryId;
-		},
+	const [filteredItems, setCountryIdFilter] = useFilteredItems(reports, (report, countryId) => {
+		return report.countryId === countryId;
 	});
 
 	const [sortDescriptor, setSortDescriptor] = useState({
@@ -54,7 +45,7 @@ export function AdminReportsTableContent(props: AdminReportsTableContentProps): 
 	});
 
 	const items = useMemo(() => {
-		const items = [...list.items].toSorted((a, z) => {
+		const items = filteredItems.toSorted((a, z) => {
 			switch (sortDescriptor.column) {
 				case "country": {
 					const idA = a.country.id;
@@ -86,7 +77,7 @@ export function AdminReportsTableContent(props: AdminReportsTableContentProps): 
 		}
 
 		return items;
-	}, [sortDescriptor, list.items, countriesById]);
+	}, [sortDescriptor, filteredItems, countriesById]);
 
 	const countryFilterOptions = useMemo(() => {
 		return [
@@ -105,7 +96,7 @@ export function AdminReportsTableContent(props: AdminReportsTableContentProps): 
 					items={countryFilterOptions}
 					label="Filter by Country"
 					onSelectionChange={(key) => {
-						list.setFilterText(String(key));
+						setCountryIdFilter(String(key));
 					}}
 				/>
 			</div>

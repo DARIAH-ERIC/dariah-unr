@@ -1,13 +1,9 @@
 "use client";
 
-import { groupByToMap, keyByToMap } from "@acdh-oeaw/lib";
-import {
-	type Country,
-	type Prisma,
-	SoftwareMarketplaceStatus,
-	SoftwareStatus,
-} from "@prisma/client";
+import { keyByToMap } from "@acdh-oeaw/lib";
+import type { Country, Person, Prisma, Role, WorkingGroup } from "@prisma/client";
 import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
+import { useFormatter } from "next-intl";
 import { Fragment, type ReactNode, useId, useMemo, useState } from "react";
 import type { Key } from "react-aria-components";
 import { useFormState } from "react-dom";
@@ -16,14 +12,13 @@ import { Pagination } from "@/components/admin/pagination";
 import { EMPTY_FILTER, useFilteredItems } from "@/components/admin/use-filtered-items";
 import { usePagination } from "@/components/admin/use-pagination";
 import { SubmitButton } from "@/components/submit-button";
+import { DateInputField } from "@/components/ui/blocks/date-input-field";
 import {
 	DropdownMenu,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/blocks/dropdown-menu";
 import { SelectField, SelectItem } from "@/components/ui/blocks/select-field";
-import { TextAreaField } from "@/components/ui/blocks/text-area-field";
-import { TextInputField } from "@/components/ui/blocks/text-input-field";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -47,10 +42,11 @@ import {
 	TableFilterSelect,
 	TableHeader,
 } from "@/components/ui/table";
-import { createSoftwareAction } from "@/lib/actions/admin/create-software";
-import { deleteSoftwareAction } from "@/lib/actions/admin/delete-software";
-import { updateSoftwareAction } from "@/lib/actions/admin/update-software";
+import { createContributionAction } from "@/lib/actions/admin/create-contribution";
+import { deleteContributionAction } from "@/lib/actions/admin/delete-contribution";
+import { updateContributionAction } from "@/lib/actions/admin/update-contribution";
 import { createKey } from "@/lib/create-key";
+import { toDateValue } from "@/lib/to-date-value";
 
 type Action =
 	| {
@@ -59,34 +55,48 @@ type Action =
 	  }
 	| {
 			kind: "delete";
-			item: Prisma.SoftwareGetPayload<{
+			item: Prisma.ContributionGetPayload<{
 				include: {
-					countries: { select: { id: true } };
+					person: { select: { id: true; name: true } };
+					country: { select: { id: true } };
 				};
 			}>;
 	  }
 	| {
 			kind: "edit";
-			item: Prisma.SoftwareGetPayload<{
+			item: Prisma.ContributionGetPayload<{
 				include: {
-					countries: { select: { id: true } };
+					person: { select: { id: true } };
+					role: { select: { id: true } };
+					country: { select: { id: true } };
+					workingGroup: { select: { id: true } };
 				};
 			}>;
 	  };
 
-interface AdminSoftwareTableContentProps {
+interface AdminContributionsTableContentProps {
 	countries: Array<Country>;
-	software: Array<
-		Prisma.SoftwareGetPayload<{
+	persons: Array<Person>;
+	roles: Array<Pick<Role, "id" | "name" | "type">>;
+	workingGroups: Array<WorkingGroup>;
+	contributions: Array<
+		Prisma.ContributionGetPayload<{
 			include: {
-				countries: { select: { id: true } };
+				country: { select: { id: true; name: true } };
+				person: { select: { id: true; name: true } };
+				role: { select: { id: true; name: true } };
+				workingGroup: { select: { id: true; name: true } };
 			};
 		}>
 	>;
 }
 
-export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps): ReactNode {
-	const { countries, software } = props;
+export function AdminContributionsTableContent(
+	props: AdminContributionsTableContentProps,
+): ReactNode {
+	const { countries, contributions, persons, roles, workingGroups } = props;
+
+	const { dateTime } = useFormatter();
 
 	const countriesById = useMemo(() => {
 		return keyByToMap(countries, (country) => {
@@ -94,20 +104,39 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 		});
 	}, [countries]);
 
+	const personsById = useMemo(() => {
+		return keyByToMap(persons, (person) => {
+			return person.id;
+		});
+	}, [persons]);
+
+	const rolesById = useMemo(() => {
+		return keyByToMap(roles, (role) => {
+			return role.id;
+		});
+	}, [roles]);
+
+	const workingGroupsById = useMemo(() => {
+		return keyByToMap(workingGroups, (workingGroup) => {
+			return workingGroup.id;
+		});
+	}, [workingGroups]);
+
 	const [action, setAction] = useState<Action | null>(null);
 
 	function onDialogClose() {
 		setAction(null);
 	}
 
-	const [filteredItems, setCountryIdFilter] = useFilteredItems(software, (software, countryId) => {
-		return software.countries.some((country) => {
-			return country.id === countryId;
-		});
-	});
+	const [filteredItems, setCountryIdFilter] = useFilteredItems(
+		contributions,
+		(contribution, countryId) => {
+			return contribution.countryId === countryId;
+		},
+	);
 
 	const [sortDescriptor, setSortDescriptor] = useState({
-		column: "name" as "country" | "marketplaceStatus" | "name" | "status",
+		column: "person" as "person" | "role" | "workingGroup" | "country" | "startDate" | "endDate",
 		direction: "ascending" as "ascending" | "descending",
 	});
 
@@ -115,20 +144,39 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 		const items = filteredItems.toSorted((a, z) => {
 			switch (sortDescriptor.column) {
 				case "country": {
-					const idA = a.countries[0]?.id;
-					const countryA = idA ? (countriesById.get(idA)?.name ?? "") : "";
-
-					const idZ = z.countries[0]?.id;
-					const countryZ = idZ ? (countriesById.get(idZ)?.name ?? "") : "";
+					const countryA = a.country?.name ?? "";
+					const countryZ = z.country?.name ?? "";
 
 					return countryA.localeCompare(countryZ);
 				}
 
-				default: {
-					const valueA = a[sortDescriptor.column] ?? "";
-					const valueZ = z[sortDescriptor.column] ?? "";
+				case "person": {
+					const personA = a.person.name;
+					const personZ = z.person.name;
 
-					return valueA.localeCompare(valueZ);
+					return personA.localeCompare(personZ);
+				}
+
+				case "role": {
+					const roleA = a.role.name;
+					const roleZ = z.role.name;
+
+					return roleA.localeCompare(roleZ);
+				}
+
+				case "workingGroup": {
+					const workingGroupA = a.country?.name ?? "";
+					const workingGroupZ = z.country?.name ?? "";
+
+					return workingGroupA.localeCompare(workingGroupZ);
+				}
+
+				case "startDate":
+				case "endDate": {
+					const dateA = a[sortDescriptor.column]?.getTime() ?? 0;
+					const dateZ = z[sortDescriptor.column]?.getTime() ?? 0;
+
+					return dateA - dateZ;
 				}
 			}
 		});
@@ -138,7 +186,7 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 		}
 
 		return items;
-	}, [sortDescriptor, filteredItems, countriesById]);
+	}, [sortDescriptor, filteredItems]);
 
 	const pagination = usePagination({ items });
 
@@ -167,6 +215,7 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 			<div className="flex justify-end">
 				<Pagination pagination={pagination} />
 			</div>
+
 			<div className="flex justify-end">
 				<TableFilterSelect
 					defaultSelectedKey={EMPTY_FILTER}
@@ -179,7 +228,7 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 			</div>
 
 			<Table
-				aria-label="Software"
+				aria-label="Services"
 				className="w-full"
 				// @ts-expect-error It's fine.
 				onSortChange={setSortDescriptor}
@@ -187,21 +236,24 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 				sortDescriptor={sortDescriptor}
 			>
 				<TableHeader>
-					<Column allowsSorting={true} defaultWidth="2fr" id="name" isRowHeader={true}>
-						Name
+					<Column allowsSorting={true} id="person" isRowHeader={true}>
+						Person
 					</Column>
-					<Column allowsSorting={true} id="country">
+					<Column allowsSorting={true} id="role">
+						Role
+					</Column>
+					<Column allowsSorting={true} id="workingGroup">
+						Working Group
+					</Column>
+					<Column allowsSorting={true} id="Country">
 						Country
 					</Column>
-					<Column allowsSorting={true} id="status">
-						Status
+					<Column allowsSorting={true} id="startDate">
+						Start date
 					</Column>
-					<Column id="url">URL</Column>
-					<Column id="marketplaceId">Marketplace ID</Column>
-					<Column allowsSorting={true} id="marketplaceStatus">
-						Marketplace status
+					<Column allowsSorting={true} id="endDate">
+						End date
 					</Column>
-					<Column id="comment">Comment</Column>
 					<Column defaultWidth={50} id="actions">
 						Actions
 					</Column>
@@ -224,21 +276,12 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 
 						return (
 							<Row>
-								<Cell>
-									<span title={row.name}>{row.name}</span>
-								</Cell>
-								<Cell>
-									{row.countries[0]?.id ? countriesById.get(row.countries[0].id)?.name : undefined}
-								</Cell>
-								<Cell>{row.status}</Cell>
-								<Cell>
-									<span title={row.url[0] ?? undefined}>{row.url[0]}</span>
-								</Cell>
-								<Cell>{row.marketplaceId}</Cell>
-								<Cell>{row.marketplaceStatus}</Cell>
-								<Cell>
-									<span title={row.comment ?? undefined}>{row.comment}</span>
-								</Cell>
+								<Cell>{row.person.name}</Cell>
+								<Cell>{row.role.name}</Cell>
+								<Cell>{row.workingGroup?.name}</Cell>
+								<Cell>{row.country?.name}</Cell>
+								<Cell>{row.startDate != null ? dateTime(row.startDate) : undefined}</Cell>
+								<Cell>{row.endDate != null ? dateTime(row.endDate) : undefined}</Cell>
 								<Cell>
 									<div className="flex justify-end">
 										<DropdownMenuTrigger>
@@ -269,40 +312,44 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 				<Pagination pagination={pagination} />
 			</div>
 
-			<CreateSoftwareDialog
-				key={createKey("create-software", action?.item?.id)}
+			<CreateContributionDialog
+				key={createKey("create-contribution", action?.item?.id)}
 				action={action}
 				countriesById={countriesById}
 				onClose={onDialogClose}
+				personsById={personsById}
+				rolesById={rolesById}
+				workingGroupsById={workingGroupsById}
 			/>
-			<EditSoftwareDialog
-				key={createKey("edit-software", action?.item?.id)}
+			<EditContributionDialog
+				key={createKey("edit-contribution", action?.item?.id)}
 				action={action}
 				countriesById={countriesById}
 				onClose={onDialogClose}
+				personsById={personsById}
+				rolesById={rolesById}
+				workingGroupsById={workingGroupsById}
 			/>
-			<DeleteSoftwareDialog
-				key={createKey("delete-software", action?.item?.id)}
+			<DeleteContributionDialog
+				key={createKey("delete-contribution", action?.item?.id)}
 				action={action}
 				onClose={onDialogClose}
 			/>
-
-			<SoftwareStatistics software={software} />
 		</Fragment>
 	);
 }
 
-interface DeleteSoftwareDialogProps {
+interface DeleteContributionDialogProps {
 	action: Action | null;
 	onClose: () => void;
 }
 
-function DeleteSoftwareDialog(props: DeleteSoftwareDialogProps) {
+function DeleteContributionDialog(props: DeleteContributionDialogProps) {
 	const { action, onClose } = props;
 
 	const formId = useId();
 
-	const [formState, formAction] = useFormState(deleteSoftwareAction, undefined);
+	const [formState, formAction] = useFormState(deleteContributionAction, undefined);
 
 	if (action?.kind !== "delete") return null;
 
@@ -314,9 +361,10 @@ function DeleteSoftwareDialog(props: DeleteSoftwareDialogProps) {
 						return (
 							<Fragment>
 								<DialogHeader>
-									<DialogTitle>Delete software</DialogTitle>
+									<DialogTitle>Delete contribution</DialogTitle>
 									<DialogDescription>
-										Are you sure you want to delete &quot;{action.item.name}&quot;?
+										Are you sure you want to delete contribution for person &quot;
+										{action.item.person.name}&quot;?
 									</DialogDescription>
 								</DialogHeader>
 
@@ -361,22 +409,25 @@ function DeleteSoftwareDialog(props: DeleteSoftwareDialogProps) {
 	);
 }
 
-interface CreateSoftwareDialogProps {
+interface CreateContributionDialogProps {
 	action: Action | null;
 	countriesById: Map<Country["id"], Country>;
+	personsById: Map<Person["id"], Person>;
+	rolesById: Map<Role["id"], Pick<Role, "id" | "name" | "type">>;
+	workingGroupsById: Map<WorkingGroup["id"], WorkingGroup>;
 	onClose: () => void;
 }
 
-function CreateSoftwareDialog(props: CreateSoftwareDialogProps) {
-	const { action, countriesById, onClose } = props;
+function CreateContributionDialog(props: CreateContributionDialogProps) {
+	const { action, countriesById, personsById, rolesById, workingGroupsById, onClose } = props;
 
 	const formId = useId();
 
-	const [formState, formAction] = useFormState(createSoftwareAction, undefined);
+	const [formState, formAction] = useFormState(createContributionAction, undefined);
 
 	if (action?.kind !== "create") return null;
 
-	const software = action.item;
+	const contribution = action.item;
 
 	return (
 		<ModalOverlay isOpen={true} onOpenChange={onClose}>
@@ -386,18 +437,21 @@ function CreateSoftwareDialog(props: CreateSoftwareDialogProps) {
 						return (
 							<Fragment>
 								<DialogHeader>
-									<DialogTitle>Create software</DialogTitle>
-									<DialogDescription>Please provide software details.</DialogDescription>
+									<DialogTitle>Create contribution</DialogTitle>
+									<DialogDescription>Please provide contribution details.</DialogDescription>
 								</DialogHeader>
 
 								<div>
-									<SoftwareEditForm
+									<ContributionEditForm
+										contribution={contribution}
 										countriesById={countriesById}
 										formAction={formAction}
 										formId={formId}
 										formState={formState}
 										onClose={close}
-										software={software}
+										personsById={personsById}
+										rolesById={rolesById}
+										workingGroupsById={workingGroupsById}
 									/>
 								</div>
 
@@ -414,22 +468,25 @@ function CreateSoftwareDialog(props: CreateSoftwareDialogProps) {
 	);
 }
 
-interface EditSoftwareDialogProps {
+interface EditContributionDialogProps {
 	action: Action | null;
 	countriesById: Map<Country["id"], Country>;
+	personsById: Map<Person["id"], Person>;
+	rolesById: Map<Role["id"], Pick<Role, "id" | "name" | "type">>;
+	workingGroupsById: Map<WorkingGroup["id"], WorkingGroup>;
 	onClose: () => void;
 }
 
-function EditSoftwareDialog(props: EditSoftwareDialogProps) {
-	const { action, countriesById, onClose } = props;
+function EditContributionDialog(props: EditContributionDialogProps) {
+	const { action, countriesById, personsById, rolesById, workingGroupsById, onClose } = props;
 
 	const formId = useId();
 
-	const [formState, formAction] = useFormState(updateSoftwareAction, undefined);
+	const [formState, formAction] = useFormState(updateContributionAction, undefined);
 
 	if (action?.kind !== "edit") return null;
 
-	const software = action.item;
+	const contribution = action.item;
 
 	return (
 		<ModalOverlay isOpen={true} onOpenChange={onClose}>
@@ -439,18 +496,21 @@ function EditSoftwareDialog(props: EditSoftwareDialogProps) {
 						return (
 							<Fragment>
 								<DialogHeader>
-									<DialogTitle>Update software</DialogTitle>
-									<DialogDescription>Please provide software details.</DialogDescription>
+									<DialogTitle>Update contribution</DialogTitle>
+									<DialogDescription>Please provide contribution details.</DialogDescription>
 								</DialogHeader>
 
 								<div>
-									<SoftwareEditForm
+									<ContributionEditForm
+										contribution={contribution}
 										countriesById={countriesById}
 										formAction={formAction}
 										formId={formId}
 										formState={formState}
 										onClose={close}
-										software={software}
+										personsById={personsById}
+										rolesById={rolesById}
+										workingGroupsById={workingGroupsById}
 									/>
 								</div>
 
@@ -467,26 +527,42 @@ function EditSoftwareDialog(props: EditSoftwareDialogProps) {
 	);
 }
 
-interface SoftwareEditFormProps {
+interface ContributionEditFormProps {
 	countriesById: Map<Country["id"], Country>;
+	personsById: Map<Person["id"], Person>;
+	rolesById: Map<Role["id"], Pick<Role, "id" | "name" | "type">>;
+	workingGroupsById: Map<WorkingGroup["id"], WorkingGroup>;
 	formId: string;
 	formAction: (formData: FormData) => void;
-	formState:
-		| Awaited<ReturnType<typeof createSoftwareAction | typeof updateSoftwareAction>>
-		| undefined;
-	software: Prisma.SoftwareGetPayload<{
+	formState: Awaited<ReturnType<typeof createContributionAction>> | undefined;
+	contribution: Prisma.ContributionGetPayload<{
 		include: {
-			countries: { select: { id: true } };
+			person: { select: { id: true } };
+			role: { select: { id: true } };
+			workingGroup: { select: { id: true } };
+			country: { select: { id: true } };
 		};
 	}> | null;
 	onClose: () => void;
 }
 
-function SoftwareEditForm(props: SoftwareEditFormProps) {
-	const { countriesById, formId, formAction, formState, software, onClose } = props;
+function ContributionEditForm(props: ContributionEditFormProps) {
+	const {
+		countriesById,
+		personsById,
+		rolesById,
+		workingGroupsById,
+		formId,
+		formAction,
+		formState,
+		contribution,
+		onClose,
+	} = props;
 
-	const softwareStatuses = Object.values(SoftwareStatus);
-	const softwareMarketplaceStatuses = Object.values(SoftwareMarketplaceStatus);
+	const [selectedRoleId, setSelectedRowId] = useState(contribution?.roleId);
+	const selectedRole = useMemo(() => {
+		return selectedRoleId ? rolesById.get(selectedRoleId) : undefined;
+	}, [rolesById, selectedRoleId]);
 
 	return (
 		<Form
@@ -498,16 +574,58 @@ function SoftwareEditForm(props: SoftwareEditFormProps) {
 			id={formId}
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
-			{software != null ? <input name="id" type="hidden" value={software.id} /> : null}
+			{contribution != null ? <input name="id" type="hidden" value={contribution.id} /> : null}
 
-			<TextInputField defaultValue={software?.name} isRequired={true} label="Name" name="name" />
-
-			{/* TODO: Multiple countries */}
 			<SelectField
-				defaultSelectedKey={software?.countries[0]?.id}
-				label="Country"
-				name="countries.0"
+				defaultSelectedKey={contribution?.personId}
+				isRequired={true}
+				label="Person"
+				name="personId"
 			>
+				{Array.from(personsById.values()).map((person) => {
+					return (
+						<SelectItem key={person.id} id={person.id} textValue={person.name}>
+							{person.name}
+						</SelectItem>
+					);
+				})}
+			</SelectField>
+
+			<SelectField
+				isRequired={true}
+				label="Role"
+				name="roleId"
+				onSelectionChange={(key) => {
+					setSelectedRowId(key as string);
+				}}
+				selectedKey={selectedRoleId ?? null}
+			>
+				{Array.from(rolesById.values()).map((role) => {
+					return (
+						<SelectItem key={role.id} id={role.id} textValue={role.name}>
+							{role.name}
+						</SelectItem>
+					);
+				})}
+			</SelectField>
+
+			<SelectField
+				defaultSelectedKey={contribution?.workingGroup?.id}
+				isDisabled={selectedRole == null || !["wg_chair", "wg_member"].includes(selectedRole.type)}
+				isRequired={selectedRole != null && ["wg_chair", "wg_member"].includes(selectedRole.type)}
+				label="Working Group"
+				name="workingGroupId"
+			>
+				{Array.from(workingGroupsById.values()).map((workingGroup) => {
+					return (
+						<SelectItem key={workingGroup.id} id={workingGroup.id} textValue={workingGroup.name}>
+							{workingGroup.name}
+						</SelectItem>
+					);
+				})}
+			</SelectField>
+
+			<SelectField defaultSelectedKey={contribution?.country?.id} label="Country" name="countryId">
 				{Array.from(countriesById.values()).map((country) => {
 					return (
 						<SelectItem key={country.id} id={country.id} textValue={country.name}>
@@ -517,44 +635,22 @@ function SoftwareEditForm(props: SoftwareEditFormProps) {
 				})}
 			</SelectField>
 
-			<SelectField defaultSelectedKey={software?.status ?? undefined} label="Status" name="status">
-				{softwareStatuses.map((softwareStatus) => {
-					return (
-						<SelectItem key={softwareStatus} id={softwareStatus} textValue={softwareStatus}>
-							{softwareStatus}
-						</SelectItem>
-					);
-				})}
-			</SelectField>
-
-			{/* TODO: Multiple URLs */}
-			<TextInputField defaultValue={software?.url[0] ?? undefined} label="URL" name="url.0" />
-
-			<TextInputField
-				defaultValue={software?.marketplaceId ?? undefined}
-				label="Marketplace ID"
-				name="marketplaceId"
+			<DateInputField
+				defaultValue={
+					contribution?.startDate ? toDateValue(contribution.startDate.toISOString()) : undefined
+				}
+				granularity="day"
+				// isRequired={true}
+				label="Start date"
+				name="startDate"
 			/>
 
-			<SelectField
-				defaultSelectedKey={software?.marketplaceStatus ?? undefined}
-				label="Marketplace status"
-				name="marketplaceStatus"
-			>
-				{softwareMarketplaceStatuses.map((softwareMarketplaceStatus) => {
-					return (
-						<SelectItem
-							key={softwareMarketplaceStatus}
-							id={softwareMarketplaceStatus}
-							textValue={softwareMarketplaceStatus}
-						>
-							{softwareMarketplaceStatus}
-						</SelectItem>
-					);
-				})}
-			</SelectField>
-
-			<TextAreaField defaultValue={software?.comment ?? undefined} label="Comment" name="comment" />
+			<DateInputField
+				defaultValue={contribution?.endDate ? toDateValue(contribution.endDate) : undefined}
+				granularity="day"
+				label="End date"
+				name="endDate"
+			/>
 
 			<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
 				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}
@@ -566,49 +662,5 @@ function SoftwareEditForm(props: SoftwareEditFormProps) {
 					: null}
 			</FormErrorMessage>
 		</Form>
-	);
-}
-
-interface SoftwareStatisticsProps {
-	software: Array<
-		Prisma.SoftwareGetPayload<{
-			include: {
-				countries: { select: { id: true } };
-			};
-		}>
-	>;
-}
-
-function SoftwareStatistics(props: SoftwareStatisticsProps) {
-	const { software } = props;
-
-	const softwareByStatus = useMemo(() => {
-		return groupByToMap(software, (item) => {
-			return item.status;
-		});
-	}, [software]);
-
-	return (
-		<div className="grid gap-y-2 text-sm text-neutral-700 dark:text-neutral-300">
-			<p>There are currently {software.length} software entries in the database.</p>
-			<dl className="grid gap-y-2">
-				<div>
-					<dt className="text-xs font-semibold uppercase tracking-wide">Grouped by status</dt>
-					<dd>
-						<ul>
-							{Object.values(SoftwareStatus).map((status) => {
-								return (
-									<li key={status}>
-										<span>
-											{status}: {softwareByStatus.get(status)?.length ?? 0}
-										</span>
-									</li>
-								);
-							})}
-						</ul>
-					</dd>
-				</div>
-			</dl>
-		</div>
 	);
 }
