@@ -8,6 +8,7 @@ import { z } from "zod";
 import { updateContribution } from "@/lib/data/contributions";
 import { getRoleByTypes } from "@/lib/data/role";
 import { getFormData } from "@/lib/get-form-data";
+import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 const formSchema = z.object({
 	id: z.string(),
@@ -41,6 +42,8 @@ export async function updateContributionAction(
 	formData: FormData,
 ): Promise<FormState> {
 	const t = await getTranslations("actions.admin.updateContribtion");
+
+	await assertAuthenticated(["admin"]);
 
 	const input = getFormData(formData);
 	const result = formSchema.safeParse(input);

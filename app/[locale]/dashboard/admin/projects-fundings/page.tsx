@@ -1,5 +1,4 @@
 import type { Metadata, ResolvingMetadata } from "next";
-import { useTranslations } from "next-intl";
 import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
 import { type ReactNode, Suspense } from "react";
 
@@ -8,6 +7,7 @@ import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import type { Locale } from "@/config/i18n.config";
 import { getProjectsFundingLeverages } from "@/lib/data/project-funding-leverage";
+import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 interface DashboardAdminProjectFundingsPageProps {
 	params: {
@@ -31,15 +31,17 @@ export async function generateMetadata(
 	return metadata;
 }
 
-export default function DashboardAdminProjectFundingsPage(
+export default async function DashboardAdminProjectFundingsPage(
 	props: DashboardAdminProjectFundingsPageProps,
-): ReactNode {
+): Promise<ReactNode> {
 	const { params } = props;
 
 	const { locale } = params;
 	setRequestLocale(locale);
 
-	const t = useTranslations("DashboardAdminProjectsFundingsPage");
+	const t = await getTranslations("DashboardAdminProjectsFundingsPage");
+
+	await assertAuthenticated(["admin"]);
 
 	return (
 		<MainContent className="container grid !max-w-screen-2xl content-start gap-y-8 py-8">

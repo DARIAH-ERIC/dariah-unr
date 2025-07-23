@@ -7,6 +7,7 @@ import { z } from "zod";
 
 import { deleteContribution } from "@/lib/data/contributions";
 import { getFormData } from "@/lib/get-form-data";
+import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 const formSchema = z.object({
 	id: z.string(),
@@ -34,6 +35,8 @@ export async function deleteContributionAction(
 	formData: FormData,
 ): Promise<FormState> {
 	const t = await getTranslations("actions.admin.deleteContribtion");
+
+	await assertAuthenticated(["admin"]);
 
 	const input = getFormData(formData);
 	const result = formSchema.safeParse(input);

@@ -8,6 +8,7 @@ import { z } from "zod";
 import { getRoleByType } from "@/lib/data/role";
 import { createWorkingGroup } from "@/lib/data/working-group";
 import { getFormData } from "@/lib/get-form-data";
+import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 const formSchema = z.object({
 	name: z.string(),
@@ -46,6 +47,8 @@ export async function createWorkingGroupAction(
 	formData: FormData,
 ): Promise<FormState> {
 	const t = await getTranslations("actions.admin.createWorkingGroup");
+
+	await assertAuthenticated(["admin"]);
 
 	const input = getFormData(formData);
 	const result = formSchema.safeParse(input);
