@@ -618,6 +618,7 @@ function ContributionEditForm(props: ContributionEditFormProps) {
 			<SelectField
 				defaultSelectedKey={contribution?.workingGroup?.id}
 				isDisabled={selectedRole == null || !["wg_chair", "wg_member"].includes(selectedRole.type)}
+				isRequired={selectedRole != null && ["wg_chair", "wg_member"].includes(selectedRole.type)}
 				label="Working Group"
 				name="workingGroupId"
 			>
