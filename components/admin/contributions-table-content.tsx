@@ -9,6 +9,7 @@ import type { Key } from "react-aria-components";
 import { useFormState } from "react-dom";
 
 import { Pagination } from "@/components/admin/pagination";
+import { EMPTY_FILTER, useFilteredItems } from "@/components/admin/use-filtered-items";
 import { usePagination } from "@/components/admin/use-pagination";
 import { SubmitButton } from "@/components/submit-button";
 import { DateInputField } from "@/components/ui/blocks/date-input-field";
@@ -46,8 +47,6 @@ import { deleteContributionAction } from "@/lib/actions/admin/delete-contributio
 import { updateContributionAction } from "@/lib/actions/admin/update-contribution";
 import { createKey } from "@/lib/create-key";
 import { toDateValue } from "@/lib/to-date-value";
-
-const EMPTY_FILTER = "_all_";
 
 type Action =
 	| {
@@ -129,19 +128,12 @@ export function AdminContributionsTableContent(
 		setAction(null);
 	}
 
-	const [countryIdFilter, setCountryIdFilter] = useState<string | null>(null);
-
-	const filteredItems = useMemo(() => {
-		const countryId = countryIdFilter;
-
-		if (!countryId || countryId === EMPTY_FILTER) {
-			return contributions;
-		}
-
-		return contributions.filter((item) => {
-			return item.countryId === countryId;
-		});
-	}, [countryIdFilter, contributions]);
+	const [filteredItems, setCountryIdFilter] = useFilteredItems(
+		contributions,
+		(contribution, countryId) => {
+			return contribution.countryId === countryId;
+		},
+	);
 
 	const [sortDescriptor, setSortDescriptor] = useState({
 		column: "person" as "person" | "role" | "workingGroup" | "country" | "startDate" | "endDate",

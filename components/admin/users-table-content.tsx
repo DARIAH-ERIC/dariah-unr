@@ -8,6 +8,7 @@ import type { Key } from "react-aria-components";
 import { useFormState } from "react-dom";
 
 import { Pagination } from "@/components/admin/pagination";
+import { EMPTY_FILTER, useFilteredItems } from "@/components/admin/use-filtered-items";
 import { usePagination } from "@/components/admin/use-pagination";
 import { SubmitButton } from "@/components/submit-button";
 import {
@@ -44,8 +45,6 @@ import { createUserAction } from "@/lib/actions/admin/create-user";
 import { deleteUserAction } from "@/lib/actions/admin/delete-user";
 import { updateUserAction } from "@/lib/actions/admin/update-user";
 import { createKey } from "@/lib/create-key";
-
-const EMPTY_FILTER = "_all_";
 
 type Action =
 	| {
@@ -93,19 +92,9 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 		setAction(null);
 	}
 
-	const [countryIdFilter, setCountryIdFilter] = useState<string | null>(null);
-
-	const filteredItems = useMemo(() => {
-		const countryId = countryIdFilter;
-
-		if (!countryId || countryId === EMPTY_FILTER) {
-			return users;
-		}
-
-		return users.filter((item) => {
-			return item.countryId === countryId;
-		});
-	}, [countryIdFilter, users]);
+	const [filteredItems, setCountryIdFilter] = useFilteredItems(users, (user, countryId) => {
+		return user.countryId === countryId;
+	});
 
 	const [sortDescriptor, setSortDescriptor] = useState({
 		column: "name" as "country" | "name" | "role" | "status",

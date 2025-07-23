@@ -13,6 +13,7 @@ import type { Key } from "react-aria-components";
 import { useFormState } from "react-dom";
 
 import { Pagination } from "@/components/admin/pagination";
+import { EMPTY_FILTER, useFilteredItems } from "@/components/admin/use-filtered-items";
 import { usePagination } from "@/components/admin/use-pagination";
 import { SubmitButton } from "@/components/submit-button";
 import {
@@ -50,8 +51,6 @@ import { createSoftwareAction } from "@/lib/actions/admin/create-software";
 import { deleteSoftwareAction } from "@/lib/actions/admin/delete-software";
 import { updateSoftwareAction } from "@/lib/actions/admin/update-software";
 import { createKey } from "@/lib/create-key";
-
-const EMPTY_FILTER = "_all_";
 
 type Action =
 	| {
@@ -101,21 +100,11 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 		setAction(null);
 	}
 
-	const [countryIdFilter, setCountryIdFilter] = useState<string | null>(null);
-
-	const filteredItems = useMemo(() => {
-		const countryId = countryIdFilter;
-
-		if (!countryId || countryId === EMPTY_FILTER) {
-			return software;
-		}
-
-		return software.filter((item) => {
-			return item.countries.some((c) => {
-				return c.id === countryId;
-			});
+	const [filteredItems, setCountryIdFilter] = useFilteredItems(software, (software, countryId) => {
+		return software.countries.some((country) => {
+			return country.id === countryId;
 		});
-	}, [countryIdFilter, software]);
+	});
 
 	const [sortDescriptor, setSortDescriptor] = useState({
 		column: "name" as "country" | "marketplaceStatus" | "name" | "status",

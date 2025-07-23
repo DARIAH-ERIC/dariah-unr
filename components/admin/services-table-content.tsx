@@ -18,6 +18,7 @@ import type { Key } from "react-aria-components";
 import { useFormState } from "react-dom";
 
 import { Pagination } from "@/components/admin/pagination";
+import { EMPTY_FILTER, useFilteredItems } from "@/components/admin/use-filtered-items";
 import { usePagination } from "@/components/admin/use-pagination";
 import { SubmitButton } from "@/components/submit-button";
 import {
@@ -56,8 +57,6 @@ import { createServiceAction } from "@/lib/actions/admin/create-service";
 import { deleteServiceAction } from "@/lib/actions/admin/delete-service";
 import { updateServiceAction } from "@/lib/actions/admin/update-service";
 import { createKey } from "@/lib/create-key";
-
-const EMPTY_FILTER = "_all_";
 
 type Action =
 	| {
@@ -135,21 +134,11 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 		setAction(null);
 	}
 
-	const [countryIdFilter, setCountryIdFilter] = useState<string | null>(null);
-
-	const filteredItems = useMemo(() => {
-		const countryId = countryIdFilter;
-
-		if (!countryId || countryId === EMPTY_FILTER) {
-			return services;
-		}
-
-		return services.filter((item) => {
-			return item.countries.some((c) => {
-				return c.id === countryId;
-			});
+	const [filteredItems, setCountryIdFilter] = useFilteredItems(services, (service, countryId) => {
+		return service.countries.some((country) => {
+			return country.id === countryId;
 		});
-	}, [countryIdFilter, services]);
+	});
 
 	const [sortDescriptor, setSortDescriptor] = useState({
 		column: "name" as "country" | "marketplaceStatus" | "name" | "size" | "status" | "type",

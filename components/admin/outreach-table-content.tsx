@@ -9,6 +9,7 @@ import type { Key } from "react-aria-components";
 import { useFormState } from "react-dom";
 
 import { Pagination } from "@/components/admin/pagination";
+import { EMPTY_FILTER, useFilteredItems } from "@/components/admin/use-filtered-items";
 import { usePagination } from "@/components/admin/use-pagination";
 import { SubmitButton } from "@/components/submit-button";
 import { DateInputField } from "@/components/ui/blocks/date-input-field";
@@ -47,8 +48,6 @@ import { deleteOutreachAction } from "@/lib/actions/admin/delete-outreach";
 import { updateOutreachAction } from "@/lib/actions/admin/update-outreach";
 import { createKey } from "@/lib/create-key";
 import { toDateValue } from "@/lib/to-date-value";
-
-const EMPTY_FILTER = "_all_";
 
 type Action =
 	| {
@@ -100,19 +99,9 @@ export function AdminOutreachTableContent(props: AdminOutreachTableContentProps)
 		setAction(null);
 	}
 
-	const [countryIdFilter, setCountryIdFilter] = useState<string | null>(null);
-
-	const filteredItems = useMemo(() => {
-		const countryId = countryIdFilter;
-
-		if (!countryId || countryId === EMPTY_FILTER) {
-			return outreach;
-		}
-
-		return outreach.filter((item) => {
-			return item.countryId === countryId;
-		});
-	}, [countryIdFilter, outreach]);
+	const [filteredItems, setCountryIdFilter] = useFilteredItems(outreach, (outreach, countryId) => {
+		return outreach.countryId === countryId;
+	});
 
 	const [sortDescriptor, setSortDescriptor] = useState({
 		column: "name" as "country" | "endDate" | "name" | "startDate" | "type",
