@@ -2,12 +2,12 @@
 
 import { keyByToMap } from "@acdh-oeaw/lib";
 import type { Contribution, Person, Prisma } from "@prisma/client";
-import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
+import { useListData } from "@react-stately/data";
+import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon, TrashIcon } from "lucide-react";
 import { useFormatter } from "next-intl";
 import { Fragment, type ReactNode, useCallback, useId, useMemo, useState } from "react";
-import type { Key } from "react-aria-components";
+import { Group, type Key } from "react-aria-components";
 import { useFormState } from "react-dom";
-import { useForm } from "react-hook-form";
 
 import { Pagination } from "@/components/admin/pagination";
 import { usePagination } from "@/components/admin/use-pagination";
@@ -18,9 +18,9 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/blocks/dropdown-menu";
+import { SelectField, SelectItem } from "@/components/ui/blocks/select-field";
 import { TextInputField } from "@/components/ui/blocks/text-input-field";
 import { Button } from "@/components/ui/button";
-import { ChairFormFieldArray, type ChairFormValues } from "@/components/ui/chair-form-field-array";
 import {
 	Dialog,
 	DialogCancelButton,
@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
+import { FormFieldArray, FormFieldArrayButton } from "@/components/ui/form-field-array";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
 import { IconButton } from "@/components/ui/icon-button";
 import { Modal, ModalOverlay } from "@/components/ui/modal";
@@ -495,21 +496,23 @@ interface WorkingGroupEditFormProps {
 	onClose: () => void;
 }
 
-function WorkingGroupEditForm(props: WorkingGroupEditFormProps) {
-	const { chairsById, formId, formAction, formState, persons, workingGroup, onClose } = props;
+type WorkingGroupChair = {
+	endDate: Date | null;
+	startDate: Date | null;
+	personId: string | null;
+} & ({ id: string; _id?: undefined } | { _id: string; id?: undefined });
 
-	const { control } = useForm<{ chairs: Array<ChairFormValues> }>({
-		defaultValues: {
-			chairs: workingGroup?.chairs.map((chair) => {
-				return {
-					personId: chair.personId,
-					startDate: chair.startDate,
-					endDate: chair.endDate,
-					contributionId: chair.id,
-				};
-			}),
+function WorkingGroupEditForm(props: WorkingGroupEditFormProps) {
+	const { formId, formAction, formState, persons, workingGroup, onClose } = props;
+
+	const chairs = useListData<WorkingGroupChair>({
+		initialItems: workingGroup?.chairs ?? [],
+		getKey(item) {
+			return item._id ?? item.id;
 		},
 	});
+
+	const chairsLabelId = useId();
 
 	return (
 		<Form
@@ -530,7 +533,87 @@ function WorkingGroupEditForm(props: WorkingGroupEditFormProps) {
 				name="name"
 			/>
 
-			<ChairFormFieldArray chairsById={chairsById} control={control} persons={persons} />
+			<FormFieldArray aria-labelledby={chairsLabelId} className="flex flex-col gap-y-4">
+				<div
+					className="text-sm font-semibold leading-tight tracking-tight text-neutral-950 dark:text-neutral-0"
+					id={chairsLabelId}
+				>
+					Chairs
+				</div>
+
+				{chairs.items.length > 0 ? (
+					<div className="flex flex-col gap-y-3">
+						{chairs.items.map((chair, index) => {
+							const { id, personId, endDate, startDate } = chair;
+
+							const key = chair._id ?? chair.id;
+
+							return (
+								<Group key={key} className="flex w-full items-end gap-2">
+									<input name={`chairs.${String(index)}.id`} type="hidden" value={id} />
+
+									<SelectField
+										className="w-64"
+										defaultSelectedKey={personId ?? undefined}
+										isRequired={true}
+										label="Name"
+										name={`chairs.${String(index)}.personId`}
+									>
+										{persons.map((person) => {
+											return (
+												<SelectItem key={person.name} id={person.id} textValue={person.name}>
+													{person.name}
+												</SelectItem>
+											);
+										})}
+									</SelectField>
+
+									<DateInputField
+										className="w-32 shrink-0"
+										defaultValue={startDate ? toDateValue(startDate) : undefined}
+										granularity="day"
+										label="Start date"
+										name={`chairs.${String(index)}.startDate`}
+									/>
+
+									<DateInputField
+										className="w-32 shrink-0"
+										defaultValue={endDate ? toDateValue(endDate) : undefined}
+										granularity="day"
+										label="End date"
+										name={`chairs.${String(index)}.endDate`}
+									/>
+
+									<IconButton
+										className="mx-auto"
+										onPress={() => {
+											chairs.remove(key);
+										}}
+									>
+										<TrashIcon aria-hidden={true} className="size-4.5 shrink-0" />
+										<span className="sr-only">Remove</span>
+									</IconButton>
+								</Group>
+							);
+						})}
+					</div>
+				) : null}
+
+				<FormFieldArrayButton
+					className="mt-2 text-xs"
+					onPress={() => {
+						chairs.append({
+							personId: null,
+							startDate: null,
+							endDate: null,
+							_id: crypto.randomUUID(),
+						});
+					}}
+				>
+					<PlusIcon aria-hidden={true} className="size-3.5 shrink-0" />
+					Add chair
+				</FormFieldArrayButton>
+			</FormFieldArray>
 
 			<DateInputField
 				defaultValue={workingGroup?.startDate ? toDateValue(workingGroup.startDate) : undefined}

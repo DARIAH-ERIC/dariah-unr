@@ -598,7 +598,7 @@ function ContributionEditForm(props: ContributionEditFormProps) {
 				onSelectionChange={(key) => {
 					setSelectedRowId(key as string);
 				}}
-				selectedKey={selectedRoleId}
+				selectedKey={selectedRoleId ?? null}
 			>
 				{Array.from(rolesById.values()).map((role) => {
 					return (
