@@ -38,9 +38,7 @@ export async function generateMetadata(
 	return metadata;
 }
 
-export default async function DashboardPage(
-	props: DashboardPageProps,
-): Promise<Promise<ReactNode>> {
+export default async function DashboardPage(props: DashboardPageProps): Promise<ReactNode> {
 	const { params } = props;
 
 	const { locale } = params;

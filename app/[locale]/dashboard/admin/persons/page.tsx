@@ -34,7 +34,7 @@ export async function generateMetadata(
 
 export default async function DashboardAdminPersonsPage(
 	props: DashboardAdminPersonsPageProps,
-): Promise<Promise<ReactNode>> {
+): Promise<ReactNode> {
 	const { params } = props;
 
 	const { locale } = params;
