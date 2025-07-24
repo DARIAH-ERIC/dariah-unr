@@ -6,9 +6,7 @@ import { activityCheckIntervalSeconds, inactivityTimeoutSeconds } from "@/config
 import { db } from "@/lib/db";
 import { constantTimeEqual, generateSecureRandomString, hashSecret } from "@/lib/server/auth/utils";
 
-export type Session = Omit<DbSession, "secretHash"> & {
-	secretHash: Uint8Array;
-};
+export type Session = DbSession;
 
 export type User = Pick<DbUser, "id" | "email" | "name" | "role" | "countryId">;
 
@@ -42,13 +40,7 @@ export async function createSession(userId: string): Promise<{ session: Session;
 	};
 
 	await db.session.create({
-		data: {
-			id: session.id,
-			secretHash: Buffer.from(session.secretHash),
-			userId: session.userId,
-			createdAt: session.createdAt,
-			lastVerifiedAt: session.lastVerifiedAt,
-		},
+		data: session,
 	});
 
 	return { session, token };
@@ -87,7 +79,7 @@ export async function validateSessionToken(token: string): Promise<SessionValida
 
 	const session = {
 		id: result.id,
-		secretHash: new Uint8Array(result.secretHash),
+		secretHash: result.secretHash,
 		userId: result.user.id,
 		createdAt: result.createdAt,
 		lastVerifiedAt: result.lastVerifiedAt,

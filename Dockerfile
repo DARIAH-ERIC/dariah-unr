@@ -6,11 +6,6 @@
 # build
 FROM node:22-alpine AS build
 
-# prisma 5.x does not find ssl on newer alpine versione
-# @see https://github.com/prisma/prisma/issues/25817
-# @see https://github.com/nodejs/docker-node/issues/2175
-RUN ln -s /usr/lib/libssl.so.3 /lib/libssl.so.3
-
 ENV PNPM_HOME="/app/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
@@ -80,11 +75,6 @@ RUN --mount=type=secret,id=AUTH_SECRET,uid=1000 \
 # serve
 FROM node:22-alpine AS serve
 
-# prisma 5.x does not find ssl on newer alpine versione
-# @see https://github.com/prisma/prisma/issues/25817
-# @see https://github.com/nodejs/docker-node/issues/2175
-RUN ln -s /usr/lib/libssl.so.3 /lib/libssl.so.3
-
 ENV PNPM_HOME="/app/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
@@ -99,7 +89,7 @@ COPY --chown=node:node ./entrypoint.sh ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh
 
 # Prisma CLI is used in entrypoint script to apply migrations.
-RUN pnpm add -g prisma@5
+RUN pnpm add -g prisma@6
 
 COPY --chown=node:node ./prisma/schema.prisma ./prisma/schema.prisma
 COPY --chown=node:node ./prisma/migrations ./prisma/migrations
