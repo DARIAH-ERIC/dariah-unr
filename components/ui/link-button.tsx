@@ -1,14 +1,11 @@
 "use client";
 
-import type { ComponentRef } from "react";
-
 /**
  * Intentionally not using `react-aria-components`'s `<Link>`, because that does not yet
  * support prefetching.
  */
 import { Link, type LinkProps } from "@/components/link";
 import { TouchTarget } from "@/components/ui/touch-target";
-import { type ForwardedRef, forwardRef } from "@/lib/forward-ref";
 import { type VariantProps, variants } from "@/lib/styles";
 
 export const linkButtonStyles = variants({
@@ -51,15 +48,12 @@ export type LinkButtonStyles = VariantProps<typeof linkButtonStyles>;
 
 export interface ButtonProps extends LinkProps, LinkButtonStyles {}
 
-export const LinkButton = forwardRef(function LinkButton(
-	props: ButtonProps,
-	forwardedRef: ForwardedRef<ComponentRef<typeof Link>>,
-) {
+export function LinkButton(props: ButtonProps) {
 	const { children, className, variant, ...rest } = props;
 
 	return (
-		<Link ref={forwardedRef} {...rest} className={linkButtonStyles({ className, variant })}>
+		<Link {...rest} className={linkButtonStyles({ className, variant })}>
 			<TouchTarget>{children}</TouchTarget>
 		</Link>
 	);
-});
+}

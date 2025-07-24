@@ -1,6 +1,5 @@
 "use client";
 
-import type { ComponentRef } from "react";
 import {
 	Button as AriaButton,
 	type ButtonProps as AriaButtonProps,
@@ -8,7 +7,6 @@ import {
 } from "react-aria-components";
 
 import { TouchTarget } from "@/components/ui/touch-target";
-import { type ForwardedRef, forwardRef } from "@/lib/forward-ref";
 import { type VariantProps, variants } from "@/lib/styles";
 
 export const buttonStyles = variants({
@@ -51,15 +49,11 @@ export type ButtonStyles = VariantProps<typeof buttonStyles>;
 
 export interface ButtonProps extends AriaButtonProps, ButtonStyles {}
 
-export const Button = forwardRef(function Button(
-	props: ButtonProps,
-	forwardedRef: ForwardedRef<ComponentRef<typeof AriaButton>>,
-) {
+export function Button(props: ButtonProps) {
 	const { children, className, variant, ...rest } = props;
 
 	return (
 		<AriaButton
-			ref={forwardedRef}
 			{...rest}
 			className={composeRenderProps(className, (className, renderProps) => {
 				return buttonStyles({ ...renderProps, className, variant });
@@ -70,4 +64,4 @@ export const Button = forwardRef(function Button(
 			})}
 		</AriaButton>
 	);
-});
+}

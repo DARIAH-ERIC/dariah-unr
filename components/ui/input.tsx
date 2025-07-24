@@ -1,13 +1,11 @@
 "use client";
 
-import type { ComponentRef } from "react";
 import {
 	composeRenderProps,
 	Input as AriaInput,
 	type InputProps as AriaInputProps,
 } from "react-aria-components";
 
-import { type ForwardedRef, forwardRef } from "@/lib/forward-ref";
 import { type VariantProps, variants } from "@/lib/styles";
 
 /** @internal */
@@ -32,15 +30,11 @@ export type InputStyles = VariantProps<typeof inputStyles>;
 export interface InputProps extends AriaInputProps, InputStyles {}
 
 /** @internal */
-export const Input = forwardRef(function Input(
-	props: InputProps,
-	forwardedRef: ForwardedRef<ComponentRef<typeof AriaInput>>,
-) {
+export function Input(props: InputProps) {
 	const { children, className, ...rest } = props;
 
 	return (
 		<AriaInput
-			ref={forwardedRef}
 			{...rest}
 			className={composeRenderProps(className, (className, renderProps) => {
 				return inputStyles({ ...renderProps, className });
@@ -49,4 +43,4 @@ export const Input = forwardRef(function Input(
 			{children}
 		</AriaInput>
 	);
-});
+}

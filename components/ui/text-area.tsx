@@ -1,13 +1,11 @@
 "use client";
 
-import type { ComponentRef } from "react";
 import {
 	composeRenderProps,
 	TextArea as AriaTextArea,
 	type TextAreaProps as AriaTextAreaProps,
 } from "react-aria-components";
 
-import { type ForwardedRef, forwardRef } from "@/lib/forward-ref";
 import { type VariantProps, variants } from "@/lib/styles";
 
 export const textAreaStyles = variants({
@@ -32,15 +30,11 @@ export interface TextAreaProps extends AriaTextAreaProps, TextAreaStyles {
 	isResizable?: boolean;
 }
 
-export const TextArea = forwardRef(function TextArea(
-	props: TextAreaProps,
-	forwardedRef: ForwardedRef<ComponentRef<typeof AriaTextArea>>,
-) {
+export function TextArea(props: TextAreaProps) {
 	const { children, className, isResizable = true, ...rest } = props;
 
 	return (
 		<AriaTextArea
-			ref={forwardedRef}
 			{...rest}
 			className={composeRenderProps(className, (className, renderProps) => {
 				return textAreaStyles({ ...renderProps, className });
@@ -50,4 +44,4 @@ export const TextArea = forwardRef(function TextArea(
 			{children}
 		</AriaTextArea>
 	);
-});
+}
