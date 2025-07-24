@@ -121,7 +121,7 @@ async function DashboardPageContent(props: DashboardPageContentProps) {
 						});
 					}}
 				>
-					<SubmitButton>{t("create-page-for-year", { year })}</SubmitButton>
+					<SubmitButton>{t("create-page-for-year", { year: String(year) })}</SubmitButton>
 				</form>
 			) : (
 				<LinkButton
@@ -129,7 +129,7 @@ async function DashboardPageContent(props: DashboardPageContentProps) {
 						pathname: `/dashboard/reports/${String(year)}/countries/${country.code}/edit/welcome`,
 					})}
 				>
-					{t("edit-page-for-year", { year })}
+					{t("edit-page-for-year", { year: String(year) })}
 				</LinkButton>
 			)}
 		</div>
