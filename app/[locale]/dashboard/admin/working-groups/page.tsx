@@ -5,15 +5,15 @@ import { type ReactNode, Suspense } from "react";
 import { AdminWorkingGroupsTableContent } from "@/components/admin/working-groups-table-content";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
-import type { Locale } from "@/config/i18n.config";
 import { getContributions } from "@/lib/data/contributions";
 import { getPersons } from "@/lib/data/person";
 import { getWorkingGroups } from "@/lib/data/working-group";
+import type { IntlLocale } from "@/lib/i18n/locales";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 interface DashboardAdminWorkingGroupsPageProps {
 	params: {
-		locale: Locale;
+		locale: IntlLocale;
 	};
 }
 

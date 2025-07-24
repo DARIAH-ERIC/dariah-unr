@@ -5,11 +5,11 @@ import type { ReactNode } from "react";
 
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
-import type { Locale } from "@/config/i18n.config";
+import type { IntlLocale } from "@/lib/i18n/locales";
 
 interface NotFoundPageProps {
 	params: {
-		locale: Locale;
+		locale: IntlLocale;
 	};
 }
 

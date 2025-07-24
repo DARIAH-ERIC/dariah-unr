@@ -1,7 +1,7 @@
 import type { UserRole } from "@prisma/client";
 import { getLocale } from "next-intl/server";
 
-import { redirect } from "@/lib/navigation";
+import { redirect } from "@/lib/navigation/navigation";
 import { getCurrentSession } from "@/lib/server/auth/get-current-session";
 import type { SessionValidationResultSuccess } from "@/lib/server/auth/sessions";
 

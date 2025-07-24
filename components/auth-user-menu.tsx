@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/blocks/dropdown-menu";
 import { IconButton } from "@/components/ui/icon-button";
 import { signOutAction } from "@/lib/actions/auth";
-import { useRouter } from "@/lib/navigation";
+import { useRouter } from "@/lib/navigation/navigation";
 import type { User } from "@/lib/server/auth/sessions";
 
 interface AuthUserMenuProps {

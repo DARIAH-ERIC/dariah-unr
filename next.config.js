@@ -57,7 +57,13 @@ const config = {
 /** @type {Array<(config: NextConfig) => NextConfig>} */
 const plugins = [
 	createBundleAnalyzerPlugin({ enabled: env.BUNDLE_ANALYZER === "enabled" }),
-	createI18nPlugin("./lib/i18n.ts"),
+	createI18nPlugin({
+		experimental: {
+			/** @see https://next-intl.dev/docs/workflows/typescript#messages-arguments */
+			createMessagesDeclaration: ["./content/en/metadata/index.json", "./messages/en.json"],
+		},
+		requestConfig: "./lib/i18n/request.ts",
+	}),
 	createMdxPlugin({
 		extension: /\.(md|mdx)$/,
 		options: mdxConfig,

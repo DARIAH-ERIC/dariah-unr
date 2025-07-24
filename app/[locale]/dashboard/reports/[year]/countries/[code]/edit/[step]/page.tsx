@@ -24,12 +24,12 @@ import { Link } from "@/components/link";
 import { LoadingIndicator } from "@/components/loading-indicator";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
-import type { Locale } from "@/config/i18n.config";
-import { createHref } from "@/lib/create-href";
 import { getCountryByCode } from "@/lib/data/country";
 import { getReportByCountryCode } from "@/lib/data/report";
 import { getCountryCodes as getStaticCountryCodes } from "@/lib/get-country-codes";
 import { getReportYears } from "@/lib/get-report-years";
+import type { IntlLocale } from "@/lib/i18n/locales";
+import { createHref } from "@/lib/navigation/create-href";
 import {
 	type DashboardCountryReportEditStepPageParams,
 	dashboardCountryReportEditStepPageParams,
@@ -43,7 +43,7 @@ import { createZoteroCollectionUrl } from "@/lib/zotero";
 interface DashboardCountryReportEditStepPageProps {
 	params: {
 		code: string;
-		locale: Locale;
+		locale: IntlLocale;
 		step: string;
 		year: string;
 	};

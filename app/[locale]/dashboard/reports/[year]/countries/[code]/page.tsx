@@ -5,17 +5,17 @@ import type { ReactNode } from "react";
 
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
-import type { Locale } from "@/config/i18n.config";
 import { getReportByCountryCode } from "@/lib/data/report";
 import { getCountryCodes as getStaticCountryCodes } from "@/lib/get-country-codes";
 import { getReportYears } from "@/lib/get-report-years";
+import type { IntlLocale } from "@/lib/i18n/locales";
 import { dashboardCountryReportPageParams } from "@/lib/schemas/dashboard";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 interface DashboardCountryReportPageProps {
 	params: {
 		code: string;
-		locale: Locale;
+		locale: IntlLocale;
 		year: string;
 	};
 }

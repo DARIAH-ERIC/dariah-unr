@@ -9,16 +9,16 @@ import { PageLeadIn } from "@/components/page-lead-in";
 import { PageTitle } from "@/components/page-title";
 import { SubmitButton } from "@/components/submit-button";
 import { LinkButton } from "@/components/ui/link-button";
-import type { Locale } from "@/config/i18n.config";
-import { createHref } from "@/lib/create-href";
 import { getCountryById } from "@/lib/data/country";
 import { createReportForCountryId, getReportByCountryId } from "@/lib/data/report";
-import { redirect } from "@/lib/navigation";
+import type { IntlLocale } from "@/lib/i18n/locales";
+import { createHref } from "@/lib/navigation/create-href";
+import { redirect } from "@/lib/navigation/navigation";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 interface DashboardPageProps {
 	params: {
-		locale: Locale;
+		locale: IntlLocale;
 	};
 }
 

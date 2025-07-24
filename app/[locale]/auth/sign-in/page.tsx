@@ -5,14 +5,14 @@ import type { ReactNode } from "react";
 import { MainContent } from "@/components/main-content";
 import { SignInForm } from "@/components/sign-in-form";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import type { Locale } from "@/config/i18n.config";
-import { redirect } from "@/lib/navigation";
+import type { IntlLocale } from "@/lib/i18n/locales";
+import { redirect } from "@/lib/navigation/navigation";
 import { authSignInPageSearchParams } from "@/lib/schemas/auth";
 import { getCurrentSession } from "@/lib/server/auth/get-current-session";
 
 interface AuthSignInPageProps {
 	params: {
-		locale: Locale;
+		locale: IntlLocale;
 	};
 	searchParams: Record<string, Array<string> | string>;
 }

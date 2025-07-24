@@ -7,12 +7,12 @@ import { ContactForm } from "@/components/contact-form";
 import { MainContent } from "@/components/main-content";
 import { PageLeadIn } from "@/components/page-lead-in";
 import { PageTitle } from "@/components/page-title";
-import type { Locale } from "@/config/i18n.config";
+import type { IntlLocale } from "@/lib/i18n/locales";
 import { contactPageSearchParams } from "@/lib/schemas/email";
 
 interface ContactPageProps {
 	params: {
-		locale: Locale;
+		locale: IntlLocale;
 	};
 	searchParams: Record<string, Array<string> | string>;
 }

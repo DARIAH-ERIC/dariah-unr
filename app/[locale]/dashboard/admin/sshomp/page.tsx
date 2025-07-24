@@ -5,12 +5,12 @@ import type { ReactNode } from "react";
 import { AdminSshompIngestFormContent } from "@/components/admin/sshomp-ingest-form-content";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
-import type { Locale } from "@/config/i18n.config";
+import type { IntlLocale } from "@/lib/i18n/locales";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 interface DashboardAdminSshompIngestPageProps {
 	params: {
-		locale: Locale;
+		locale: IntlLocale;
 	};
 }
 

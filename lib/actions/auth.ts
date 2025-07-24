@@ -5,7 +5,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import type { z } from "zod";
 
 import { getUserByEmail } from "@/lib/data/user";
-import { redirect } from "@/lib/navigation";
+import { redirect } from "@/lib/navigation/navigation";
 import { type SignInFormSchema, signInFormSchema } from "@/lib/schemas/auth";
 import { getCurrentSession } from "@/lib/server/auth/get-current-session";
 import { verifyPassword } from "@/lib/server/auth/passwords";

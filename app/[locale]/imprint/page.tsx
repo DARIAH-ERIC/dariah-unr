@@ -7,12 +7,12 @@ import type { ReactNode } from "react";
 
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
-import type { Locale } from "@/config/i18n.config";
 import { createImprintUrl } from "@/config/imprint.config";
+import type { IntlLocale } from "@/lib/i18n/locales";
 
 interface ImprintPageProps {
 	params: {
-		locale: Locale;
+		locale: IntlLocale;
 	};
 }
 
@@ -50,7 +50,7 @@ export default function ImprintPage(props: ImprintPageProps): ReactNode {
 }
 
 interface ImprintPageContentProps {
-	locale: Locale;
+	locale: IntlLocale;
 }
 
 async function ImprintPageContent(props: ImprintPageContentProps) {
@@ -61,12 +61,12 @@ async function ImprintPageContent(props: ImprintPageContentProps) {
 	return <div dangerouslySetInnerHTML={{ __html: html }} className="prose prose-sm" />;
 }
 
-async function getImprintHtml(locale: Locale): Promise<string> {
+async function getImprintHtml(locale: IntlLocale): Promise<string> {
 	try {
 		const url = createImprintUrl(locale);
 		const html = await request(url, { responseType: "text" });
 
-		return html as string;
+		return html;
 	} catch (error) {
 		if (error instanceof HttpError && error.response.status === 404) {
 			notFound();

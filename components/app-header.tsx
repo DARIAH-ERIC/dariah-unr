@@ -11,7 +11,7 @@ import { LocaleSwitcher } from "@/components/locale-switcher";
 import { Logo } from "@/components/logo";
 import { Drawer, DrawerTrigger } from "@/components/ui/blocks/drawer";
 import { IconButton } from "@/components/ui/icon-button";
-import { createHref } from "@/lib/create-href";
+import { createHref } from "@/lib/navigation/create-href";
 
 export function AppHeader(): ReactNode {
 	const t = useTranslations("AppHeader");

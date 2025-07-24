@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 
 import { AppNavLink } from "@/components/app-nav-link";
 import type { LinkProps } from "@/components/link";
-import { createHref } from "@/lib/create-href";
+import { createHref } from "@/lib/navigation/create-href";
 
 export function AppFooter(): ReactNode {
 	const t = useTranslations("AppFooter");

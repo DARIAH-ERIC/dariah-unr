@@ -198,25 +198,12 @@
 		"loading": "Loading"
 	},
 	"LocaleLayout": {
-		"meta": {
-			"description": "Key performance indicators for DARIAH member countries.",
-			"title": "DARIAH Unified National Reporting",
-			"twitter": {
-				"creator": "@dariaheu",
-				"site": "@dariaheu"
-			}
-		},
 		"skip-to-main-content": "Skip to main content"
 	},
 	"LocaleSwitcher": {
 		"current-locale": "Current language: {locale}",
 		"switch-locale": "Switch locale",
 		"switch-locale-to": "Switch to {locale}"
-	},
-	"Manifest": {
-		"description": "Key performance indicators for DARIAH member countries.",
-		"name": "DARIAH Unified National Reporting",
-		"short-name": "DARIAH UNR"
 	},
 	"NotFoundPage": {
 		"meta": {

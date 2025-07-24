@@ -6,14 +6,14 @@ import type { ReactNode } from "react";
 import { DraftModeToggle } from "@/components/draft-mode-toggle";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
-import type { Locale } from "@/config/i18n.config";
 import { getDocumentationContent } from "@/lib/content/mdx";
 import { reader } from "@/lib/content/reader";
+import type { IntlLocale } from "@/lib/i18n/locales";
 
 interface DocumentationPageProps {
 	params: {
 		id: string;
-		locale: Locale;
+		locale: IntlLocale;
 	};
 }
 
@@ -64,7 +64,7 @@ export default function DocumentationPage(props: DocumentationPageProps): ReactN
 
 interface DocumentationPageContentProps {
 	id: string;
-	locale: Locale;
+	locale: IntlLocale;
 }
 
 async function DocumentationPageContent(props: DocumentationPageContentProps) {

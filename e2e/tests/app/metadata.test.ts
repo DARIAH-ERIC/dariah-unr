@@ -2,8 +2,8 @@ import { createUrl } from "@acdh-oeaw/lib";
 import { jsonLdScriptProps } from "react-schemaorg";
 
 import { env } from "@/config/env.config";
-import { locales } from "@/config/i18n.config";
 import { expect, test } from "@/e2e/lib/test";
+import { locales } from "@/lib/i18n/locales";
 
 test("should set a canonical url", async ({ page }) => {
 	for (const locale of locales) {
@@ -17,7 +17,7 @@ test("should set a canonical url", async ({ page }) => {
 	}
 });
 
-/** FIXME: @see https://github.com/vercel/next	.js/issues/45620 */
+/** FIXME: @see https://github.com/vercel/next.js/issues/45620 */
 test.fixme("should set document title on not-found page", async ({ page }) => {
 	await page.goto("/unknown");
 	await expect(page).toHaveTitle("Page not found | DARIAH Unified National Reporting");

@@ -6,12 +6,12 @@ import type { ReactNode } from "react";
 import { Logo } from "@/components/logo";
 import { MainContent } from "@/components/main-content";
 import { LinkButton } from "@/components/ui/link-button";
-import type { Locale } from "@/config/i18n.config";
-import { createHref } from "@/lib/create-href";
+import type { IntlLocale } from "@/lib/i18n/locales";
+import { createHref } from "@/lib/navigation/create-href";
 
 interface IndexPageProps {
 	params: {
-		locale: Locale;
+		locale: IntlLocale;
 	};
 }
 

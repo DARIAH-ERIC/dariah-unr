@@ -6,7 +6,6 @@ import { type ReactNode, Suspense } from "react";
 import { AdminStatisticsContent } from "@/components/admin/statistics-content";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
-import type { Locale } from "@/config/i18n.config";
 import {
 	getContributionsCount,
 	getInstitutionsCount,
@@ -16,12 +15,13 @@ import {
 	getServicesCount,
 } from "@/lib/data/stats";
 import { getReportYears } from "@/lib/get-report-years";
+import type { IntlLocale } from "@/lib/i18n/locales";
 import { dashboardAdminStatisticsPageParams } from "@/lib/schemas/dashboard";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 interface DashboardAdminStatisticsPageProps {
 	params: {
-		locale: Locale;
+		locale: IntlLocale;
 		year: string;
 	};
 }

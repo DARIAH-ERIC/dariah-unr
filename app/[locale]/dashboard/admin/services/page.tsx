@@ -5,15 +5,15 @@ import { type ReactNode, Suspense } from "react";
 import { AdminServicesTableContent } from "@/components/admin/services-table-content";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
-import type { Locale } from "@/config/i18n.config";
 import { getCountries } from "@/lib/data/country";
 import { getInstitutions } from "@/lib/data/institution";
 import { getServices, getServiceSizes } from "@/lib/data/service";
+import type { IntlLocale } from "@/lib/i18n/locales";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 interface DashboardAdminServicesPageProps {
 	params: {
-		locale: Locale;
+		locale: IntlLocale;
 	};
 }
 

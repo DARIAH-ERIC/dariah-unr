@@ -5,13 +5,13 @@ import { type ReactNode, Suspense } from "react";
 import { AdminProjectsFundingsTableContent } from "@/components/admin/projects-fundings-table-content";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
-import type { Locale } from "@/config/i18n.config";
 import { getProjectsFundingLeverages } from "@/lib/data/project-funding-leverage";
+import type { IntlLocale } from "@/lib/i18n/locales";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 interface DashboardAdminProjectFundingsPageProps {
 	params: {
-		locale: Locale;
+		locale: IntlLocale;
 	};
 }
 

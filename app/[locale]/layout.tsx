@@ -1,7 +1,7 @@
 import { pick } from "@acdh-oeaw/lib";
 import type { Metadata, ResolvingMetadata } from "next";
 import { useMessages, useTranslations } from "next-intl";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 import { LocalizedStringProvider as Translations } from "react-aria-components/i18n";
 import { jsonLdScriptProps } from "react-schemaorg";
@@ -13,16 +13,17 @@ import { AppLayout } from "@/components/app-layout";
 import { id } from "@/components/main-content";
 import { SkipLink } from "@/components/skip-link";
 import { env } from "@/config/env.config";
-import { type Locale, locales } from "@/config/i18n.config";
 import { AnalyticsScript } from "@/lib/analytics-script";
 import { ColorSchemeScript } from "@/lib/color-scheme-script";
 import * as fonts from "@/lib/fonts";
+import { type IntlLocale, locales } from "@/lib/i18n/locales";
+import { getMetadata, useMetadata } from "@/lib/i18n/metadata";
 import { cn } from "@/lib/styles";
 
 interface LocaleLayoutProps {
 	children: ReactNode;
 	params: {
-		locale: Locale;
+		locale: IntlLocale;
 	};
 }
 
@@ -41,26 +42,26 @@ export async function generateMetadata(
 	const { params } = props;
 
 	const { locale } = params;
-	const t = await getTranslations({ locale, namespace: "LocaleLayout" });
+	const meta = await getMetadata(locale);
 
 	const metadata: Metadata = {
 		title: {
-			default: t("meta.title"),
-			template: ["%s", t("meta.title")].join(" | "),
+			default: meta.title,
+			template: ["%s", meta.title].join(" | "),
 		},
-		description: t("meta.description"),
+		description: meta.description,
 		openGraph: {
-			title: t("meta.title"),
-			description: t("meta.description"),
+			title: meta.title,
+			description: meta.description,
 			url: "./",
-			siteName: t("meta.title"),
+			siteName: meta.title,
 			locale,
 			type: "website",
 		},
 		twitter: {
 			card: "summary_large_image",
-			creator: t("meta.twitter.creator"),
-			site: t("meta.twitter.site"),
+			creator: meta.social.twitter,
+			site: meta.social.twitter,
 		},
 		verification: {
 			google: env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
@@ -77,7 +78,8 @@ export default function LocaleLayout(props: LocaleLayoutProps): ReactNode {
 	setRequestLocale(locale);
 
 	const t = useTranslations("LocaleLayout");
-	const messages = useMessages() as IntlMessages;
+	const messages = useMessages();
+	const meta = useMetadata();
 
 	return (
 		<html
@@ -94,8 +96,8 @@ export default function LocaleLayout(props: LocaleLayoutProps): ReactNode {
 					{...jsonLdScriptProps({
 						"@context": "https://schema.org",
 						"@type": "WebSite",
-						name: t("meta.title"),
-						description: t("meta.description"),
+						name: meta.title,
+						description: meta.description,
 					})}
 				/>
 

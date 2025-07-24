@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale } from "next-intl";
 import type { Key, ReactNode } from "react";
 
 import { IconButton } from "@/components/ui/icon-button";
@@ -10,12 +11,12 @@ import {
 	SelectPopover,
 	SelectValue,
 } from "@/components/ui/select";
-import type { Locale } from "@/config/i18n.config";
-import { createHref } from "@/lib/create-href";
-import { useLocale, usePathname, useRouter } from "@/lib/navigation";
+import type { IntlLocale } from "@/lib/i18n/locales";
+import { createHref } from "@/lib/navigation/create-href";
+import { usePathname, useRouter } from "@/lib/navigation/navigation";
 
 interface LocaleSelectProps {
-	items: Record<Locale, string>;
+	items: Record<IntlLocale, string>;
 	label: string;
 }
 
@@ -27,7 +28,7 @@ export function LocaleSelect(props: LocaleSelectProps): ReactNode {
 	const pathname = usePathname();
 
 	function onSelectionChange(key: Key | null) {
-		const locale = key as Locale;
+		const locale = key as IntlLocale;
 		router.push(createHref({ pathname }), { locale });
 	}
 

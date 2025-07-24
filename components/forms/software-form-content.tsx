@@ -14,8 +14,8 @@ import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
 import { LinkButton } from "@/components/ui/link-button";
 import { updateSoftwareAction } from "@/lib/actions/update-software";
-import { createHref } from "@/lib/create-href";
 import { createKey } from "@/lib/create-key";
+import { createHref } from "@/lib/navigation/create-href";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
 
 interface SoftwareFormContentProps {
