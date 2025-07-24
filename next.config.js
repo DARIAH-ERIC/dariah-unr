@@ -72,7 +72,7 @@ const plugins = [
 		return withSentryPlugin(config, {
 			authToken: env.SENTRY_AUTH_TOKEN,
 			org: "acdh-ch",
-			project: "dariah-unr",
+			project: "dariah-knowledge-base",
 			automaticVercelMonitors: true,
 			disableLogger: true,
 			hideSourceMaps: true,
