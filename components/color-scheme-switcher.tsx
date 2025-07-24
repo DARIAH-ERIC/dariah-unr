@@ -11,7 +11,6 @@ const ColorSchemeSelect = dynamic(
 		});
 	},
 	{
-		// @ts-expect-error `ReactNode` is a valid return type.
 		loading: ColorSchemeSelectLoadingIndicator,
 		ssr: false,
 	},

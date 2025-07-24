@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { useLocale as _useLocale } from "next-intl";
-import { createSharedPathnamesNavigation } from "next-intl/navigation";
+import { createNavigation } from "next-intl/navigation";
 import type { ComponentPropsWithRef, FC } from "react";
 
 import { isValidLocale, type Locale, locales } from "@/config/i18n.config";
@@ -10,7 +10,7 @@ const {
 	redirect: __redirect,
 	usePathname,
 	useRouter,
-} = createSharedPathnamesNavigation({
+} = createNavigation({
 	locales,
 });
 

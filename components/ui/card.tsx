@@ -1,6 +1,6 @@
 "use client";
 
-import type { ComponentPropsWithoutRef, ElementRef } from "react";
+import type { ComponentPropsWithoutRef, ComponentRef } from "react";
 import {
 	Heading as AriaCardTitle,
 	type HeadingProps as AriaCardTitleProps,
@@ -27,7 +27,7 @@ export interface CardProps extends ComponentPropsWithoutRef<"article">, CardStyl
 
 export const Card = forwardRef(function Card(
 	props: CardProps,
-	forwardedRef: ForwardedRef<ElementRef<"article">>,
+	forwardedRef: ForwardedRef<ComponentRef<"article">>,
 ) {
 	const { children, className, ...rest } = props;
 
@@ -48,7 +48,7 @@ export interface CardHeaderProps extends ComponentPropsWithoutRef<"header">, Car
 
 export const CardHeader = forwardRef(function CardHeader(
 	props: CardHeaderProps,
-	forwardedRef: ForwardedRef<ElementRef<"header">>,
+	forwardedRef: ForwardedRef<ComponentRef<"header">>,
 ) {
 	const { children, className, ...rest } = props;
 
@@ -71,7 +71,7 @@ export interface CardTitleProps extends AriaCardTitleProps, CardTitleStyles {}
 
 export const CardTitle = forwardRef(function CardTitle(
 	props: CardTitleProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaCardTitle>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaCardTitle>>,
 ) {
 	const { children, className, ...rest } = props;
 
@@ -97,7 +97,7 @@ export interface CardDescriptionProps extends AriaCardDescriptionProps, CardDesc
 
 export const CardDescription = forwardRef(function CardDescription(
 	props: CardDescriptionProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaCardDescription>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaCardDescription>>,
 ) {
 	const { children, className, ...rest } = props;
 
@@ -124,7 +124,7 @@ export interface CardFooterProps extends ComponentPropsWithoutRef<"footer">, Car
 
 export const CardFooter = forwardRef(function CardFooter(
 	props: CardFooterProps,
-	forwardedRef: ForwardedRef<ElementRef<"footer">>,
+	forwardedRef: ForwardedRef<ComponentRef<"footer">>,
 ) {
 	const { children, className, ...rest } = props;
 

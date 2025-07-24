@@ -1,4 +1,4 @@
-import type { ElementRef } from "react";
+import type { ComponentRef } from "react";
 import {
 	composeRenderProps,
 	OverlayArrow as AriaPopoverArrow,
@@ -30,7 +30,7 @@ export interface PopoverProps extends AriaPopoverProps, PopoverStyles {}
 
 export const Popover = forwardRef(function Popover(
 	props: PopoverProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaPopover>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaPopover>>,
 ) {
 	const { children, className, ...rest } = props;
 
@@ -57,7 +57,7 @@ export interface PopoverArrowProps extends AriaPopoverArrowProps, PopoverArrowSt
 
 export const PopoverArrow = forwardRef(function PopoverArrow(
 	props: PopoverArrowProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaPopoverArrow>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaPopoverArrow>>,
 ) {
 	const { className, ...rest } = props;
 

@@ -148,7 +148,7 @@ interface TableFilterSelectProps {
 	defaultSelectedKey?: Key;
 	label: string;
 	items: Array<{ id: string; label: string }>;
-	onSelectionChange: (key: Key) => void;
+	onSelectionChange: (key: Key | null) => void;
 }
 
 export function TableFilterSelect(props: TableFilterSelectProps) {

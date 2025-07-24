@@ -1,6 +1,6 @@
 "use client";
 
-import type { ElementRef } from "react";
+import type { ComponentRef } from "react";
 import {
 	composeRenderProps,
 	TextArea as AriaTextArea,
@@ -34,7 +34,7 @@ export interface TextAreaProps extends AriaTextAreaProps, TextAreaStyles {
 
 export const TextArea = forwardRef(function TextArea(
 	props: TextAreaProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaTextArea>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaTextArea>>,
 ) {
 	const { children, className, isResizable = true, ...rest } = props;
 

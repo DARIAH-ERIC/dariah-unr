@@ -1,6 +1,6 @@
 "use client";
 
-import type { ElementRef } from "react";
+import type { ComponentRef } from "react";
 
 /**
  * Intentionally not using `react-aria-components`'s `<Link>`, because that does not yet
@@ -53,7 +53,7 @@ export interface ButtonProps extends LinkProps, LinkButtonStyles {}
 
 export const LinkButton = forwardRef(function LinkButton(
 	props: ButtonProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof Link>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof Link>>,
 ) {
 	const { children, className, variant, ...rest } = props;
 

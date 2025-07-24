@@ -1,6 +1,6 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
-import { unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { DraftModeToggle } from "@/components/draft-mode-toggle";
@@ -22,7 +22,7 @@ interface DocumentationPageProps {
 export async function generateStaticParams(_props: {
 	params: Pick<DocumentationPageProps["params"], "locale">;
 }): Promise<Array<Pick<DocumentationPageProps["params"], "id">>> {
-	const ids = await reader().collections.documentation.list();
+	const ids = await (await reader()).collections.documentation.list();
 
 	return ids.map((id) => {
 		return { id };
@@ -36,7 +36,7 @@ export async function generateMetadata(
 	const { params } = props;
 
 	const { id } = params;
-	const document = await reader().collections.documentation.read(id);
+	const document = await (await reader()).collections.documentation.read(id);
 
 	if (document == null) notFound();
 
@@ -70,7 +70,7 @@ interface DocumentationPageContentProps {
 async function DocumentationPageContent(props: DocumentationPageContentProps) {
 	const { id } = props;
 
-	const document = await reader().collections.documentation.read(id);
+	const document = await (await reader()).collections.documentation.read(id);
 	if (document == null) notFound();
 
 	const { Content } = await getDocumentationContent(id);

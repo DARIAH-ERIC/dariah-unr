@@ -130,6 +130,7 @@ test.describe("should add json+ld metadata", () => {
 				"@type": "WebSite",
 				name: "DARIAH Unified National Reporting",
 				description: "Key performance indicators for DARIAH member countries.",
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 			}).dangerouslySetInnerHTML?.__html,
 		);
 	});
@@ -146,6 +147,7 @@ test.describe("should add json+ld metadata", () => {
 				"@type": "WebSite",
 				name: "DARIAH Unified National Reporting",
 				description: "Wichtige Leistungsindikatoren für DARIAH-Mitgliedsländer.",
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 			}).dangerouslySetInnerHTML?.__html,
 		);
 	});
@@ -159,7 +161,7 @@ test("should serve an open-graph image", async ({ page, request }) => {
 		await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
 			"content",
 			expect.stringContaining(
-				String(createUrl({ baseUrl: env.NEXT_PUBLIC_APP_BASE_URL, pathname: imagePath })) + `?`,
+				`${String(createUrl({ baseUrl: env.NEXT_PUBLIC_APP_BASE_URL, pathname: imagePath }))}?`,
 			),
 		);
 

@@ -1,5 +1,5 @@
 import type { Metadata, ResolvingMetadata } from "next";
-import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { type ReactNode, Suspense } from "react";
 
 import { AdminSoftwareTableContent } from "@/components/admin/software-table-content";

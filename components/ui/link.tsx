@@ -1,6 +1,6 @@
 "use client";
 
-import type { ElementRef } from "react";
+import type { ComponentRef } from "react";
 import {
 	composeRenderProps,
 	Link as AriaLink,
@@ -25,7 +25,7 @@ export interface LinkProps extends AriaLinkProps, LinkStyles {}
 
 export const Link = forwardRef(function Link(
 	props: LinkProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaLink>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaLink>>,
 ) {
 	const { children, className, ...rest } = props;
 

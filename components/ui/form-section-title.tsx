@@ -1,6 +1,6 @@
 "use client";
 
-import type { ElementRef } from "react";
+import type { ComponentRef } from "react";
 import {
 	Heading as AriaFormSectionTitle,
 	type HeadingProps as AriaFormSectionTitleProps,
@@ -23,7 +23,7 @@ export interface FormSectionTitleProps extends AriaFormSectionTitleProps, FormSe
 
 export const FormSectionTitle = forwardRef(function FormSectionTitle(
 	props: FormSectionTitleProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaFormSectionTitle>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaFormSectionTitle>>,
 ) {
 	const { children, className, ...rest } = props;
 

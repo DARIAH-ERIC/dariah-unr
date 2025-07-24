@@ -1,6 +1,6 @@
 "use client";
 
-import type { ComponentPropsWithoutRef, ElementRef } from "react";
+import type { ComponentPropsWithoutRef, ComponentRef } from "react";
 
 import { type ForwardedRef, forwardRef } from "@/lib/forward-ref";
 import { type VariantProps, variants } from "@/lib/styles";
@@ -15,7 +15,7 @@ export interface FormSectionProps extends ComponentPropsWithoutRef<"section">, F
 
 export const FormSection = forwardRef(function FormSection(
 	props: FormSectionProps,
-	forwardedRef: ForwardedRef<ElementRef<"section">>,
+	forwardedRef: ForwardedRef<ComponentRef<"section">>,
 ) {
 	const { children, className, ...rest } = props;
 

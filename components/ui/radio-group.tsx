@@ -1,6 +1,6 @@
 "use client";
 
-import { type ComponentPropsWithoutRef, type ElementRef, Fragment } from "react";
+import { type ComponentPropsWithoutRef, type ComponentRef, Fragment } from "react";
 import {
 	composeRenderProps,
 	Radio as AriaRadio,
@@ -22,7 +22,7 @@ export interface RadioGroupProps extends AriaRadioGroupProps, RadioGroupStyles {
 
 export const RadioGroup = forwardRef(function RadioGroup(
 	props: RadioGroupProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaRadioGroup>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaRadioGroup>>,
 ) {
 	const { children, className, ...rest } = props;
 
@@ -49,7 +49,7 @@ export interface RadioProps extends AriaRadioProps, RadioStyles {}
 
 export const Radio = forwardRef(function Radio(
 	props: RadioProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaRadio>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaRadio>>,
 ) {
 	const { children, className, ...rest } = props;
 
@@ -90,7 +90,7 @@ export interface RadioBoxProps extends ComponentPropsWithoutRef<"div">, RadioBox
 
 export const RadioBox = forwardRef(function RadioBox(
 	props: RadioBoxProps,
-	forwardedRef: ForwardedRef<ElementRef<"div">>,
+	forwardedRef: ForwardedRef<ComponentRef<"div">>,
 ) {
 	const { className, ...rest } = props;
 

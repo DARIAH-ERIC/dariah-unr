@@ -1,6 +1,6 @@
 "use client";
 
-import type { ElementRef } from "react";
+import type { ComponentRef } from "react";
 import {
 	composeRenderProps,
 	NumberField as AriaNumberField,
@@ -20,7 +20,7 @@ export interface NumberFieldProps extends AriaNumberFieldProps, NumberFieldStyle
 
 export const NumberField = forwardRef(function NumberField(
 	props: NumberFieldProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaNumberField>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaNumberField>>,
 ) {
 	const { children, className, ...rest } = props;
 

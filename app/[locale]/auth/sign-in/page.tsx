@@ -1,5 +1,5 @@
 import type { Metadata, ResolvingMetadata } from "next";
-import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { MainContent } from "@/components/main-content";
@@ -46,7 +46,7 @@ export default async function AuthSignInPage(props: AuthSignInPageProps): Promis
 	const { session } = await getCurrentSession();
 
 	if (session != null) {
-		redirect("/dashboard");
+		redirect({ href: "/dashboard", locale });
 	}
 
 	return (

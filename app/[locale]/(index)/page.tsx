@@ -1,6 +1,6 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import { useTranslations } from "next-intl";
-import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { Logo } from "@/components/logo";

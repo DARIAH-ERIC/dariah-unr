@@ -2,7 +2,7 @@
 
 import { chain } from "@react-aria/utils";
 import { XIcon } from "lucide-react";
-import { type ComponentPropsWithoutRef, type ElementRef, useContext } from "react";
+import { type ComponentPropsWithoutRef, type ComponentRef, useContext } from "react";
 import {
 	Button as AriaDialogCloseButton,
 	type ButtonProps as AriaDialogCloseButtonProps,
@@ -47,7 +47,7 @@ export interface DialogProps extends AriaDialogProps, DialogStyles {}
 
 export const Dialog = forwardRef(function Dialog(
 	props: DialogProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaDialog>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaDialog>>,
 ) {
 	const { children, className, ...rest } = props;
 
@@ -68,7 +68,7 @@ export interface DialogHeaderProps extends ComponentPropsWithoutRef<"header">, D
 
 export const DialogHeader = forwardRef(function DialogHeader(
 	props: DialogHeaderProps,
-	forwardedRef: ForwardedRef<ElementRef<"header">>,
+	forwardedRef: ForwardedRef<ComponentRef<"header">>,
 ) {
 	const { children, className, ...rest } = props;
 
@@ -91,7 +91,7 @@ export interface DialogTitleProps extends AriaDialogTitleProps, DialogTitleStyle
 
 export const DialogTitle = forwardRef(function DialogTitle(
 	props: DialogTitleProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaDialogTitle>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaDialogTitle>>,
 ) {
 	const { children, className, ...rest } = props;
 
@@ -119,7 +119,7 @@ export interface DialogDescriptionProps
 
 export const DialogDescription = forwardRef(function DialogDescription(
 	props: DialogDescriptionProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaDialogDescription>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaDialogDescription>>,
 ) {
 	const { children, className, ...rest } = props;
 
@@ -145,7 +145,7 @@ export interface DialogFooterProps extends ComponentPropsWithoutRef<"footer">, D
 
 export const DialogFooter = forwardRef(function DialogFooter(
 	props: DialogFooterProps,
-	forwardedRef: ForwardedRef<ElementRef<"footer">>,
+	forwardedRef: ForwardedRef<ComponentRef<"footer">>,
 ) {
 	const { children, className, ...rest } = props;
 
@@ -174,12 +174,12 @@ export interface DialogCloseButtonProps
 
 export const DialogCloseButton = forwardRef(function DialogCloseButton(
 	props: DialogCloseButtonProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaDialogCloseButton>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaDialogCloseButton>>,
 ) {
 	const { className, onPress, ...rest } = props;
 
 	// eslint-disable-next-line @typescript-eslint/unbound-method
-	const { close } = useContext(AriaOverlayTriggerStateContext);
+	const { close } = useContext(AriaOverlayTriggerStateContext)!;
 
 	return (
 		<AriaDialogCloseButton
@@ -207,12 +207,12 @@ export interface DialogCancelButtonProps
 
 export const DialogCancelButton = forwardRef(function DialogCancelButton(
 	props: DialogCancelButtonProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaDialogCancelButton>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaDialogCancelButton>>,
 ) {
 	const { children, className, onPress, variant = "plain", ...rest } = props;
 
 	// eslint-disable-next-line @typescript-eslint/unbound-method
-	const { close } = useContext(AriaOverlayTriggerStateContext);
+	const { close } = useContext(AriaOverlayTriggerStateContext)!;
 
 	return (
 		<AriaDialogCancelButton
@@ -241,12 +241,12 @@ export interface DialogActionButtonProps
 
 export const DialogActionButton = forwardRef(function DialogActionButton(
 	props: DialogActionButtonProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaDialogActionButton>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaDialogActionButton>>,
 ) {
 	const { children, className, onPress, ...rest } = props;
 
 	// eslint-disable-next-line @typescript-eslint/unbound-method
-	const { close } = useContext(AriaOverlayTriggerStateContext);
+	const { close } = useContext(AriaOverlayTriggerStateContext)!;
 
 	return (
 		<AriaDialogActionButton

@@ -19,12 +19,13 @@ interface ColorSchemeSelectProps {
 	label: string;
 }
 
+// eslint-disable-next-line import-x/no-default-export
 export default function ColorSchemeSelect(props: ColorSchemeSelectProps): ReactNode {
 	const { items, label } = props;
 
 	const { colorSchemeState, setColorScheme } = useColorScheme();
 
-	function onSelectionChange(key: Key) {
+	function onSelectionChange(key: Key | null) {
 		const value = key as keyof ColorSchemeSelectProps["items"];
 
 		setColorScheme(value === "system" ? null : value);

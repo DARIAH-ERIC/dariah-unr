@@ -1,6 +1,6 @@
 "use client";
 
-import type { ElementRef } from "react";
+import type { ComponentRef } from "react";
 import {
 	Button as AriaButton,
 	type ButtonProps as AriaButtonProps,
@@ -53,7 +53,7 @@ export interface ButtonProps extends AriaButtonProps, ButtonStyles {}
 
 export const Button = forwardRef(function Button(
 	props: ButtonProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaButton>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaButton>>,
 ) {
 	const { children, className, variant, ...rest } = props;
 

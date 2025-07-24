@@ -1,6 +1,6 @@
 "use client";
 
-import type { ElementRef } from "react";
+import type { ComponentRef } from "react";
 import {
 	composeRenderProps,
 	TextField as AriaTextField,
@@ -20,7 +20,7 @@ export interface TextFieldProps extends AriaTextFieldProps, TextFieldStyles {}
 
 export const TextField = forwardRef(function TextField(
 	props: TextFieldProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaTextField>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaTextField>>,
 ) {
 	const { children, className, ...rest } = props;
 

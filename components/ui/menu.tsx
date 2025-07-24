@@ -1,6 +1,6 @@
 "use client";
 
-import type { ElementRef } from "react";
+import type { ComponentRef } from "react";
 import {
 	Menu as AriaMenu,
 	MenuItem as AriaMenuItem,
@@ -36,7 +36,7 @@ export interface MenuPopoverProps extends AriaMenuPopoverProps, MenuPopoverStyle
 
 export const MenuPopover = forwardRef(function MenuPopover(
 	props: MenuPopoverProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaMenuPopover>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaMenuPopover>>,
 ) {
 	const { children, className, ...rest } = props;
 
@@ -67,7 +67,7 @@ export interface MenuProps<T extends object> extends AriaMenuProps<T>, MenuStyle
 
 export const Menu = forwardRef(function Menu<T extends object>(
 	props: MenuProps<T>,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaMenu>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaMenu>>,
 ) {
 	const { children, className, ...rest } = props;
 
@@ -94,7 +94,7 @@ export interface MenuItemProps<T extends object> extends AriaMenuItemProps<T>, M
 
 export const MenuItem = forwardRef(function MenuItem<T extends object>(
 	props: MenuItemProps<T>,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaMenuItem<T>>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaMenuItem<T>>>,
 ) {
 	const { children, className, ...rest } = props;
 
@@ -115,7 +115,7 @@ export interface MenuSeparatorProps extends AriaMenuSeparatorProps, menuSeparato
 
 export const MenuSeparator = forwardRef(function MenuSeparator(
 	props: MenuSeparatorProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaMenuSeparator>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaMenuSeparator>>,
 ) {
 	const { className, ...rest } = props;
 

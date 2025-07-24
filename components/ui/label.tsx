@@ -1,6 +1,6 @@
 "use client";
 
-import type { ElementRef } from "react";
+import type { ComponentRef } from "react";
 import { Label as AriaLabel, type LabelProps as AriaLabelProps } from "react-aria-components";
 
 import { type ForwardedRef, forwardRef } from "@/lib/forward-ref";
@@ -20,7 +20,7 @@ export interface LabelProps extends AriaLabelProps, LabelStyles {}
 
 export const Label = forwardRef(function Label(
 	props: LabelProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaLabel>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaLabel>>,
 ) {
 	const { children, className, ...rest } = props;
 

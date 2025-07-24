@@ -1,6 +1,6 @@
 "use client";
 
-import type { ElementRef } from "react";
+import type { ComponentRef } from "react";
 import {
 	Text as AriaFieldDescription,
 	type TextProps as AriaFieldDescriptionProps,
@@ -25,7 +25,7 @@ export interface FieldDescriptionProps
 
 export const FieldDescription = forwardRef(function FieldDescription(
 	props: FieldDescriptionProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaFieldDescription>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaFieldDescription>>,
 ) {
 	const { children, className, ...rest } = props;
 

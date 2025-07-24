@@ -1,7 +1,7 @@
 "use client";
 
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
-import { type ElementRef, Fragment } from "react";
+import { type ComponentRef, Fragment } from "react";
 import {
 	Button as AriaSelectTrigger,
 	type ButtonProps as AriaSelectTriggerProps,
@@ -31,7 +31,7 @@ export interface SelectProps<T extends object> extends AriaSelectProps<T>, Selec
 
 export const Select = forwardRef(function Select<T extends object>(
 	props: SelectProps<T>,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaSelect>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaSelect>>,
 ) {
 	const { children, className, ...rest } = props;
 
@@ -68,7 +68,7 @@ export interface SelectTriggerProps extends AriaSelectTriggerProps, SelectTrigge
 
 export const SelectTrigger = forwardRef(function SelectTrigger(
 	props: SelectTriggerProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaSelectTrigger>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaSelectTrigger>>,
 ) {
 	const { children, className, ...rest } = props;
 
@@ -104,7 +104,7 @@ export interface SelectValueProps<T extends object>
 
 export const SelectValue = forwardRef(function SelectValue<T extends object>(
 	props: SelectValueProps<T>,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaSelectValue>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaSelectValue>>,
 ) {
 	const { children, className, ...rest } = props;
 
@@ -131,7 +131,7 @@ export interface SelectPopoverProps extends AriaSelectPopoverProps, SelectPopove
 
 export const SelectPopover = forwardRef(function SelectPopover(
 	props: SelectPopoverProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaSelectPopover>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaSelectPopover>>,
 ) {
 	const { children, className, ...rest } = props;
 
@@ -168,7 +168,7 @@ export interface SelectListBoxProps<T extends object>
 
 export const SelectListBox = forwardRef(function SelectListBox<T extends object>(
 	props: SelectListBoxProps<T>,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaSelectListBox>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaSelectListBox>>,
 ) {
 	const { children, className, ...rest } = props;
 
@@ -206,7 +206,7 @@ export interface SelectListBoxItemProps<T extends object>
 
 export const SelectListBoxItem = forwardRef(function SelectListBoxItem<T extends object>(
 	props: SelectListBoxItemProps<T>,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaSelectListBoxItem<T>>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaSelectListBoxItem<T>>>,
 ) {
 	const { children, className, ...rest } = props;
 

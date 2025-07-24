@@ -1,7 +1,7 @@
 "use client";
 
 import { AlertCircleIcon } from "lucide-react";
-import type { ComponentPropsWithoutRef, ElementRef } from "react";
+import type { ComponentPropsWithoutRef, ComponentRef } from "react";
 import { useFormStatus } from "react-dom";
 
 import { type ForwardedRef, forwardRef } from "@/lib/forward-ref";
@@ -28,7 +28,7 @@ export interface FormErrorProps
 
 export const FormError = forwardRef(function FormError(
 	props: FormErrorProps,
-	forwardedRef: ForwardedRef<ElementRef<"div">>,
+	forwardedRef: ForwardedRef<ComponentRef<"div">>,
 ) {
 	const { children, className, ...rest } = props;
 

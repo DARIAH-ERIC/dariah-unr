@@ -26,7 +26,7 @@ export function LocaleSelect(props: LocaleSelectProps): ReactNode {
 	const router = useRouter();
 	const pathname = usePathname();
 
-	function onSelectionChange(key: Key) {
+	function onSelectionChange(key: Key | null) {
 		const locale = key as Locale;
 		router.push(createHref({ pathname }), { locale });
 	}

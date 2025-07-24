@@ -1,6 +1,6 @@
 "use client";
 
-import type { ElementRef } from "react";
+import type { ComponentRef } from "react";
 import { composeRenderProps } from "react-aria-components";
 
 import { Input, type InputProps } from "@/components/ui/input";
@@ -17,7 +17,7 @@ export interface TextInputProps extends InputProps, TextInputStyles {}
 
 export const TextInput = forwardRef(function TextInput(
 	props: TextInputProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof Input>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof Input>>,
 ) {
 	const { children, className, ...rest } = props;
 

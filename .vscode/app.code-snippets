@@ -5,7 +5,7 @@
 		"body": [
 			"import type { Metadata, ResolvingMetadata } from \"next\";",
 			"import { useTranslations } from \"next-intl\";",
-			"import { getTranslations, unstable_setRequestLocale as setRequestLocale } from \"next-intl/server\";",
+			"import { getTranslations, setRequestLocale } from \"next-intl/server\";",
 			"import type { ReactNode } from \"react\";",
 			"",
 			"import { MainContent } from \"@/components/main-content\";",
@@ -57,7 +57,7 @@
 		"body": [
 			"import type { Metadata, ResolvingMetadata } from \"next\";",
 			"import { useTranslations } from \"next-intl\";",
-			"import { getTranslations, unstable_setRequestLocale as setRequestLocale } from \"next-intl/server\";",
+			"import { getTranslations, setRequestLocale } from \"next-intl/server\";",
 			"import type { ReactNode } from \"react\";",
 			"",
 			"import { MainContent } from \"@/components/main-content\";",
@@ -123,7 +123,7 @@
 		"scope": "typescriptreact",
 		"prefix": "next-layout",
 		"body": [
-			"import { unstable_setRequestLocale as setRequestLocale } from \"next-intl/server\";",
+			"import { setRequestLocale } from \"next-intl/server\";",
 			"import type { ReactNode } from \"react\";",
 			"",
 			"import type { Locale } from \"@/config/i18n.config\";",

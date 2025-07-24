@@ -1,6 +1,6 @@
 "use client";
 
-import type { ElementRef } from "react";
+import type { ComponentRef } from "react";
 import {
 	composeRenderProps,
 	DateField as AriaDateField,
@@ -25,7 +25,7 @@ export interface DateFieldProps<T extends AriaDateValue>
 
 export const DateField = forwardRef(function DateField<T extends AriaDateValue>(
 	props: DateFieldProps<T>,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaDateField>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaDateField>>,
 ) {
 	const { children, className, ...rest } = props;
 

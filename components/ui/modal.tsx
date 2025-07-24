@@ -1,6 +1,6 @@
 "use client";
 
-import type { ElementRef } from "react";
+import type { ComponentRef } from "react";
 import {
 	composeRenderProps,
 	Modal as AriaModal,
@@ -25,7 +25,7 @@ export interface ModalOverlayProps extends AriaModalOverlayProps, ModalOverlaySt
 
 export const ModalOverlay = forwardRef(function ModalOverlay(
 	props: ModalOverlayProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaModalOverlay>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaModalOverlay>>,
 ) {
 	const { children, className, ...rest } = props;
 
@@ -54,7 +54,7 @@ export interface ModalProps extends AriaModalProps, ModalStyles {}
 
 export const Modal = forwardRef(function Modal(
 	props: ModalProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaModal>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaModal>>,
 ) {
 	const { children, className, ...rest } = props;
 

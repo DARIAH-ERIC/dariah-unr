@@ -1,6 +1,6 @@
 "use client";
 
-import type { ElementRef } from "react";
+import type { ComponentRef } from "react";
 import { Text as AriaText, type TextProps as AriaTextProps } from "react-aria-components";
 
 import { type ForwardedRef, forwardRef } from "@/lib/forward-ref";
@@ -16,7 +16,7 @@ export interface TextProps extends AriaTextProps, TextStyles {}
 
 export const Text = forwardRef(function Text(
 	props: TextProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaText>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaText>>,
 ) {
 	const { children, className, ...rest } = props;
 

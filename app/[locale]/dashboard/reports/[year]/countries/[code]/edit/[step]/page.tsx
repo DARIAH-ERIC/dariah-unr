@@ -2,7 +2,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { type ReactNode, Suspense } from "react";
 
 import { AppLink } from "@/components/app-link";

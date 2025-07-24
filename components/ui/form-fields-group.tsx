@@ -1,6 +1,6 @@
 "use client";
 
-import type { ElementRef } from "react";
+import type { ComponentRef } from "react";
 import {
 	composeRenderProps,
 	Group as AriaGroup,
@@ -20,7 +20,7 @@ export interface FormFieldsGroupProps extends AriaGroupProps, FormFieldsGroupSty
 
 export const FormFieldsGroup = forwardRef(function FormFieldsGroup(
 	props: FormFieldsGroupProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaGroup>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaGroup>>,
 ) {
 	const { children, className, ...rest } = props;
 

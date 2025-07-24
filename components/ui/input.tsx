@@ -1,6 +1,6 @@
 "use client";
 
-import type { ElementRef } from "react";
+import type { ComponentRef } from "react";
 import {
 	composeRenderProps,
 	Input as AriaInput,
@@ -34,7 +34,7 @@ export interface InputProps extends AriaInputProps, InputStyles {}
 /** @internal */
 export const Input = forwardRef(function Input(
 	props: InputProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaInput>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaInput>>,
 ) {
 	const { children, className, ...rest } = props;
 

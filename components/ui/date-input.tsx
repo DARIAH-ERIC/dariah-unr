@@ -1,6 +1,6 @@
 "use client";
 
-import type { ElementRef } from "react";
+import type { ComponentRef } from "react";
 import {
 	DateInput as AriaDateInput,
 	type DateInputProps as AriaDateInputProps,
@@ -34,7 +34,7 @@ export interface DateInputProps extends AriaDateInputProps, DateInputStyles {}
 
 export const DateInput = forwardRef(function DateInput(
 	props: DateInputProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaDateInput>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaDateInput>>,
 ) {
 	const { children, className, ...rest } = props;
 
@@ -55,7 +55,7 @@ export interface DateSegmentProps extends AriaDateSegmentProps, DateSegmentStyle
 
 export const DateSegment = forwardRef(function DateSegment(
 	props: DateSegmentProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaDateSegment>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaDateSegment>>,
 ) {
 	const { children, className, ...rest } = props;
 

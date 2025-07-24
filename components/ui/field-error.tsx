@@ -1,6 +1,6 @@
 "use client";
 
-import type { ElementRef } from "react";
+import type { ComponentRef } from "react";
 import {
 	composeRenderProps,
 	FieldError as AriaFieldError,
@@ -24,7 +24,7 @@ export interface FieldErrorProps extends AriaFieldErrorProps, FieldErrorStyles {
 
 export const FieldError = forwardRef(function FieldError(
 	props: FieldErrorProps,
-	forwardedRef: ForwardedRef<ElementRef<typeof AriaFieldError>>,
+	forwardedRef: ForwardedRef<ComponentRef<typeof AriaFieldError>>,
 ) {
 	const { children, className, ...rest } = props;
 

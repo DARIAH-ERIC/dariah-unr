@@ -1,7 +1,7 @@
 import type { Country } from "@prisma/client";
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
-import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
+import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { MainContent } from "@/components/main-content";
@@ -99,6 +99,7 @@ interface DashboardPageContentProps {
 async function DashboardPageContent(props: DashboardPageContentProps) {
 	const { country, year } = props;
 
+	const locale = await getLocale();
 	const t = await getTranslations("DashboardPageContent");
 
 	const report = await getReportByCountryId({ countryId: country.id, year });
@@ -112,11 +113,12 @@ async function DashboardPageContent(props: DashboardPageContentProps) {
 
 						await createReportForCountryId({ countryId: country.id, year });
 
-						redirect(
-							createHref({
+						redirect({
+							href: createHref({
 								pathname: `/dashboard/reports/${String(year)}/countries/${country.code}/edit/welcome`,
 							}),
-						);
+							locale,
+						});
 					}}
 				>
 					<SubmitButton>{t("create-page-for-year", { year })}</SubmitButton>
