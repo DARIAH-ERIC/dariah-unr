@@ -5,7 +5,6 @@ import { Confetti } from "@/components/confetti";
 import { Summary } from "@/components/forms/summary";
 import { Link } from "@/components/link";
 import { ReportDownloadLink } from "@/components/report-download-link";
-import { getCurrentUser } from "@/lib/auth/session";
 import { calculateOperationalCost } from "@/lib/calculate-operational-cost";
 import { createHref } from "@/lib/create-href";
 import { getContributionsByCountryAndYear } from "@/lib/data/contributions";
@@ -19,6 +18,7 @@ import {
 } from "@/lib/data/report";
 import { getServicesByCountry } from "@/lib/data/service";
 import { getSoftwareByCountry } from "@/lib/data/software";
+import { getCurrentSession } from "@/lib/server/auth/get-current-session";
 import { getPublications } from "@/lib/zotero";
 
 interface ReportSummaryProps {
@@ -30,7 +30,7 @@ interface ReportSummaryProps {
 export async function ReportSummary(props: ReportSummaryProps) {
 	const { countryId, reportId, year } = props;
 
-	const user = await getCurrentUser();
+	const { user } = await getCurrentSession();
 	const { number } = await getFormatter();
 
 	const calculation = await calculateOperationalCost({ countryId, reportId });

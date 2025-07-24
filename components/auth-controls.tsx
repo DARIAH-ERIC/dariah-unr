@@ -2,10 +2,10 @@ import { getTranslations } from "next-intl/server";
 
 import { AuthSignInButton } from "@/components/auth-sign-in-button";
 import { AuthUserMenu } from "@/components/auth-user-menu";
-import { getCurrentUser } from "@/lib/auth/session";
+import { getCurrentSession } from "@/lib/server/auth/get-current-session";
 
 export async function AuthControls() {
-	const user = await getCurrentUser();
+	const { user } = await getCurrentSession();
 
 	const t = await getTranslations("AuthControls");
 

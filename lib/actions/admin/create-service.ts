@@ -15,6 +15,7 @@ import { z } from "zod";
 import { createFullService as createService } from "@/lib/data/service";
 import { getFormData } from "@/lib/get-form-data";
 import { checkBox } from "@/lib/schemas/utils";
+import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 const formSchema = z.object({
 	agreements: z.string().optional(),
@@ -82,6 +83,8 @@ export async function createServiceAction(
 	formData: FormData,
 ): Promise<FormState> {
 	const t = await getTranslations("actions.admin.createService");
+
+	await assertAuthenticated(["admin"]);
 
 	const input = getFormData(formData);
 	const result = formSchema.safeParse(input);

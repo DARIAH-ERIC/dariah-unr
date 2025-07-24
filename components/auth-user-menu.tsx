@@ -1,7 +1,6 @@
 "use client";
 
 import { UserIcon } from "lucide-react";
-import type { Session } from "next-auth";
 import { Header, type Key, Section } from "react-aria-components";
 
 import {
@@ -12,12 +11,13 @@ import {
 import { IconButton } from "@/components/ui/icon-button";
 import { signOutAction } from "@/lib/actions/auth";
 import { useRouter } from "@/lib/navigation";
+import type { User } from "@/lib/server/auth/sessions";
 
 interface AuthUserMenuProps {
 	adminDashboardLabel: string;
 	signOutLabel: string;
 	toggleUserMenuLabel: string;
-	user: Session["user"];
+	user: User;
 }
 
 export function AuthUserMenu(props: AuthUserMenuProps) {
@@ -44,12 +44,7 @@ export function AuthUserMenu(props: AuthUserMenuProps) {
 	return (
 		<DropdownMenuTrigger>
 			<IconButton variant="plain">
-				{user.image ? (
-					// eslint-disable-next-line @next/next/no-img-element
-					<img alt="" className="size-5 shrink-0" src={user.image} />
-				) : (
-					<UserIcon aria-hidden={true} className="size-5 shrink-0" />
-				)}
+				<UserIcon aria-hidden={true} className="size-5 shrink-0" />
 				<span className="sr-only">{toggleUserMenuLabel}</span>
 			</IconButton>
 			{/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}

@@ -52,12 +52,11 @@ interface UpdateUserParams {
 	id: string;
 	name?: string;
 	role: User["role"];
-	status: User["status"];
 	countryId?: string;
 }
 
 export function updateUser(params: UpdateUserParams) {
-	const { id, name, role, status, countryId } = params;
+	const { id, name, role, countryId } = params;
 
 	return db.user.update({
 		where: {
@@ -66,7 +65,6 @@ export function updateUser(params: UpdateUserParams) {
 		data: {
 			name,
 			role,
-			status,
 			country:
 				countryId != null
 					? {
@@ -98,12 +96,11 @@ interface CreateFullUserParams {
 	name: string;
 	password: string;
 	role: User["role"];
-	status: User["status"];
 	countryId?: string;
 }
 
 export async function createFullUser(params: CreateFullUserParams) {
-	const { email, password, name, role, status, countryId } = params;
+	const { email, password, name, role, countryId } = params;
 
 	return db.user.create({
 		data: {
@@ -111,7 +108,6 @@ export async function createFullUser(params: CreateFullUserParams) {
 			name,
 			password: await hash(password, 10),
 			role,
-			status,
 			country:
 				countryId != null
 					? {

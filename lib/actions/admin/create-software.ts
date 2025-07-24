@@ -8,6 +8,7 @@ import { z } from "zod";
 
 import { createFullSoftware as createSoftware } from "@/lib/data/software";
 import { getFormData } from "@/lib/get-form-data";
+import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 const formSchema = z.object({
 	comment: z.string().optional(),
@@ -50,6 +51,8 @@ export async function createSoftwareAction(
 	formData: FormData,
 ): Promise<FormState> {
 	const t = await getTranslations("actions.admin.createSoftware");
+
+	await assertAuthenticated(["admin"]);
 
 	const input = getFormData(formData);
 	const result = formSchema.safeParse(input);

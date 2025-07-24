@@ -1,18 +1,16 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
-import { useTranslations } from "next-intl";
 import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import type { Locale } from "@/config/i18n.config";
-import { getCurrentUser } from "@/lib/auth/session";
 import { getReportByCountryCode } from "@/lib/data/report";
 import { getCountryCodes as getStaticCountryCodes } from "@/lib/get-country-codes";
 import { getReportYears } from "@/lib/get-report-years";
-import { redirect } from "@/lib/navigation";
 import { dashboardCountryReportPageParams } from "@/lib/schemas/dashboard";
+import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 interface DashboardCountryReportPageProps {
 	params: {
@@ -61,15 +59,17 @@ export async function generateMetadata(
 	return metadata;
 }
 
-export default function DashboardCountryReportPage(
+export default async function DashboardCountryReportPage(
 	props: DashboardCountryReportPageProps,
-): ReactNode {
+): Promise<ReactNode> {
 	const { params } = props;
 
 	const { locale } = params;
 	setRequestLocale(locale);
 
-	const t = useTranslations("DashboardCountryReportPage");
+	const t = await getTranslations("DashboardCountryReportPage");
+
+	await assertAuthenticated();
 
 	const result = dashboardCountryReportPageParams.safeParse(params);
 	if (!result.success) notFound();
@@ -91,12 +91,6 @@ interface DashboardCountryReportPageContentProps {
 
 async function DashboardCountryReportPageContent(props: DashboardCountryReportPageContentProps) {
 	const { code, year } = props;
-
-	const user = await getCurrentUser();
-
-	if (user == null) {
-		redirect("/");
-	}
 
 	const report = await getReportByCountryCode({ countryCode: code, year });
 	if (report == null) notFound();

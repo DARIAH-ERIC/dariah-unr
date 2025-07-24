@@ -1,6 +1,5 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
-import { useTranslations } from "next-intl";
 import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
 import { type ReactNode, Suspense } from "react";
 
@@ -18,6 +17,7 @@ import {
 } from "@/lib/data/stats";
 import { getReportYears } from "@/lib/get-report-years";
 import { dashboardAdminStatisticsPageParams } from "@/lib/schemas/dashboard";
+import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 interface DashboardAdminStatisticsPageProps {
 	params: {
@@ -56,15 +56,17 @@ export async function generateMetadata(
 	return metadata;
 }
 
-export default function DashboardAdminStatisticsPage(
+export default async function DashboardAdminStatisticsPage(
 	props: DashboardAdminStatisticsPageProps,
-): ReactNode {
+): Promise<ReactNode> {
 	const { params } = props;
 
 	const { locale } = params;
 	setRequestLocale(locale);
 
-	const t = useTranslations("DashboardAdminStatisticsPage");
+	const t = await getTranslations("DashboardAdminStatisticsPage");
+
+	await assertAuthenticated(["admin"]);
 
 	const result = dashboardAdminStatisticsPageParams.safeParse(params);
 	if (!result.success) notFound();

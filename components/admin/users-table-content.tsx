@@ -1,7 +1,7 @@
 "use client";
 
 import { keyByToMap } from "@acdh-oeaw/lib";
-import { type Country, type Prisma, UserRole, UserStatus } from "@prisma/client";
+import { type Country, type Prisma, UserRole } from "@prisma/client";
 import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { Fragment, type ReactNode, useId, useMemo, useState } from "react";
 import type { Key } from "react-aria-components";
@@ -97,7 +97,7 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 	});
 
 	const [sortDescriptor, setSortDescriptor] = useState({
-		column: "name" as "country" | "name" | "role" | "status",
+		column: "name" as "country" | "name" | "role",
 		direction: "ascending" as "ascending" | "descending",
 	});
 
@@ -115,8 +115,8 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 				}
 
 				default: {
-					const valueA = a[sortDescriptor.column] ?? "";
-					const valueZ = z[sortDescriptor.column] ?? "";
+					const valueA = a[sortDescriptor.column];
+					const valueZ = z[sortDescriptor.column];
 
 					return valueA.localeCompare(valueZ);
 				}
@@ -187,9 +187,6 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 					<Column allowsSorting={true} id="role">
 						Role
 					</Column>
-					<Column allowsSorting={true} id="status">
-						Status
-					</Column>
 					<Column defaultWidth={50} id="actions">
 						Actions
 					</Column>
@@ -213,12 +210,11 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 						return (
 							<Row>
 								<Cell>
-									<span title={row.name ?? undefined}>{row.name}</span>
+									<span title={row.name}>{row.name}</span>
 								</Cell>
 								<Cell>{row.country?.id ? countriesById.get(row.country.id)?.name : undefined}</Cell>
 								<Cell>{row.email}</Cell>
 								<Cell>{row.role}</Cell>
-								<Cell>{row.status}</Cell>
 								<Cell>
 									<div className="flex justify-end">
 										<DropdownMenuTrigger>
@@ -462,7 +458,6 @@ function UserEditForm(props: UserEditFormProps) {
 	const { countriesById, formId, formAction, formState, user, onClose } = props;
 
 	const userRoles = Object.values(UserRole);
-	const userStatuses = Object.values(UserStatus);
 
 	return (
 		<Form
@@ -500,16 +495,6 @@ function UserEditForm(props: UserEditFormProps) {
 					return (
 						<SelectItem key={role} id={role} textValue={role}>
 							{role}
-						</SelectItem>
-					);
-				})}
-			</SelectField>
-
-			<SelectField defaultSelectedKey={user?.status} label="Status" name="status">
-				{userStatuses.map((status) => {
-					return (
-						<SelectItem key={status} id={status} textValue={status}>
-							{status}
 						</SelectItem>
 					);
 				})}

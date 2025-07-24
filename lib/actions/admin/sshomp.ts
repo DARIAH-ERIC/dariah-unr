@@ -6,6 +6,7 @@ import { getTranslations } from "next-intl/server";
 import type { z, ZodTypeAny } from "zod";
 
 import { ingestDataFromSshomp } from "@/lib/db/ingest-data-from-sshomp";
+import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 interface FormReturnValue {
 	timestamp: number;
@@ -27,6 +28,8 @@ export async function ingestDataFromSshompAction(
 	_formData: FormData,
 ): Promise<FormState> {
 	const t = await getTranslations("actions.ingestDataFromSshomp");
+
+	await assertAuthenticated(["admin"]);
 
 	try {
 		const stats = await ingestDataFromSshomp();

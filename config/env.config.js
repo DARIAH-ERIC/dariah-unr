@@ -13,9 +13,6 @@ export const env = createEnv({
 	},
 	private(input) {
 		const Schema = z.object({
-			AUTH_SECRET: z.string().min(32),
-			AUTH_SIGN_UP: z.enum(["disabled", "enabled"]).default("disabled"),
-			AUTH_URL: z.string().url().optional(),
 			BASEROW_API_BASE_URL: z.string().url().optional(),
 			BASEROW_DATABASE_ID: z.string().min(1).optional(),
 			BASEROW_EMAIL: z.string().email().optional(),
@@ -65,9 +62,6 @@ export const env = createEnv({
 		return Schema.parse(input);
 	},
 	environment: {
-		AUTH_SECRET: process.env.AUTH_SECRET,
-		AUTH_SIGN_UP: process.env.AUTH_SIGN_UP,
-		AUTH_URL: process.env.AUTH_URL,
 		BASEROW_API_BASE_URL: process.env.BASEROW_API_BASE_URL,
 		BASEROW_DATABASE_ID: process.env.BASEROW_DATABASE_ID,
 		BASEROW_EMAIL: process.env.BASEROW_EMAIL,

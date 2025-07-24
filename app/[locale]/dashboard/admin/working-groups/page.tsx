@@ -1,5 +1,4 @@
 import type { Metadata, ResolvingMetadata } from "next";
-import { useTranslations } from "next-intl";
 import { getTranslations, unstable_setRequestLocale as setRequestLocale } from "next-intl/server";
 import { type ReactNode, Suspense } from "react";
 
@@ -10,6 +9,7 @@ import type { Locale } from "@/config/i18n.config";
 import { getContributions } from "@/lib/data/contributions";
 import { getPersons } from "@/lib/data/person";
 import { getWorkingGroups } from "@/lib/data/working-group";
+import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 interface DashboardAdminWorkingGroupsPageProps {
 	params: {
@@ -33,15 +33,17 @@ export async function generateMetadata(
 	return metadata;
 }
 
-export default function DashboardAdminWorkingGroupsPage(
+export default async function DashboardAdminWorkingGroupsPage(
 	props: DashboardAdminWorkingGroupsPageProps,
-): ReactNode {
+): Promise<ReactNode> {
 	const { params } = props;
 
 	const { locale } = params;
 	setRequestLocale(locale);
 
-	const t = useTranslations("DashboardAdminWorkingGroupsPage");
+	const t = await getTranslations("DashboardAdminWorkingGroupsPage");
+
+	await assertAuthenticated(["admin"]);
 
 	return (
 		<MainContent className="container grid !max-w-screen-2xl content-start gap-y-8 py-8">

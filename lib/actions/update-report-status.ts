@@ -15,6 +15,7 @@ import {
 } from "@/lib/data/report";
 import { getFormData } from "@/lib/get-form-data";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
+import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 const formSchema = z.object({
 	comment: z.string().optional(),
@@ -44,6 +45,8 @@ export async function updateReportStatusAction(
 	formData: FormData,
 ): Promise<FormState> {
 	const t = await getTranslations("actions.updateReport");
+
+	await assertAuthenticated(["admin", "national_coordinator"]);
 
 	const input = getFormData(formData);
 	const result = formSchema.safeParse(input);

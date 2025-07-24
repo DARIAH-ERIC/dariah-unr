@@ -36,12 +36,6 @@
 		},
 		"title": "Sign in"
 	},
-	"AuthSignUpPage": {
-		"meta": {
-			"title": "Sign up"
-		},
-		"title": "Sign up"
-	},
 	"ColorSchemeSwitcher": {
 		"change-color-scheme": "Change color scheme",
 		"color-schemes": {
@@ -241,12 +235,6 @@
 		"password": "Password",
 		"sign-in": "Sign in"
 	},
-	"SignUpForm": {
-		"email": "Email",
-		"name": "Name",
-		"password": "Password",
-		"sign-up": "Sign up"
-	},
 	"TermsOfUsePage": {
 		"meta": {
 			"title": "Terms of use"
@@ -438,20 +426,10 @@
 		},
 		"signIn": {
 			"errors": {
-				"AccessDeniedError": "You do not have permission to sign in.",
 				"CredentialsSignInError": "Sign in failed. Check if the details you provided are correct.",
 				"DefaultAuthError": "Unable to sign in."
 			},
 			"success": "Successfully signed in."
-		},
-		"signUp": {
-			"errors": {
-				"DatabaseError": "Failed to create user.",
-				"DatabaseUserExistsError": "User already exists in the database.",
-				"InvalidInputError": "Invalid input.",
-				"SignUpNotAllowedError": "Sign up is currently not allowed."
-			},
-			"success": "Successfully registered."
 		},
 		"updateContributionEndDate": {
 			"errors": {

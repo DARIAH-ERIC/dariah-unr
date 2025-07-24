@@ -9,6 +9,7 @@ import { getReportComments, updateReportComments, upsertEventReport } from "@/li
 import { getFormData } from "@/lib/get-form-data";
 import { eventReportSchema, type ReportCommentsSchema } from "@/lib/schemas/report";
 import { nonEmptyString } from "@/lib/schemas/utils";
+import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 const formSchema = z.object({
 	comment: z.string().optional(),
@@ -39,6 +40,8 @@ export async function updateEventReportAction(
 	formData: FormData,
 ): Promise<FormState> {
 	const t = await getTranslations("actions.updateEventReport");
+
+	await assertAuthenticated();
 
 	const input = getFormData(formData);
 	const result = formSchema.safeParse(input);
