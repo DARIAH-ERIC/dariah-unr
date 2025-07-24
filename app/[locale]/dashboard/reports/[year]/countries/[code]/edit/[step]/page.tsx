@@ -41,20 +41,20 @@ import type { User } from "@/lib/server/auth/sessions";
 import { createZoteroCollectionUrl } from "@/lib/zotero";
 
 interface DashboardCountryReportEditStepPageProps {
-	params: {
+	params: Promise<{
 		code: string;
 		locale: IntlLocale;
 		step: string;
 		year: string;
-	};
+	}>;
 }
 
 // export const dynamicParams = false;
 
 export async function generateStaticParams(_props: {
-	params: Pick<DashboardCountryReportEditStepPageProps["params"], "locale">;
+	params: Pick<Awaited<DashboardCountryReportEditStepPageProps["params"]>, "locale">;
 }): Promise<
-	Array<Pick<DashboardCountryReportEditStepPageProps["params"], "code" | "step" | "year">>
+	Array<Pick<Awaited<DashboardCountryReportEditStepPageProps["params"]>, "code" | "step" | "year">>
 > {
 	/**
 	 * FIXME: we cannot access the postgres database on acdh servers from github ci/cd, so we cannot
@@ -84,7 +84,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
 	const { params } = props;
 
-	const { locale } = params;
+	const { locale } = await params;
 	const t = await getTranslations({ locale, namespace: "DashboardCountryReportEditStepPage" });
 
 	const metadata: Metadata = {
@@ -99,14 +99,14 @@ export default async function DashboardCountryReportEditStepPage(
 ): Promise<ReactNode> {
 	const { params } = props;
 
-	const { locale } = params;
+	const { locale } = await params;
 	setRequestLocale(locale);
 
 	const t = await getTranslations("DashboardCountryReportEditStepPage");
 
 	const { user } = await assertAuthenticated();
 
-	const result = dashboardCountryReportEditStepPageParams.safeParse(params);
+	const result = dashboardCountryReportEditStepPageParams.safeParse(await params);
 	if (!result.success) notFound();
 	const { code, step, year } = result.data;
 

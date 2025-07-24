@@ -1,7 +1,6 @@
 import { pick } from "@acdh-oeaw/lib";
 import type { Metadata, ResolvingMetadata } from "next";
-import { useMessages, useTranslations } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
+import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 import { LocalizedStringProvider as Translations } from "react-aria-components/i18n";
 import { jsonLdScriptProps } from "react-schemaorg";
@@ -17,19 +16,19 @@ import { AnalyticsScript } from "@/lib/analytics-script";
 import { ColorSchemeScript } from "@/lib/color-scheme-script";
 import * as fonts from "@/lib/fonts";
 import { type IntlLocale, locales } from "@/lib/i18n/locales";
-import { getMetadata, useMetadata } from "@/lib/i18n/metadata";
+import { getMetadata } from "@/lib/i18n/metadata";
 import { cn } from "@/lib/styles";
 
 interface LocaleLayoutProps {
 	children: ReactNode;
-	params: {
+	params: Promise<{
 		locale: IntlLocale;
-	};
+	}>;
 }
 
 // export const dynamicParams = false;
 
-export function generateStaticParams(): Array<LocaleLayoutProps["params"]> {
+export function generateStaticParams(): Array<Awaited<LocaleLayoutProps["params"]>> {
 	return locales.map((locale) => {
 		return { locale };
 	});
@@ -41,7 +40,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
 	const { params } = props;
 
-	const { locale } = params;
+	const { locale } = await params;
 	const meta = await getMetadata(locale);
 
 	const metadata: Metadata = {
@@ -71,19 +70,19 @@ export async function generateMetadata(
 	return metadata;
 }
 
-export default function LocaleLayout(props: LocaleLayoutProps): ReactNode {
+export default async function LocaleLayout(props: LocaleLayoutProps): Promise<ReactNode> {
 	const { children, params } = props;
 
-	const { locale } = params;
+	const { locale } = await params;
 	setRequestLocale(locale);
 
-	const t = useTranslations("LocaleLayout");
-	const messages = useMessages();
-	const meta = useMetadata();
+	const t = await getTranslations("LocaleLayout");
+	const messages = await getMessages();
+	const meta = await getMetadata();
 
 	return (
 		<html
-			className={cn(fonts.body.variable, fonts.heading.variable)}
+			className={cn(fonts.body.variable)}
 			lang={locale}
 			/**
 			 * Suppressing hydration warning because we add `data-ui-color-scheme` before first paint.

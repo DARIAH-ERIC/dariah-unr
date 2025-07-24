@@ -1,5 +1,4 @@
 import type { Metadata, ResolvingMetadata } from "next";
-import { useTranslations } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 
@@ -10,9 +9,9 @@ import type { IntlLocale } from "@/lib/i18n/locales";
 import { createHref } from "@/lib/navigation/create-href";
 
 interface PrivacyPolicyPageProps {
-	params: {
+	params: Promise<{
 		locale: IntlLocale;
-	};
+	}>;
 }
 
 export async function generateMetadata(
@@ -21,7 +20,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
 	const { params } = props;
 
-	const { locale } = params;
+	const { locale } = await params;
 	const t = await getTranslations({ locale, namespace: "PrivacyPolicyPage" });
 
 	const metadata: Metadata = {
@@ -31,13 +30,13 @@ export async function generateMetadata(
 	return metadata;
 }
 
-export default function PrivacyPolicyPage(props: PrivacyPolicyPageProps): ReactNode {
+export default async function PrivacyPolicyPage(props: PrivacyPolicyPageProps): Promise<ReactNode> {
 	const { params } = props;
 
-	const { locale } = params;
+	const { locale } = await params;
 	setRequestLocale(locale);
 
-	const t = useTranslations("PrivacyPolicyPage");
+	const t = await getTranslations("PrivacyPolicyPage");
 
 	return (
 		<MainContent className="container grid max-w-(--breakpoint-md) content-start gap-y-8 py-8">

@@ -20,17 +20,17 @@ import { dashboardAdminStatisticsPageParams } from "@/lib/schemas/dashboard";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 interface DashboardAdminStatisticsPageProps {
-	params: {
+	params: Promise<{
 		locale: IntlLocale;
 		year: string;
-	};
+	}>;
 }
 
 // export const dynamicParams = false;
 
 export async function generateStaticParams(_props: {
-	params: Pick<DashboardAdminStatisticsPageProps["params"], "locale">;
-}): Promise<Array<Pick<DashboardAdminStatisticsPageProps["params"], "year">>> {
+	params: Pick<Awaited<DashboardAdminStatisticsPageProps["params"]>, "locale">;
+}): Promise<Array<Pick<Awaited<DashboardAdminStatisticsPageProps["params"]>, "year">>> {
 	const years = await Promise.resolve(getReportYears());
 
 	const params = years.map((year) => {
@@ -46,7 +46,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
 	const { params } = props;
 
-	const { locale } = params;
+	const { locale } = await params;
 	const t = await getTranslations({ locale, namespace: "DashboardAdminStatisticsPage" });
 
 	const metadata: Metadata = {
@@ -61,14 +61,14 @@ export default async function DashboardAdminStatisticsPage(
 ): Promise<ReactNode> {
 	const { params } = props;
 
-	const { locale } = params;
+	const { locale } = await params;
 	setRequestLocale(locale);
 
 	const t = await getTranslations("DashboardAdminStatisticsPage");
 
 	await assertAuthenticated(["admin"]);
 
-	const result = dashboardAdminStatisticsPageParams.safeParse(params);
+	const result = dashboardAdminStatisticsPageParams.safeParse(await params);
 	if (!result.success) notFound();
 	const { year } = result.data;
 

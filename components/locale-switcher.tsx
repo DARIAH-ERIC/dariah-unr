@@ -2,7 +2,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { type ReactNode, useMemo } from "react";
 
 import { LocaleSelect } from "@/components/locale-select";
-import { type IntlLocale, locales } from "@/lib/i18n/locales";
+import { getIntlLanguage, type IntlLocale, locales } from "@/lib/i18n/locales";
 
 export function LocaleSwitcher(): ReactNode {
 	const currentLocale = useLocale();
@@ -13,7 +13,7 @@ export function LocaleSwitcher(): ReactNode {
 
 		return Object.fromEntries(
 			locales.map((locale) => {
-				return [locale, displayNames.of(locale)];
+				return [locale, displayNames.of(getIntlLanguage(locale))];
 			}),
 		) as Record<IntlLocale, string>;
 	}, [currentLocale]);

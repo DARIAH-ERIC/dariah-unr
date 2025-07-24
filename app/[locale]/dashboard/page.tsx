@@ -17,9 +17,9 @@ import { redirect } from "@/lib/navigation/navigation";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 interface DashboardPageProps {
-	params: {
+	params: Promise<{
 		locale: IntlLocale;
-	};
+	}>;
 }
 
 export async function generateMetadata(
@@ -28,7 +28,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
 	const { params } = props;
 
-	const { locale } = params;
+	const { locale } = await params;
 	const t = await getTranslations({ locale, namespace: "DashboardPage" });
 
 	const metadata: Metadata = {
@@ -41,7 +41,7 @@ export async function generateMetadata(
 export default async function DashboardPage(props: DashboardPageProps): Promise<ReactNode> {
 	const { params } = props;
 
-	const { locale } = params;
+	const { locale } = await params;
 	setRequestLocale(locale);
 
 	const t = await getTranslations("DashboardPage");

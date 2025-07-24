@@ -14,9 +14,9 @@ import type { IntlLocale } from "@/lib/i18n/locales";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 interface DashboardAdminContributionsPageProps {
-	params: {
+	params: Promise<{
 		locale: IntlLocale;
-	};
+	}>;
 }
 
 export async function generateMetadata(
@@ -25,7 +25,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
 	const { params } = props;
 
-	const { locale } = params;
+	const { locale } = await params;
 	const t = await getTranslations({ locale, namespace: "DashboardAdminContributionsPage" });
 
 	const metadata: Metadata = {
@@ -40,7 +40,7 @@ export default async function DashboardAdminContributionsPage(
 ): Promise<ReactNode> {
 	const { params } = props;
 
-	const { locale } = params;
+	const { locale } = await params;
 	setRequestLocale(locale);
 
 	const t = await getTranslations("DashboardAdminContributionsPage");

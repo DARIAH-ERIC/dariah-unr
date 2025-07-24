@@ -11,17 +11,17 @@ import { reader } from "@/lib/content/reader";
 import type { IntlLocale } from "@/lib/i18n/locales";
 
 interface DocumentationPageProps {
-	params: {
+	params: Promise<{
 		id: string;
 		locale: IntlLocale;
-	};
+	}>;
 }
 
 // export const dynamicParams = false;
 
 export async function generateStaticParams(_props: {
-	params: Pick<DocumentationPageProps["params"], "locale">;
-}): Promise<Array<Pick<DocumentationPageProps["params"], "id">>> {
+	params: Pick<Awaited<DocumentationPageProps["params"]>, "locale">;
+}): Promise<Array<Pick<Awaited<DocumentationPageProps["params"]>, "id">>> {
 	const ids = await (await reader()).collections.documentation.list();
 
 	return ids.map((id) => {
@@ -35,7 +35,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
 	const { params } = props;
 
-	const { id } = params;
+	const { id } = await params;
 	const document = await (await reader()).collections.documentation.read(id);
 
 	if (document == null) notFound();
@@ -47,10 +47,10 @@ export async function generateMetadata(
 	return metadata;
 }
 
-export default function DocumentationPage(props: DocumentationPageProps): ReactNode {
+export default async function DocumentationPage(props: DocumentationPageProps): Promise<ReactNode> {
 	const { params } = props;
 
-	const { id, locale } = params;
+	const { id, locale } = await params;
 	setRequestLocale(locale);
 
 	return (

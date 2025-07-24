@@ -29,7 +29,7 @@ export default async function NotFoundPage() {
 
 	return (
 		<html
-			className={cn(fonts.body.variable, fonts.heading.variable)}
+			className={cn(fonts.body.variable)}
 			lang={defaultLocale}
 			/**
 			 * Suppressing hydration warning because we add `data-ui-color-scheme` before first paint.

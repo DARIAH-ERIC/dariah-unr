@@ -11,7 +11,7 @@ import {
 	SelectPopover,
 	SelectValue,
 } from "@/components/ui/select";
-import type { IntlLocale } from "@/lib/i18n/locales";
+import { getIntlLanguage, type IntlLocale } from "@/lib/i18n/locales";
 import { createHref } from "@/lib/navigation/create-href";
 import { usePathname, useRouter } from "@/lib/navigation/navigation";
 
@@ -40,7 +40,7 @@ export function LocaleSelect(props: LocaleSelectProps): ReactNode {
 			selectedKey={currentLocale}
 		>
 			<IconButton variant="plain">
-				<span aria-hidden={true}>{currentLocale.toUpperCase()}</span>
+				<span aria-hidden={true}>{getIntlLanguage(currentLocale).toUpperCase()}</span>
 				<SelectValue className="sr-only" />
 			</IconButton>
 			<SelectPopover placement="bottom">

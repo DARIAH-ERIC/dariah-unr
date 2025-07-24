@@ -32,7 +32,7 @@ export function AppHeader(): ReactNode {
 	} satisfies Record<string, { href: LinkProps["href"]; label: string }>;
 
 	return (
-		<header className="border-b">
+		<header className="border-b border-neutral-200 dark:border-neutral-800">
 			<div className="container flex items-center justify-between gap-4 py-4">
 				<nav aria-label={t("navigation-primary")} className="-ml-3">
 					<ul className="hidden items-center gap-4 text-sm sm:flex" role="list">

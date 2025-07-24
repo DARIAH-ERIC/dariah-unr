@@ -11,10 +11,10 @@ import { authSignInPageSearchParams } from "@/lib/schemas/auth";
 import { getCurrentSession } from "@/lib/server/auth/get-current-session";
 
 interface AuthSignInPageProps {
-	params: {
+	params: Promise<{
 		locale: IntlLocale;
-	};
-	searchParams: Record<string, Array<string> | string>;
+	}>;
+	searchParams: Promise<Record<string, Array<string> | string>>;
 }
 
 export async function generateMetadata(
@@ -23,7 +23,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
 	const { params } = props;
 
-	const { locale } = params;
+	const { locale } = await params;
 	const t = await getTranslations({ locale, namespace: "AuthSignInPage" });
 
 	const metadata: Metadata = {
@@ -36,12 +36,12 @@ export async function generateMetadata(
 export default async function AuthSignInPage(props: AuthSignInPageProps): Promise<ReactNode> {
 	const { params, searchParams } = props;
 
-	const { locale } = params;
+	const { locale } = await params;
 	setRequestLocale(locale);
 
 	const t = await getTranslations("AuthSignInPage");
 
-	const { callbackUrl } = authSignInPageSearchParams.parse(searchParams);
+	const { callbackUrl } = authSignInPageSearchParams.parse(await searchParams);
 
 	const { session } = await getCurrentSession();
 

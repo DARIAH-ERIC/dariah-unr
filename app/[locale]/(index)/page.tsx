@@ -10,9 +10,9 @@ import type { IntlLocale } from "@/lib/i18n/locales";
 import { createHref } from "@/lib/navigation/create-href";
 
 interface IndexPageProps {
-	params: {
+	params: Promise<{
 		locale: IntlLocale;
-	};
+	}>;
 }
 
 export async function generateMetadata(
@@ -21,7 +21,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
 	const { params } = props;
 
-	const { locale } = params;
+	const { locale } = await params;
 	const _t = await getTranslations({ locale, namespace: "IndexPage" });
 
 	const metadata: Metadata = {
@@ -36,10 +36,10 @@ export async function generateMetadata(
 	return metadata;
 }
 
-export default function IndexPage(props: IndexPageProps): ReactNode {
+export default async function IndexPage(props: IndexPageProps): Promise<ReactNode> {
 	const { params } = props;
 
-	const { locale } = params;
+	const { locale } = await params;
 	setRequestLocale(locale);
 
 	return (

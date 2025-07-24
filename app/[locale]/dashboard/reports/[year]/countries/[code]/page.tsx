@@ -13,18 +13,18 @@ import { dashboardCountryReportPageParams } from "@/lib/schemas/dashboard";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 interface DashboardCountryReportPageProps {
-	params: {
+	params: Promise<{
 		code: string;
 		locale: IntlLocale;
 		year: string;
-	};
+	}>;
 }
 
 // export const dynamicParams = false;
 
 export async function generateStaticParams(_props: {
-	params: Pick<DashboardCountryReportPageProps["params"], "locale">;
-}): Promise<Array<Pick<DashboardCountryReportPageProps["params"], "code" | "year">>> {
+	params: Pick<Awaited<DashboardCountryReportPageProps["params"]>, "locale">;
+}): Promise<Array<Pick<Awaited<DashboardCountryReportPageProps["params"]>, "code" | "year">>> {
 	/**
 	 * FIXME: we cannot access the postgres database on acdh servers from github ci/cd, so we cannot
 	 * query for country codes (or report years) at build time.
@@ -49,7 +49,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
 	const { params } = props;
 
-	const { locale } = params;
+	const { locale } = await params;
 	const t = await getTranslations({ locale, namespace: "DashboardCountryReportPage" });
 
 	const metadata: Metadata = {
@@ -64,14 +64,14 @@ export default async function DashboardCountryReportPage(
 ): Promise<ReactNode> {
 	const { params } = props;
 
-	const { locale } = params;
+	const { locale } = await params;
 	setRequestLocale(locale);
 
 	const t = await getTranslations("DashboardCountryReportPage");
 
 	await assertAuthenticated();
 
-	const result = dashboardCountryReportPageParams.safeParse(params);
+	const result = dashboardCountryReportPageParams.safeParse(await params);
 	if (!result.success) notFound();
 	const { code, year } = result.data;
 

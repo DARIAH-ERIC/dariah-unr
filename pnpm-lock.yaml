@@ -133,9 +133,6 @@ importers:
       '@acdh-oeaw/stylelint-config':
         specifier: ^2.2.0
         version: 2.2.0(postcss-html@1.7.0)(stylelint-order@6.0.4(stylelint@16.22.0(typescript@5.8.3)))(stylelint@16.22.0(typescript@5.8.3))
-      '@acdh-oeaw/tailwindcss-preset':
-        specifier: ^0.0.22
-        version: 0.0.22(tailwindcss@4.1.11)
       '@acdh-oeaw/tsconfig':
         specifier: ^1.5.1
         version: 1.5.1(typescript@5.8.3)
@@ -178,6 +175,9 @@ importers:
       '@tailwindcss/postcss':
         specifier: ^4.1.11
         version: 4.1.11
+      '@tailwindcss/typography':
+        specifier: ^0.5.16
+        version: 0.5.16(tailwindcss@4.1.11)
       '@types/bcrypt':
         specifier: ^6.0.0
         version: 6.0.0
@@ -271,6 +271,9 @@ importers:
       tailwindcss:
         specifier: ^4.1.11
         version: 4.1.11
+      tailwindcss-animate:
+        specifier: ^1.0.7
+        version: 1.0.7(tailwindcss@4.1.11)
       tailwindcss-react-aria-components:
         specifier: ^2.0.0
         version: 2.0.0(tailwindcss@4.1.11)
@@ -355,11 +358,6 @@ packages:
     resolution: {integrity: sha512-/3xzrXg2JWdXekpvaI7UmB+iIz777aTrU68y64Z7PI1MNICw/cNsnPGcPpk42+/Fhps5mbHB3jGcurmiFwEddg==}
     peerDependencies:
       stylelint: '>=16.11'
-
-  '@acdh-oeaw/tailwindcss-preset@0.0.22':
-    resolution: {integrity: sha512-HqeqziOZMQCtvMolXaPSPnIIBjXirirJFAwNMs+8UJL7/4dAa/CCC5cO9tHcusn/dVtW3z/BUtW4fW4vGHyVoA==}
-    peerDependencies:
-      tailwindcss: 3.x
 
   '@acdh-oeaw/tsconfig@1.5.1':
     resolution: {integrity: sha512-/tY4cU7Mq6YAxs5cG3ZaLYJfH3k8rmn4kEHw9Yn4lxdPUOQhVyAe1wrqr6+jakWCiZJRFKszcUSH1/M5BkzPeA==}
@@ -7106,12 +7104,6 @@ snapshots:
     transitivePeerDependencies:
       - postcss-html
       - stylelint-order
-
-  '@acdh-oeaw/tailwindcss-preset@0.0.22(tailwindcss@4.1.11)':
-    dependencies:
-      '@tailwindcss/typography': 0.5.16(tailwindcss@4.1.11)
-      tailwindcss: 4.1.11
-      tailwindcss-animate: 1.0.7(tailwindcss@4.1.11)
 
   '@acdh-oeaw/tsconfig@1.5.1(typescript@5.8.3)':
     dependencies:
