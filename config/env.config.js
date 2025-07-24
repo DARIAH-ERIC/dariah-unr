@@ -38,7 +38,7 @@ export const env = createEnv({
 			KEYSTATIC_GITHUB_CLIENT_ID: z.string().min(1).optional(),
 			KEYSTATIC_GITHUB_CLIENT_SECRET: z.string().min(1).optional(),
 			KEYSTATIC_SECRET: z.string().min(1).optional(),
-			NEXT_RUNTIME: z.enum(["edge", "nodejs"]),
+			NEXT_RUNTIME: z.enum(["edge", "nodejs"]).optional(),
 			SENTRY_AUTH_TOKEN: z.string().min(1).optional(),
 			SSHOC_MARKETPLACE_API_BASE_URL: z.string().url(),
 			SSHOC_MARKETPLACE_BASE_URL: z.string().url(),
