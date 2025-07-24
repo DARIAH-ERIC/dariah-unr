@@ -112,6 +112,9 @@ jobs:
             "NEXT_PUBLIC_MATOMO_BASE_URL=${{ vars.NEXT_PUBLIC_MATOMO_BASE_URL }}"
             "NEXT_PUBLIC_MATOMO_ID=${{ vars.NEXT_PUBLIC_MATOMO_ID }}"
             "NEXT_PUBLIC_REDMINE_ID=${{ vars.SERVICE_ID }}"
+            "NEXT_PUBLIC_SENTRY_DSN=${{ vars.NEXT_PUBLIC_SENTRY_DSN }}"
+            "NEXT_PUBLIC_SENTRY_ORG=${{ vars.NEXT_PUBLIC_SENTRY_ORG }}"
+            "NEXT_PUBLIC_SENTRY_PROJECT=${{ vars.NEXT_PUBLIC_SENTRY_PROJECT }}"
           secrets: |
             "AUTH_SECRET=${{ secrets.K8S_SECRET_AUTH_SECRET }}"
             "EMAIL_CONTACT_ADDRESS=${{ secrets.K8S_SECRET_EMAIL_CONTACT_ADDRESS }}"
