@@ -37,7 +37,7 @@ export function PublicationsFormContent(props: PublicationsFormContentProps): Re
 			{total > 0 ? (
 				<div
 					dangerouslySetInnerHTML={{ __html: bibliography }}
-					className="max-w-screen-md text-sm leading-relaxed text-neutral-700 dark:text-neutral-300 [&_.csl-bib-body]:flex [&_.csl-bib-body]:flex-col [&_.csl-bib-body]:gap-y-2 [&_.csl-entry]:pl-4 [&_.csl-entry]:-indent-4"
+					className="max-w-(--breakpoint-md) text-sm leading-relaxed text-neutral-700 dark:text-neutral-300 [&_.csl-bib-body]:flex [&_.csl-bib-body]:flex-col [&_.csl-bib-body]:gap-y-2 [&_.csl-entry]:pl-4 [&_.csl-entry]:-indent-4"
 				/>
 			) : (
 				<div className="grid place-items-center py-6 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">

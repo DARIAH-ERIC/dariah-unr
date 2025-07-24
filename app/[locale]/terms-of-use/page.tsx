@@ -40,7 +40,7 @@ export default function TermsOfUsePage(props: TermsOfUsePageProps): ReactNode {
 	const t = useTranslations("TermsOfUsePage");
 
 	return (
-		<MainContent className="container grid max-w-screen-md content-start gap-y-8 py-8">
+		<MainContent className="container grid max-w-(--breakpoint-md) content-start gap-y-8 py-8">
 			<PageTitle>{t("title")}</PageTitle>
 
 			<div className="prose prose-sm">

@@ -53,15 +53,15 @@ function IndexPageHeroSection(): ReactNode {
 	const t = useTranslations("IndexPageHeroSection");
 
 	return (
-		<section className="mx-auto grid w-full max-w-screen-lg content-start justify-items-center gap-y-4 px-4 py-8 text-center md:py-16">
-			<div className="flex items-center gap-2 rounded-lg bg-neutral-100 px-3 py-1 text-sm font-medium leading-tight dark:bg-neutral-800">
+		<section className="mx-auto grid w-full max-w-(--breakpoint-lg) content-start justify-items-center gap-y-4 px-4 py-8 text-center md:py-16">
+			<div className="flex items-center gap-2 rounded-lg bg-neutral-100 px-3 py-1 text-sm leading-tight font-medium dark:bg-neutral-800">
 				<Logo className="size-4 shrink-0 text-brand" />
 				<span>{t("badge")}</span>
 			</div>
-			<h1 className="text-balance text-3xl font-bold leading-tight tracking-tighter text-neutral-950 md:text-5xl lg:text-6xl dark:text-neutral-0">
+			<h1 className="text-3xl leading-tight font-bold tracking-tighter text-balance text-neutral-950 md:text-5xl lg:text-6xl dark:text-neutral-0">
 				{t("title")}
 			</h1>
-			<div className="w-full text-pretty px-8 text-md text-neutral-700 sm:text-lg dark:text-neutral-300">
+			<div className="w-full px-8 text-md text-pretty text-neutral-700 sm:text-lg dark:text-neutral-300">
 				{t("lead-in")}
 			</div>
 			<div className="my-3 flex items-center gap-x-4">

@@ -732,7 +732,7 @@ function ServicesEditForm(props: ServicesEditFormProps) {
 					name="dariahBranding"
 					type="checkbox"
 				/>
-				<span className="select-none text-sm font-medium leading-normal text-neutral-950 transition disabled:opacity-50 dark:text-neutral-0">
+				<span className="text-sm leading-normal font-medium text-neutral-950 transition select-none disabled:opacity-50 dark:text-neutral-0">
 					DARIAH branding
 				</span>
 			</label>
@@ -743,7 +743,7 @@ function ServicesEditForm(props: ServicesEditFormProps) {
 					name="eoscOnboarding"
 					type="checkbox"
 				/>
-				<span className="select-none text-sm font-medium leading-normal text-neutral-950 transition disabled:opacity-50 dark:text-neutral-0">
+				<span className="text-sm leading-normal font-medium text-neutral-950 transition select-none disabled:opacity-50 dark:text-neutral-0">
 					EOSC onboarding
 				</span>
 			</label>
@@ -754,7 +754,7 @@ function ServicesEditForm(props: ServicesEditFormProps) {
 					name="monitoring"
 					type="checkbox"
 				/>
-				<span className="select-none text-sm font-medium leading-normal text-neutral-950 transition disabled:opacity-50 dark:text-neutral-0">
+				<span className="text-sm leading-normal font-medium text-neutral-950 transition select-none disabled:opacity-50 dark:text-neutral-0">
 					Monitoring
 				</span>
 			</label>
@@ -765,7 +765,7 @@ function ServicesEditForm(props: ServicesEditFormProps) {
 					name="privateSupplier"
 					type="checkbox"
 				/>
-				<span className="select-none text-sm font-medium leading-normal text-neutral-950 transition disabled:opacity-50 dark:text-neutral-0">
+				<span className="text-sm leading-normal font-medium text-neutral-950 transition select-none disabled:opacity-50 dark:text-neutral-0">
 					Private supplier
 				</span>
 			</label>
@@ -822,7 +822,7 @@ function ServiceStatistics(props: ServiceStatisticsProps) {
 			<p>There are currently {services.length} services in the database.</p>
 			<dl className="grid gap-y-2">
 				<div>
-					<dt className="text-xs font-semibold uppercase tracking-wide">Grouped by size</dt>
+					<dt className="text-xs font-semibold tracking-wide uppercase">Grouped by size</dt>
 					<dd>
 						<ul>
 							{Array.from(serviceSizesById.values()).map((size) => {
@@ -838,7 +838,7 @@ function ServiceStatistics(props: ServiceStatisticsProps) {
 					</dd>
 				</div>
 				<div>
-					<dt className="text-xs font-semibold uppercase tracking-wide">Grouped by status</dt>
+					<dt className="text-xs font-semibold tracking-wide uppercase">Grouped by status</dt>
 					<dd>
 						<ul>
 							{Object.values(ServiceStatus).map((status) => {
@@ -854,7 +854,7 @@ function ServiceStatistics(props: ServiceStatisticsProps) {
 					</dd>
 				</div>
 				<div>
-					<dt className="text-xs font-semibold uppercase tracking-wide">Grouped by type</dt>
+					<dt className="text-xs font-semibold tracking-wide uppercase">Grouped by type</dt>
 					<dd>
 						<ul>
 							{Object.values(ServiceType).map((type) => {

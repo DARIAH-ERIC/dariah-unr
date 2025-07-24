@@ -535,7 +535,7 @@ function WorkingGroupEditForm(props: WorkingGroupEditFormProps) {
 
 			<FormFieldArray aria-labelledby={chairsLabelId} className="flex flex-col gap-y-4">
 				<div
-					className="text-sm font-semibold leading-tight tracking-tight text-neutral-950 dark:text-neutral-0"
+					className="text-sm leading-tight font-semibold tracking-tight text-neutral-950 dark:text-neutral-0"
 					id={chairsLabelId}
 				>
 					Chairs

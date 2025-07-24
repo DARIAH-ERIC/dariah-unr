@@ -70,7 +70,7 @@ export const radioBoxStyles = variants({
 		"rounded-full",
 		"border border-neutral-950/15 group-hover:border-neutral-950/30 dark:border-neutral-0/15 dark:group-hover:border-neutral-0/30",
 		"bg-neutral-0 dark:bg-neutral-0/5",
-		"shadow-sm dark:shadow-none",
+		"shadow-xs dark:shadow-none",
 		"group-selected:bg-neutral-50",
 	],
 });

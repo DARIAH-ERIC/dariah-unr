@@ -44,7 +44,7 @@ export default function ContactPage(props: ContactPageProps): ReactNode {
 	const contactSearchParams = contactPageSearchParams.parse(searchParams);
 
 	return (
-		<MainContent className="container grid max-w-screen-md content-start gap-8 py-8">
+		<MainContent className="container grid max-w-(--breakpoint-md) content-start gap-8 py-8">
 			<PageTitle>{t("title")}</PageTitle>
 			<PageLeadIn>{t("lead-in")}</PageLeadIn>
 

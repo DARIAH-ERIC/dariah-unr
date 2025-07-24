@@ -593,7 +593,7 @@ function SoftwareStatistics(props: SoftwareStatisticsProps) {
 			<p>There are currently {software.length} software entries in the database.</p>
 			<dl className="grid gap-y-2">
 				<div>
-					<dt className="text-xs font-semibold uppercase tracking-wide">Grouped by status</dt>
+					<dt className="text-xs font-semibold tracking-wide uppercase">Grouped by status</dt>
 					<dd>
 						<ul>
 							{Object.values(SoftwareStatus).map((status) => {

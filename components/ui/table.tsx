@@ -120,7 +120,7 @@ export function Row<T extends object>({ id, columns, children, ...otherProps }: 
 }
 
 const cellStyles = variants({
-	base: "truncate border-b p-2 -outline-offset-2 [--selected-border:theme(colors.accent.200)] group-last/row:border-b-0 group-selected/row:border-[--selected-border] dark:border-b-neutral-700 dark:[--selected-border:theme(colors.accent.900)] [:has(+[data-selected])_&]:border-[--selected-border]",
+	base: "truncate border-b p-2 -outline-offset-2 [--selected-border:var(--color-accent-200)] group-last/row:border-b-0 group-selected/row:border-(--selected-border) dark:border-b-neutral-700 dark:[--selected-border:var(--color-accent-900)] in-[:has(+[data-selected])]:border-(--selected-border)",
 });
 
 export function Cell(props: CellProps) {

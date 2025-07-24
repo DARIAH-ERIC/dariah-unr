@@ -1,5 +1,7 @@
 /** @typedef {import("typescript-eslint").Config} Config */
 
+import { resolve } from "node:path";
+
 import baseConfig from "@acdh-oeaw/eslint-config";
 import nextConfig from "@acdh-oeaw/eslint-config-next";
 import playwrightConfig from "@acdh-oeaw/eslint-config-playwright";
@@ -15,10 +17,16 @@ const config = [
 	...reactConfig,
 	...nextConfig,
 	...tailwindcssConfig,
+	{
+		settings: {
+			tailwindcss: {
+				config: resolve("./styles/index.css"),
+			},
+		},
+	},
 	...playwrightConfig,
 	{
 		plugins: {
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			"check-file": checkFilePlugin,
 		},
 		rules: {

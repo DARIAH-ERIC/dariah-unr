@@ -76,7 +76,7 @@ async function DocumentationPageContent(props: DocumentationPageContentProps) {
 	const { Content } = await getDocumentationContent(id);
 
 	return (
-		<div className="mx-auto grid w-full max-w-screen-md content-start gap-y-8">
+		<div className="mx-auto grid w-full max-w-(--breakpoint-md) content-start gap-y-8">
 			<PageTitle>{document.title}</PageTitle>
 
 			<div className="prose prose-sm">

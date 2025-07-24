@@ -25,7 +25,7 @@ export {
 };
 
 export const menuPopoverStyles = variants({
-	base: ["w-max min-w-[--trigger-width]"],
+	base: ["w-max min-w-(--trigger-width)"],
 });
 
 export type MenuPopoverStyles = VariantProps<typeof menuPopoverStyles>;
@@ -44,7 +44,7 @@ export function MenuPopover(props: MenuPopoverProps) {
 
 export const menuStyles = variants({
 	base: [
-		"outline outline-1 outline-transparent transition",
+		"outline-solid outline-1 outline-transparent transition",
 		// "overflow-y-scroll overscroll-contain",
 		"select-none",
 		"rounded-md p-1",
