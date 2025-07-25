@@ -18,6 +18,8 @@ USER node
 
 COPY --chown=node:node .npmrc package.json pnpm-lock.yaml ./
 
+ENV SKIP_INSTALL_SIMPLE_GIT_HOOKS=1
+
 RUN pnpm fetch
 
 COPY --chown=node:node ./ ./

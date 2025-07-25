@@ -47,10 +47,10 @@ test.describe("should set page metadata", () => {
 		await expect(twCard).toHaveAttribute("content", "summary_large_image");
 
 		const twCreator = page.locator('meta[name="twitter:creator"]');
-		await expect(twCreator).toHaveAttribute("content", "@dariaheu");
+		await expect(twCreator).toHaveAttribute("content", "https://x.com/dariaheu");
 
 		const twSite = page.locator('meta[name="twitter:site"]');
-		await expect(twSite).toHaveAttribute("content", "@dariaheu");
+		await expect(twSite).toHaveAttribute("content", "https://x.com/dariaheu");
 
 		// const googleSiteVerification = page.locator('meta[name="google-site-verification"]');
 		// await expect(googleSiteVerification).toHaveAttribute("content", "");
@@ -83,7 +83,7 @@ test.describe("should set page metadata", () => {
 		);
 
 		const ogLocale = page.locator('meta[property="og:locale"]');
-		await expect(ogLocale).toHaveAttribute("content", "en");
+		await expect(ogLocale).toHaveAttribute("content", "en-GB");
 	});
 
 	// eslint-disable-next-line playwright/no-skipped-test
