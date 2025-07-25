@@ -3,7 +3,7 @@
 import { type Prisma, ProjectScope } from "@prisma/client";
 import { MoreHorizontalIcon, PencilIcon, Trash2Icon } from "lucide-react";
 import { useFormatter } from "next-intl";
-import { Fragment, type ReactNode, useActionState,useId, useMemo, useState  } from "react";
+import { Fragment, type ReactNode, useActionState, useId, useMemo, useState } from "react";
 import type { Key } from "react-aria-components";
 
 import { Pagination } from "@/components/admin/pagination";

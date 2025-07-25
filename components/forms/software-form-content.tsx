@@ -1,7 +1,7 @@
 "use client";
 
 import type { Country, Report, Software } from "@prisma/client";
-import { type ReactNode, useActionState  } from "react";
+import { type ReactNode, useActionState } from "react";
 import { Group } from "react-aria-components";
 
 import { SubmitButton } from "@/components/submit-button";

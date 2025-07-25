@@ -4,7 +4,7 @@ import { groupByToMap, keyByToMap } from "@acdh-oeaw/lib";
 import type { Country, Person, Prisma, Report, Role, WorkingGroup } from "@prisma/client";
 import { useListData } from "@react-stately/data";
 import { PlusIcon } from "lucide-react";
-import { Fragment, type ReactNode, useActionState,useId  } from "react";
+import { Fragment, type ReactNode, useActionState, useId } from "react";
 
 import { SubmitButton } from "@/components/submit-button";
 import { NumberInputField } from "@/components/ui/blocks/number-input-field";

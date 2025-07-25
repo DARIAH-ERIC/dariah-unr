@@ -5,7 +5,15 @@ import type { Contribution, Person, Prisma } from "@prisma/client";
 import { useListData } from "@react-stately/data";
 import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon, TrashIcon } from "lucide-react";
 import { useFormatter } from "next-intl";
-import { Fragment, type ReactNode, useActionState,useCallback, useId, useMemo, useState  } from "react";
+import {
+	Fragment,
+	type ReactNode,
+	useActionState,
+	useCallback,
+	useId,
+	useMemo,
+	useState,
+} from "react";
 import { Group, type Key } from "react-aria-components";
 
 import { Pagination } from "@/components/admin/pagination";

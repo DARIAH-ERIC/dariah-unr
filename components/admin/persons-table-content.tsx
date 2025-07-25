@@ -4,7 +4,7 @@ import { keyByToMap } from "@acdh-oeaw/lib";
 import type { Institution, Prisma } from "@prisma/client";
 import { useListData } from "@react-stately/data";
 import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
-import { Fragment, type ReactNode, useActionState,useId, useMemo, useState  } from "react";
+import { Fragment, type ReactNode, useActionState, useId, useMemo, useState } from "react";
 import type { Key } from "react-aria-components";
 
 import { Pagination } from "@/components/admin/pagination";

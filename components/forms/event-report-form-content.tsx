@@ -2,7 +2,7 @@
 
 import { isNonEmptyString } from "@acdh-oeaw/lib";
 import type { EventReport, Report } from "@prisma/client";
-import { type ReactNode, useActionState  } from "react";
+import { type ReactNode, useActionState } from "react";
 
 import { SubmitButton } from "@/components/submit-button";
 import { NumberInputField } from "@/components/ui/blocks/number-input-field";

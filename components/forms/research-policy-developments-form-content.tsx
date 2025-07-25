@@ -2,7 +2,7 @@
 
 import type { Report, ResearchPolicyDevelopment } from "@prisma/client";
 import { useListData } from "@react-stately/data";
-import { type ReactNode, useActionState  } from "react";
+import { type ReactNode, useActionState } from "react";
 
 import { SubmitButton } from "@/components/submit-button";
 import { TextAreaField } from "@/components/ui/blocks/text-area-field";

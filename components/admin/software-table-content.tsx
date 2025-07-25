@@ -8,7 +8,7 @@ import {
 	SoftwareStatus,
 } from "@prisma/client";
 import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
-import { Fragment, type ReactNode, useActionState,useId, useMemo, useState  } from "react";
+import { Fragment, type ReactNode, useActionState, useId, useMemo, useState } from "react";
 import type { Key } from "react-aria-components";
 
 import { Pagination } from "@/components/admin/pagination";
