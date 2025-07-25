@@ -211,7 +211,9 @@
 	table {
 		font-variant-numeric: tabular-nums;
 	}
+}
 
+@layer utilities {
 	.prose {
 		--tw-prose-body: var(--color-neutral-700);
 		--tw-prose-headings: var(--color-neutral-900);
