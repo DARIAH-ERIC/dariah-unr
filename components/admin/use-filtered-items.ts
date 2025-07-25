@@ -1,9 +1,5 @@
-import {
-	experimental_useEffectEvent as useEffectEvent,
-	useCallback,
-	useMemo,
-	useState,
-} from "react";
+import { useEffectEvent } from "@react-aria/utils";
+import { useCallback, useMemo, useState } from "react";
 
 export const EMPTY_FILTER = "_all_";
 
