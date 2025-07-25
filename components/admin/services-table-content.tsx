@@ -13,9 +13,8 @@ import {
 	ServiceType,
 } from "@prisma/client";
 import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
-import { Fragment, type ReactNode, useId, useMemo, useState } from "react";
+import { Fragment, type ReactNode, useActionState,useId, useMemo, useState  } from "react";
 import type { Key } from "react-aria-components";
-import { useFormState } from "react-dom";
 
 import { Pagination } from "@/components/admin/pagination";
 import { EMPTY_FILTER, useFilteredItems } from "@/components/admin/use-filtered-items";
@@ -354,7 +353,7 @@ function DeleteServicesDialog(props: DeleteServicesDialogProps) {
 
 	const formId = useId();
 
-	const [formState, formAction] = useFormState(deleteServiceAction, undefined);
+	const [formState, formAction] = useActionState(deleteServiceAction, undefined);
 
 	if (action?.kind !== "delete") return null;
 
@@ -426,7 +425,7 @@ function CreateServicesDialog(props: CreateServicesDialogProps) {
 
 	const formId = useId();
 
-	const [formState, formAction] = useFormState(createServiceAction, undefined);
+	const [formState, formAction] = useActionState(createServiceAction, undefined);
 
 	if (action?.kind !== "create") return null;
 
@@ -483,7 +482,7 @@ function EditServicesDialog(props: EditServicesDialogProps) {
 
 	const formId = useId();
 
-	const [formState, formAction] = useFormState(updateServiceAction, undefined);
+	const [formState, formAction] = useActionState(updateServiceAction, undefined);
 
 	if (action?.kind !== "edit") return null;
 

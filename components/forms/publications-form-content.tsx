@@ -1,8 +1,7 @@
 "use client";
 
 import type { Report } from "@prisma/client";
-import type { ReactNode } from "react";
-import { useFormState } from "react-dom";
+import { type ReactNode, useActionState  } from "react";
 
 import { SubmitButton } from "@/components/submit-button";
 import { TextAreaField } from "@/components/ui/blocks/text-area-field";
@@ -24,7 +23,7 @@ interface PublicationsFormContentProps {
 export function PublicationsFormContent(props: PublicationsFormContentProps): ReactNode {
 	const { bibliography, comments, reportId, total, year } = props;
 
-	const [formState, formAction] = useFormState(updatePublicationsAction, undefined);
+	const [formState, formAction] = useActionState(updatePublicationsAction, undefined);
 
 	return (
 		<Form

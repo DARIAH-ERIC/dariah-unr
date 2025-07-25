@@ -11,9 +11,8 @@ import {
 	// ServiceStatus,
 } from "@prisma/client";
 import { useListData } from "@react-stately/data";
-import type { ReactNode } from "react";
+import { type ReactNode, useActionState  } from "react";
 import { Group } from "react-aria-components";
-import { useFormState } from "react-dom";
 
 import { SubmitButton } from "@/components/submit-button";
 import { ContextualHelp } from "@/components/ui/blocks/contextual-help";
@@ -61,7 +60,7 @@ export function ServiceReportsFormContent(props: ServiceReportsFormContentProps)
 
 	// const serviceStatuses = Object.values(ServiceStatus);
 
-	const [formState, formAction] = useFormState(updateServiceReportsAction, undefined);
+	const [formState, formAction] = useActionState(updateServiceReportsAction, undefined);
 
 	const serviceReportsByServiceId = keyByToMap(serviceReports, (serviceReport) => {
 		return serviceReport.service.id;
