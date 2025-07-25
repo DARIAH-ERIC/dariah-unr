@@ -58,7 +58,7 @@ function IndexPageHeroSection(): ReactNode {
 				<Logo className="size-4 shrink-0 text-brand" />
 				<span>{t("badge")}</span>
 			</div>
-			<h1 className="text-3xl leading-tight font-bold tracking-tighter text-balance text-neutral-950 md:text-5xl lg:text-6xl dark:text-neutral-0">
+			<h1 className="text-3xl font-bold tracking-tighter text-balance text-neutral-950 md:text-5xl lg:text-6xl dark:text-neutral-0">
 				{t("title")}
 			</h1>
 			<div className="w-full px-8 text-md text-pretty text-neutral-700 sm:text-lg dark:text-neutral-300">

@@ -254,12 +254,14 @@
 }
 
 @utility container {
-	@variant md {
-		padding-inline: --spacing(8);
-	}
-
 	width: 100%;
 	max-width: var(--breakpoint-2xl);
 	margin-inline: auto;
 	padding-inline: --spacing(4);
+}
+
+@utility container {
+	@variant md {
+		padding-inline: --spacing(8);
+	}
 }
