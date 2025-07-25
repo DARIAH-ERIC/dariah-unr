@@ -71,8 +71,8 @@ test.describe("app", () => {
 		// TODO: use toMatchSnapshot
 		expect(body.toString()).toEqual(
 			JSON.stringify({
-				name: "DARIAH Unified National Reporting",
-				short_name: "DARIAH UNR",
+				name: "DARIAH Knowledge Base",
+				short_name: "DARIAH Knowledge Base",
 				description: "Key performance indicators for DARIAH member countries.",
 				start_url: "/",
 				display: "standalone",

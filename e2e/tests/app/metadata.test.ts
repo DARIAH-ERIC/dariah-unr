@@ -20,10 +20,10 @@ test("should set a canonical url", async ({ page }) => {
 /** FIXME: @see https://github.com/vercel/next.js/issues/45620 */
 test.fixme("should set document title on not-found page", async ({ page }) => {
 	await page.goto("/unknown");
-	await expect(page).toHaveTitle("Page not found | DARIAH Unified National Reporting");
+	await expect(page).toHaveTitle("Page not found | DARIAH Knowledge Base");
 
 	await page.goto("/de/unknown");
-	await expect(page).toHaveTitle("Seite nicht gefunden | DARIAH Unified National Reporting");
+	await expect(page).toHaveTitle("Seite nicht gefunden | DARIAH Knowledge Base");
 });
 
 /** FIXME: @see https://github.com/vercel/next.js/issues/45620 */
@@ -59,7 +59,7 @@ test.describe("should set page metadata", () => {
 	test("with en locale", async ({ page }) => {
 		await page.goto("/en");
 
-		await expect(page).toHaveTitle("DARIAH Unified National Reporting");
+		await expect(page).toHaveTitle("DARIAH Knowledge Base");
 
 		const metaDescription = page.locator('meta[name="description"]');
 		await expect(metaDescription).toHaveAttribute(
@@ -68,7 +68,7 @@ test.describe("should set page metadata", () => {
 		);
 
 		const ogTitle = page.locator('meta[property="og:title"]');
-		await expect(ogTitle).toHaveAttribute("content", "DARIAH Unified National Reporting");
+		await expect(ogTitle).toHaveAttribute("content", "DARIAH Knowledge Base");
 
 		const ogDescription = page.locator('meta[property="og:description"]');
 		await expect(ogDescription).toHaveAttribute(
@@ -90,7 +90,7 @@ test.describe("should set page metadata", () => {
 	test.skip("with de locale", async ({ page }) => {
 		await page.goto("/de");
 
-		await expect(page).toHaveTitle("DARIAH Unified National Reporting");
+		await expect(page).toHaveTitle("DARIAH Knowledge Base");
 
 		const metaDescription = page.locator('meta[name="description"]');
 		await expect(metaDescription).toHaveAttribute(
@@ -99,7 +99,7 @@ test.describe("should set page metadata", () => {
 		);
 
 		const ogTitle = page.locator('meta[property="og:title"]');
-		await expect(ogTitle).toHaveAttribute("content", "DARIAH Unified National Reporting");
+		await expect(ogTitle).toHaveAttribute("content", "DARIAH Knowledge Base");
 
 		const ogDescription = page.locator('meta[property="og:description"]');
 		await expect(ogDescription).toHaveAttribute(
@@ -128,7 +128,7 @@ test.describe("should add json+ld metadata", () => {
 			jsonLdScriptProps({
 				"@context": "https://schema.org",
 				"@type": "WebSite",
-				name: "DARIAH Unified National Reporting",
+				name: "DARIAH Knowledge Base",
 				description: "Key performance indicators for DARIAH member countries.",
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 			}).dangerouslySetInnerHTML?.__html,
@@ -145,7 +145,7 @@ test.describe("should add json+ld metadata", () => {
 			jsonLdScriptProps({
 				"@context": "https://schema.org",
 				"@type": "WebSite",
-				name: "DARIAH Unified National Reporting",
+				name: "DARIAH Knowledge Base",
 				description: "Wichtige Leistungsindikatoren für DARIAH-Mitgliedsländer.",
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 			}).dangerouslySetInnerHTML?.__html,

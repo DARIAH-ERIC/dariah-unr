@@ -44,10 +44,10 @@ export default async function PrivacyPolicyPage(props: PrivacyPolicyPageProps): 
 
 			<div className="prose prose-sm">
 				<p>
-					This privacy statement describes how the DARIAH Unified National Reporting App collects
-					and uses data while browsing this website. We are committed to ensuring that your personal
-					details are protected when you use our website, or API. If you have any questions about
-					how we use your personal information or comply with data protection legislation, please{" "}
+					This privacy statement describes how the DARIAH Knowledge Base collects and uses data
+					while browsing this website. We are committed to ensuring that your personal details are
+					protected when you use our website, or API. If you have any questions about how we use
+					your personal information or comply with data protection legislation, please{" "}
 					<Link href={createHref({ pathname: "/contact" })}>contact us</Link>.
 				</p>
 
