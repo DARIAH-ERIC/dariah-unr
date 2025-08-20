@@ -1,3 +1,4 @@
+import { CountryType } from "@prisma/client";
 import { type NextRequest, NextResponse } from "next/server";
 import * as v from "valibot";
 
@@ -22,23 +23,30 @@ const SearchParamsSchema = v.object({
 		v.pipe(v.string(), v.transform(Number), v.number(), v.integer(), v.minValue(0)),
 		"0",
 	),
+	type: v.optional(v.nullable(v.picklist(Object.values(CountryType)))),
 });
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
 	try {
 		const url = new URL(request.url);
 
-		const { limit, offset } = await v.parseAsync(SearchParamsSchema, {
+		const {
+			limit,
+			offset,
+			type: countryType,
+		} = await v.parseAsync(SearchParamsSchema, {
 			limit: url.searchParams.get("limit"),
 			offset: url.searchParams.get("offset"),
+			type: url.searchParams.get("type"),
 		});
 
 		const [countries, total] = await Promise.all([
 			db.country.findMany({
 				take: limit,
 				skip: offset,
+				where: { ...(countryType && { type: countryType }) },
 			}),
-			db.country.count(),
+			db.country.count({ where: { ...(countryType && { type: countryType }) } }),
 		]);
 
 		const data = countries.map((country) => {
