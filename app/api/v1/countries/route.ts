@@ -98,9 +98,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 		]);
 
 		const data = countries.map((country) => {
-			const nationalRepresentativeInstitution = country.institutions.find((institution) => {
-				return institution.types.includes("national_representative_institution");
-			});
+			const nationalRepresentativeInstitution =
+				country.institutions.find((institution) => {
+					return institution.types.includes("national_representative_institution");
+				}) ?? null;
 			const nationalRepresentatives = country.contributions
 				.filter((contribution) => {
 					return contribution.role.type === "national_representative";
@@ -108,9 +109,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 				.map((contribution) => {
 					return contribution.person.name.trim();
 				});
-			const nationalCoordinatingInstitution = country.institutions.find((institution) => {
-				return institution.types.includes("national_coordinating_institution");
-			});
+			const nationalCoordinatingInstitution =
+				country.institutions.find((institution) => {
+					return institution.types.includes("national_coordinating_institution");
+				}) ?? null;
 			const nationalCoordinatorUsers = country.users
 				.filter((user) => {
 					return user.role === "national_coordinator";
@@ -136,14 +138,14 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 				endDate: country.endDate,
 				type: country.type,
 				sshOpenMarketplaceId: country.marketplaceId,
-				nationalRepresentativeInstitution: {
-					name: nationalRepresentativeInstitution?.name,
-					urls: nationalRepresentativeInstitution?.url,
+				nationalRepresentativeInstitution: nationalRepresentativeInstitution && {
+					name: nationalRepresentativeInstitution.name,
+					urls: nationalRepresentativeInstitution.url,
 				},
 				nationalRepresentatives,
-				nationalCoordinatingInstitution: {
-					name: nationalCoordinatingInstitution?.name,
-					urls: nationalCoordinatingInstitution?.url,
+				nationalCoordinatingInstitution: nationalCoordinatingInstitution && {
+					name: nationalCoordinatingInstitution.name,
+					urls: nationalCoordinatingInstitution.url,
 				},
 				nationalCoordinators,
 			};
