@@ -100,7 +100,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 		const data = countries.map((country) => {
 			const nationalRepresentativeInstitution = country.institutions.find((institution) => {
 				return institution.types.includes("national_representative_institution");
-			})?.name;
+			});
 			const nationalRepresentatives = country.contributions
 				.filter((contribution) => {
 					return contribution.role.type === "national_representative";
@@ -110,7 +110,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 				});
 			const nationalCoordinatingInstitution = country.institutions.find((institution) => {
 				return institution.types.includes("national_coordinating_institution");
-			})?.name;
+			});
 			const nationalCoordinatorUsers = country.users
 				.filter((user) => {
 					return user.role === "national_coordinator";
@@ -136,9 +136,15 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 				endDate: country.endDate,
 				type: country.type,
 				sshOpenMarketplaceId: country.marketplaceId,
-				nationalRepresentativeInstitution,
+				nationalRepresentativeInstitution: {
+					name: nationalRepresentativeInstitution?.name,
+					urls: nationalRepresentativeInstitution?.url,
+				},
 				nationalRepresentatives,
-				nationalCoordinatingInstitution,
+				nationalCoordinatingInstitution: {
+					name: nationalCoordinatingInstitution?.name,
+					urls: nationalCoordinatingInstitution?.url,
+				},
 				nationalCoordinators,
 			};
 		});
