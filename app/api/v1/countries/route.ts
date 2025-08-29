@@ -47,7 +47,15 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 			},
 		});
 
+		const national_representative_role = await db.role.findFirst({
+			where: { type: "national_representative" },
+			select: {
+				id: true,
+			},
+		});
+
 		const national_coordinator_role_id = national_coordinator_role?.id;
+		const national_representative_role_id = national_representative_role?.id;
 
 		const [countries, total] = await Promise.all([
 			db.country.findMany({
@@ -66,8 +74,14 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 						},
 					},
 					contributions: {
-						where: { roleId: { equals: national_coordinator_role_id } },
+						where: {
+							OR: [
+								{ roleId: { equals: national_coordinator_role_id } },
+								{ roleId: { equals: national_representative_role_id } },
+							],
+						},
 						select: {
+							role: true,
 							person: {
 								select: {
 									name: true,
@@ -86,7 +100,17 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 		const data = countries.map((country) => {
 			const nationalRepresentativeInstitution = country.institutions.find((institution) => {
 				return institution.types.includes("national_representative_institution");
-			})?.name;
+			});
+			const nationalRepresentatives = country.contributions
+				.filter((contribution) => {
+					return contribution.role.type === "national_representative";
+				})
+				.map((contribution) => {
+					return contribution.person.name.trim();
+				});
+			const nationalCoordinatingInstitution = country.institutions.find((institution) => {
+				return institution.types.includes("national_coordinating_institution");
+			});
 			const nationalCoordinatorUsers = country.users
 				.filter((user) => {
 					return user.role === "national_coordinator";
@@ -94,9 +118,13 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 				.map((nc) => {
 					return nc.name;
 				});
-			const nationalCoordinatorPersons = country.contributions.map((contribution) => {
-				return contribution.person.name.trim();
-			});
+			const nationalCoordinatorPersons = country.contributions
+				.filter((contribution) => {
+					return contribution.role.type === "national_coordinator";
+				})
+				.map((contribution) => {
+					return contribution.person.name.trim();
+				});
 			const nationalCoordinators = [
 				...new Set(nationalCoordinatorUsers.concat(nationalCoordinatorPersons)),
 			];
@@ -108,7 +136,15 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 				endDate: country.endDate,
 				type: country.type,
 				sshOpenMarketplaceId: country.marketplaceId,
-				nationalRepresentativeInstitution,
+				nationalRepresentativeInstitution: {
+					name: nationalRepresentativeInstitution?.name,
+					urls: nationalRepresentativeInstitution?.url,
+				},
+				nationalRepresentatives,
+				nationalCoordinatingInstitution: {
+					name: nationalCoordinatingInstitution?.name,
+					urls: nationalCoordinatingInstitution?.url,
+				},
 				nationalCoordinators,
 			};
 		});
