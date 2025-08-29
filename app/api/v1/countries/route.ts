@@ -108,6 +108,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 				.map((contribution) => {
 					return contribution.person.name.trim();
 				});
+			const nationalCoordinatingInstitution = country.institutions.find((institution) => {
+				return institution.types.includes("national_coordinating_institution");
+			})?.name;
 			const nationalCoordinatorUsers = country.users
 				.filter((user) => {
 					return user.role === "national_coordinator";
@@ -135,6 +138,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 				sshOpenMarketplaceId: country.marketplaceId,
 				nationalRepresentativeInstitution,
 				nationalRepresentatives,
+				nationalCoordinatingInstitution,
 				nationalCoordinators,
 			};
 		});
