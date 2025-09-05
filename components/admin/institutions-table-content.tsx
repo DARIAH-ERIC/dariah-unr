@@ -2,10 +2,11 @@
 
 import { keyByToMap } from "@acdh-oeaw/lib";
 import { type Country, InstitutionType, type Prisma } from "@prisma/client";
-import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
+import { useListData } from "@react-stately/data";
+import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon, TrashIcon } from "lucide-react";
 import { useFormatter } from "next-intl";
 import { Fragment, type ReactNode, useActionState, useId, useMemo, useState } from "react";
-import type { Key } from "react-aria-components";
+import { Group, type Key } from "react-aria-components";
 
 import { Pagination } from "@/components/admin/pagination";
 import { EMPTY_FILTER, useFilteredItems } from "@/components/admin/use-filtered-items";
@@ -30,6 +31,7 @@ import {
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
+import { FormFieldArray, FormFieldArrayButton } from "@/components/ui/form-field-array";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
 import { IconButton } from "@/components/ui/icon-button";
 import { Modal, ModalOverlay } from "@/components/ui/modal";
@@ -252,7 +254,7 @@ export function AdminInstitutionsTableContent(
 								<Cell>
 									{row.countries[0]?.id ? countriesById.get(row.countries[0].id)?.name : undefined}
 								</Cell>
-								<Cell>{row.types}</Cell>
+								<Cell>{row.types.join(", ")}</Cell>
 								<Cell>{row.url[0] ?? undefined}</Cell>
 								<Cell>{row.ror}</Cell>
 								<Cell>{row.startDate != null ? dateTime(row.startDate) : undefined}</Cell>
@@ -499,7 +501,22 @@ interface InstitutionEditFormProps {
 function InstitutionEditForm(props: InstitutionEditFormProps) {
 	const { countriesById, formId, formAction, formState, institution, onClose } = props;
 
-	const institutionTypes = Object.values(InstitutionType);
+	const availableInstitutionTypes = Object.values(InstitutionType);
+
+	const institutionTypes = useListData<InstitutionType>({
+		initialItems: institution?.types ?? [],
+		getKey(item) {
+			return item;
+		},
+	});
+
+	const getRemainingAvailableOptions = useMemo(() => {
+		return availableInstitutionTypes.filter((item) => {
+			return !institutionTypes.items.includes(item);
+		});
+	}, [institutionTypes, availableInstitutionTypes]);
+
+	const institutionTypesLabelId = useId();
 
 	return (
 		<Form
@@ -515,7 +532,6 @@ function InstitutionEditForm(props: InstitutionEditFormProps) {
 
 			<TextInputField defaultValue={institution?.name} isRequired={true} label="Name" name="name" />
 
-			{/* TODO: Multiple countries */}
 			<SelectField
 				defaultSelectedKey={institution?.countries[0]?.id}
 				label="Country"
@@ -531,20 +547,67 @@ function InstitutionEditForm(props: InstitutionEditFormProps) {
 			</SelectField>
 
 			{/* TODO: Multiple types */}
-			<SelectField
-				defaultSelectedKey={institution?.types[0]}
-				label="Institution Type"
-				name="types.0"
-			>
-				{institutionTypes.map((type) => {
-					return (
-						<SelectItem key={type} id={type} textValue={type}>
-							{type}
-						</SelectItem>
-					);
-				})}
-			</SelectField>
+			<FormFieldArray aria-labelledby={institutionTypesLabelId} className="flex flex-col gap-y-4">
+				<div
+					className="text-sm leading-tight font-semibold tracking-tight text-neutral-950 dark:text-neutral-0"
+					id={institutionTypesLabelId}
+				>
+					Institution types
+				</div>
 
+				{institutionTypes.items.length > 0 ? (
+					<div className="flex flex-col gap-y-3">
+						{institutionTypes.items.map((institutionType, index) => {
+							return (
+								<Group key={institutionType} className="flex w-full items-end gap-2">
+									<input name={`types.${String(index)}`} type="hidden" value={institutionType} />
+
+									<SelectField
+										className="w-64"
+										defaultSelectedKey={institutionType}
+										isRequired={index === 0}
+										label="Institution Type"
+										name={`types.${String(index)}`}
+									>
+										{availableInstitutionTypes.map((institutionType) => {
+											return (
+												<SelectItem
+													key={institutionType}
+													id={institutionType}
+													textValue={institutionType}
+												>
+													{institutionType}
+												</SelectItem>
+											);
+										})}
+									</SelectField>
+									<IconButton
+										className="mx-auto"
+										onPress={() => {
+											institutionTypes.remove(institutionType);
+										}}
+									>
+										<TrashIcon aria-hidden={true} className="size-4.5 shrink-0" />
+										<span className="sr-only">Remove</span>
+									</IconButton>
+								</Group>
+							);
+						})}
+					</div>
+				) : null}
+
+				{getRemainingAvailableOptions.length > 0 && (
+					<FormFieldArrayButton
+						className="mt-2 text-xs"
+						onPress={() => {
+							institutionTypes.append(getRemainingAvailableOptions[0]!);
+						}}
+					>
+						<PlusIcon aria-hidden={true} className="size-3.5 shrink-0" />
+						Add institution type
+					</FormFieldArrayButton>
+				)}
+			</FormFieldArray>
 			{/* TODO: Multiple URLs */}
 			<TextInputField defaultValue={institution?.url[0] ?? undefined} label="URL" name="url.0" />
 
