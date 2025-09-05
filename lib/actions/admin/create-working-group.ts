@@ -23,6 +23,8 @@ const formSchema = z.object({
 			}),
 		)
 		.optional(),
+	mailingList: z.string().optional(),
+	memberTracking: z.string().optional(),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -63,7 +65,7 @@ export async function createWorkingGroupAction(
 		};
 	}
 
-	const { chairs, endDate, name, startDate } = result.data;
+	const { chairs, endDate, mailingList, memberTracking, name, startDate } = result.data;
 
 	try {
 		const workingGroupChairRole = await getRoleByType("wg_chair");
@@ -77,6 +79,8 @@ export async function createWorkingGroupAction(
 			chairs: chairs?.map((chair) => {
 				return { ...chair, roleId: workingGroupChairRoleId };
 			}),
+			mailingList,
+			memberTracking,
 		});
 
 		revalidatePath("/[locale]/dashboard/admin/working-groups", "page");

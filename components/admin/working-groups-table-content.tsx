@@ -138,7 +138,13 @@ export function AdminWorkingGroupsTableContent(
 	}
 
 	const [sortDescriptor, setSortDescriptor] = useState({
-		column: "name" as "chairs" | "endDate" | "name" | "startDate",
+		column: "name" as
+			| "chairs"
+			| "endDate"
+			| "name"
+			| "startDate"
+			| "memberTracking"
+			| "mailingList",
 		direction: "ascending" as "ascending" | "descending",
 	});
 
@@ -164,9 +170,8 @@ export function AdminWorkingGroupsTableContent(
 				}
 
 				default: {
-					// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 					const valueA = a[sortDescriptor.column] ?? "";
-					// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
 					const valueZ = z[sortDescriptor.column] ?? "";
 
 					return valueA.localeCompare(valueZ);
@@ -221,6 +226,12 @@ export function AdminWorkingGroupsTableContent(
 					<Column allowsSorting={true} id="endDate">
 						End date
 					</Column>
+					<Column allowsSorting={true} id="mailingList">
+						Mailing list
+					</Column>
+					<Column allowsSorting={true} id="memberTracking">
+						Member tracking
+					</Column>
 					<Column defaultWidth={50} id="actions">
 						Actions
 					</Column>
@@ -257,6 +268,8 @@ export function AdminWorkingGroupsTableContent(
 								</Cell>
 								<Cell>{row.startDate != null ? dateTime(row.startDate) : undefined}</Cell>
 								<Cell>{row.endDate != null ? dateTime(row.endDate) : undefined}</Cell>
+								<Cell>{row.mailingList}</Cell>
+								<Cell>{row.memberTracking}</Cell>
 								<Cell>
 									<div className="flex justify-end">
 										<DropdownMenuTrigger>
@@ -634,6 +647,18 @@ function WorkingGroupEditForm(props: WorkingGroupEditFormProps) {
 				granularity="day"
 				label="End date"
 				name="endDate"
+			/>
+
+			<TextInputField
+				defaultValue={workingGroup?.mailingList ?? undefined}
+				label="Mailing List"
+				name="mailingList"
+			/>
+
+			<TextInputField
+				defaultValue={workingGroup?.memberTracking ?? undefined}
+				label="Member Tracking"
+				name="memberTracking"
 			/>
 
 			<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
