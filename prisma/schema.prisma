@@ -429,6 +429,7 @@ model Service {
 
   agreements              String?
   audience                ServiceAudience?
+	comment           String?
   dariahBranding          Boolean?                  @map(name: "dariah_branding")
   eoscOnboarding          Boolean?                  @map(name: "eosc_onboarding")
   marketplaceStatus       ServiceMarketplaceStatus? @map(name: "marketplace_status")

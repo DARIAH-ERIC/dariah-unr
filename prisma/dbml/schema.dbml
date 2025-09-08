@@ -217,6 +217,7 @@ Table services {
   id String [pk]
   agreements String
   audience ServiceAudience
+  comment String
   dariahBranding Boolean
   eoscOnboarding Boolean
   marketplaceStatus ServiceMarketplaceStatus
