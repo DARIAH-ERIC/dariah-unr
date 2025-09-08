@@ -23,6 +23,7 @@ const formSchema = z.object({
 	audience: z
 		.enum(Object.values(ServiceAudience) as [ServiceAudience, ...Array<ServiceAudience>])
 		.optional(),
+	comment: z.string().optional(),
 	dariahBranding: checkBox(z.boolean().optional()),
 	eoscOnboarding: checkBox(z.boolean().optional()),
 	marketplaceStatus: z
@@ -104,6 +105,7 @@ export async function updateServiceAction(
 		id,
 		agreements,
 		audience,
+		comment,
 		dariahBranding,
 		eoscOnboarding,
 		marketplaceStatus,
@@ -127,6 +129,7 @@ export async function updateServiceAction(
 			id,
 			agreements,
 			audience,
+			comment,
 			dariahBranding,
 			eoscOnboarding,
 			marketplaceStatus,

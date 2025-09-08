@@ -84,6 +84,7 @@ interface UpdateServiceParams {
 	id: Service["id"];
 	agreements?: Service["agreements"];
 	audience?: Service["audience"];
+	comment?: Service["comment"];
 	dariahBranding?: Service["dariahBranding"];
 	eoscOnboarding?: Service["eoscOnboarding"];
 	marketplaceStatus?: Service["marketplaceStatus"];
@@ -107,6 +108,7 @@ export function updateService(params: UpdateServiceParams) {
 		id,
 		agreements,
 		audience,
+		comment,
 		dariahBranding,
 		eoscOnboarding,
 		marketplaceStatus,
@@ -132,6 +134,7 @@ export function updateService(params: UpdateServiceParams) {
 		data: {
 			agreements,
 			audience,
+			comment,
 			dariahBranding,
 			eoscOnboarding,
 			marketplaceStatus,
@@ -188,6 +191,7 @@ export function updateService(params: UpdateServiceParams) {
 interface CreateFullServiceParams {
 	agreements?: Service["agreements"];
 	audience?: Service["audience"];
+	comment?: Service["comment"];
 	dariahBranding?: Service["dariahBranding"];
 	eoscOnboarding?: Service["eoscOnboarding"];
 	marketplaceStatus?: Service["marketplaceStatus"];
@@ -210,6 +214,7 @@ export function createFullService(params: CreateFullServiceParams) {
 	const {
 		agreements,
 		audience,
+		comment,
 		dariahBranding,
 		eoscOnboarding,
 		marketplaceStatus,
@@ -232,6 +237,7 @@ export function createFullService(params: CreateFullServiceParams) {
 		data: {
 			agreements,
 			audience,
+			comment,
 			dariahBranding,
 			eoscOnboarding,
 			marketplaceStatus,

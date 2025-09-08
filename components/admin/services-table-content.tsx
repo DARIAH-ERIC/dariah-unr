@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/blocks/dropdown-menu";
 import { NumberInputField } from "@/components/ui/blocks/number-input-field";
 import { SelectField, SelectItem } from "@/components/ui/blocks/select-field";
+import { TextAreaField } from "@/components/ui/blocks/text-area-field";
 import { TextInputField } from "@/components/ui/blocks/text-input-field";
 import { Button } from "@/components/ui/button";
 import {
@@ -250,6 +251,7 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 					<Column allowsSorting={true} id="marketplaceStatus">
 						Marketplace status
 					</Column>
+					<Column id="comment">Comment</Column>
 					<Column defaultWidth={50} id="actions">
 						Actions
 					</Column>
@@ -286,6 +288,9 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 								</Cell>
 								<Cell>{row.marketplaceId}</Cell>
 								<Cell>{row.marketplaceStatus}</Cell>
+								<Cell>
+									<span title={row.comment ?? undefined}>{row.comment}</span>
+								</Cell>
 								<Cell>
 									<div className="flex justify-end">
 										<DropdownMenuTrigger>
@@ -768,6 +773,7 @@ function ServicesEditForm(props: ServicesEditFormProps) {
 					Private supplier
 				</span>
 			</label>
+			<TextAreaField defaultValue={service?.comment ?? undefined} label="Comment" name="comment" />
 
 			<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
 				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}
