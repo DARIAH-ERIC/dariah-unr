@@ -81,12 +81,13 @@ interface AdminInstitutionsTableContentProps {
 			};
 		}>
 	>;
+	hideFilter?: boolean;
 }
 
 export function AdminInstitutionsTableContent(
 	props: AdminInstitutionsTableContentProps,
 ): ReactNode {
-	const { countries, institutions } = props;
+	const { countries, institutions, hideFilter } = props;
 
 	const { dateTime } = useFormatter();
 
@@ -189,16 +190,18 @@ export function AdminInstitutionsTableContent(
 			<div className="flex justify-end">
 				<Pagination pagination={pagination} />
 			</div>
-			<div className="flex justify-end">
-				<TableFilterSelect
-					defaultSelectedKey={EMPTY_FILTER}
-					items={countryFilterOptions}
-					label="Filter by Country"
-					onSelectionChange={(key) => {
-						setCountryIdFilter(String(key));
-					}}
-				/>
-			</div>
+			{!hideFilter && (
+				<div className="flex justify-end">
+					<TableFilterSelect
+						defaultSelectedKey={EMPTY_FILTER}
+						items={countryFilterOptions}
+						label="Filter by Country"
+						onSelectionChange={(key) => {
+							setCountryIdFilter(String(key));
+						}}
+					/>
+				</div>
+			)}
 
 			<Table
 				aria-label="Services"
