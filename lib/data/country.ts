@@ -27,6 +27,55 @@ export function getCountryByCode(params: GetCountryByCodeParams) {
 	});
 }
 
+interface GetCountryAndRelationsByCodeParams {
+	code: Country["code"];
+}
+
+export function getCountryAndRelationsByCode(params: GetCountryAndRelationsByCodeParams) {
+	const { code } = params;
+
+	return db.country.findFirst({
+		where: {
+			code,
+		},
+		include: {
+			institutions: {
+				include: {
+					countries: true,
+				},
+			},
+			contributions: {
+				include: {
+					country: {
+						select: { id: true, name: true },
+					},
+					person: {
+						select: { id: true, name: true },
+					},
+					role: {
+						select: { id: true, name: true },
+					},
+					workingGroup: {
+						select: { id: true, name: true },
+					},
+				},
+			},
+			services: {
+				include: {
+					countries: true,
+					size: true,
+					institutions: true,
+				},
+			},
+			software: {
+				include: {
+					countries: true,
+				},
+			},
+		},
+	});
+}
+
 interface GetCountryByIdParams {
 	id: Country["id"];
 }
@@ -62,6 +111,38 @@ export function getCountyCodeByCountyId(params: GetCountyIdByCountyCodeParams) {
 		},
 		select: {
 			code: true,
+		},
+	});
+}
+
+interface UpdateCountryParams {
+	id: string;
+	code?: Country["code"];
+	description?: string;
+	endDate?: Date;
+	logo?: string;
+	marketplaceId?: number;
+	name?: string;
+	startDate?: Date;
+	type?: Country["type"];
+}
+
+export function updateCountry(params: UpdateCountryParams) {
+	const { id, code, description, endDate, logo, marketplaceId, name, startDate, type } = params;
+
+	return db.country.update({
+		where: {
+			id,
+		},
+		data: {
+			code,
+			description,
+			endDate,
+			logo,
+			marketplaceId,
+			name,
+			startDate,
+			type,
 		},
 	});
 }

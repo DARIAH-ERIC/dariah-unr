@@ -88,12 +88,13 @@ interface AdminContributionsTableContentProps {
 			};
 		}>
 	>;
+	hideFilter?: boolean;
 }
 
 export function AdminContributionsTableContent(
 	props: AdminContributionsTableContentProps,
 ): ReactNode {
-	const { countries, contributions, persons, roles, workingGroups } = props;
+	const { countries, contributions, persons, roles, workingGroups, hideFilter } = props;
 
 	const { dateTime } = useFormatter();
 
@@ -215,16 +216,18 @@ export function AdminContributionsTableContent(
 				<Pagination pagination={pagination} />
 			</div>
 
-			<div className="flex justify-end">
-				<TableFilterSelect
-					defaultSelectedKey={EMPTY_FILTER}
-					items={countryFilterOptions}
-					label="Filter by Country"
-					onSelectionChange={(key) => {
-						setCountryIdFilter(String(key));
-					}}
-				/>
-			</div>
+			{!hideFilter && (
+				<div className="flex justify-end">
+					<TableFilterSelect
+						defaultSelectedKey={EMPTY_FILTER}
+						items={countryFilterOptions}
+						label="Filter by Country"
+						onSelectionChange={(key) => {
+							setCountryIdFilter(String(key));
+						}}
+					/>
+				</div>
+			)}
 
 			<Table
 				aria-label="Services"

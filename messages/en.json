@@ -69,6 +69,12 @@
 		},
 		"title": "Contributions"
 	},
+	"DashboardAdminCountriesPage": {
+		"meta": {
+			"title": "Countries"
+		},
+		"title": "Countries"
+	},
 	"DashboardAdminInstitutionsPage": {
 		"meta": {
 			"title": "Institutions"
@@ -247,6 +253,12 @@
 					"default": "Failed to update contribution."
 				},
 				"success": "Successfully updated contribution."
+			},
+			"updateCountry": {
+				"errors": {
+					"default": "Failed to update country."
+				},
+				"success": "Successfully updated country."
 			},
 			"createInstitution": {
 				"errors": {
