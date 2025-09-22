@@ -4,8 +4,10 @@ import type { ReactNode } from "react";
 
 import { AdminCountryDashboardContent } from "@/components/admin/country-dashboard-content";
 import { getCountries, getCountryAndRelationsByCode } from "@/lib/data/country";
+import { getInstitutions } from "@/lib/data/institution";
 import { getPersons } from "@/lib/data/person";
 import { getRoles } from "@/lib/data/role";
+import { getServiceSizes } from "@/lib/data/service";
 import { getWorkingGroups } from "@/lib/data/working-group";
 import type { IntlLocale } from "@/lib/i18n/locales";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
@@ -43,13 +45,16 @@ export default async function DashboardAdminCountryPage(
 
 	await assertAuthenticated(["admin"]);
 
-	const [country, countries, persons, roles, workingGroups] = await Promise.all([
-		getCountryAndRelationsByCode({ code: code }),
-		getCountries(),
-		getPersons(),
-		getRoles(),
-		getWorkingGroups(),
-	]);
+	const [country, countries, institutions, persons, roles, serviceSizes, workingGroups] =
+		await Promise.all([
+			getCountryAndRelationsByCode({ code: code }),
+			getCountries(),
+			getInstitutions(),
+			getPersons(),
+			getRoles(),
+			getServiceSizes(),
+			getWorkingGroups(),
+		]);
 
 	return (
 		<div>
@@ -57,8 +62,10 @@ export default async function DashboardAdminCountryPage(
 				<AdminCountryDashboardContent
 					countries={countries}
 					country={country}
+					institutions={institutions}
 					persons={persons}
 					roles={roles}
+					serviceSizes={serviceSizes}
 					workingGroups={workingGroups}
 				/>
 			) : null}

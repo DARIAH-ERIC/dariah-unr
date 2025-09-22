@@ -82,10 +82,11 @@ interface AdminSoftwareTableContentProps {
 			};
 		}>
 	>;
+	hideFilter?: boolean;
 }
 
 export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps): ReactNode {
-	const { countries, software } = props;
+	const { countries, hideFilter, software } = props;
 
 	const countriesById = useMemo(() => {
 		return keyByToMap(countries, (country) => {
@@ -166,16 +167,18 @@ export function AdminSoftwareTableContent(props: AdminSoftwareTableContentProps)
 			<div className="flex justify-end">
 				<Pagination pagination={pagination} />
 			</div>
-			<div className="flex justify-end">
-				<TableFilterSelect
-					defaultSelectedKey={EMPTY_FILTER}
-					items={countryFilterOptions}
-					label="Filter by Country"
-					onSelectionChange={(key) => {
-						setCountryIdFilter(String(key));
-					}}
-				/>
-			</div>
+			{!hideFilter && (
+				<div className="flex justify-end">
+					<TableFilterSelect
+						defaultSelectedKey={EMPTY_FILTER}
+						items={countryFilterOptions}
+						label="Filter by Country"
+						onSelectionChange={(key) => {
+							setCountryIdFilter(String(key));
+						}}
+					/>
+				</div>
+			)}
 
 			<Table
 				aria-label="Software"

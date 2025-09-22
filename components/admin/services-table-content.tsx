@@ -105,10 +105,11 @@ interface AdminServicesTableContentProps {
 		}>
 	>;
 	institutions: Array<Institution>;
+	hideFilter?: boolean;
 }
 
 export function AdminServicesTableContent(props: AdminServicesTableContentProps): ReactNode {
-	const { countries, institutions, services, serviceSizes } = props;
+	const { countries, institutions, services, serviceSizes, hideFilter } = props;
 
 	const countriesById = useMemo(() => {
 		return keyByToMap(countries, (country) => {
@@ -211,16 +212,18 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 			<div className="flex justify-end">
 				<Pagination pagination={pagination} />
 			</div>
-			<div className="flex justify-end">
-				<TableFilterSelect
-					defaultSelectedKey={EMPTY_FILTER}
-					items={countryFilterOptions}
-					label="Filter by Country"
-					onSelectionChange={(key) => {
-						setCountryIdFilter(String(key));
-					}}
-				/>
-			</div>
+			{!hideFilter && (
+				<div className="flex justify-end">
+					<TableFilterSelect
+						defaultSelectedKey={EMPTY_FILTER}
+						items={countryFilterOptions}
+						label="Filter by Country"
+						onSelectionChange={(key) => {
+							setCountryIdFilter(String(key));
+						}}
+					/>
+				</div>
+			)}
 
 			<Table
 				aria-label="Services"

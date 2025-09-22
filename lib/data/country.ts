@@ -60,6 +60,18 @@ export function getCountryAndRelationsByCode(params: GetCountryAndRelationsByCod
 					},
 				},
 			},
+			services: {
+				include: {
+					countries: true,
+					size: true,
+					institutions: true,
+				},
+			},
+			software: {
+				include: {
+					countries: true,
+				},
+			},
 		},
 	});
 }

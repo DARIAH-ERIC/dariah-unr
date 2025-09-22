@@ -3,15 +3,19 @@
 import {
 	type Country,
 	CountryType,
+	type Institution,
 	type Person,
 	type Prisma,
 	type Role,
+	type ServiceSize,
 	type WorkingGroup,
 } from "@prisma/client";
 import { Fragment, type ReactNode, useActionState, useId, useState } from "react";
 
 import { AdminContributionsTableContent } from "@/components/admin/contributions-table-content";
 import { AdminInstitutionsTableContent } from "@/components/admin/institutions-table-content";
+import { AdminServicesTableContent } from "@/components/admin/services-table-content";
+import { AdminSoftwareTableContent } from "@/components/admin/software-table-content";
 import { SubmitButton } from "@/components/submit-button";
 import { DateInputField } from "@/components/ui/blocks/date-input-field";
 import { NumberInputField } from "@/components/ui/blocks/number-input-field";
@@ -49,15 +53,34 @@ interface AdminCountryDashboardContentProps {
 					countries: true;
 				};
 			};
+			services: {
+				include: {
+					countries: true;
+					institutions: {
+						select: {
+							role: true;
+							institution: true;
+						};
+					};
+					size: true;
+				};
+			};
+			software: {
+				include: {
+					countries: true;
+				};
+			};
 		};
 	}>;
+	institutions: Array<Institution>;
 	persons: Array<Person>;
 	roles: Array<Pick<Role, "id" | "name" | "type">>;
+	serviceSizes: Array<Omit<ServiceSize, "createdAt" | "updatedAt">>;
 	workingGroups: Array<WorkingGroup>;
 }
 
 export function AdminCountryDashboardContent(props: AdminCountryDashboardContentProps): ReactNode {
-	const { country, countries, persons, roles, workingGroups } = props;
+	const { country, countries, institutions, persons, roles, serviceSizes, workingGroups } = props;
 
 	const [updateDataFilter, setUpdateDataFilter] = useState("update_country_data");
 
@@ -65,6 +88,8 @@ export function AdminCountryDashboardContent(props: AdminCountryDashboardContent
 		{ id: "update_country_data", label: "Update Country Data" },
 		{ id: "update_country_institutions", label: "Update Country Institutions" },
 		{ id: "update_country_contributions", label: "Update Country Contributions" },
+		{ id: "update_country_services", label: "Update Country Services" },
+		{ id: "update_country_software", label: "Update Country Software" },
 	];
 
 	return (
@@ -123,6 +148,24 @@ export function AdminCountryDashboardContent(props: AdminCountryDashboardContent
 										roles={roles}
 										workingGroups={workingGroups}
 									/>
+								</div>
+							);
+						case "update_country_services":
+							return (
+								<div className="flex flex-col gap-y-4">
+									<AdminServicesTableContent
+										countries={countries}
+										hideFilter={true}
+										institutions={institutions}
+										serviceSizes={serviceSizes}
+										services={country.services}
+									/>
+								</div>
+							);
+						case "update_country_software":
+							return (
+								<div className="flex flex-col gap-y-4">
+									<AdminSoftwareTableContent countries={countries} software={country.software} />
 								</div>
 							);
 						default:
