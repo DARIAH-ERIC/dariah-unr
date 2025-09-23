@@ -134,6 +134,7 @@ function getAnnualValues() {
 	};
 
 	const outreach: Record<OutreachType, number> = {
+		national_social_media: 0,
 		national_website: 5_000,
 		social_media: 2_000,
 	};
