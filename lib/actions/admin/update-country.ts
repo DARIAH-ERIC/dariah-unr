@@ -14,6 +14,7 @@ const formSchema = z.object({
 	id: z.string(),
 	name: z.string(),
 	code: z.string(),
+	consortiumName: z.string().optional(),
 	description: z.string().optional(),
 	logo: z.string().optional(),
 	marketplaceId: z.coerce.number().int().positive().optional(),
@@ -60,14 +61,25 @@ export async function updateCountryAction(
 		};
 	}
 
-	const { id, code, logo, marketplaceId, name, description, endDate, startDate, type } =
-		result.data;
+	const {
+		id,
+		code,
+		consortiumName,
+		logo,
+		marketplaceId,
+		name,
+		description,
+		endDate,
+		startDate,
+		type,
+	} = result.data;
 
 	try {
 		await updateCountry({
 			id,
 			name,
 			code,
+			consortiumName,
 			logo,
 			marketplaceId,
 			type,

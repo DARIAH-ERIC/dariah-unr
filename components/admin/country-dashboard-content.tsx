@@ -228,6 +228,12 @@ function CountryEditForm(props: CountryEditFormProps) {
 			<TextInputField defaultValue={country.name} isRequired={true} label="Name" name="name" />
 
 			<TextInputField
+				defaultValue={country.consortiumName ?? undefined}
+				label="Consortium Name"
+				name="consortiumName"
+			/>
+
+			<TextInputField
 				defaultValue={country.description ?? undefined}
 				label="Description"
 				name="description"

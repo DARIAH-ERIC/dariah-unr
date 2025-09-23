@@ -118,6 +118,7 @@ export function getCountyCodeByCountyId(params: GetCountyIdByCountyCodeParams) {
 interface UpdateCountryParams {
 	id: string;
 	code?: Country["code"];
+	consortiumName?: string;
 	description?: string;
 	endDate?: Date;
 	logo?: string;
@@ -128,7 +129,18 @@ interface UpdateCountryParams {
 }
 
 export function updateCountry(params: UpdateCountryParams) {
-	const { id, code, description, endDate, logo, marketplaceId, name, startDate, type } = params;
+	const {
+		id,
+		code,
+		consortiumName,
+		description,
+		endDate,
+		logo,
+		marketplaceId,
+		name,
+		startDate,
+		type,
+	} = params;
 
 	return db.country.update({
 		where: {
@@ -136,6 +148,7 @@ export function updateCountry(params: UpdateCountryParams) {
 		},
 		data: {
 			code,
+			consortiumName,
 			description,
 			endDate,
 			logo,

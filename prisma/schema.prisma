@@ -71,6 +71,7 @@ model Country {
   id String @id @default(uuid()) @db.Uuid
 
   code          String
+	consortiumName String? @map(name: "consortium_name")
   description   String?
   endDate       DateTime? @map(name: "end_date")
   logo          String?
