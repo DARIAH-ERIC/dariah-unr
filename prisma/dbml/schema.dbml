@@ -412,6 +412,7 @@ Enum InstitutionServiceRole {
 }
 
 Enum OutreachType {
+  national_social_media
   national_website
   social_media
 }
