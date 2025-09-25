@@ -21,6 +21,7 @@ import { DateInputField } from "@/components/ui/blocks/date-input-field";
 import { NumberInputField } from "@/components/ui/blocks/number-input-field";
 import { SelectField, SelectItem } from "@/components/ui/blocks/select-field";
 import { TextInputField } from "@/components/ui/blocks/text-input-field";
+import { TiptapEditor } from "@/components/ui/blocks/tiptap-editor";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
@@ -233,8 +234,8 @@ function CountryEditForm(props: CountryEditFormProps) {
 				name="consortiumName"
 			/>
 
-			<TextInputField
-				defaultValue={country.description ?? undefined}
+			<TiptapEditor
+				defaultContent={country.description ?? undefined}
 				label="Description"
 				name="description"
 			/>
