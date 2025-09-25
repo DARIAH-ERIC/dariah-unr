@@ -47,6 +47,13 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 			},
 		});
 
+		const national_coordinator_deputy_role = await db.role.findFirst({
+			where: { type: "national_coordinator_deputy" },
+			select: {
+				id: true,
+			},
+		});
+
 		const national_representative_role = await db.role.findFirst({
 			where: { type: "national_representative" },
 			select: {
@@ -55,6 +62,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 		});
 
 		const national_coordinator_role_id = national_coordinator_role?.id;
+		const national_coordinator_deputy_role_id = national_coordinator_deputy_role?.id;
 		const national_representative_role_id = national_representative_role?.id;
 
 		const [countries, total] = await Promise.all([
@@ -63,7 +71,15 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 					institutions: {
 						select: {
 							name: true,
+							startDate: true,
+							endDate: true,
 							types: true,
+							url: true,
+						},
+					},
+					outreach: {
+						select: {
+							type: true,
 							url: true,
 						},
 					},
@@ -77,6 +93,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 						where: {
 							OR: [
 								{ roleId: { equals: national_coordinator_role_id } },
+								{ roleId: { equals: national_coordinator_deputy_role_id } },
 								{ roleId: { equals: national_representative_role_id } },
 							],
 						},
@@ -127,13 +144,38 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 				.map((contribution) => {
 					return contribution.person.name.trim();
 				});
+			const nationalCoordinatorDeputies = country.contributions
+				.filter((contribution) => {
+					return contribution.role.type === "national_coordinator_deputy";
+				})
+				.map((contribution) => {
+					return contribution.person.name.trim();
+				});
 			const nationalCoordinators = [
 				...new Set(nationalCoordinatorUsers.concat(nationalCoordinatorPersons)),
 			];
+			const outreachUrl = country.outreach.find((outreach) => {
+				return outreach.type === "national_website";
+			})?.url;
+			const partnerInstitutionsResult = country.institutions.filter((institution) => {
+				return institution.types.includes("partner_institution");
+			});
+
+			const partnerInstitutions = partnerInstitutionsResult.map((partnerInstitution) => {
+				const { name, startDate, endDate, url: website } = partnerInstitution;
+				return {
+					name,
+					startDate,
+					endDate,
+					website,
+				};
+			});
 
 			return {
 				name: country.name,
 				code: country.code,
+				consortiumName: country.consortiumName,
+				description: country.description,
 				startDate: country.startDate,
 				endDate: country.endDate,
 				type: country.type,
@@ -148,6 +190,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 					urls: nationalCoordinatingInstitution.url,
 				},
 				nationalCoordinators,
+				nationalCoordinatorDeputies,
+				outreachUrl,
+				partnerInstitutions,
 			};
 		});
 
