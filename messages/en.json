@@ -405,6 +405,12 @@
 				"success": "Successfully updated working group."
 			}
 		},
+		"createImage": {
+			"errors": {
+				"DefaultImageCreationError": "Unable to create image."
+			},
+			"success": "Successfully uploaded image."
+		},
 		"createOutreach": {
 			"errors": {
 				"default": "Could not create outreach."

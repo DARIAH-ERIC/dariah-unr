@@ -18,6 +18,7 @@ import { AdminServicesTableContent } from "@/components/admin/services-table-con
 import { AdminSoftwareTableContent } from "@/components/admin/software-table-content";
 import { SubmitButton } from "@/components/submit-button";
 import { DateInputField } from "@/components/ui/blocks/date-input-field";
+import { ImageSelector } from "@/components/ui/blocks/image-selector";
 import { NumberInputField } from "@/components/ui/blocks/number-input-field";
 import { SelectField, SelectItem } from "@/components/ui/blocks/select-field";
 import { TextInputField } from "@/components/ui/blocks/text-input-field";
@@ -251,7 +252,7 @@ function CountryEditForm(props: CountryEditFormProps) {
 				})}
 			</SelectField>
 
-			<TextInputField defaultValue={country.logo ?? undefined} label="Logo" name="logo" />
+			<ImageSelector defaultValue={country.logo ?? undefined} name="logo" />
 
 			<NumberInputField
 				defaultValue={country.marketplaceId ?? undefined}
