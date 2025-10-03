@@ -176,6 +176,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 				code: country.code,
 				consortiumName: country.consortiumName,
 				description: country.description,
+				logo: country.logo,
 				startDate: country.startDate,
 				endDate: country.endDate,
 				type: country.type,
