@@ -9,9 +9,9 @@ export async function getImageUrls() {
 	const { images } = await client.images.all();
 
 	const imagesUpdated = await Promise.all(
-		images.map(async (image) => {
+		images.map((image) => {
 			const { objectName } = image;
-			const { url } = await client.signedImageUrls.get(objectName);
+			const { url } = client.signedImageUrls.get(objectName);
 			return {
 				...image,
 				url,

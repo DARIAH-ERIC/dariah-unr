@@ -47,9 +47,8 @@ export const createClient = cache(async function createClient() {
 
 	const signedImageUrls = {
 		// FIXME: which options should we expose?
-		async get(objectName: string) {
-			const presignedUrl = await client.presignedGetObject(bucketName, objectName, 24 * 60 * 60);
-			const url = generateSignedImageUrl(presignedUrl, {
+		get(objectName: string) {
+			const url = generateSignedImageUrl(objectName, bucketName, {
 				resizing_type: "fit",
 				width: 800,
 				gravity: { type: "no" },

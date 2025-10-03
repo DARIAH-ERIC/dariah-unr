@@ -4,10 +4,14 @@ import { env } from "@/config/env.config";
 
 export type Options = NonNullable<IGenerateImageUrl["options"]>;
 
-export function generateSignedImageUrl(presignedUrl: string, options: Options): string {
+export function generateSignedImageUrl(
+	objectName: string,
+	bucketName: string,
+	options: Options,
+): string {
 	const url = generateImageUrl({
 		endpoint: env.IMGPROXY_BASE_URL,
-		url: presignedUrl,
+		url: `s3://${bucketName}/${objectName}`,
 		/** @see @see https://github.com/imgproxy/imgproxy-js-core/pull/26 */
 		options,
 		salt: env.IMGPROXY_SALT,
