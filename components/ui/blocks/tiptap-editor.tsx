@@ -1,6 +1,5 @@
 "use client";
 
-import { usePreventScroll } from "@react-aria/overlays";
 import { Bold } from "@tiptap/extension-bold";
 import { Document } from "@tiptap/extension-document";
 import { Link } from "@tiptap/extension-link";
@@ -74,8 +73,6 @@ export function TiptapEditor(props: TipTapEditorProps): ReactNode {
 			setLink(url);
 		}
 	};
-
-	usePreventScroll({ isDisabled: isOpen });
 
 	const [content, setContent] = useState(defaultContent);
 	const editor = useEditor({
