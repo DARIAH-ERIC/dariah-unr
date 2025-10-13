@@ -2,7 +2,7 @@
 //// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 //// ------------------------------------------------------
 
-Table bodies {
+Table bodies [headercolor: #79AD51] {
   id String [pk]
   acronym String
   name String [not null]
@@ -12,7 +12,7 @@ Table bodies {
   updatedAt DateTime [not null]
 }
 
-Table contributions {
+Table contributions [headercolor: #79AD51] {
   id String [pk]
   endDate DateTime
   startDate DateTime
@@ -28,7 +28,7 @@ Table contributions {
   updatedAt DateTime [not null]
 }
 
-Table countries {
+Table countries [headercolor: #79AD51] {
   id String [pk]
   code String [not null]
   consortiumName String
@@ -50,7 +50,7 @@ Table countries {
   updatedAt DateTime [not null]
 }
 
-Table event_sizes {
+Table event_sizes [headercolor: #999999] {
   id String [pk]
   annualValue Int [not null]
   type EventSizeType [not null]
@@ -58,7 +58,7 @@ Table event_sizes {
   updatedAt DateTime [not null]
 }
 
-Table event_reports {
+Table event_reports [headercolor: #E4A62E] {
   id String [pk]
   dariahCommissionedEvent String
   largeMeetings Int
@@ -72,7 +72,7 @@ Table event_reports {
   WGReport wgreports [not null]
 }
 
-Table institutions {
+Table institutions [headercolor: #79AD51] {
   id String [pk]
   endDate DateTime
   name String [not null]
@@ -82,6 +82,7 @@ Table institutions {
   url String[] [not null]
   countries countries [not null]
   persons persons [not null]
+  projects projects [not null]
   services institution_service [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
@@ -113,7 +114,7 @@ Table outreach {
   updatedAt DateTime [not null]
 }
 
-Table outreach_type_values {
+Table outreach_type_values [headercolor: #999999] {
   id String [pk]
   annualValue Int [not null]
   type OutreachType [not null]
@@ -121,7 +122,7 @@ Table outreach_type_values {
   updatedAt DateTime [not null]
 }
 
-Table outreach_reports {
+Table outreach_reports [headercolor: #E4A62E] {
   id String [pk]
   outreachId String [not null]
   reportId String [not null]
@@ -132,7 +133,7 @@ Table outreach_reports {
   updatedAt DateTime [not null]
 }
 
-Table outreach_kpis {
+Table outreach_kpis [headercolor: #E4A62E] {
   id String [pk]
   unit OutreachKpiType [not null]
   value Int [not null]
@@ -142,7 +143,7 @@ Table outreach_kpis {
   updatedAt DateTime [not null]
 }
 
-Table persons {
+Table persons [headercolor: #79AD51] {
   id String [pk]
   email String
   name String [not null]
@@ -153,7 +154,31 @@ Table persons {
   updatedAt DateTime [not null]
 }
 
-Table projects_funding_leverage {
+Table projects {
+  id String [pk]
+  amount Decimal
+  projectname String [not null]  
+  startDate DateTime
+  endDate DateTime
+  projectMonths Int // redundant, computable from endDate - startDate
+  scope ProjectScope
+  funders String  
+  call String
+  topic String
+  totalAmount Decimal  
+  partners institutions [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table projects_contribution {
+  projectId String [ref: > projects.id]
+  institutionsId String [ref: > institutions.id]
+  partnerBudget Decimal // budget of given partner in a project
+  projectRole ProjectRole
+}
+
+Table projects_funding_leverage [headercolor: #E4A62E] {
   id String [pk]
   amount Decimal
   funders String
@@ -168,7 +193,7 @@ Table projects_funding_leverage {
   updatedAt DateTime [not null]
 }
 
-Table reports {
+Table reports [headercolor: #E4A62E] {
   id String [pk]
   comments Json
   contributionsCount Int
@@ -192,7 +217,7 @@ Table reports {
   }
 }
 
-Table research_policy_developments {
+Table research_policy_developments [headercolor: #999999] {
   id String [pk]
   level ResearchPolicyLevel [not null]
   name String [not null]
@@ -203,7 +228,7 @@ Table research_policy_developments {
   updatedAt DateTime [not null]
 }
 
-Table roles {
+Table roles [headercolor: #79AD51] {
   id String [pk]
   annualValue Int [not null]
   name String [not null]
@@ -214,7 +239,7 @@ Table roles {
   updatedAt DateTime [not null]
 }
 
-Table services {
+Table services [headercolor: #79AD51] {
   id String [pk]
   agreements String
   audience ServiceAudience
@@ -250,7 +275,7 @@ Table service_sizes {
   updatedAt DateTime [not null]
 }
 
-Table service_reports {
+Table service_reports [headercolor: #E4A62E] {
   id String [pk]
   reportId String [not null]
   serviceId String [not null]
@@ -261,7 +286,7 @@ Table service_reports {
   updatedAt DateTime [not null]
 }
 
-Table service_kpis {
+Table service_kpis [headercolor: #E4A62E] {
   id String [pk]
   unit ServiceKpiType [not null]
   value Int [not null]
@@ -284,7 +309,7 @@ Table software {
   updatedAt DateTime [not null]
 }
 
-Table working_groups {
+Table working_groups [headercolor: #8F8DD8] {
   id String [pk]
   endDate DateTime
   name String [not null]
@@ -299,7 +324,7 @@ Table working_groups {
   wGEventDetailId String
 }
 
-Table wgreports {
+Table wgreports [headercolor: #8F8DD8] {
   id String [pk]
   comments Json
   numberMebmers Int
@@ -319,7 +344,7 @@ Table wgreports {
   }
 }
 
-Table WGEventDetail {
+Table WGEventDetail [headercolor: #8F8DD8] {
   id String [pk]
   eventTitle String [not null]
   eventLink String [not null]
@@ -430,6 +455,12 @@ Enum OutreachKpiType {
   unique_visitors
   views
   watch_time
+}
+
+Enum ProjectRole {
+  coordinator
+  beneficiary
+  affiliated_entity
 }
 
 Enum ProjectScope {
@@ -575,3 +606,45 @@ Ref: wgreports.eventReportId > event_reports.id
 Ref: users.countryId > countries.id
 
 Ref: sessions.userId > users.id [delete: Cascade]
+Note note_1759958438485 {
+'''#292 add Projects
+#293 projects/institutions
+#150
+#252'''
+}
+
+Note note_1759958581907 {
+'#218 facultative Questions'
+}
+
+Note note_1759958606693 {
+'''#297 bio
+#290 picture'''
+}
+
+Note note_1759958711169 {
+'#236 users/persons'
+}
+
+Note note_1759958774599 {
+'''#51
+#234'''
+}
+
+Note note_1759958828568 {
+'#40'
+}
+
+Note note_1759958975953 {
+'''#229 publications
+/Zotero'''
+}
+
+Note note_1759959057101 {
+'''#285 
+#223'''
+}
+
+Note note_1759959116706 {
+'#137'
+}
