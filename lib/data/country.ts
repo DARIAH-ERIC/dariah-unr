@@ -93,7 +93,7 @@ export function getCountryById(params: GetCountryByIdParams) {
 export function getCountries() {
 	return db.country.findMany({
 		orderBy: {
-			code: "asc",
+			name: "asc",
 		},
 	});
 }
