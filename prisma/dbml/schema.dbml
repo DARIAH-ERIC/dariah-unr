@@ -457,11 +457,14 @@ Enum RoleType {
   national_coordinator
   national_coordinator_deputy
   national_representative
+  national_representative_deputy
   jrc_member
   scientific_board_member
   smt_member
   wg_chair
   wg_member
+  national_consortium_contact
+  cooperating_partner_contact
 }
 
 Enum ServiceAudience {
