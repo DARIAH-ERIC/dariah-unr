@@ -82,11 +82,11 @@ export function AdminReportsTableContent(props: AdminReportsTableContentProps): 
 	const countryFilterOptions = useMemo(() => {
 		return [
 			{ id: EMPTY_FILTER, label: "Show all" },
-			...Array.from(countriesById.values()).map((country) => {
+			...countries.map((country) => {
 				return { id: country.id, label: country.name };
 			}),
 		];
-	}, [countriesById]);
+	}, [countries]);
 
 	return (
 		<Fragment>
