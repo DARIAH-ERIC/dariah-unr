@@ -70,12 +70,12 @@ enum CountryType {
 model Country {
   id String @id @default(uuid()) @db.Uuid
 
-  code          String
-	consortiumName String? @map(name: "consortium_name")
-  description   String?
-  endDate       DateTime? @map(name: "end_date")
-  logo          String?
-  marketplaceId Int?      @map(name: "marketplace_id")
+  code           String
+  consortiumName String?   @map(name: "consortium_name")
+  description    String?
+  endDate        DateTime? @map(name: "end_date")
+  logo           String?
+  marketplaceId  Int?      @map(name: "marketplace_id")
 
   name      String
   startDate DateTime?   @map(name: "start_date")
@@ -184,7 +184,7 @@ model InstitutionToService {
 }
 
 enum OutreachType {
-	national_social_media
+  national_social_media
   national_website
   social_media
 }
@@ -377,11 +377,14 @@ enum RoleType {
   national_coordinator
   national_coordinator_deputy
   national_representative
+  national_representative_deputy
   jrc_member
   scientific_board_member
   smt_member
   wg_chair
   wg_member
+  national_consortium_contact
+  cooperating_partner_contact
 }
 
 model Role {
@@ -431,7 +434,7 @@ model Service {
 
   agreements              String?
   audience                ServiceAudience?
-	comment           String?
+  comment                 String?
   dariahBranding          Boolean?                  @map(name: "dariah_branding")
   eoscOnboarding          Boolean?                  @map(name: "eosc_onboarding")
   marketplaceStatus       ServiceMarketplaceStatus? @map(name: "marketplace_status")
@@ -564,9 +567,9 @@ model WorkingGroup {
   name      String
   startDate DateTime? @map(name: "start_date")
 
-  chairs          Contribution[]
-  memberTracking String?  @map(name: "member_tracking") // describe how you keep track of the WG members, e.g. via mailing list?
-  mailingList    String?  @map(name: "mailing_list") // If you use a mailing list for the WG communication, provide here.
+  chairs         Contribution[]
+  memberTracking String?        @map(name: "member_tracking") // describe how you keep track of the WG members, e.g. via mailing list?
+  mailingList    String?        @map(name: "mailing_list") // If you use a mailing list for the WG communication, provide here.
 
   createdAt       DateTime       @default(now()) @map(name: "created_at")
   updatedAt       DateTime       @updatedAt @map(name: "updated_at")
