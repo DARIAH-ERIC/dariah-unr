@@ -25,7 +25,7 @@ export function constantTimeEqual(a: Uint8Array, b: Uint8Array): boolean {
 	return c === 0;
 }
 
-export async function hashSecret(secret: string): Promise<Uint8Array> {
+export async function hashSecret(secret: string): Promise<Uint8Array<ArrayBuffer>> {
 	const secretBytes = new TextEncoder().encode(secret);
 	const secretHashBuffer = await crypto.subtle.digest("SHA-256", secretBytes);
 	return new Uint8Array(secretHashBuffer);
