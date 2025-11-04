@@ -74,6 +74,7 @@ const config = defineConfig([
 				},
 			],
 			// "@typescript-eslint/explicit-module-boundary-types": "error",
+			"@typescript-eslint/no-deprecated": "off",
 			"@typescript-eslint/require-array-sort-compare": "error",
 			// "@typescript-eslint/strict-boolean-expressions": "error",
 			"@typescript-eslint/switch-exhaustiveness-check": [
