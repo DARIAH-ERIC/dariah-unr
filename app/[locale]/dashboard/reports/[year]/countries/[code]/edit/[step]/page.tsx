@@ -683,12 +683,12 @@ function DashboardCountryReportNavigation(props: DashboardCountryReportNavigatio
 
 	return (
 		<nav>
-			<ol className="flex border-b">
+			<ol className="flex flex-wrap border-b">
 				{steps.slice(1).map((step) => {
 					return (
 						<li key={step}>
 							<AppNavLink
-								className="ml-auto gap-x-2 rounded-b-none pb-4 text-sm whitespace-nowrap aria-[current]:border-b-2"
+								className="ml-auto gap-x-2 rounded-b-none border-transparent text-sm whitespace-nowrap aria-[current]:border-b-2 aria-[current]:border-current lg:pb-4"
 								href={createHref({
 									pathname: `/dashboard/reports/${String(year)}/countries/${code}/edit/${step}`,
 								})}
