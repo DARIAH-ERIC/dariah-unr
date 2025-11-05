@@ -176,7 +176,8 @@
 			"software": "Software",
 			"publications": "Publications",
 			"project-funding-leverage": "Project funding",
-			"summary": "Summary"
+			"summary": "Summary",
+			"welcome": "Welcome"
 		}
 	},
 	"DashboardCountryReportPage": {

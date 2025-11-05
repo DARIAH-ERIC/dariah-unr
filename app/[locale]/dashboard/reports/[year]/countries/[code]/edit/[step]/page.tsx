@@ -672,7 +672,7 @@ function FormPlaceholder(props: FormPlaceholderProps): ReactNode {
 
 interface DashboardCountryReportNavigationProps {
 	code: string;
-	steps: ReadonlyArray<Exclude<(typeof dashboardCountryReportSteps)[number], "welcome">>;
+	steps: typeof dashboardCountryReportSteps;
 	year: number;
 }
 
