@@ -23,6 +23,7 @@ export function getWorkingGroups() {
 interface CreateWorkingGroupParams {
 	name: WorkingGroup["name"];
 	chairs?: Array<{ personId: string; roleId: string; endDate?: Date; startDate?: Date }>;
+	contactEmail?: WorkingGroup["contactEmail"];
 	endDate?: WorkingGroup["endDate"];
 	mailingList?: WorkingGroup["mailingList"];
 	memberTracking?: WorkingGroup["memberTracking"];
@@ -30,7 +31,15 @@ interface CreateWorkingGroupParams {
 }
 
 export function createWorkingGroup(params: CreateWorkingGroupParams) {
-	const { chairs = [], endDate, mailingList, memberTracking, name, startDate } = params;
+	const {
+		chairs = [],
+		contactEmail,
+		endDate,
+		mailingList,
+		memberTracking,
+		name,
+		startDate,
+	} = params;
 
 	return db.workingGroup.create({
 		data: {
@@ -51,6 +60,7 @@ export function createWorkingGroup(params: CreateWorkingGroupParams) {
 					};
 				}),
 			},
+			contactEmail,
 		},
 	});
 }
@@ -65,6 +75,7 @@ interface UpdateWorkingGroupParams {
 		endDate?: Date;
 		startDate?: Date;
 	}>;
+	contactEmail?: WorkingGroup["contactEmail"];
 	endDate?: WorkingGroup["endDate"];
 	mailingList?: WorkingGroup["mailingList"];
 	memberTracking?: WorkingGroup["memberTracking"];
@@ -72,7 +83,16 @@ interface UpdateWorkingGroupParams {
 }
 
 export function updateWorkingGroup(params: UpdateWorkingGroupParams) {
-	const { id, chairs = [], endDate, mailingList, memberTracking, name, startDate } = params;
+	const {
+		id,
+		chairs = [],
+		contactEmail,
+		endDate,
+		mailingList,
+		memberTracking,
+		name,
+		startDate,
+	} = params;
 
 	return db.workingGroup.update({
 		where: {
@@ -127,6 +147,7 @@ export function updateWorkingGroup(params: UpdateWorkingGroupParams) {
 						};
 					}),
 			},
+			contactEmail,
 		},
 	});
 }
