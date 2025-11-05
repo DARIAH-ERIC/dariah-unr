@@ -115,7 +115,7 @@ export default async function DashboardCountryReportEditStepPage(
 	return (
 		<MainContent className="container grid content-start gap-8 py-8">
 			<PageTitle>{t("title")}</PageTitle>
-			<ReportNavigation code={code} steps={steps} year={year} />
+			<DashboardCountryReportNavigation code={code} steps={steps} year={year} />
 			<DashboardCountryReportEditStepPageContent code={code} step={step} user={user} year={year} />
 		</MainContent>
 	);
@@ -670,14 +670,16 @@ function FormPlaceholder(props: FormPlaceholderProps): ReactNode {
 	);
 }
 
-interface ReportNavigationProps {
+interface DashboardCountryReportNavigationProps {
 	code: string;
-	steps: ReadonlyArray<string>;
+	steps: ReadonlyArray<Exclude<(typeof dashboardCountryReportSteps)[number], "welcome">>;
 	year: number;
 }
 
-function ReportNavigation(props: ReportNavigationProps): ReactNode {
+function DashboardCountryReportNavigation(props: DashboardCountryReportNavigationProps): ReactNode {
 	const { code, steps, year } = props;
+
+	const t = useTranslations("DashboardCountryReportNavigation");
 
 	return (
 		<nav>
@@ -691,7 +693,7 @@ function ReportNavigation(props: ReportNavigationProps): ReactNode {
 									pathname: `/dashboard/reports/${String(year)}/countries/${code}/edit/${step}`,
 								})}
 							>
-								{step}
+								{t(`links.${step}`)}
 							</AppNavLink>
 						</li>
 					);

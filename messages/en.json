@@ -165,6 +165,20 @@
 		"summary": "Summary",
 		"welcome": "Welcome"
 	},
+	"DashboardCountryReportNavigation": {
+		"links": {
+			"confirm": "Confirmation",
+			"institutions": "Institutions",
+			"contributions": "Contributors",
+			"events": "Events",
+			"outreach": "Outreach",
+			"services": "Services",
+			"software": "Software",
+			"publications": "Publications",
+			"project-funding-leverage": "Project funding",
+			"summary": "Summary"
+		}
+	},
 	"DashboardCountryReportPage": {
 		"meta": {
 			"title": "Report"
