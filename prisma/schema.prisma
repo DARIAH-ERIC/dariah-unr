@@ -567,7 +567,8 @@ model WorkingGroup {
   name      String
   startDate DateTime? @map(name: "start_date")
 
-  chairs         Contribution[]
+  contactEmail   String?        @map(name: "contact_email")
+	chairs         Contribution[]
   memberTracking String?        @map(name: "member_tracking") // describe how you keep track of the WG members, e.g. via mailing list?
   mailingList    String?        @map(name: "mailing_list") // If you use a mailing list for the WG communication, provide here.
 

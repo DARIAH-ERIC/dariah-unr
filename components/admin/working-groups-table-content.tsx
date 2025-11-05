@@ -140,6 +140,7 @@ export function AdminWorkingGroupsTableContent(
 	const [sortDescriptor, setSortDescriptor] = useState({
 		column: "name" as
 			| "chairs"
+			| "contactEmail"
 			| "endDate"
 			| "name"
 			| "startDate"
@@ -220,6 +221,9 @@ export function AdminWorkingGroupsTableContent(
 					<Column allowsSorting={true} defaultWidth="2fr" id="chairs">
 						Chair
 					</Column>
+					<Column allowsSorting={true} id="contactEmail">
+						Contact email
+					</Column>
 					<Column allowsSorting={true} id="startDate">
 						Start date
 					</Column>
@@ -266,6 +270,7 @@ export function AdminWorkingGroupsTableContent(
 										})
 										.join(", ")}
 								</Cell>
+								<Cell>{row.contactEmail}</Cell>
 								<Cell>{row.startDate != null ? dateTime(row.startDate) : undefined}</Cell>
 								<Cell>{row.endDate != null ? dateTime(row.endDate) : undefined}</Cell>
 								<Cell>{row.mailingList}</Cell>
@@ -634,6 +639,12 @@ function WorkingGroupEditForm(props: WorkingGroupEditFormProps) {
 					Add chair
 				</FormFieldArrayButton>
 			</FormFieldArray>
+
+			<TextInputField
+				defaultValue={workingGroup?.contactEmail ?? undefined}
+				label="Contact email"
+				name="contactEmail"
+			/>
 
 			<DateInputField
 				defaultValue={workingGroup?.startDate ? toDateValue(workingGroup.startDate) : undefined}
