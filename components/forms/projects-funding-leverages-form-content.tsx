@@ -199,7 +199,7 @@ function AddedProjectsFundingLeveragesSection(): ReactNode {
 						/>
 
 						<NumberInputField
-							defaultValue={Number(addedProjectsFundingLeverage.amount)}
+							defaultValue={addedProjectsFundingLeverage.amount}
 							isReadOnly={true}
 							label="Total amount"
 							name={`addedProjectsFundingLeverages.${String(index)}.amount`}

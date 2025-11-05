@@ -8,16 +8,14 @@ export async function getImageUrls() {
 	const client = await createClient();
 	const { images } = await client.images.all();
 
-	const imagesUpdated = await Promise.all(
-		images.map((image) => {
-			const { objectName } = image;
-			const { url } = client.signedImageUrls.get(objectName);
-			return {
-				...image,
-				url,
-			};
-		}),
-	);
+	const imagesUpdated = images.map((image) => {
+		const { objectName } = image;
+		const { url } = client.signedImageUrls.get(objectName);
+		return {
+			...image,
+			url,
+		};
+	});
 
 	return imagesUpdated;
 }

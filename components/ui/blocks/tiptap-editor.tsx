@@ -7,6 +7,7 @@ import { Paragraph } from "@tiptap/extension-paragraph";
 import { Text } from "@tiptap/extension-text";
 import { Placeholder } from "@tiptap/extensions";
 import { type Editor, EditorContent, useEditor, useEditorState } from "@tiptap/react";
+// eslint-disable-next-line import-x/no-named-as-default
 import DOMPurify from "dompurify";
 import { BoldIcon, LinkIcon, UnlinkIcon } from "lucide-react";
 import { Fragment, type ReactNode, useState } from "react";

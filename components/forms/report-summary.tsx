@@ -31,7 +31,7 @@ export async function ReportSummary(props: ReportSummaryProps) {
 	const { countryId, reportId, year } = props;
 
 	const { user } = await getCurrentSession();
-	const { number } = await getFormatter();
+	const format = await getFormatter();
 
 	const calculation = await calculateOperationalCost({ countryId, reportId });
 
@@ -151,14 +151,17 @@ export async function ReportSummary(props: ReportSummaryProps) {
 				<div>Financial value of the national in-kind contribution:</div>
 				<div>
 					Threshold:{" "}
-					{number(Number(calculation.operationalCostThreshold), {
+					{format.number(calculation.operationalCostThreshold, {
 						style: "currency",
 						currency: "EUR",
 					})}
 				</div>
 				<div>
 					Cost calculation:{" "}
-					{number(Number(calculation.operationalCost), { style: "currency", currency: "EUR" })}
+					{format.number(calculation.operationalCost, {
+						style: "currency",
+						currency: "EUR",
+					})}
 				</div>
 			</div>
 

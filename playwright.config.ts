@@ -1,5 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
-import { isCI } from "ci-info";
+import isCI from "is-in-ci";
 
 const port = 3000;
 const baseUrl = `http://localhost:${String(port)}`;

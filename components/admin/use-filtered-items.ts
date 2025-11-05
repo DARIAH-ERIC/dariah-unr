@@ -19,8 +19,12 @@ export function useFilteredItems<T>(
 		}
 
 		return items.filter((item) => {
+			// This is not `react`'s new built-in `useEffectEvent`.
+			// eslint-disable-next-line react-hooks/rules-of-hooks
 			return filterFunction(item, filterText);
 		});
+		// This is not `react`'s new built-in `useEffectEvent`.
+		// eslint-disable-next-line react-hooks/rules-of-hooks
 	}, [items, filterFunction, filterText]);
 
 	const setFilter = useCallback((text: string | null) => {
