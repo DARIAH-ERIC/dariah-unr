@@ -6,6 +6,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { type ReactNode, Suspense } from "react";
 
 import { AppLink } from "@/components/app-link";
+import { AppNavLink } from "@/components/app-nav-link";
 import { Delay } from "@/components/delay";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { FormDescription } from "@/components/form-description";
@@ -109,11 +110,12 @@ export default async function DashboardCountryReportEditStepPage(
 	const result = dashboardCountryReportEditStepPageParams.safeParse(await params);
 	if (!result.success) notFound();
 	const { code, step, year } = result.data;
+	const steps = dashboardCountryReportSteps;
 
 	return (
 		<MainContent className="container grid content-start gap-8 py-8">
 			<PageTitle>{t("title")}</PageTitle>
-
+			<DashboardCountryReportNavigation code={code} steps={steps} year={year} />
 			<DashboardCountryReportEditStepPageContent code={code} step={step} user={user} year={year} />
 		</MainContent>
 	);
@@ -665,5 +667,38 @@ function FormPlaceholder(props: FormPlaceholderProps): ReactNode {
 		>
 			{children}
 		</Suspense>
+	);
+}
+
+interface DashboardCountryReportNavigationProps {
+	code: string;
+	steps: typeof dashboardCountryReportSteps;
+	year: number;
+}
+
+function DashboardCountryReportNavigation(props: DashboardCountryReportNavigationProps): ReactNode {
+	const { code, steps, year } = props;
+
+	const t = useTranslations("DashboardCountryReportNavigation");
+
+	return (
+		<nav>
+			<ol className="flex flex-wrap border-b">
+				{steps.slice(1).map((step) => {
+					return (
+						<li key={step}>
+							<AppNavLink
+								className="ml-auto gap-x-2 rounded-b-none border-transparent text-sm whitespace-nowrap aria-[current]:border-b-2 aria-[current]:border-current lg:pb-4"
+								href={createHref({
+									pathname: `/dashboard/reports/${String(year)}/countries/${code}/edit/${step}`,
+								})}
+							>
+								{t(`links.${step}`)}
+							</AppNavLink>
+						</li>
+					);
+				})}
+			</ol>
+		</nav>
 	);
 }
