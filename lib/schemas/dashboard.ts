@@ -17,18 +17,18 @@ export type DashboardCountryReportEditPageParams = z.infer<
 >;
 
 export const dashboardCountryReportSteps = [
-	"confirm",
+	"welcome",
+	"institutions",
 	"contributions",
 	"events",
-	"institutions",
 	"outreach",
-	"project-funding-leverage",
-	"publications",
-	// "research-policy-developments",
 	"services",
 	"software",
+	"publications",
+	"project-funding-leverage",
+	"confirm",
+	// "research-policy-developments",
 	"summary",
-	"welcome",
 ] as const;
 
 export const dashboardCountryReportEditStepPageParams = z.object({

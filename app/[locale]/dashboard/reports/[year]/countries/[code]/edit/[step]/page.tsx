@@ -6,6 +6,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { type ReactNode, Suspense } from "react";
 
 import { AppLink } from "@/components/app-link";
+import { AppNavLink } from "@/components/app-nav-link";
 import { Delay } from "@/components/delay";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { FormDescription } from "@/components/form-description";
@@ -109,11 +110,12 @@ export default async function DashboardCountryReportEditStepPage(
 	const result = dashboardCountryReportEditStepPageParams.safeParse(await params);
 	if (!result.success) notFound();
 	const { code, step, year } = result.data;
+	const steps = dashboardCountryReportSteps;
 
 	return (
 		<MainContent className="container grid content-start gap-8 py-8">
 			<PageTitle>{t("title")}</PageTitle>
-
+			<ReportNavigation code={code} steps={steps} year={year} />
 			<DashboardCountryReportEditStepPageContent code={code} step={step} user={user} year={year} />
 		</MainContent>
 	);
@@ -665,5 +667,36 @@ function FormPlaceholder(props: FormPlaceholderProps): ReactNode {
 		>
 			{children}
 		</Suspense>
+	);
+}
+
+interface ReportNavigationProps {
+	code: string;
+	steps: ReadonlyArray<string>;
+	year: number;
+}
+
+function ReportNavigation(props: ReportNavigationProps): ReactNode {
+	const { code, steps, year } = props;
+
+	return (
+		<nav>
+			<ol className="flex border-b">
+				{steps.slice(1).map((step) => {
+					return (
+						<li key={step}>
+							<AppNavLink
+								className="ml-auto gap-x-2 rounded-b-none pb-4 text-sm whitespace-nowrap aria-[current]:border-b-2"
+								href={createHref({
+									pathname: `/dashboard/reports/${String(year)}/countries/${code}/edit/${step}`,
+								})}
+							>
+								{step}
+							</AppNavLink>
+						</li>
+					);
+				})}
+			</ol>
+		</nav>
 	);
 }
