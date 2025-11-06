@@ -14,7 +14,6 @@ import {
 	getReportsByYear,
 	getServicesCount,
 } from "@/lib/data/stats";
-import { getReportYears } from "@/lib/get-report-years";
 import type { IntlLocale } from "@/lib/i18n/locales";
 import { dashboardAdminStatisticsPageParams } from "@/lib/schemas/dashboard";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
@@ -24,20 +23,6 @@ interface DashboardAdminStatisticsPageProps {
 		locale: IntlLocale;
 		year: string;
 	}>;
-}
-
-// export const dynamicParams = false;
-
-export async function generateStaticParams(_props: {
-	params: Pick<Awaited<DashboardAdminStatisticsPageProps["params"]>, "locale">;
-}): Promise<Array<Pick<Awaited<DashboardAdminStatisticsPageProps["params"]>, "year">>> {
-	const years = await Promise.resolve(getReportYears());
-
-	const params = years.map((year) => {
-		return { year };
-	});
-
-	return params;
 }
 
 export async function generateMetadata(

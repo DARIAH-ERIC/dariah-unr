@@ -27,8 +27,6 @@ import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import { getCountryByCode } from "@/lib/data/country";
 import { getReportByCountryCode } from "@/lib/data/report";
-import { getCountryCodes as getStaticCountryCodes } from "@/lib/get-country-codes";
-import { getReportYears } from "@/lib/get-report-years";
 import type { IntlLocale } from "@/lib/i18n/locales";
 import { createHref } from "@/lib/navigation/create-href";
 import {
@@ -48,35 +46,6 @@ interface DashboardCountryReportEditStepPageProps {
 		step: string;
 		year: string;
 	}>;
-}
-
-// export const dynamicParams = false;
-
-export async function generateStaticParams(_props: {
-	params: Pick<Awaited<DashboardCountryReportEditStepPageProps["params"]>, "locale">;
-}): Promise<
-	Array<Pick<Awaited<DashboardCountryReportEditStepPageProps["params"]>, "code" | "step" | "year">>
-> {
-	/**
-	 * FIXME: we cannot access the postgres database on acdh servers from github ci/cd, so we cannot
-	 * query for country codes (or report years) at build time.
-	 */
-	// const countries = await getCountryCodes();
-	const countries = await Promise.resolve(Array.from(getStaticCountryCodes().values()));
-
-	const steps = dashboardCountryReportSteps;
-
-	const years = getReportYears();
-
-	const params = years.flatMap((year) => {
-		return countries.flatMap((code) => {
-			return steps.map((step) => {
-				return { code, step, year };
-			});
-		});
-	});
-
-	return params;
 }
 
 export async function generateMetadata(
