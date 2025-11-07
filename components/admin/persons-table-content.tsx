@@ -495,6 +495,7 @@ function PersonEditForm(props: PersonEditFormProps) {
 
 			<SelectField
 				defaultSelectedKey={defaultSelectedCountryId}
+				isClearable={true}
 				label="Country of Institution"
 				onSelectionChange={(key) => {
 					list.setFilterText(String(key));
@@ -516,6 +517,7 @@ function PersonEditForm(props: PersonEditFormProps) {
 			{/* TODO: Multiple institutions */}
 			<SelectField
 				defaultSelectedKey={defaultSelectedInstitutionId}
+				isClearable={true}
 				isDisabled={list.items.length === 0}
 				label="Institution"
 				name="institutions.0"

@@ -123,13 +123,15 @@ export function AdminCountryDashboardContent(props: AdminCountryDashboardContent
 			<div className="mt-8">
 				{(() => {
 					switch (updateDataFilter) {
-						case "update_country_data":
+						case "update_country_data": {
 							return (
 								<div className="md:w-1/2">
 									<EditCountryWrapper country={country} />
 								</div>
 							);
-						case "update_country_institutions":
+						}
+
+						case "update_country_institutions": {
 							return (
 								<div className="flex flex-col gap-y-4">
 									<AdminInstitutionsTableContent
@@ -139,7 +141,9 @@ export function AdminCountryDashboardContent(props: AdminCountryDashboardContent
 									/>
 								</div>
 							);
-						case "update_country_contributions":
+						}
+
+						case "update_country_contributions": {
 							return (
 								<div className="flex flex-col gap-y-4">
 									<AdminContributionsTableContent
@@ -152,7 +156,9 @@ export function AdminCountryDashboardContent(props: AdminCountryDashboardContent
 									/>
 								</div>
 							);
-						case "update_country_services":
+						}
+
+						case "update_country_services": {
 							return (
 								<div className="flex flex-col gap-y-4">
 									<AdminServicesTableContent
@@ -164,14 +170,19 @@ export function AdminCountryDashboardContent(props: AdminCountryDashboardContent
 									/>
 								</div>
 							);
-						case "update_country_software":
+						}
+
+						case "update_country_software": {
 							return (
 								<div className="flex flex-col gap-y-4">
 									<AdminSoftwareTableContent countries={countries} software={country.software} />
 								</div>
 							);
-						default:
+						}
+
+						default: {
 							return null;
+						}
 					}
 				})()}
 			</div>
@@ -242,7 +253,8 @@ function CountryEditForm(props: CountryEditFormProps) {
 			/>
 
 			<TextInputField defaultValue={country.code} label="Code" name="code" />
-			<SelectField defaultSelectedKey={country.type} label="Type" name="type">
+
+			<SelectField defaultSelectedKey={country.type} isClearable={true} label="Type" name="type">
 				{countryTypes.map((countryType) => {
 					return (
 						<SelectItem key={countryType} id={countryType} textValue={countryType}>
