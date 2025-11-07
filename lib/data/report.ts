@@ -121,6 +121,14 @@ export function updateReportStatus(params: UpdateReportStatusParams) {
 		data: {
 			status: "final",
 		},
+		select: {
+			country: {
+				select: {
+					name: true,
+				},
+			},
+			year: true,
+		},
 	});
 }
 

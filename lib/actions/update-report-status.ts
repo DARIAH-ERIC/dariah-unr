@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
+import { env } from "@/config/env.config";
 import { calculateOperationalCost } from "@/lib/calculate-operational-cost";
 import {
 	getReportComments,
@@ -13,6 +14,7 @@ import {
 	updateReportComments,
 	updateReportStatus,
 } from "@/lib/data/report";
+import { sendEmail } from "@/lib/email";
 import { getFormData } from "@/lib/get-form-data";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
@@ -68,7 +70,7 @@ export async function updateReportStatusAction(
 		const comments = report?.comments as ReportCommentsSchema | undefined;
 		await updateReportComments({ id: reportId, comments: { ...comments, confirmation: comment } });
 
-		await updateReportStatus({ id: reportId });
+		const result = await updateReportStatus({ id: reportId });
 
 		const calculation = await calculateOperationalCost({ countryId, reportId });
 		await updateReportCalculation({
@@ -79,6 +81,16 @@ export async function updateReportStatusAction(
 		});
 
 		revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/confirm", "page");
+
+		try {
+			await sendEmail({
+				from: env.EMAIL_CONTACT_ADDRESS,
+				subject: "[dariah-unr] report submitted",
+				text: `A report for ${String(result.year)} has been submitted by ${result.country.name}.`,
+			});
+		} catch (error) {
+			log.error(error);
+		}
 
 		return {
 			status: "success" as const,
