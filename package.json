@@ -53,6 +53,7 @@
 	},
 	"dependencies": {
 		"@acdh-oeaw/lib": "^0.3.5",
+		"@acdh-oeaw/mdx-lib": "^0.1.4",
 		"@acdh-oeaw/validate-env": "^0.0.3",
 		"@citation-js/core": "^0.7.21",
 		"@citation-js/plugin-csl": "^0.7.21",

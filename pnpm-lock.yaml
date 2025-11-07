@@ -15,6 +15,9 @@ importers:
       '@acdh-oeaw/lib':
         specifier: ^0.3.5
         version: 0.3.5
+      '@acdh-oeaw/mdx-lib':
+        specifier: ^0.1.4
+        version: 0.1.4
       '@acdh-oeaw/validate-env':
         specifier: ^0.0.3
         version: 0.0.3
@@ -367,9 +370,17 @@ packages:
       globals: 16.x
       typescript: 5.x
 
+  '@acdh-oeaw/lib@0.1.12':
+    resolution: {integrity: sha512-yNAjUxcoqvEXX+YsqWqOqCOJeFg6oYL2Q+bVdhu6LEQU1MGpcMbo7haSTX12X8UYZjIU6oWpHrZfdKZZxRH23Q==}
+    engines: {node: '>=20', pnpm: '>=9'}
+
   '@acdh-oeaw/lib@0.3.5':
     resolution: {integrity: sha512-4IwV5uMlO3skseYjlY12jx3OFL8IqEm5XzlYkcf2o74PXrKLWbT046YlK4uw3fmS0ZDWmuWrXuCYKnPlY+vvMQ==}
     engines: {node: '>=22', pnpm: 10.x}
+
+  '@acdh-oeaw/mdx-lib@0.1.4':
+    resolution: {integrity: sha512-pEkDuErxA0/dk3eKO+pUTnCSoybxDiru53YtHs3Y/isksOAc4F2WRcZ9uo2oqeNzmvKxoD6hcYo4S6R+PJProg==}
+    engines: {node: '>=22', pnpm: 9.x}
 
   '@acdh-oeaw/prettier-config@2.0.1':
     resolution: {integrity: sha512-0M77qAD8Uhks+S6lPaKzq6ylwQJzjS33jE6uWKNM9dt7iJ1KHgsuZ3xVhWNmw5h/cUGYJvBi0V/ZSy65ow+9Ag==}
@@ -4494,6 +4505,12 @@ packages:
   hast-util-heading-rank@3.0.0:
     resolution: {integrity: sha512-EJKb8oMUXVHcWZTDepnr+WNbfnXKFNf9duMesmr4S8SXTJBJ9M4Yok08pu9vxdJwdlGRhVumk9mEhkEvKGifwA==}
 
+  hast-util-heading@3.0.0:
+    resolution: {integrity: sha512-SykluYSLOs7z72hUUcztJpPV20alz58pfbi8g/NckXPnJ4OFVwPidNz3XOqgSNu5MTeFvde5c0cFVUk319Qlqw==}
+
+  hast-util-is-element@3.0.0:
+    resolution: {integrity: sha512-Val9mnv2IWpLbNPqc/pUem+a7Ipj2aHacCwgNfTiK0vJKl0LF+4Ba4+v1oPHFpf3bLYmreq0/l3Gud9S5OH42g==}
+
   hast-util-to-estree@3.1.3:
     resolution: {integrity: sha512-48+B/rJWAp0jamNbAAf9M7Uf//UVqAoMmgXhBdxTDJLGKY+LRnZ99qcG+Qjl5HfMpYNzS5v4EAwVEF34LeAj7w==}
 
@@ -4552,6 +4569,11 @@ packages:
   image-dimensions@2.5.0:
     resolution: {integrity: sha512-CKZPHjAEtSg9lBV9eER0bhNn/yrY7cFEQEhkwjLhqLY+Na8lcP1pEyWsaGMGc8t2qbKWA/tuqbhFQpOKGN72Yw==}
     engines: {node: '>=18'}
+    hasBin: true
+
+  image-size@1.2.1:
+    resolution: {integrity: sha512-rH+46sQJ2dlwfjfhCyNx5thzrv+dtmBIhPHk0zgRUukHzZ/kRueTJXoYYsclBaKcSMBWuGbOFXtioLpzTb5euw==}
+    engines: {node: '>=16.x'}
     hasBin: true
 
   immer@9.0.21:
@@ -5786,6 +5808,9 @@ packages:
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
 
+  queue@6.0.2:
+    resolution: {integrity: sha512-iHZWu+q3IdFZFX36ro/lKBkSvfkztY5Y7HMiPlOUjhupPcG2JMfst2KKEpu5XndviX/3UhFbRngUPNKtgvtZiA==}
+
   randombytes@2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
 
@@ -6861,7 +6886,29 @@ snapshots:
       - eslint-plugin-import
       - supports-color
 
+  '@acdh-oeaw/lib@0.1.12': {}
+
   '@acdh-oeaw/lib@0.3.5': {}
+
+  '@acdh-oeaw/mdx-lib@0.1.4':
+    dependencies:
+      '@acdh-oeaw/lib': 0.1.12
+      '@mdx-js/mdx': 3.1.1
+      '@types/estree': 1.0.8
+      '@types/hast': 3.0.4
+      '@types/mdast': 4.0.4
+      '@types/mdx': 2.0.13
+      estree-util-value-to-estree: 3.5.0
+      hast-util-heading: 3.0.0
+      hast-util-heading-rank: 3.0.0
+      hast-util-to-string: 3.0.1
+      image-size: 1.2.1
+      mdast-util-mdx-jsx: 3.2.0
+      unified: 11.0.5
+      unist-util-visit: 5.0.0
+      vfile: 6.0.3
+    transitivePeerDependencies:
+      - supports-color
 
   '@acdh-oeaw/prettier-config@2.0.1(prettier@3.6.2)':
     dependencies:
@@ -12419,6 +12466,15 @@ snapshots:
     dependencies:
       '@types/hast': 3.0.4
 
+  hast-util-heading@3.0.0:
+    dependencies:
+      '@types/hast': 3.0.4
+      hast-util-is-element: 3.0.0
+
+  hast-util-is-element@3.0.0:
+    dependencies:
+      '@types/hast': 3.0.4
+
   hast-util-to-estree@3.1.3:
     dependencies:
       '@types/estree': 1.0.8
@@ -12519,6 +12575,10 @@ snapshots:
   ignore@7.0.5: {}
 
   image-dimensions@2.5.0: {}
+
+  image-size@1.2.1:
+    dependencies:
+      queue: 6.0.2
 
   immer@9.0.21: {}
 
@@ -14022,6 +14082,10 @@ snapshots:
       strict-uri-encode: 2.0.0
 
   queue-microtask@1.2.3: {}
+
+  queue@6.0.2:
+    dependencies:
+      inherits: 2.0.4
 
   randombytes@2.1.0:
     dependencies:

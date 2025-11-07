@@ -1,3 +1,4 @@
+import { withTableOfContents } from "@acdh-oeaw/mdx-lib";
 import withSyntaxHighlighter from "@shikijs/rehype";
 import withHeadingIds from "rehype-slug";
 import withFrontmatter from "remark-frontmatter";
@@ -10,5 +11,9 @@ import { config as syntaxHighlighterConfig } from "./syntax-highlighter.config.m
 /** @type {import('@mdx-js/mdx').CompileOptions} */
 export const config = {
 	remarkPlugins: [withFrontmatter, withMdxFrontmatter, withGfm, withTypographicQuotes],
-	rehypePlugins: [withHeadingIds, [withSyntaxHighlighter, syntaxHighlighterConfig]],
+	rehypePlugins: [
+		withHeadingIds,
+		withTableOfContents,
+		[withSyntaxHighlighter, syntaxHighlighterConfig],
+	],
 };

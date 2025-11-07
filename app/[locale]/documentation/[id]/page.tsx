@@ -1,3 +1,5 @@
+import { isNonEmptyArray } from "@acdh-oeaw/lib";
+import type { TableOfContents } from "@acdh-oeaw/mdx-lib";
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
@@ -71,15 +73,57 @@ async function DocumentationPageContent(props: DocumentationPageContentProps) {
 	const document = await (await reader()).collections.documentation.read(id);
 	if (document == null) notFound();
 
-	const { Content } = await getDocumentationContent(id);
+	const { Content, tableOfContents } = await getDocumentationContent(id);
 
 	return (
 		<div className="mx-auto grid w-full max-w-(--breakpoint-md) content-start gap-y-8">
 			<PageTitle>{document.title}</PageTitle>
 
+			<nav aria-labelledby="table-of-contents">
+				<h2 id="table-of-contents">Contents</h2>
+				<TableOfContentsLevel headings={tableOfContents} />
+			</nav>
+
 			<div className="prose prose-sm">
 				<Content />
 			</div>
 		</div>
+	);
+}
+
+interface TableOfContentsLevelProps {
+	depth?: number;
+	headings: TableOfContents | undefined;
+}
+
+function TableOfContentsLevel(props: Readonly<TableOfContentsLevelProps>) {
+	const { depth = 0, headings } = props;
+
+	if (!isNonEmptyArray(headings)) {
+		return null;
+	}
+
+	const spacing = "space-y-1.5";
+
+	return (
+		<ol className={spacing} style={{ marginLeft: depth * 8 }}>
+			{headings.map((heading, index) => {
+				return (
+					<li key={index} className={spacing}>
+						{heading.id !== undefined ? (
+							<a
+								className="relative flex rounded transition focus:outline-none focus-visible:ring"
+								href={`#${heading.id}`}
+							>
+								{heading.value}
+							</a>
+						) : (
+							<span>{heading.value}</span>
+						)}
+						<TableOfContentsLevel depth={depth + 1} headings={heading.children} />
+					</li>
+				);
+			})}
+		</ol>
 	);
 }
