@@ -7,6 +7,7 @@ import { FieldError } from "@/components/ui/field-error";
 import { Label } from "@/components/ui/label";
 import {
 	Select,
+	SelectClearButton,
 	SelectListBox,
 	SelectListBoxItem,
 	SelectPopover,
@@ -18,11 +19,12 @@ import {
 
 interface SelectFieldProps<T extends object> extends Omit<SelectProps<T>, "children">, FieldProps {
 	children: ReactNode;
+	isClearable?: boolean;
 	placement?: SelectPopoverProps["placement"];
 }
 
 export function SelectField<T extends object>(props: SelectFieldProps<T>): ReactNode {
-	const { children, description, errorMessage, label, placement, ...rest } = props;
+	const { children, description, errorMessage, isClearable, label, placement, ...rest } = props;
 
 	return (
 		<Select<T> {...rest}>
@@ -32,9 +34,18 @@ export function SelectField<T extends object>(props: SelectFieldProps<T>): React
 					<RequiredIndicator isVisible={props.isRequired} />
 				</Label>
 			) : null}
-			<SelectTrigger>
-				<SelectValue />
-			</SelectTrigger>
+			{isClearable ? (
+				<div className="flex gap-x-1.5" role="group">
+					<SelectTrigger>
+						<SelectValue />
+					</SelectTrigger>
+					<SelectClearButton />
+				</div>
+			) : (
+				<SelectTrigger>
+					<SelectValue />
+				</SelectTrigger>
+			)}
 			{description != null ? <FieldDescription>{description}</FieldDescription> : null}
 			<FieldError>{errorMessage}</FieldError>
 			<SelectPopover placement={placement}>

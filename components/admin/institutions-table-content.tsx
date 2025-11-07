@@ -537,6 +537,7 @@ function InstitutionEditForm(props: InstitutionEditFormProps) {
 
 			<SelectField
 				defaultSelectedKey={institution?.countries[0]?.id}
+				isClearable={true}
 				label="Country"
 				name="countries.0"
 			>
