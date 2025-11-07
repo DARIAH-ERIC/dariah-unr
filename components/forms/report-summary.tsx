@@ -1,9 +1,9 @@
 import type { Country, Report } from "@prisma/client";
-import { getFormatter } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 
 import { Confetti } from "@/components/confetti";
+import { CalculationResult } from "@/components/forms/calculation-result";
 import { Summary } from "@/components/forms/summary";
-import { Link } from "@/components/link";
 import { ReportDownloadLink } from "@/components/report-download-link";
 import { calculateOperationalCost } from "@/lib/calculate-operational-cost";
 import { getContributionsByCountryAndYear } from "@/lib/data/contributions";
@@ -17,7 +17,7 @@ import {
 } from "@/lib/data/report";
 import { getServicesByCountry } from "@/lib/data/service";
 import { getSoftwareByCountry } from "@/lib/data/software";
-import { createHref } from "@/lib/navigation/create-href";
+import { defaultLocale } from "@/lib/i18n/locales";
 import { getCurrentSession } from "@/lib/server/auth/get-current-session";
 import { getPublications } from "@/lib/zotero";
 
@@ -31,7 +31,6 @@ export async function ReportSummary(props: ReportSummaryProps) {
 	const { countryId, reportId, year } = props;
 
 	const { user } = await getCurrentSession();
-	const format = await getFormatter();
 
 	const calculation = await calculateOperationalCost({ countryId, reportId });
 
@@ -60,6 +59,8 @@ export async function ReportSummary(props: ReportSummaryProps) {
 	]);
 
 	const publications = await getPublications({ countryCode: countryCode!.code, year });
+
+	const t = await getTranslations({ locale: defaultLocale, namespace: "CalculationResult" });
 
 	const report = {
 		contributors: {
@@ -147,50 +148,15 @@ export async function ReportSummary(props: ReportSummaryProps) {
 
 			<hr />
 
-			<div className="grid gap-y-2 text-sm text-neutral-950 dark:text-neutral-0">
-				<div>Financial value of the national in-kind contribution:</div>
-				<div>
-					Threshold:{" "}
-					{format.number(calculation.operationalCostThreshold, {
-						style: "currency",
-						currency: "EUR",
-					})}
-				</div>
-				<div>
-					Cost calculation:{" "}
-					{format.number(calculation.operationalCost, {
-						style: "currency",
-						currency: "EUR",
-					})}
-				</div>
-			</div>
+			<CalculationResult
+				isAboveThreshold={isAboveThreshold}
+				operationalCost={calculation.operationalCost}
+				operationalCostThreshold={calculation.operationalCostThreshold}
+				successMessage={t("summary-success-message")}
+				userEmail={user?.email}
+			/>
 
 			<Confetti isEnabled={isAboveThreshold} />
-
-			{!isAboveThreshold ? (
-				<div>
-					Using the Policy on InKind Financial Value calculations, you have not reached the
-					threshold. This is not necessarily problematic, as you can report your own figures. Please
-					get in touch with the DARIAH team via our{" "}
-					<Link
-						href={createHref({
-							pathname: "/contact",
-							searchParams: {
-								email: user?.email,
-								subject: "Operational cost calculation",
-							},
-						})}
-					>
-						contact form
-					</Link>
-					.
-				</div>
-			) : (
-				<div>
-					You have reached your financial in-kind threshold, congratulations! You have nothing
-					further to do.
-				</div>
-			)}
 
 			<div>
 				<ReportDownloadLink calculation={report} />

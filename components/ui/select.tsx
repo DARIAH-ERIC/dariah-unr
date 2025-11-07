@@ -1,9 +1,11 @@
 "use client";
 
-import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
-import { Fragment } from "react";
+import { CheckIcon, ChevronsUpDownIcon, XIcon } from "lucide-react";
+import { Fragment, use } from "react";
 import {
+	Button as AriaButton,
 	Button as AriaSelectTrigger,
+	type ButtonProps as AriaButtonProps,
 	type ButtonProps as AriaSelectTriggerProps,
 	composeRenderProps,
 	ListBox as AriaSelectListBox,
@@ -14,11 +16,12 @@ import {
 	type PopoverProps as AriaSelectPopoverProps,
 	Select as AriaSelect,
 	type SelectProps as AriaSelectProps,
+	SelectStateContext as AriaSelectStateContext,
 	SelectValue as AriaSelectValue,
 	type SelectValueProps as AriaSelectValueProps,
 } from "react-aria-components";
 
-import { type VariantProps, variants } from "@/lib/styles";
+import { cn, type VariantProps, variants } from "@/lib/styles";
 
 export const selectStyles = variants({
 	base: ["group grid content-start gap-y-1.5"],
@@ -105,6 +108,34 @@ export function SelectValue<T extends object>(props: SelectValueProps<T>) {
 		>
 			{children}
 		</AriaSelectValue>
+	);
+}
+
+export interface SelectClearButtonProps extends Pick<AriaButtonProps, "className"> {}
+
+export function SelectClearButton(props: SelectClearButtonProps) {
+	const { className } = props;
+
+	const state = use(AriaSelectStateContext);
+
+	return (
+		<AriaButton
+			className={composeRenderProps(className, (className) => {
+				return cn(
+					"inline-grid aspect-square cursor-default place-items-center rounded-md border border-neutral-950/10 bg-neutral-0 p-1.5 text-neutral-400 shadow-xs transition  dark:border-neutral-0/10 dark:bg-neutral-0/5 dark:text-neutral-600 dark:shadow-none ",
+					"hover:border-neutral-950/20 hover:text-neutral-500 dark:hover:border-neutral-0/20 dark:hover:text-neutral-500",
+					"outline-0 outline-neutral-950 outline-solid focus:outline-1 focus-visible:outline-2 dark:outline-neutral-0 forced-colors:outline-[Highlight]",
+					className,
+				);
+			})}
+			onPress={() => {
+				return state?.setValue(null);
+			}}
+			slot={null}
+		>
+			<span className="sr-only">Clear</span>
+			<XIcon className="size-4 shrink-0" />
+		</AriaButton>
 	);
 }
 

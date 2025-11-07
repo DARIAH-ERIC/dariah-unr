@@ -527,3 +527,24 @@ export function updateReportCalculation(params: UpdateReportCalculationParams) {
 		},
 	});
 }
+
+interface GetReportStatusByCountryCodeParams {
+	countryCode: Country["code"];
+	year: Report["year"];
+}
+
+export function getReportStatusByCountryCode(params: GetReportStatusByCountryCodeParams) {
+	const { countryCode, year } = params;
+
+	return db.report.findFirst({
+		where: {
+			country: {
+				code: countryCode,
+			},
+			year,
+		},
+		select: {
+			status: true,
+		},
+	});
+}

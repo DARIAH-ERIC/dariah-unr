@@ -586,6 +586,7 @@ function ServicesEditForm(props: ServicesEditFormProps) {
 			{/* TODO: Multiple countries */}
 			<SelectField
 				defaultSelectedKey={service?.countries[0]?.id}
+				isClearable={true}
 				label="Country"
 				name="countries.0"
 			>
@@ -602,6 +603,7 @@ function ServicesEditForm(props: ServicesEditFormProps) {
 			<FormFieldsGroup>
 				<SelectField
 					defaultSelectedKey={service?.institutions[0]?.institution.id}
+					isClearable={true}
 					label="Institution"
 					name="institutions.0.institution"
 				>
@@ -616,6 +618,7 @@ function ServicesEditForm(props: ServicesEditFormProps) {
 
 				<SelectField
 					defaultSelectedKey={service?.institutions[0]?.role}
+					isClearable={true}
 					label="Institution role"
 					name="institutions.0.role"
 				>
@@ -633,7 +636,12 @@ function ServicesEditForm(props: ServicesEditFormProps) {
 				</SelectField>
 			</FormFieldsGroup>
 
-			<SelectField defaultSelectedKey={service?.status ?? undefined} label="Status" name="status">
+			<SelectField
+				defaultSelectedKey={service?.status ?? undefined}
+				isClearable={true}
+				label="Status"
+				name="status"
+			>
 				{serviceStatuses.map((serviceStatus) => {
 					return (
 						<SelectItem key={serviceStatus} id={serviceStatus} textValue={serviceStatus}>
@@ -658,7 +666,12 @@ function ServicesEditForm(props: ServicesEditFormProps) {
 				})}
 			</SelectField>
 
-			<SelectField defaultSelectedKey={service?.type ?? undefined} label="Type" name="type">
+			<SelectField
+				defaultSelectedKey={service?.type ?? undefined}
+				isClearable={true}
+				label="Type"
+				name="type"
+			>
 				{serviceTypes.map((serviceType) => {
 					return (
 						<SelectItem key={serviceType} id={serviceType} textValue={serviceType}>
@@ -679,6 +692,7 @@ function ServicesEditForm(props: ServicesEditFormProps) {
 
 			<SelectField
 				defaultSelectedKey={service?.marketplaceStatus ?? undefined}
+				isClearable={true}
 				label="Marketplace status"
 				name="marketplaceStatus"
 			>
@@ -721,6 +735,7 @@ function ServicesEditForm(props: ServicesEditFormProps) {
 
 			<SelectField
 				defaultSelectedKey={service?.audience ?? undefined}
+				isClearable={true}
 				label="Audience"
 				name="audience"
 			>
