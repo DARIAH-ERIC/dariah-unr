@@ -146,6 +146,8 @@ async function DashboardCountryReportEditStepPageContent(
 
 	const isConfirmationAvailable = user.role === "admin" || user.role === "national_coordinator";
 
+	const isReportConfirmed = report.status !== "draft";
+
 	switch (step) {
 		case "confirm": {
 			return (
@@ -166,7 +168,12 @@ async function DashboardCountryReportEditStepPageContent(
 						/>
 					</FormPlaceholder>
 
-					<Navigation code={code} previous="project-funding-leverage" year={year} />
+					<Navigation
+						code={code}
+						next={isReportConfirmed ? "summary" : undefined}
+						previous="project-funding-leverage"
+						year={year}
+					/>
 				</section>
 			);
 		}
