@@ -507,6 +507,7 @@ function SoftwareEditForm(props: SoftwareEditFormProps) {
 			{/* TODO: Multiple countries */}
 			<SelectField
 				defaultSelectedKey={software?.countries[0]?.id}
+				isClearable={true}
 				label="Country"
 				name="countries.0"
 			>
@@ -519,7 +520,12 @@ function SoftwareEditForm(props: SoftwareEditFormProps) {
 				})}
 			</SelectField>
 
-			<SelectField defaultSelectedKey={software?.status ?? undefined} label="Status" name="status">
+			<SelectField
+				defaultSelectedKey={software?.status ?? undefined}
+				isClearable={true}
+				label="Status"
+				name="status"
+			>
 				{softwareStatuses.map((softwareStatus) => {
 					return (
 						<SelectItem key={softwareStatus} id={softwareStatus} textValue={softwareStatus}>
@@ -540,6 +546,7 @@ function SoftwareEditForm(props: SoftwareEditFormProps) {
 
 			<SelectField
 				defaultSelectedKey={software?.marketplaceStatus ?? undefined}
+				isClearable={true}
 				label="Marketplace status"
 				name="marketplaceStatus"
 			>

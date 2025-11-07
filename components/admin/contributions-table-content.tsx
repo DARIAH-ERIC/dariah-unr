@@ -627,7 +627,12 @@ function ContributionEditForm(props: ContributionEditFormProps) {
 				})}
 			</SelectField>
 
-			<SelectField defaultSelectedKey={contribution?.country?.id} label="Country" name="countryId">
+			<SelectField
+				defaultSelectedKey={contribution?.country?.id}
+				isClearable={true}
+				label="Country"
+				name="countryId"
+			>
 				{Array.from(countriesById.values()).map((country) => {
 					return (
 						<SelectItem key={country.id} id={country.id} textValue={country.name}>

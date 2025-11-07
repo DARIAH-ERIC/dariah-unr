@@ -26,7 +26,7 @@ import { LoadingIndicator } from "@/components/loading-indicator";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import { getCountryByCode } from "@/lib/data/country";
-import { getReportByCountryCode } from "@/lib/data/report";
+import { getReportByCountryCode, getReportStatusByCountryCode } from "@/lib/data/report";
 import type { IntlLocale } from "@/lib/i18n/locales";
 import { createHref } from "@/lib/navigation/create-href";
 import {
@@ -106,7 +106,7 @@ async function DashboardCountryReportEditStepPageContent(
 	if (country == null) notFound();
 
 	const report = await getReportByCountryCode({ countryCode: code, year });
-	if (report == null) notFound();
+	if (report == null || (report.status === "draft" && step === "summary")) notFound();
 
 	// TODO: safeParse
 	const comments = report.comments != null ? reportCommentsSchema.parse(report.comments) : null;
@@ -114,6 +114,8 @@ async function DashboardCountryReportEditStepPageContent(
 	const previousReport = await getReportByCountryCode({ countryCode: code, year: year - 1 });
 
 	const isConfirmationAvailable = user.role === "admin" || user.role === "national_coordinator";
+
+	const isReportConfirmed = report.status !== "draft";
 
 	switch (step) {
 		case "confirm": {
@@ -131,11 +133,17 @@ async function DashboardCountryReportEditStepPageContent(
 						<ConfirmationForm
 							countryId={country.id}
 							isConfirmationAvailable={isConfirmationAvailable}
+							isReportConfirmed={isReportConfirmed}
 							reportId={report.id}
 						/>
 					</FormPlaceholder>
 
-					<Navigation code={code} next="summary" previous="project-funding-leverage" year={year} />
+					<Navigation
+						code={code}
+						next={isReportConfirmed ? "summary" : undefined}
+						previous="project-funding-leverage"
+						year={year}
+					/>
 				</section>
 			);
 		}
@@ -645,15 +653,21 @@ interface DashboardCountryReportNavigationProps {
 	year: number;
 }
 
-function DashboardCountryReportNavigation(props: DashboardCountryReportNavigationProps): ReactNode {
+async function DashboardCountryReportNavigation(
+	props: DashboardCountryReportNavigationProps,
+): Promise<ReactNode> {
 	const { code, steps, year } = props;
 
-	const t = useTranslations("DashboardCountryReportNavigation");
+	const t = await getTranslations("DashboardCountryReportNavigation");
+
+	const reportStatus = await getReportStatusByCountryCode({ countryCode: code, year });
+
+	const navSteps = reportStatus?.status === "final" ? steps.slice(1) : steps.slice(1, -1);
 
 	return (
 		<nav>
-			<ol className="flex flex-wrap border-b">
-				{steps.slice(1).map((step) => {
+			<ol className="flex w-fit flex-wrap border-b">
+				{navSteps.map((step) => {
 					return (
 						<li key={step}>
 							<AppNavLink
