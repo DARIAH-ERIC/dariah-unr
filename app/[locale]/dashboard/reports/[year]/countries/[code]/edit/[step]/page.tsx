@@ -164,6 +164,7 @@ async function DashboardCountryReportEditStepPageContent(
 						<ConfirmationForm
 							countryId={country.id}
 							isConfirmationAvailable={isConfirmationAvailable}
+							isReportConfirmed={isReportConfirmed}
 							reportId={report.id}
 						/>
 					</FormPlaceholder>

@@ -48,6 +48,9 @@
 			"system": "System"
 		}
 	},
+	"ConfirmationForm": {
+		"confirmation-info": "This report has already been submitted."
+	},
 	"ContactForm": {
 		"email": "Email",
 		"message": "Message",
