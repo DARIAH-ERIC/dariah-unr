@@ -17,8 +17,6 @@ interface DocumentationPageProps {
 	}>;
 }
 
-// export const dynamicParams = false;
-
 export async function generateStaticParams(_props: {
 	params: Pick<Awaited<DocumentationPageProps["params"]>, "locale">;
 }): Promise<Array<Pick<Awaited<DocumentationPageProps["params"]>, "id">>> {

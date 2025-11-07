@@ -6,8 +6,6 @@ import type { ReactNode } from "react";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import { getReportByCountryCode } from "@/lib/data/report";
-import { getCountryCodes as getStaticCountryCodes } from "@/lib/get-country-codes";
-import { getReportYears } from "@/lib/get-report-years";
 import type { IntlLocale } from "@/lib/i18n/locales";
 import { dashboardCountryReportPageParams } from "@/lib/schemas/dashboard";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
@@ -18,29 +16,6 @@ interface DashboardCountryReportPageProps {
 		locale: IntlLocale;
 		year: string;
 	}>;
-}
-
-// export const dynamicParams = false;
-
-export async function generateStaticParams(_props: {
-	params: Pick<Awaited<DashboardCountryReportPageProps["params"]>, "locale">;
-}): Promise<Array<Pick<Awaited<DashboardCountryReportPageProps["params"]>, "code" | "year">>> {
-	/**
-	 * FIXME: we cannot access the postgres database on acdh servers from github ci/cd, so we cannot
-	 * query for country codes (or report years) at build time.
-	 */
-	// const countries = await getCountryCodes();
-	const countries = await Promise.resolve(Array.from(getStaticCountryCodes().values()));
-
-	const years = getReportYears();
-
-	const params = years.flatMap((year) => {
-		return countries.map((code) => {
-			return { code, year };
-		});
-	});
-
-	return params;
 }
 
 export async function generateMetadata(
