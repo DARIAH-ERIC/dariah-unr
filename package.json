@@ -4,8 +4,7 @@
 	"license": "MIT",
 	"type": "module",
 	"engines": {
-		"node": "22.x",
-		"pnpm": "10.x"
+		"node": "24.x"
 	},
 	"packageManager": "pnpm@10.20.0",
 	"scripts": {
@@ -31,8 +30,6 @@
 		"dev:db": "docker run -d -e POSTGRES_DB=dariah-unr -e POSTGRES_USER=dariah-unr -e POSTGRES_PASSWORD=dariah-unr --name dariah-unr -p 5432:5432 --rm postgres",
 		"format:check": "prettier . \"!./content/**\" --cache --check --ignore-path ./.gitignore",
 		"format:fix": "pnpm run format:check --write",
-		"i18n:check": "i18n-check --format next-intl --locales ./messages/ --source en --unused ./app/ ./components/",
-		"i18n:prepare": "tsx ./scripts/generate-i18n-message-types.ts",
 		"lint:check": "run-p --continue-on-error \"lint:*:check\"",
 		"lint:fix": "run-p --continue-on-error \"lint:*:fix\"",
 		"lint:code:check": "eslint . --cache",
@@ -40,7 +37,7 @@
 		"lint:styles:check": "stylelint \"./**/*.css\" --cache --ignore-path ./.gitignore",
 		"lint:styles:fix": "pnpm run lint:styles:check --fix",
 		"preinstall": "npx only-allow pnpm",
-		"prepare": "run-s setup i18n:prepare db:generate",
+		"prepare": "run-s setup types:prepare db:generate",
 		"setup": "is-in-ci || simple-git-hooks",
 		"start": "next start",
 		"test:db": "docker run -d -e POSTGRES_DB=dariah-unr-test -e POSTGRES_USER=dariah-unr-test -e POSTGRES_PASSWORD=dariah-unr-test --name dariah-unr-test -p 5432:5432 --rm postgres",
@@ -51,7 +48,8 @@
 		"test:e2e:install": "playwright install --with-deps",
 		"test:e2e:ui": "dotenv -c test -- playwright test --ui",
 		"test:e2e:update-snapshots": "dotenv -c test -- playwright test --update-snapshots",
-		"types:check": "tsc --noEmit"
+		"types:check": "tsc --noEmit",
+		"types:prepare": "ENV_VALIDATION=disabled next typegen"
 	},
 	"dependencies": {
 		"@acdh-oeaw/lib": "^0.3.5",
@@ -114,7 +112,6 @@
 		"@acdh-oeaw/tsconfig": "^1.5.1",
 		"@commitlint/cli": "^20.1.0",
 		"@faker-js/faker": "^10.1.0",
-		"@lingual/i18n-check": "^0.8.12",
 		"@mdx-js/loader": "^3.1.1",
 		"@next/bundle-analyzer": "^15.5.6",
 		"@next/eslint-plugin-next": "^15.5.6",
@@ -130,7 +127,7 @@
 		"@types/canvas-confetti": "^1.9.0",
 		"@types/hast": "^3.0.4",
 		"@types/mdx": "^2.0.13",
-		"@types/node": "^22.19.0",
+		"@types/node": "^24.10.0",
 		"@types/nodemailer": "^7.0.3",
 		"@types/react": "^19.2.2",
 		"@types/react-dom": "^19.2.2",
