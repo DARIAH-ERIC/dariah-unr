@@ -36,6 +36,10 @@
 		},
 		"title": "Sign in"
 	},
+	"CalculationResult": {
+		"confirmation-success-message": "You have reached your financial in-kind threshold.",
+		"summary-success-message": "You have reached your financial in-kind threshold, congratulations! You have nothing further to do."
+	},
 	"ColorSchemeSwitcher": {
 		"change-color-scheme": "Change color scheme",
 		"color-schemes": {
