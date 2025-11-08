@@ -4,7 +4,7 @@
 # @see https://sharp.pixelplumbing.com/install#linux-memory-allocator
 
 # build
-FROM node:24-alpine AS build
+FROM node:22-alpine AS build
 
 ENV PNPM_HOME="/app/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
@@ -96,7 +96,7 @@ RUN --mount=type=secret,id=AUTH_SECRET,uid=1000 \
 		pnpm run build
 
 # serve
-FROM node:24-alpine AS serve
+FROM node:22-alpine AS serve
 
 ENV PNPM_HOME="/app/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
