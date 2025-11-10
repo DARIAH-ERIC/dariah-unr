@@ -1,3 +1,7 @@
+import { isNonEmptyArray } from "@acdh-oeaw/lib";
+import type { TableOfContents } from "@acdh-oeaw/mdx-lib";
+import cn from "clsx/lite";
+import { ChevronDownIcon } from "lucide-react";
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
@@ -71,15 +75,67 @@ async function DocumentationPageContent(props: DocumentationPageContentProps) {
 	const document = await (await reader()).collections.documentation.read(id);
 	if (document == null) notFound();
 
-	const { Content } = await getDocumentationContent(id);
+	const { Content, tableOfContents } = await getDocumentationContent(id);
 
 	return (
 		<div className="mx-auto grid w-full max-w-(--breakpoint-md) content-start gap-y-8">
 			<PageTitle>{document.title}</PageTitle>
 
+			<details className="group" open={true}>
+				<summary className="flex cursor-pointer">
+					<h2 className="flex items-center gap-x-2 text-lg font-semibold" id="table-of-contents">
+						Table of contents
+						<ChevronDownIcon className="size-5 shrink-0 group-open:rotate-180" />
+					</h2>
+				</summary>
+				<nav aria-labelledby="table-of-contents">
+					<TableOfContentsLevel headings={tableOfContents} />
+				</nav>
+			</details>
+
 			<div className="prose prose-sm">
 				<Content />
 			</div>
 		</div>
+	);
+}
+
+interface TableOfContentsLevelProps {
+	depth?: number;
+	headings: TableOfContents | undefined;
+}
+
+function TableOfContentsLevel(props: Readonly<TableOfContentsLevelProps>) {
+	const { depth = 0, headings } = props;
+
+	if (!isNonEmptyArray(headings)) {
+		return null;
+	}
+
+	const spacing = "gap-y-1.5";
+
+	return (
+		<ol
+			className={cn("mt-2 mb-1 flex flex-col text-sm", spacing)}
+			style={{ marginLeft: depth * 8 }}
+		>
+			{headings.map((heading, index) => {
+				return (
+					<li key={index} className={spacing}>
+						{heading.id !== undefined ? (
+							<a
+								className="relative flex rounded underline decoration-dotted transition hover:decoration-solid focus:outline-none focus-visible:ring"
+								href={`#${heading.id}`}
+							>
+								{heading.value}
+							</a>
+						) : (
+							<span>{heading.value}</span>
+						)}
+						<TableOfContentsLevel depth={depth + 1} headings={heading.children} />
+					</li>
+				);
+			})}
+		</ol>
 	);
 }

@@ -1,5 +1,6 @@
 import "server-only";
 
+import type { TableOfContents } from "@acdh-oeaw/mdx-lib";
 import { evaluate } from "@mdx-js/mdx";
 import type { MDXModule } from "mdx/types";
 import { draftMode } from "next/headers";
@@ -15,6 +16,7 @@ import { useMDXComponents } from "@/mdx-components";
 interface MdxContent<T extends Record<string, unknown>> extends MDXModule {
 	/** Added by `remark-mdx-frontmatter`. */
 	frontmatter: T;
+	tableOfContents: TableOfContents;
 }
 
 export const processMdx = cache(function processMdx<T extends Record<string, unknown>>(
@@ -32,14 +34,16 @@ export async function getDocumentationContent(id: string) {
 		if (documentation == null) notFound();
 
 		const { content, ...frontmatter } = documentation;
-		const { default: Content } = await processMdx(await content());
+		const { default: Content, tableOfContents } = await processMdx(await content());
 
-		return { Content, frontmatter };
+		return { Content, frontmatter, tableOfContents };
 	}
 
-	const { default: Content, frontmatter } = (await import(
-		`@/content/documentation/${id}.mdx`
-	)) as MdxContent<DocumentationMetadata>;
+	const {
+		default: Content,
+		frontmatter,
+		tableOfContents,
+	} = (await import(`@/content/documentation/${id}.mdx`)) as MdxContent<DocumentationMetadata>;
 
-	return { Content, frontmatter };
+	return { Content, frontmatter, tableOfContents };
 }
