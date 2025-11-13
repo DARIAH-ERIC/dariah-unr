@@ -84,7 +84,7 @@ export async function updateReportStatusAction(
 
 		try {
 			await sendEmail({
-				from: env.EMAIL_CONTACT_ADDRESS,
+				from: env.EMAIL_ADDRESS,
 				subject: "[dariah-unr] report submitted",
 				text: `A report for ${String(result.year)} has been submitted by ${result.country.name}.`,
 			});
