@@ -36,10 +36,6 @@ export interface CalculateOperationalCostParamsResult {
 			core: number;
 		};
 	};
-	url: {
-		website: Array<string>;
-		social: Array<string>;
-	};
 	operationalCost: number;
 	operationalCostThreshold: number;
 }
@@ -124,6 +120,7 @@ export async function calculateOperationalCost(
 	});
 
 	const serviceSizes = await getServiceSizes();
+
 	const serviceSizesByType = keyByToMap(serviceSizes, (serviceSize) => {
 		return serviceSize.type;
 	});
@@ -192,16 +189,6 @@ export async function calculateOperationalCost(
 				large: largeServicesCount,
 				core: coreServicesCount,
 			},
-		},
-		url: {
-			website:
-				outreachsByType.get("national_website")?.map((outreach) => {
-					return outreach.url;
-				}) ?? [],
-			social:
-				outreachsByType.get("social_media")?.map((outreach) => {
-					return outreach.url;
-				}) ?? [],
 		},
 		operationalCost,
 		operationalCostThreshold: report.operationalCostThreshold ?? 0,
