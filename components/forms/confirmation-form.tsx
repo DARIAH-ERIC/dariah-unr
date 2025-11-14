@@ -6,6 +6,7 @@ import { CalculationResult } from "@/components/forms/calculation-result";
 import { ConfirmationFormContent } from "@/components/forms/confirmation-form-content";
 import { Summary } from "@/components/forms/summary";
 import { calculateOperationalCost } from "@/lib/calculate-operational-cost";
+import { createReportSummary } from "@/lib/create-report-summary";
 import { getCurrentSession } from "@/lib/server/auth/get-current-session";
 
 interface ConfirmationFormProps {
@@ -22,6 +23,8 @@ export async function ConfirmationForm(props: ConfirmationFormProps) {
 
 	const calculation = await calculateOperationalCost({ countryId, reportId });
 
+	const reportSummary = await createReportSummary({ countryId, reportId, calculation });
+
 	const isAboveThreshold = calculation.operationalCost >= calculation.operationalCostThreshold;
 
 	const t = await getTranslations("CalculationResult");
@@ -29,7 +32,7 @@ export async function ConfirmationForm(props: ConfirmationFormProps) {
 
 	return (
 		<section className="grid gap-y-8">
-			<Summary calculation={calculation} />
+			<Summary reportSummary={reportSummary} />
 			<hr />
 			<CalculationResult
 				isAboveThreshold={isAboveThreshold}
