@@ -7,7 +7,6 @@ import type {
 	Report,
 	ServiceKpiType,
 	ServiceSizeType,
-	ServiceType,
 } from "@prisma/client";
 import { notFound } from "next/navigation";
 
@@ -22,7 +21,6 @@ import {
 	getReportById,
 	getServiceReports,
 } from "@/lib/data/report";
-import { getServicesByCountry } from "@/lib/data/service";
 import { getSoftwareByCountry } from "@/lib/data/software";
 import { getPublications, type ZoteroItem } from "@/lib/zotero";
 
@@ -98,7 +96,6 @@ export interface ReportSummaryParamsResult {
 				value: number;
 			}>;
 			size: ServiceSizeType;
-			type: ServiceType | null;
 		}>;
 	};
 	software: {
@@ -126,7 +123,6 @@ export async function createReportSummary(
 		countryCode,
 		outreachs,
 		outreachReports,
-		services,
 		serviceReports,
 		contributions,
 		institutions,
@@ -136,7 +132,6 @@ export async function createReportSummary(
 		getCountyCodeByCountyId({ id: countryId }),
 		getOutreachByCountry({ countryId }),
 		getOutreachReports({ reportId }),
-		getServicesByCountry({ countryId }),
 		getServiceReports({ reportId }),
 		getContributionsByCountryAndYear({ countryId, year }),
 		getPartnerInstitutionsByCountry({ countryId }),
@@ -218,21 +213,23 @@ export async function createReportSummary(
 		},
 		services: {
 			count: calculation.count.services,
-			items: services.map((s) => {
-				return {
-					name: s.name,
-					kpi: serviceReports
-						.filter((r) => {
-							return r.serviceId === s.id;
-						})
-						.flatMap((r) => {
-							return r.kpis.map((k) => {
-								return { unit: k.unit, value: k.value };
-							});
-						}),
-					size: s.size.type,
-					type: s.type,
-				};
+			items: Object.entries(calculation.servicesBySize).flatMap(([key, items]) => {
+				return items.map((item) => {
+					return {
+						name: item.name,
+						kpi: serviceReports
+							.filter((r) => {
+								return r.serviceId === item.id;
+							})
+							.flatMap((r) => {
+								return r.kpis.map((k) => {
+									return { unit: k.unit, value: k.value };
+								});
+							}),
+						// the calculated size, not the size property of the service
+						size: key as ServiceSizeType,
+					};
+				});
 			}),
 		},
 		software: {

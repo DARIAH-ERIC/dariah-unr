@@ -1,5 +1,5 @@
 import { groupByToMap, isNonEmptyString, keyByToMap } from "@acdh-oeaw/lib";
-import type { Country, Report } from "@prisma/client";
+import type { Country, Report, Service } from "@prisma/client";
 import { notFound } from "next/navigation";
 
 import { getContributionsByCountryAndYear } from "@/lib/data/contributions";
@@ -36,6 +36,7 @@ export interface CalculateOperationalCostParamsResult {
 			core: number;
 		};
 	};
+	servicesBySize: Record<string, Array<Service>>;
 	operationalCost: number;
 	operationalCostThreshold: number;
 }
@@ -190,6 +191,7 @@ export async function calculateOperationalCost(
 				core: coreServicesCount,
 			},
 		},
+		servicesBySize: Object.fromEntries(servicesBySize),
 		operationalCost,
 		operationalCostThreshold: report.operationalCostThreshold ?? 0,
 	};

@@ -127,9 +127,43 @@ export function Summary(props: SummaryProps): ReactNode {
 
 			<div>
 				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
+					Small community services
+				</dt>
+				<dd>
+					<ul>
+						{reportSummary.services.items
+							.filter((service) => {
+								return service.size === "small";
+							})
+							.map((service, idx) => {
+								return <li key={idx}>{service.name}</li>;
+							})}
+					</ul>
+				</dd>
+			</div>
+
+			<div>
+				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
 					Number of medium community services
 				</dt>
 				<dd>{reportSummary.services.count.medium}</dd>
+			</div>
+
+			<div>
+				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
+					Medium community services
+				</dt>
+				<dd>
+					<ul>
+						{reportSummary.services.items
+							.filter((service) => {
+								return service.size === "medium";
+							})
+							.map((service, idx) => {
+								return <li key={idx}>{service.name}</li>;
+							})}
+					</ul>
+				</dd>
 			</div>
 
 			<div>
@@ -141,9 +175,43 @@ export function Summary(props: SummaryProps): ReactNode {
 
 			<div>
 				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
+					Large community services
+				</dt>
+				<dd>
+					<ul>
+						{reportSummary.services.items
+							.filter((service) => {
+								return service.size === "large";
+							})
+							.map((service, idx) => {
+								return <li key={idx}>{service.name}</li>;
+							})}
+					</ul>
+				</dd>
+			</div>
+
+			<div>
+				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
 					Number of core community services
 				</dt>
 				<dd>{reportSummary.services.count.core}</dd>
+			</div>
+
+			<div>
+				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
+					Core community services
+				</dt>
+				<dd>
+					<ul>
+						{reportSummary.services.items
+							.filter((service) => {
+								return service.size === "core";
+							})
+							.map((service, idx) => {
+								return <li key={idx}>{service.name}</li>;
+							})}
+					</ul>
+				</dd>
 			</div>
 
 			<div>
