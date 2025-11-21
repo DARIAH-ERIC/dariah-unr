@@ -106,8 +106,10 @@ Table outreach {
   type OutreachType [not null]
   url String [not null]
   countryId String
+  workingGroupId String
   country countries
   reports outreach_reports [not null]
+  workingGroup working_groups
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
@@ -285,30 +287,30 @@ Table software {
 
 Table working_groups {
   id String [pk]
+  contactEmail String
   endDate DateTime
+  mailingList String
+  memberTracking String
   name String [not null]
   startDate DateTime
-  contactEmail String
   chairs contributions [not null]
-  memberTracking String
-  mailingList String
-  wgReports wg_reports [not null]
-  wgevents WGEvent [not null]
+  outreach outreach [not null]
+  workingGroupReports working_group_reports [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
 
-Table wg_reports {
+Table working_group_reports {
   id String [pk]
   comments Json
-  numberMebmers Int
+  facultativeQuestions String [not null]
+  members Int
+  narrativeReport String [not null]
   status ReportStatus [not null, default: 'draft']
   year Int [not null]
-  narrativeReport String [not null]
-  facultativeQuestions String [not null]
   workingGroupId String
   workingGroup working_groups
-  wgEvents WGEvent [not null]
+  workingGroupEvents working_group_events [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 
@@ -317,16 +319,14 @@ Table wg_reports {
   }
 }
 
-Table WGEvent {
+Table working_group_events {
   id String [pk]
-  eventTitle String [not null]
-  eventLink String [not null]
-  workingGroupId String [not null]
-  workingGroup working_groups [not null]
-  eventDate DateTime
-  eventRole String [not null]
-  wgreport wg_reports
-  wGReportId String
+  date DateTime
+  eventRole EventRole [not null]
+  title String [not null]
+  url String [not null]
+  reportId String
+  report working_group_reports
 }
 
 Table users {
@@ -528,6 +528,11 @@ Enum SoftwareStatus {
   not_maintained
 }
 
+Enum EventRole {
+  organiser
+  presenter
+}
+
 Enum UserRole {
   admin
   contributor
@@ -550,6 +555,8 @@ Ref: institution_service.serviceId > services.id [delete: Cascade]
 
 Ref: outreach.countryId > countries.id [delete: Cascade]
 
+Ref: outreach.workingGroupId > working_groups.id
+
 Ref: outreach_reports.outreachId > outreach.id [delete: Cascade]
 
 Ref: outreach_reports.reportId > reports.id [delete: Cascade]
@@ -570,11 +577,9 @@ Ref: service_reports.serviceId > services.id [delete: Cascade]
 
 Ref: service_kpis.serviceReportId > service_reports.id [delete: Cascade]
 
-Ref: wg_reports.workingGroupId > working_groups.id
+Ref: working_group_reports.workingGroupId > working_groups.id
 
-Ref: WGEvent.workingGroupId > working_groups.id
-
-Ref: WGEvent.wGReportId > wg_reports.id
+Ref: working_group_events.reportId > working_group_reports.id
 
 Ref: users.countryId > countries.id
 
