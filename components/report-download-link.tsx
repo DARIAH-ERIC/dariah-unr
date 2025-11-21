@@ -26,7 +26,7 @@ export function ReportDownloadLink(props: ReportDownloadLinkProps) {
 	if (href == null) return null;
 
 	return (
-		<LinkButton download="dariah-report.json" href={href}>
+		<LinkButton className="print:hidden" download="dariah-report.json" href={href}>
 			Download report as JSON
 		</LinkButton>
 	);

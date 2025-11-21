@@ -21,14 +21,14 @@ export function Summary(props: SummaryProps): ReactNode {
 	];
 
 	return (
-		<dl className="prose prose-sm grid gap-y-4">
+		<dl className="prose prose-sm grid gap-y-4 print:block">
 			<div>
 				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
 					Number of partner institutions
 				</dt>
 				<dd>{reportSummary.institutions.count}</dd>
 			</div>
-			<div>
+			<div className="print:break-inside-avoid-page">
 				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
 					Partner Institutions
 				</dt>
@@ -41,13 +41,13 @@ export function Summary(props: SummaryProps): ReactNode {
 				</dd>
 			</div>
 
-			<div>
+			<div className="print:break-inside-avoid-page">
 				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
 					Number of contributors at national level
 				</dt>
 				<dd>{reportSummary.contributors.count}</dd>
 			</div>
-			<div>
+			<div className="print:break-inside-avoid-page">
 				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
 					Contributors at national level
 				</dt>
@@ -76,56 +76,56 @@ export function Summary(props: SummaryProps): ReactNode {
 						})}
 				</dd>
 			</div>
-			<div>
+			<div className="print:break-inside-avoid-page">
 				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
 					Number of large meetings
 				</dt>
 				<dd>{reportSummary.events.count.large}</dd>
 			</div>
 
-			<div>
+			<div className="print:break-inside-avoid-page">
 				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
 					Number of medium meetings
 				</dt>
 				<dd>{reportSummary.events.count.medium}</dd>
 			</div>
 
-			<div>
+			<div className="print:break-inside-avoid-page">
 				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
 					Number of small meetings
 				</dt>
 				<dd>{reportSummary.events.count.small}</dd>
 			</div>
 
-			<div>
+			<div className="print:break-inside-avoid-page">
 				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
 					Number of DARIAH commissioned events
 				</dt>
 				<dd>{reportSummary.events.count.dariah}</dd>
 			</div>
 
-			<div>
+			<div className="print:break-inside-avoid-page">
 				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
 					National website
 				</dt>
 				<dd>{list(reportSummary.url.website)}</dd>
 			</div>
 
-			<div>
+			<div className="print:break-inside-avoid-page">
 				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
 					National social media
 				</dt>
 				<dd>{list(reportSummary.url.social)}</dd>
 			</div>
 
-			<div>
+			<div className="print:break-inside-avoid-page">
 				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
 					Number of small community services
 				</dt>
 				<dd>{reportSummary.services.count.small}</dd>
 			</div>
 
-			<div>
+			<div className="print:break-inside-avoid-page">
 				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
 					Small community services
 				</dt>
@@ -142,14 +142,14 @@ export function Summary(props: SummaryProps): ReactNode {
 				</dd>
 			</div>
 
-			<div>
+			<div className="print:break-inside-avoid-page">
 				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
 					Number of medium community services
 				</dt>
 				<dd>{reportSummary.services.count.medium}</dd>
 			</div>
 
-			<div>
+			<div className="print:break-inside-avoid-page">
 				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
 					Medium community services
 				</dt>
@@ -166,14 +166,14 @@ export function Summary(props: SummaryProps): ReactNode {
 				</dd>
 			</div>
 
-			<div>
+			<div className="print:break-inside-avoid-page">
 				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
 					Number of large community services
 				</dt>
 				<dd>{reportSummary.services.count.large}</dd>
 			</div>
 
-			<div>
+			<div className="print:break-inside-avoid-page">
 				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
 					Large community services
 				</dt>
@@ -190,14 +190,14 @@ export function Summary(props: SummaryProps): ReactNode {
 				</dd>
 			</div>
 
-			<div>
+			<div className="print:break-inside-avoid-page">
 				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
 					Number of core community services
 				</dt>
 				<dd>{reportSummary.services.count.core}</dd>
 			</div>
 
-			<div>
+			<div className="print:break-inside-avoid-page">
 				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
 					Core community services
 				</dt>
@@ -214,21 +214,21 @@ export function Summary(props: SummaryProps): ReactNode {
 				</dd>
 			</div>
 
-			<div>
+			<div className="print:break-inside-avoid-page">
 				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
 					Number of publications
 				</dt>
 				<dd>{reportSummary.publications.count}</dd>
 			</div>
 
-			<div>
+			<div className="print:break-inside-avoid-page">
 				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
 					Number of software
 				</dt>
 				<dd>{reportSummary.software.count}</dd>
 			</div>
 
-			<div>
+			<div className="print:break-inside-avoid-page">
 				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
 					Software
 				</dt>
@@ -241,7 +241,7 @@ export function Summary(props: SummaryProps): ReactNode {
 				</dd>
 			</div>
 
-			<div>
+			<div className="print:break-inside-avoid-page">
 				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
 					Project Funding Leveraged in {reportSummary.year} (amount total)
 				</dt>
