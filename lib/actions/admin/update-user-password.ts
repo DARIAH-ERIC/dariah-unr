@@ -3,13 +3,18 @@
 import { log } from "@acdh-oeaw/lib";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
-import type { z } from "zod";
+import { z } from "zod";
 
-import { sendEmail } from "@/lib/email";
+import { updateUserPassword } from "@/lib/data/user";
 import { getFormData } from "@/lib/get-form-data";
-import { type ContactFormSchema, contactFormSchema } from "@/lib/schemas/email";
+import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
-type FormSchema = ContactFormSchema;
+const formSchema = z.object({
+	id: z.string(),
+	password: z.string().min(8).max(72),
+});
+
+type FormSchema = z.infer<typeof formSchema>;
 
 interface FormReturnValue {
 	timestamp: number;
@@ -26,14 +31,16 @@ interface FormSuccess extends FormReturnValue {
 
 type FormState = FormErrors | FormSuccess;
 
-export async function sendContactEmailAction(
+export async function updateUserPasswordAction(
 	previousFormState: FormState | undefined,
 	formData: FormData,
 ): Promise<FormState> {
-	const t = await getTranslations("actions.sendEmail");
+	const t = await getTranslations("actions.admin.updateUser");
+
+	await assertAuthenticated(["admin"]);
 
 	const input = getFormData(formData);
-	const result = contactFormSchema.safeParse(input);
+	const result = formSchema.safeParse(input);
 
 	if (!result.success) {
 		log.error(result.error.flatten());
@@ -45,12 +52,15 @@ export async function sendContactEmailAction(
 		};
 	}
 
+	const { id, password } = result.data;
+
 	try {
-		const { email, message, subject } = result.data;
+		await updateUserPassword({
+			id,
+			password,
+		});
 
-		await sendEmail({ from: email, subject, text: message });
-
-		revalidatePath("/[locale]/contact", "page");
+		revalidatePath("/[locale]/dashboard/admin/users", "page");
 
 		return {
 			status: "success" as const,
