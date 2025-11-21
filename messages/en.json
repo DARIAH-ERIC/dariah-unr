@@ -152,7 +152,8 @@
 		"meta": {
 			"title": "Edit report"
 		},
-		"title": "Edit report"
+		"title": "Edit report",
+		"print-title": "Report {year}"
 	},
 	"DashboardCountryReportEditStepNavigation": {
 		"next": "Next",

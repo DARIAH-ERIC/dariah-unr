@@ -37,6 +37,7 @@ import {
 import { reportCommentsSchema } from "@/lib/schemas/report";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 import type { User } from "@/lib/server/auth/sessions";
+import { cn } from "@/lib/styles";
 import { createZoteroCollectionUrl } from "@/lib/zotero";
 
 interface DashboardCountryReportEditStepPageProps {
@@ -83,8 +84,16 @@ export default async function DashboardCountryReportEditStepPage(
 
 	return (
 		<MainContent className="container grid content-start gap-8 py-8">
-			<PageTitle>{t("title")}</PageTitle>
-			<DashboardCountryReportNavigation code={code} steps={steps} year={year} />
+			<PageTitle className="print:hidden">{t("title")}</PageTitle>
+			<PageTitle className="hidden print:block">
+				{t("print-title", { year: String(year) })}
+			</PageTitle>
+			<DashboardCountryReportNavigation
+				className="print:hidden"
+				code={code}
+				steps={steps}
+				year={year}
+			/>
 			<DashboardCountryReportEditStepPageContent code={code} step={step} user={user} year={year} />
 		</MainContent>
 	);
@@ -521,8 +530,8 @@ async function DashboardCountryReportEditStepPageContent(
 		case "summary": {
 			return (
 				<section className="grid gap-6">
-					<FormTitle>{t("summary")}</FormTitle>
-					<FormDescription>
+					<FormTitle className="print:hidden">{t("summary")}</FormTitle>
+					<FormDescription className="print:hidden">
 						<p>
 							Every DARIAH Member country must reach a certain threshold of contributions, set by
 							the DARIAH General Assembly. In the past, we asked National Coordinators to calculate
@@ -553,7 +562,7 @@ async function DashboardCountryReportEditStepPageContent(
 						<ReportSummary countryId={country.id} reportId={report.id} year={year} />
 					</FormPlaceholder>
 
-					<Navigation code={code} previous="confirm" year={year} />
+					<Navigation className="print:hidden" code={code} previous="confirm" year={year} />
 				</section>
 			);
 		}
@@ -584,6 +593,7 @@ async function DashboardCountryReportEditStepPageContent(
 }
 
 interface NavigationProps {
+	className?: string;
 	code: string;
 	next?: DashboardCountryReportEditStepPageParams["step"];
 	previous?: DashboardCountryReportEditStepPageParams["step"];
@@ -591,14 +601,14 @@ interface NavigationProps {
 }
 
 function Navigation(props: NavigationProps): ReactNode {
-	const { code, next, previous, year } = props;
+	const { className, code, next, previous, year } = props;
 
 	const t = useTranslations("DashboardCountryReportEditStepNavigation");
 
 	if (previous == null && next == null) return null;
 
 	return (
-		<div className="flex items-center gap-x-8 py-8">
+		<div className={cn("flex items-center gap-x-8 py-8", className)}>
 			{previous != null ? (
 				<AppLink
 					className="mr-auto gap-x-2 font-medium"
@@ -651,12 +661,13 @@ interface DashboardCountryReportNavigationProps {
 	code: string;
 	steps: typeof dashboardCountryReportSteps;
 	year: number;
+	className?: string;
 }
 
 async function DashboardCountryReportNavigation(
 	props: DashboardCountryReportNavigationProps,
 ): Promise<ReactNode> {
-	const { code, steps, year } = props;
+	const { className, code, steps, year } = props;
 
 	const t = await getTranslations("DashboardCountryReportNavigation");
 
@@ -665,7 +676,7 @@ async function DashboardCountryReportNavigation(
 	const navSteps = reportStatus?.status === "final" ? steps.slice(1) : steps.slice(1, -1);
 
 	return (
-		<nav>
+		<nav className={className}>
 			<ol className="flex w-fit flex-wrap border-b">
 				{navSteps.map((step) => {
 					return (
