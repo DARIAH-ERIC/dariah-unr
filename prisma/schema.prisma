@@ -128,9 +128,8 @@ model EventReport {
 
   report Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime   @default(now()) @map(name: "created_at")
-  updatedAt DateTime   @updatedAt @map(name: "updated_at")
-  WGReport  WGReport[]
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
 
   @@map(name: "event_reports")
 }
@@ -568,15 +567,15 @@ model WorkingGroup {
   startDate DateTime? @map(name: "start_date")
 
   contactEmail   String?        @map(name: "contact_email")
-	chairs         Contribution[]
+  chairs         Contribution[]
   memberTracking String?        @map(name: "member_tracking") // describe how you keep track of the WG members, e.g. via mailing list?
   mailingList    String?        @map(name: "mailing_list") // If you use a mailing list for the WG communication, provide here.
 
-  createdAt       DateTime       @default(now()) @map(name: "created_at")
-  updatedAt       DateTime       @updatedAt @map(name: "updated_at")
-  WGReport        WGReport[]
-  WGEventDetail   WGEventDetail? @relation(fields: [wGEventDetailId], references: [id])
-  wGEventDetailId String?        @db.Uuid
+  wgReports WGReport[]
+	wgevents  WGEvent[]
+
+  createdAt DateTime  @default(now()) @map(name: "created_at")
+  updatedAt DateTime  @updatedAt @map(name: "updated_at")
 
   @@map(name: "working_groups")
 }
@@ -594,28 +593,30 @@ model WGReport {
 
   workingGroupId String?       @map(name: "working_group_id") @db.Uuid
   workingGroup   WorkingGroup? @relation(fields: [workingGroupId], references: [id])
+  wgEvents       WGEvent[]
 
-  eventReport EventReport? @relation(fields: [eventReportId], references: [id])
-
-  createdAt     DateTime @default(now()) @map(name: "created_at")
-  updatedAt     DateTime @updatedAt @map(name: "updated_at")
-  eventReportId String?  @db.Uuid
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
 
   @@unique([workingGroupId, year])
   @@index(fields: [year])
-  @@map(name: "wgreports")
+  @@map(name: "wg_reports")
 }
 
-model WGEventDetail {
+model WGEvent {
   id String @id @default(uuid()) @db.Uuid
 
-  eventTitle     String
-  eventLink      String // URL
-  working_groups WorkingGroup[] // multiple WGs can organise one event
+  eventTitle String
+  eventLink  String // URL
+
+  workingGroupId String       @map(name: "working_group_id") @db.Uuid
+  workingGroup   WorkingGroup @relation(fields: [workingGroupId], references: [id])
 
   eventDate DateTime? // not finally decided yet, if necessary.
 
-  eventRole String // role of WG in the organisation of the event (something like organiser, presenter ...) - enum not final yet
+  eventRole  String // role of WG in the organisation of the event (something like organiser, presenter ...) - enum not final yet
+  wgreport   WGReport? @relation(fields: [wGReportId], references: [id])
+  wGReportId String?   @db.Uuid
 }
 
 // -------------------------------------------------------------------------------------------------
