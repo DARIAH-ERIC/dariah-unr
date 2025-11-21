@@ -65,11 +65,11 @@ export function Summary(props: SummaryProps): ReactNode {
 								<dl key={role}>
 									<dt key={role}>{role}</dt>
 									<dd>
-										{persons
-											.map((person) => {
+										{list(
+											persons.map((person) => {
 												return person.name;
-											})
-											.join(", ")}
+											}),
+										)}
 									</dd>
 								</dl>
 							);
