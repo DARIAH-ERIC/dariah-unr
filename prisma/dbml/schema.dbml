@@ -106,10 +106,8 @@ Table outreach {
   type OutreachType [not null]
   url String [not null]
   countryId String
-  workingGroupId String
   country countries
   reports outreach_reports [not null]
-  workingGroup working_groups
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
@@ -294,8 +292,8 @@ Table working_groups {
   name String [not null]
   startDate DateTime
   chairs contributions [not null]
-  outreach outreach [not null]
-  workingGroupReports working_group_reports [not null]
+  outreach working_group_outreach [not null]
+  reports working_group_reports [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
@@ -322,11 +320,24 @@ Table working_group_reports {
 Table working_group_events {
   id String [pk]
   date DateTime
-  eventRole EventRole [not null]
+  role WorkingGroupEventRole [not null]
   title String [not null]
   url String [not null]
   reportId String
   report working_group_reports
+}
+
+Table working_group_outreach {
+  id String [pk]
+  endDate DateTime
+  name String [not null]
+  startDate DateTime
+  type OutreachType [not null]
+  url String [not null]
+  workingGroupId String
+  workingGroup working_groups
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
 }
 
 Table users {
@@ -528,9 +539,14 @@ Enum SoftwareStatus {
   not_maintained
 }
 
-Enum EventRole {
+Enum WorkingGroupEventRole {
   organiser
   presenter
+}
+
+Enum WorkingGroupOutreachType {
+  website
+  social_media
 }
 
 Enum UserRole {
@@ -555,8 +571,6 @@ Ref: institution_service.serviceId > services.id [delete: Cascade]
 
 Ref: outreach.countryId > countries.id [delete: Cascade]
 
-Ref: outreach.workingGroupId > working_groups.id
-
 Ref: outreach_reports.outreachId > outreach.id [delete: Cascade]
 
 Ref: outreach_reports.reportId > reports.id [delete: Cascade]
@@ -580,6 +594,8 @@ Ref: service_kpis.serviceReportId > service_reports.id [delete: Cascade]
 Ref: working_group_reports.workingGroupId > working_groups.id
 
 Ref: working_group_events.reportId > working_group_reports.id
+
+Ref: working_group_outreach.workingGroupId > working_groups.id
 
 Ref: users.countryId > countries.id
 

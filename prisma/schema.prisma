@@ -197,12 +197,10 @@ model Outreach {
   type      OutreachType
   url       String
 
-  countryId      String? @map(name: "country_id") @db.Uuid
-  workingGroupId String? @map(name: "working_group_id") @db.Uuid
+  countryId String? @map(name: "country_id") @db.Uuid
 
-  country      Country?         @relation(fields: [countryId], references: [id], onDelete: Cascade)
-  reports      OutreachReport[]
-  workingGroup WorkingGroup?    @relation(fields: [workingGroupId], references: [id])
+  country Country?         @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  reports OutreachReport[]
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
@@ -571,10 +569,10 @@ model WorkingGroup {
   name           String
   startDate      DateTime? @map(name: "start_date")
 
-  chairs              Contribution[]
+  chairs   Contribution[]
   // FIXME: https://github.com/DARIAH-ERIC/dariah-unr/issues/309#issuecomment-3564930378
-  outreach            Outreach[]
-  workingGroupReports WorkingGroupReport[]
+  outreach WorkingGroupOutreach[]
+  reports  WorkingGroupReport[]
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
@@ -606,24 +604,50 @@ model WorkingGroupReport {
 }
 
 // FIXME: https://github.com/DARIAH-ERIC/dariah-unr/issues/218#issuecomment-3564940915
-enum EventRole {
+enum WorkingGroupEventRole {
   organiser
   presenter
+
+  @@map("EventRole")
 }
 
 model WorkingGroupEvent {
   id String @id @default(uuid()) @db.Uuid
 
-  date      DateTime?
-  eventRole EventRole @map(name: "event_role")
-  title     String
-  url       String
+  date  DateTime?
+  role  WorkingGroupEventRole
+  title String
+  url   String
 
   reportId String? @map(name: "report_id") @db.Uuid
 
   report WorkingGroupReport? @relation(fields: [reportId], references: [id])
 
   @@map(name: "working_group_events")
+}
+
+enum WorkingGroupOutreachType {
+  website
+  social_media
+}
+
+model WorkingGroupOutreach {
+  id String @id @default(uuid()) @db.Uuid
+
+  endDate   DateTime?    @map(name: "end_date")
+  name      String
+  startDate DateTime?    @map(name: "start_date")
+  type      OutreachType
+  url       String
+
+  workingGroupId String? @map(name: "working_group_id") @db.Uuid
+
+  workingGroup WorkingGroup? @relation(fields: [workingGroupId], references: [id])
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "working_group_outreach")
 }
 
 // -------------------------------------------------------------------------------------------------
