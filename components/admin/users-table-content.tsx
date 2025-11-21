@@ -394,6 +394,10 @@ function CreateUserDialog(props: CreateUserDialogProps) {
 									/>
 								</div>
 
+								<p className="text-right text-sm text-orange-600 dark:text-orange-400">
+									Make sure to copy the password &ndash; it will not be visible again!
+								</p>
+
 								<DialogFooter>
 									<DialogCancelButton>Cancel</DialogCancelButton>
 									<SubmitButton form={formId}>Create</SubmitButton>
@@ -655,6 +659,10 @@ function UpdatePasswordDialog(props: UpdatePasswordDialogProps) {
 										</FormErrorMessage>
 									</Form>
 								</div>
+
+								<p className="text-right text-sm text-orange-600 dark:text-orange-400">
+									Make sure to copy the password &ndash; it will not be visible again!
+								</p>
 
 								<DialogFooter>
 									<DialogCancelButton>Cancel</DialogCancelButton>
