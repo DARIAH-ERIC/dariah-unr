@@ -700,6 +700,10 @@ function PasswordGeneratorField(): ReactNode {
 }
 
 function generatePassword(length = 16): string {
+	if (length < 12) {
+		throw new Error("Password length must be at least 12.");
+	}
+
 	const UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	const LOWER = "abcdefghijklmnopqrstuvwxyz";
 	const DIGITS = "0123456789";
@@ -707,11 +711,11 @@ function generatePassword(length = 16): string {
 
 	const ALL = UPPER + LOWER + DIGITS + SYMBOLS;
 
-	const secureRandomBytes = (len: number): Uint8Array => {
+	function secureRandomBytes(len: number): Uint8Array {
 		return crypto.getRandomValues(new Uint8Array(len));
-	};
+	}
 
-	const secureRandomInt = (max: number): number => {
+	function secureRandomInt(max: number): number {
 		const limit = 256 - (256 % max);
 
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -722,9 +726,9 @@ function generatePassword(length = 16): string {
 				return b % max;
 			}
 		}
-	};
+	}
 
-	const secureShuffle = (arr: Array<string>): Array<string> => {
+	function secureShuffle(arr: Array<string>): Array<string> {
 		for (let i = arr.length - 1; i > 0; i--) {
 			const j = secureRandomInt(i + 1);
 
@@ -732,10 +736,6 @@ function generatePassword(length = 16): string {
 		}
 
 		return arr;
-	};
-
-	if (length < 12) {
-		throw new Error("Password length must be at least 12.");
 	}
 
 	/** Ensure at least one of each class. */
