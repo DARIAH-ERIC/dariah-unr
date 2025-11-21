@@ -28,6 +28,7 @@
 	"less.validate": false,
 	"mdx.server.enable": true,
 	"prettier.ignorePath": ".gitignore",
+	"prisma.pinToPrisma6": true,
 	"scss.validate": false,
 	"stylelint.enable": true,
 	"stylelint.snippet": ["css", "postcss", "tailwindcss"],
