@@ -77,6 +77,24 @@ export function updateUser(params: UpdateUserParams) {
 	});
 }
 
+interface UpdateUserPasswordParams {
+	id: string;
+	password: string;
+}
+
+export async function updateUserPassword(params: UpdateUserPasswordParams) {
+	const { id, password } = params;
+
+	return db.user.update({
+		where: {
+			id,
+		},
+		data: {
+			password: await hash(password, 10),
+		},
+	});
+}
+
 interface DeleteUserParams {
 	id: string;
 }

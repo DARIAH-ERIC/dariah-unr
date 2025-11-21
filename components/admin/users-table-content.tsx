@@ -2,7 +2,7 @@
 
 import { keyByToMap } from "@acdh-oeaw/lib";
 import { type Country, type Prisma, UserRole } from "@prisma/client";
-import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
+import { KeyRoundIcon, MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { Fragment, type ReactNode, useActionState, useId, useMemo, useState } from "react";
 import type { Key } from "react-aria-components";
 
@@ -43,6 +43,7 @@ import {
 import { createUserAction } from "@/lib/actions/admin/create-user";
 import { deleteUserAction } from "@/lib/actions/admin/delete-user";
 import { updateUserAction } from "@/lib/actions/admin/update-user";
+import { updateUserPasswordAction } from "@/lib/actions/admin/update-user-password";
 import { createKey } from "@/lib/create-key";
 
 type Action =
@@ -60,6 +61,14 @@ type Action =
 	  }
 	| {
 			kind: "edit";
+			item: Prisma.UserGetPayload<{
+				include: {
+					country: { select: { id: true } };
+				};
+			}>;
+	  }
+	| {
+			kind: "update-password";
 			item: Prisma.UserGetPayload<{
 				include: {
 					country: { select: { id: true } };
@@ -203,6 +212,11 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 									setAction({ kind: "edit", item: row });
 									break;
 								}
+
+								case "update-password": {
+									setAction({ kind: "update-password", item: row });
+									break;
+								}
 							}
 						}
 
@@ -225,6 +239,10 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 												<DropdownMenuItem id="edit">
 													Edit
 													<PencilIcon aria-hidden={true} className="size-4 shrink-0" />
+												</DropdownMenuItem>
+												<DropdownMenuItem id="update-password">
+													Update password
+													<KeyRoundIcon aria-hidden={true} className="size-4 shrink-0" />
 												</DropdownMenuItem>
 												<DropdownMenuItem id="delete">
 													Delete
@@ -254,6 +272,11 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 				key={createKey("edit-user", action?.item?.id)}
 				action={action}
 				countriesById={countriesById}
+				onClose={onDialogClose}
+			/>
+			<UpdatePasswordDialog
+				key={createKey("update-password", action?.item?.id)}
+				action={action}
 				onClose={onDialogClose}
 			/>
 			<DeleteUserDialog
@@ -349,8 +372,6 @@ function CreateUserDialog(props: CreateUserDialogProps) {
 
 	if (action?.kind !== "create") return null;
 
-	const user = action.item;
-
 	return (
 		<ModalOverlay isOpen={true} onOpenChange={onClose}>
 			<Modal isOpen={true} onOpenChange={onClose}>
@@ -364,15 +385,18 @@ function CreateUserDialog(props: CreateUserDialogProps) {
 								</DialogHeader>
 
 								<div>
-									<UserEditForm
+									<UserCreateForm
 										countriesById={countriesById}
 										formAction={formAction}
 										formId={formId}
 										formState={formState}
 										onClose={close}
-										user={user}
 									/>
 								</div>
+
+								<p className="text-right text-sm text-orange-600 dark:text-orange-400">
+									Make sure to copy the password &ndash; it will not be visible again!
+								</p>
 
 								<DialogFooter>
 									<DialogCancelButton>Cancel</DialogCancelButton>
@@ -384,6 +408,68 @@ function CreateUserDialog(props: CreateUserDialogProps) {
 				</Dialog>
 			</Modal>
 		</ModalOverlay>
+	);
+}
+
+interface UserCreateFormProps {
+	countriesById: Map<Country["id"], Country>;
+	formId: string;
+	formAction: (formData: FormData) => void;
+	formState: Awaited<ReturnType<typeof createUserAction>> | undefined;
+	onClose: () => void;
+}
+
+function UserCreateForm(props: UserCreateFormProps) {
+	const { countriesById, formId, formAction, formState, onClose } = props;
+
+	const userRoles = Object.values(UserRole);
+
+	return (
+		<Form
+			action={(formData) => {
+				formAction(formData);
+				onClose();
+			}}
+			className="grid gap-y-6"
+			id={formId}
+			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
+		>
+			<TextInputField isRequired={true} label="Name" name="name" />
+
+			<SelectField label="Country" name="country">
+				{Array.from(countriesById.values()).map((country) => {
+					return (
+						<SelectItem key={country.id} id={country.id} textValue={country.name}>
+							{country.name}
+						</SelectItem>
+					);
+				})}
+			</SelectField>
+
+			<TextInputField isRequired={true} label="Email" name="email" type="email" />
+
+			<PasswordGeneratorField />
+
+			<SelectField isRequired={true} label="Role" name="role">
+				{userRoles.map((role) => {
+					return (
+						<SelectItem key={role} id={role} textValue={role}>
+							{role}
+						</SelectItem>
+					);
+				})}
+			</SelectField>
+
+			<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
+				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}
+			</FormSuccessMessage>
+
+			<FormErrorMessage key={createKey("form-error", formState?.timestamp)}>
+				{formState?.status === "error" && formState.formErrors.length > 0
+					? formState.formErrors
+					: null}
+			</FormErrorMessage>
+		</Form>
 	);
 }
 
@@ -449,7 +535,7 @@ interface UserEditFormProps {
 		include: {
 			country: { select: { id: true } };
 		};
-	}> | null;
+	}>;
 	onClose: () => void;
 }
 
@@ -468,11 +554,11 @@ function UserEditForm(props: UserEditFormProps) {
 			id={formId}
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
-			{user != null ? <input name="id" type="hidden" value={user.id} /> : null}
+			<input name="id" type="hidden" value={user.id} />
 
-			<TextInputField defaultValue={user?.name ?? undefined} label="Name" name="name" />
+			<TextInputField defaultValue={user.name} isRequired={true} label="Name" name="name" />
 
-			<SelectField defaultSelectedKey={user?.country?.id} label="Country" name="country">
+			<SelectField defaultSelectedKey={user.country?.id} label="Country" name="country">
 				{Array.from(countriesById.values()).map((country) => {
 					return (
 						<SelectItem key={country.id} id={country.id} textValue={country.name}>
@@ -482,14 +568,9 @@ function UserEditForm(props: UserEditFormProps) {
 				})}
 			</SelectField>
 
-			<TextInputField
-				defaultValue={user?.email ?? undefined}
-				isReadOnly={true}
-				label="Email"
-				name="email"
-			/>
+			<TextInputField defaultValue={user.email} isReadOnly={true} label="Email" name="email" />
 
-			<SelectField defaultSelectedKey={user?.role} label="Role" name="role">
+			<SelectField defaultSelectedKey={user.role} isRequired={true} label="Role" name="role">
 				{userRoles.map((role) => {
 					return (
 						<SelectItem key={role} id={role} textValue={role}>
@@ -510,4 +591,165 @@ function UserEditForm(props: UserEditFormProps) {
 			</FormErrorMessage>
 		</Form>
 	);
+}
+
+interface UpdatePasswordDialogProps {
+	action: Action | null;
+	onClose: () => void;
+}
+
+function UpdatePasswordDialog(props: UpdatePasswordDialogProps) {
+	const { action, onClose } = props;
+
+	const formId = useId();
+
+	const [formState, formAction] = useActionState(updateUserPasswordAction, undefined);
+
+	if (action?.kind !== "update-password") return null;
+
+	const user = action.item;
+
+	return (
+		<ModalOverlay isOpen={true} onOpenChange={onClose}>
+			<Modal isOpen={true} onOpenChange={onClose}>
+				<Dialog role="alertdialog">
+					{({ close }) => {
+						return (
+							<Fragment>
+								<DialogHeader>
+									<DialogTitle>Update password</DialogTitle>
+									<DialogDescription>
+										Replace the current user password with a newly generated one.
+									</DialogDescription>
+								</DialogHeader>
+
+								<div>
+									<Form
+										action={(formData) => {
+											formAction(formData);
+											close();
+										}}
+										className="grid gap-y-6"
+										id={formId}
+										validationErrors={
+											formState?.status === "error" ? formState.fieldErrors : undefined
+										}
+									>
+										<input name="id" type="hidden" value={action.item.id} />
+
+										<TextInputField
+											defaultValue={user.email}
+											isReadOnly={true}
+											label="Email"
+											name="email"
+										/>
+
+										<PasswordGeneratorField />
+
+										<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
+											{formState?.status === "success" && formState.message.length > 0
+												? formState.message
+												: null}
+										</FormSuccessMessage>
+
+										<FormErrorMessage key={createKey("form-error", formState?.timestamp)}>
+											{formState?.status === "error" && formState.formErrors.length > 0
+												? formState.formErrors
+												: null}
+										</FormErrorMessage>
+									</Form>
+								</div>
+
+								<p className="text-right text-sm text-orange-600 dark:text-orange-400">
+									Make sure to copy the password &ndash; it will not be visible again!
+								</p>
+
+								<DialogFooter>
+									<DialogCancelButton>Cancel</DialogCancelButton>
+									<SubmitButton form={formId}>Update</SubmitButton>
+								</DialogFooter>
+							</Fragment>
+						);
+					}}
+				</Dialog>
+			</Modal>
+		</ModalOverlay>
+	);
+}
+
+function PasswordGeneratorField(): ReactNode {
+	const [generatedPassword, setGeneratedPassword] = useState(generatePassword);
+
+	return (
+		<div className="flex flex-col gap-y-1.5">
+			<TextInputField
+				isRequired={true}
+				label="Password"
+				name="password"
+				value={generatedPassword}
+			/>
+			<Button
+				onPress={() => {
+					setGeneratedPassword(generatePassword());
+				}}
+			>
+				Re-generate
+			</Button>
+		</div>
+	);
+}
+
+function generatePassword(length = 16): string {
+	if (length < 12) {
+		throw new Error("Password length must be at least 12.");
+	}
+
+	const UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	const LOWER = "abcdefghijklmnopqrstuvwxyz";
+	const DIGITS = "0123456789";
+	const SYMBOLS = "!@#$%^&*()-_=+[]{};:,.<>?/~";
+
+	const ALL = UPPER + LOWER + DIGITS + SYMBOLS;
+
+	function secureRandomBytes(len: number): Uint8Array {
+		return crypto.getRandomValues(new Uint8Array(len));
+	}
+
+	function secureRandomInt(max: number): number {
+		const limit = 256 - (256 % max);
+
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		while (true) {
+			const b = secureRandomBytes(1)[0]!;
+
+			if (b < limit) {
+				return b % max;
+			}
+		}
+	}
+
+	function secureShuffle(arr: Array<string>): Array<string> {
+		for (let i = arr.length - 1; i > 0; i--) {
+			const j = secureRandomInt(i + 1);
+
+			[arr[i], arr[j]] = [arr[j]!, arr[i]!];
+		}
+
+		return arr;
+	}
+
+	/** Ensure at least one of each class. */
+	const pwd = [
+		UPPER[secureRandomInt(UPPER.length)]!,
+		LOWER[secureRandomInt(LOWER.length)]!,
+		DIGITS[secureRandomInt(DIGITS.length)]!,
+		SYMBOLS[secureRandomInt(SYMBOLS.length)]!,
+	];
+
+	/** Fill the rest from full charset. */
+	while (pwd.length < length) {
+		pwd.push(ALL[secureRandomInt(ALL.length)]!);
+	}
+
+	return secureShuffle(pwd).join("");
 }
