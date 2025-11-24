@@ -589,9 +589,9 @@ model WorkingGroupReport {
   status               ReportStatus @default(draft)
   year                 Int
 
-  workingGroupId String? @map(name: "working_group_id") @db.Uuid
+  workingGroupId String @map(name: "working_group_id") @db.Uuid
 
-  workingGroup       WorkingGroup?       @relation(fields: [workingGroupId], references: [id])
+  workingGroup       WorkingGroup        @relation(fields: [workingGroupId], references: [id])
   workingGroupEvents WorkingGroupEvent[]
 
   createdAt DateTime @default(now()) @map(name: "created_at")
@@ -615,9 +615,9 @@ model WorkingGroupEvent {
   title String
   url   String
 
-  reportId String? @map(name: "report_id") @db.Uuid
+  reportId String @map(name: "report_id") @db.Uuid
 
-  report WorkingGroupReport? @relation(fields: [reportId], references: [id])
+  report WorkingGroupReport @relation(fields: [reportId], references: [id])
 
   @@map(name: "working_group_events")
 }
@@ -636,9 +636,9 @@ model WorkingGroupOutreach {
   type      OutreachType
   url       String
 
-  workingGroupId String? @map(name: "working_group_id") @db.Uuid
+  workingGroupId String @map(name: "working_group_id") @db.Uuid
 
-  workingGroup WorkingGroup? @relation(fields: [workingGroupId], references: [id])
+  workingGroup WorkingGroup @relation(fields: [workingGroupId], references: [id])
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
