@@ -1,8 +1,8 @@
 import { assert, includes } from "@acdh-oeaw/lib";
-import type { User } from "@prisma/client";
 import { cache } from "react";
 
 import { hasPersonWorkingGroupRole } from "@/lib/data/contributions";
+import type { User } from "@/lib/server/auth/sessions";
 
 type PermissionRequest =
 	| { kind: "country"; id: string; action: "read" | "read-write" | "confirm" }
