@@ -69,7 +69,6 @@ Table event_reports {
   report reports [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-  WGReport wgreports [not null]
 }
 
 Table institutions {
@@ -287,47 +286,59 @@ Table software {
 
 Table working_groups {
   id String [pk]
+  contactEmail String
   endDate DateTime
+  mailingList String
+  memberTracking String
   name String [not null]
   startDate DateTime
-  contactEmail String
   chairs contributions [not null]
-  memberTracking String
-  mailingList String
+  outreach working_group_outreach [not null]
+  reports working_group_reports [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-  WGReport wgreports [not null]
-  WGEventDetail WGEventDetail
-  wGEventDetailId String
 }
 
-Table wgreports {
+Table working_group_reports {
   id String [pk]
   comments Json
-  numberMebmers Int
+  facultativeQuestions String [not null]
+  members Int
+  narrativeReport String [not null]
   status ReportStatus [not null, default: 'draft']
   year Int [not null]
-  narrativeReport String [not null]
-  facultativeQuestions String [not null]
-  workingGroupId String
-  workingGroup working_groups
-  eventReport event_reports
+  workingGroupId String [not null]
+  workingGroup working_groups [not null]
+  workingGroupEvents working_group_events [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-  eventReportId String
 
   indexes {
     (workingGroupId, year) [unique]
   }
 }
 
-Table WGEventDetail {
+Table working_group_events {
   id String [pk]
-  eventTitle String [not null]
-  eventLink String [not null]
-  working_groups working_groups [not null]
-  eventDate DateTime
-  eventRole String [not null]
+  date DateTime
+  role WorkingGroupEventRole [not null]
+  title String [not null]
+  url String [not null]
+  reportId String [not null]
+  report working_group_reports [not null]
+}
+
+Table working_group_outreach {
+  id String [pk]
+  endDate DateTime
+  name String [not null]
+  startDate DateTime
+  type OutreachType [not null]
+  url String [not null]
+  workingGroupId String [not null]
+  workingGroup working_groups [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
 }
 
 Table users {
@@ -531,6 +542,16 @@ Enum SoftwareStatus {
   not_maintained
 }
 
+Enum WorkingGroupEventRole {
+  organiser
+  presenter
+}
+
+Enum WorkingGroupOutreachType {
+  website
+  social_media
+}
+
 Enum UserRole {
   admin
   contributor
@@ -573,11 +594,11 @@ Ref: service_reports.serviceId > services.id [delete: Cascade]
 
 Ref: service_kpis.serviceReportId > service_reports.id [delete: Cascade]
 
-Ref: working_groups.wGEventDetailId > WGEventDetail.id
+Ref: working_group_reports.workingGroupId > working_groups.id
 
-Ref: wgreports.workingGroupId > working_groups.id
+Ref: working_group_events.reportId > working_group_reports.id
 
-Ref: wgreports.eventReportId > event_reports.id
+Ref: working_group_outreach.workingGroupId > working_groups.id
 
 Ref: users.countryId > countries.id
 
