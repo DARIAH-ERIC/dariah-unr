@@ -28,7 +28,6 @@ export async function generateMetadata(props: DashboardWorkingGroupPageProps): P
 	const { id } = await params;
 
 	await assertPermissions(user, { kind: "working-group", id, action: "read" });
-	// TODO: return 403
 
 	const workingGroup = await getWorkingGroupById({ id });
 	if (workingGroup == null) {
@@ -57,7 +56,6 @@ export default async function DashboardWorkingGroupPage(
 	const { id } = await params;
 
 	await assertPermissions(user, { kind: "working-group", id, action: "read" });
-	// TODO: return 403
 
 	const workingGroup = await getWorkingGroupById({ id });
 	if (workingGroup == null) {

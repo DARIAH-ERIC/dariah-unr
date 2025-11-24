@@ -1,7 +1,9 @@
-import { assert, includes } from "@acdh-oeaw/lib";
+import { includes } from "@acdh-oeaw/lib";
+import { getLocale } from "next-intl/server";
 import { cache } from "react";
 
 import { hasPersonWorkingGroupRole } from "@/lib/data/permissions";
+import { redirect } from "@/lib/navigation/navigation";
 import type { User } from "@/lib/server/auth/sessions";
 
 type PermissionRequest =
@@ -72,5 +74,11 @@ export const hasPermissions = cache(async function hasPermissions(
 });
 
 export async function assertPermissions(user: User, request: PermissionRequest, date = new Date()) {
-	assert(await hasPermissions(user, request, date));
+	if (await hasPermissions(user, request, date)) {
+		return;
+	}
+
+	const locale = await getLocale();
+
+	redirect({ href: "/auth/unauthorized", locale });
 }

@@ -36,6 +36,13 @@
 		},
 		"title": "Sign in"
 	},
+	"AuthUnauthorizedPage": {
+		"message": "You are not authorized to view this page.",
+		"meta": {
+			"title": "Not authorized"
+		},
+		"title": "Not authorized"
+	},
 	"CalculationResult": {
 		"confirmation-success-message": "You have reached your financial in-kind threshold.",
 		"summary-success-message": "You have reached your financial in-kind threshold, congratulations! You have nothing further to do."
