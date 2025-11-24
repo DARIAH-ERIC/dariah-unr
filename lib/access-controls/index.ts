@@ -31,11 +31,8 @@ export const hasPermissions = cache(async function hasPermissions(
 				return user.role === "national_coordinator";
 			}
 
+			case "read":
 			case "read-write": {
-				return true;
-			}
-
-			case "read": {
 				return true;
 			}
 		}
