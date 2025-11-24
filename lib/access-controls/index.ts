@@ -1,5 +1,6 @@
 import { assert } from "@acdh-oeaw/lib";
 import type { User } from "@prisma/client";
+import { cache } from "react";
 
 import { hasPersonWorkingGroupRole } from "@/lib/data/contributions";
 
@@ -7,7 +8,7 @@ type PermissionRequest =
 	| { kind: "country"; id: string; action: "read" | "read-write" | "confirm" }
 	| { kind: "working-group"; id: string; action: "read" | "read-write" | "confirm" };
 
-export async function hasPermissions(
+export const hasPermissions = cache(async function hasPermissions(
 	user: User,
 	request: PermissionRequest,
 	date = new Date(),
@@ -71,7 +72,7 @@ export async function hasPermissions(
 	}
 
 	return false;
-}
+});
 
 export async function assertPermissions(user: User, request: PermissionRequest, date = new Date()) {
 	assert(await hasPermissions(user, request, date));
