@@ -1,4 +1,4 @@
-import { assert } from "@acdh-oeaw/lib";
+import { assert, includes } from "@acdh-oeaw/lib";
 import type { User } from "@prisma/client";
 import { cache } from "react";
 
@@ -28,12 +28,12 @@ export const hasPermissions = cache(async function hasPermissions(
 
 		switch (request.action) {
 			case "confirm": {
-				return user.role === "national_coordinator";
+				return includes(["national_coordinator"], user.role);
 			}
 
 			case "read":
 			case "read-write": {
-				return true;
+				return includes(["national_coordinator", "contributor"], user.role);
 			}
 		}
 	}
