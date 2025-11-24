@@ -570,7 +570,6 @@ model WorkingGroup {
   startDate      DateTime? @map(name: "start_date")
 
   chairs   Contribution[]
-  // FIXME: https://github.com/DARIAH-ERIC/dariah-unr/issues/309#issuecomment-3564930378
   outreach WorkingGroupOutreach[]
   reports  WorkingGroupReport[]
 
@@ -603,12 +602,9 @@ model WorkingGroupReport {
   @@map(name: "working_group_reports")
 }
 
-// FIXME: https://github.com/DARIAH-ERIC/dariah-unr/issues/218#issuecomment-3564940915
 enum WorkingGroupEventRole {
   organiser
   presenter
-
-  @@map("EventRole")
 }
 
 model WorkingGroupEvent {
