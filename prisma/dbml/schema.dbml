@@ -149,6 +149,7 @@ Table persons {
   orcid String
   contributions contributions [not null]
   institutions institutions [not null]
+  users users [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
@@ -336,7 +337,9 @@ Table users {
   password String [not null]
   role UserRole [not null, default: 'contributor']
   countryId String
+  personId String
   country countries
+  person persons
   sessions sessions [not null]
 }
 
@@ -577,5 +580,7 @@ Ref: wgreports.workingGroupId > working_groups.id
 Ref: wgreports.eventReportId > event_reports.id
 
 Ref: users.countryId > countries.id
+
+Ref: users.personId > persons.id
 
 Ref: sessions.userId > users.id [delete: Cascade]
