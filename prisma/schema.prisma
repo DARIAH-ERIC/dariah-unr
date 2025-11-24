@@ -128,9 +128,8 @@ model EventReport {
 
   report Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime   @default(now()) @map(name: "created_at")
-  updatedAt DateTime   @updatedAt @map(name: "updated_at")
-  WGReport  WGReport[]
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
 
   @@map(name: "event_reports")
 }
@@ -563,59 +562,88 @@ model Software {
 model WorkingGroup {
   id String @id @default(uuid()) @db.Uuid
 
-  endDate   DateTime? @map(name: "end_date")
-  name      String
-  startDate DateTime? @map(name: "start_date")
+  contactEmail   String?   @map(name: "contact_email")
+  endDate        DateTime? @map(name: "end_date")
+  mailingList    String?   @map(name: "mailing_list")
+  memberTracking String?   @map(name: "member_tracking")
+  name           String
+  startDate      DateTime? @map(name: "start_date")
 
-  contactEmail   String?        @map(name: "contact_email")
-	chairs         Contribution[]
-  memberTracking String?        @map(name: "member_tracking") // describe how you keep track of the WG members, e.g. via mailing list?
-  mailingList    String?        @map(name: "mailing_list") // If you use a mailing list for the WG communication, provide here.
+  chairs   Contribution[]
+  outreach WorkingGroupOutreach[]
+  reports  WorkingGroupReport[]
 
-  createdAt       DateTime       @default(now()) @map(name: "created_at")
-  updatedAt       DateTime       @updatedAt @map(name: "updated_at")
-  WGReport        WGReport[]
-  WGEventDetail   WGEventDetail? @relation(fields: [wGEventDetailId], references: [id])
-  wGEventDetailId String?        @db.Uuid
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
 
   @@map(name: "working_groups")
 }
 
-model WGReport {
+model WorkingGroupReport {
   id String @id @default(uuid()) @db.Uuid
 
-  comments      Json?
-  numberMebmers Int?
-  status        ReportStatus @default(draft)
-  year          Int
+  comments             Json?
+  facultativeQuestions String       @map(name: "facultative_questions")
+  members              Int?
+  narrativeReport      String       @map(name: "narrative_report")
+  status               ReportStatus @default(draft)
+  year                 Int
 
-  narrativeReport      String // this should allow a long rich text
-  facultativeQuestions String // this should allow a long rich text
+  workingGroupId String @map(name: "working_group_id") @db.Uuid
 
-  workingGroupId String?       @map(name: "working_group_id") @db.Uuid
-  workingGroup   WorkingGroup? @relation(fields: [workingGroupId], references: [id])
+  workingGroup       WorkingGroup        @relation(fields: [workingGroupId], references: [id])
+  workingGroupEvents WorkingGroupEvent[]
 
-  eventReport EventReport? @relation(fields: [eventReportId], references: [id])
-
-  createdAt     DateTime @default(now()) @map(name: "created_at")
-  updatedAt     DateTime @updatedAt @map(name: "updated_at")
-  eventReportId String?  @db.Uuid
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
 
   @@unique([workingGroupId, year])
   @@index(fields: [year])
-  @@map(name: "wgreports")
+  @@map(name: "working_group_reports")
 }
 
-model WGEventDetail {
+enum WorkingGroupEventRole {
+  organiser
+  presenter
+}
+
+model WorkingGroupEvent {
   id String @id @default(uuid()) @db.Uuid
 
-  eventTitle     String
-  eventLink      String // URL
-  working_groups WorkingGroup[] // multiple WGs can organise one event
+  date  DateTime?
+  role  WorkingGroupEventRole
+  title String
+  url   String
 
-  eventDate DateTime? // not finally decided yet, if necessary.
+  reportId String @map(name: "report_id") @db.Uuid
 
-  eventRole String // role of WG in the organisation of the event (something like organiser, presenter ...) - enum not final yet
+  report WorkingGroupReport @relation(fields: [reportId], references: [id])
+
+  @@map(name: "working_group_events")
+}
+
+enum WorkingGroupOutreachType {
+  website
+  social_media
+}
+
+model WorkingGroupOutreach {
+  id String @id @default(uuid()) @db.Uuid
+
+  endDate   DateTime?    @map(name: "end_date")
+  name      String
+  startDate DateTime?    @map(name: "start_date")
+  type      OutreachType
+  url       String
+
+  workingGroupId String @map(name: "working_group_id") @db.Uuid
+
+  workingGroup WorkingGroup @relation(fields: [workingGroupId], references: [id])
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "working_group_outreach")
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -634,7 +662,7 @@ model User {
   password String
   role     UserRole @default(contributor)
 
-  countryId String? @map("country_id") @db.Uuid
+  countryId String? @map(name: "country_id") @db.Uuid
 
   country  Country?  @relation(fields: [countryId], references: [id])
   sessions Session[]
@@ -649,7 +677,7 @@ model Session {
   createdAt      DateTime @map(name: "created_at")
   lastVerifiedAt DateTime @map(name: "last_verified_at")
 
-  userId String @map("user_id") @db.Uuid
+  userId String @map(name: "user_id") @db.Uuid
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
