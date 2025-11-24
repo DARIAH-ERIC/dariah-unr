@@ -205,6 +205,12 @@
 		"create-page-for-year": "Create report for {year}",
 		"edit-page-for-year": "Edit report for {year}"
 	},
+	"DashboardWorkingGroupPage": {
+		"meta": {
+			"title": "Working group - {name}"
+		},
+		"title": "Working group - {name}"
+	},
 	"Error": {
 		"something-went-wrong": "Something went wrong!",
 		"try-again": "Try again"
