@@ -231,11 +231,9 @@ Table services {
   type ServiceType
   url String[] [not null]
   valueProposition String
-  sizeId String [not null]
   countries countries [not null]
   institutions institution_service [not null]
   reports service_reports [not null]
-  size service_sizes [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
@@ -244,7 +242,6 @@ Table service_sizes {
   id String [pk]
   annualValue Int [not null]
   type ServiceSizeType [not null]
-  services services [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
@@ -582,8 +579,6 @@ Ref: projects_funding_leverage.reportId > reports.id [delete: Cascade]
 Ref: reports.countryId > countries.id [delete: Cascade]
 
 Ref: research_policy_developments.reportId > reports.id [delete: Cascade]
-
-Ref: services.sizeId > service_sizes.id
 
 Ref: service_reports.reportId > reports.id [delete: Cascade]
 
