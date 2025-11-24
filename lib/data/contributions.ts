@@ -1,4 +1,4 @@
-import type { Contribution, Country, Person, Role, RoleType, WorkingGroup } from "@prisma/client";
+import type { Contribution, Country, Person, Role, WorkingGroup } from "@prisma/client";
 
 import { db } from "@/lib/db";
 
@@ -209,45 +209,6 @@ export function updateContribution(params: UpdateContributionParams) {
 							},
 						}
 					: undefined,
-		},
-	});
-}
-
-interface HasPersonWorkingGroupRoleParams {
-	personId: string;
-	workingGroupId: string;
-	role: [RoleType, ...Array<RoleType>];
-	date: Date;
-}
-
-export function hasPersonWorkingGroupRole({
-	personId,
-	workingGroupId,
-	role,
-	date,
-}: HasPersonWorkingGroupRoleParams) {
-	return db.contribution.count({
-		where: {
-			personId,
-			workingGroupId,
-			role: {
-				type: {
-					in: role,
-				},
-			},
-			startDate: {
-				lte: date,
-			},
-			OR: [
-				{
-					endDate: null,
-				},
-				{
-					endDate: {
-						gte: date,
-					},
-				},
-			],
 		},
 	});
 }

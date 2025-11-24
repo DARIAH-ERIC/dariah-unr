@@ -1,7 +1,7 @@
 import { assert, includes } from "@acdh-oeaw/lib";
 import { cache } from "react";
 
-import { hasPersonWorkingGroupRole } from "@/lib/data/contributions";
+import { hasPersonWorkingGroupRole } from "@/lib/data/permissions";
 import type { User } from "@/lib/server/auth/sessions";
 
 type PermissionRequest =
