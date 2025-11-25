@@ -20,6 +20,7 @@ import { getRoles } from "@/lib/data/role";
 import { getWorkingGroups } from "@/lib/data/working-group";
 import type { IntlLocale } from "@/lib/i18n/locales";
 import { createHref } from "@/lib/navigation/create-href";
+import { redirect } from "@/lib/navigation/navigation";
 import { dashboardCountryPageParams, dashboardCountryPageSections } from "@/lib/schemas/dashboard";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
@@ -55,7 +56,7 @@ export default async function DashboardCountryPage(
 	const { locale } = await params;
 	setRequestLocale(locale);
 
-	const t = await getTranslations("DashboardCountryPage");
+	const t = await getTranslations({ locale, namespace: "DashboardCountryPage" });
 
 	const { user } = await assertAuthenticated();
 
@@ -64,7 +65,7 @@ export default async function DashboardCountryPage(
 	const { code, section } = result.data;
 	const country = await getCountryByCode({ code });
 
-	if (user.countryId !== country?.id) return notFound();
+	if (user.countryId !== country?.id) redirect({ href: "/auth/unauthorized", locale });
 
 	return (
 		<MainContent className="container grid content-start gap-8 py-8">
@@ -84,11 +85,13 @@ interface DashboardCountryPageContentProps {
 async function DashboardCountryPageContent(props: DashboardCountryPageContentProps) {
 	const { country, section } = props;
 
-	const institutions = await getInstitutionsByCountry({ countryId: country.id });
-	const contributions = await getContributionsByCountry({ countryId: country.id });
-	const persons = await getPersons();
-	const workingGroups = await getWorkingGroups();
-	const roles = await getRoles();
+	const [institutions, contributions, persons, workingGroups, roles] = await Promise.all([
+		getInstitutionsByCountry({ countryId: country.id }),
+		getContributionsByCountry({ countryId: country.id }),
+		getPersons(),
+		getWorkingGroups(),
+		getRoles(),
+	]);
 
 	const t = await getTranslations("DashboardCountryPage");
 
@@ -159,7 +162,7 @@ async function DashboardCountryPageNavigation(
 
 	return (
 		<nav className={className}>
-			<ol className="flex w-fit flex-wrap border-b">
+			<ul className="flex w-fit flex-wrap border-b">
 				{navItems.map((navItem) => {
 					return (
 						<li key={navItem}>
@@ -177,7 +180,7 @@ async function DashboardCountryPageNavigation(
 						</li>
 					);
 				})}
-			</ol>
+			</ul>
 		</nav>
 	);
 }
