@@ -8,7 +8,7 @@ import { constantTimeEqual, generateSecureRandomString, hashSecret } from "@/lib
 
 export type Session = DbSession;
 
-export type User = Pick<DbUser, "id" | "email" | "name" | "role" | "countryId">;
+export type User = Pick<DbUser, "id" | "email" | "name" | "role" | "countryId" | "personId">;
 
 export interface SessionValidationResultSuccess {
 	session: Session;
@@ -68,6 +68,7 @@ export async function validateSessionToken(token: string): Promise<SessionValida
 					name: true,
 					role: true,
 					countryId: true,
+					personId: true,
 				},
 			},
 		},
@@ -91,6 +92,7 @@ export async function validateSessionToken(token: string): Promise<SessionValida
 		name: result.user.name,
 		role: result.user.role,
 		countryId: result.user.countryId,
+		personId: result.user.personId,
 	};
 
 	if (now.getTime() - session.lastVerifiedAt.getTime() >= inactivityTimeoutSeconds * 1000) {
