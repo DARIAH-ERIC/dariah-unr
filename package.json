@@ -12,7 +12,6 @@
 		"build": "next build",
 		"db:create-annual-values": "dotenv -c development -- tsx ./prisma/create-annual-values.ts",
 		"db:create-country-ids-from-sshomp": "dotenv -c development -- tsx ./prisma/create-country-ids-from-sshomp.ts",
-		"db:create-initial-entries-from-sshomp": "dotenv -c development -- tsx ./prisma/create-initial-entries-from-sshomp.ts",
 		"db:create-operational-cost-thresholds": "dotenv -c development -- tsx ./prisma/create-operational-cost-thresholds.ts",
 		"db:create-report-year": "dotenv -c development -- tsx ./prisma/create-report-year.ts",
 		"db:update-password": "dotenv -c development -- tsx ./prisma/update-password.ts",
