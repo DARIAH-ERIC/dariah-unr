@@ -77,6 +77,12 @@
 		},
 		"title": "Admin dashboard"
 	},
+	"DashboardAdminCampaignPage": {
+		"meta": {
+			"title": "Reporting campaign"
+		},
+		"title": "Reporting campaign"
+	},
 	"DashboardAdminContributionsPage": {
 		"meta": {
 			"title": "Contributions"
@@ -272,19 +278,25 @@
 	},
 	"actions": {
 		"admin": {
-			"createContribtion": {
+			"createCampaign": {
+				"errors": {
+					"default": "Could not initiate reporting campaign."
+				},
+				"success": "Successfully initiated reporting campaign."
+			},
+			"createContribution": {
 				"errors": {
 					"default": "Could not create contribution."
 				},
 				"success": "Successfully created contribution."
 			},
-			"deleteContribtion": {
+			"deleteContribution": {
 				"errors": {
 					"default": "Could not delete contribution."
 				},
 				"success": "Successfully deleted contribution."
 			},
-			"updateContribtion": {
+			"updateContribution": {
 				"errors": {
 					"default": "Failed to update contribution."
 				},

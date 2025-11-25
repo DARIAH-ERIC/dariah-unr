@@ -41,7 +41,7 @@ export async function updateContributionAction(
 	previousFormState: FormState | undefined,
 	formData: FormData,
 ): Promise<FormState> {
-	const t = await getTranslations("actions.admin.updateContribtion");
+	const t = await getTranslations("actions.admin.updateContribution");
 
 	await assertAuthenticated(["admin"]);
 
