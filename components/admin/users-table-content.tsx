@@ -198,7 +198,7 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 				sortDescriptor={sortDescriptor}
 			>
 				<TableHeader>
-					<Column allowsSorting={true} defaultWidth="2fr" id="name" isRowHeader={true}>
+					<Column allowsSorting={true} defaultWidth="1fr" id="name" isRowHeader={true}>
 						Name
 					</Column>
 					<Column id="email">Email</Column>
