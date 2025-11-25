@@ -15,6 +15,7 @@ const formSchema = z.object({
 	name: z.string().optional(),
 	role: z.enum(Object.values(UserRole) as [UserRole, ...Array<UserRole>]),
 	country: z.string().optional(),
+	person: z.string().optional(),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -55,7 +56,7 @@ export async function updateUserAction(
 		};
 	}
 
-	const { id, name, role, country: countryId } = result.data;
+	const { id, name, role, country: countryId, person: personId } = result.data;
 
 	try {
 		await updateUser({
@@ -63,6 +64,7 @@ export async function updateUserAction(
 			name,
 			role,
 			countryId,
+			personId,
 		});
 
 		revalidatePath("/[locale]/dashboard/admin/users", "page");

@@ -16,6 +16,7 @@ const formSchema = z.object({
 	name: z.string(),
 	role: z.enum(Object.values(UserRole) as [UserRole, ...Array<UserRole>]),
 	country: z.string().optional(),
+	person: z.string().optional(),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -56,7 +57,7 @@ export async function createUserAction(
 		};
 	}
 
-	const { email, password, name, role, country: countryId } = result.data;
+	const { email, password, name, role, country: countryId, person: personId } = result.data;
 
 	try {
 		await createUser({
@@ -65,6 +66,7 @@ export async function createUserAction(
 			name,
 			role,
 			countryId,
+			personId,
 		});
 
 		revalidatePath("/[locale]/dashboard/admin/users", "page");
