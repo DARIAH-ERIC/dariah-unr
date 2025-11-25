@@ -13,10 +13,6 @@ export const env = createEnv({
 	},
 	private(input) {
 		const Schema = z.object({
-			BASEROW_API_BASE_URL: z.string().url().optional(),
-			BASEROW_DATABASE_ID: z.string().min(1).optional(),
-			BASEROW_EMAIL: z.string().email().optional(),
-			BASEROW_PASSWORD: z.string().min(1).optional(),
 			BUILD_MODE: z.enum(["export", "standalone"]).default("standalone"),
 			BUNDLE_ANALYZER: z.enum(["disabled", "enabled"]).default("disabled"),
 			CI: z.unknown().transform(Boolean).optional(),
@@ -76,10 +72,6 @@ export const env = createEnv({
 		return Schema.parse(input);
 	},
 	environment: {
-		BASEROW_API_BASE_URL: process.env.BASEROW_API_BASE_URL,
-		BASEROW_DATABASE_ID: process.env.BASEROW_DATABASE_ID,
-		BASEROW_EMAIL: process.env.BASEROW_EMAIL,
-		BASEROW_PASSWORD: process.env.BASEROW_PASSWORD,
 		BUILD_MODE: process.env.BUILD_MODE,
 		BUNDLE_ANALYZER: process.env.BUNDLE_ANALYZER,
 		CI: process.env.CI,
