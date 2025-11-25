@@ -215,7 +215,12 @@ export async function ingestDataFromSshomp() {
 								return { id: country.id };
 							}),
 						},
-						// type: isCoreService ? ServiceType.core : ServiceType.community,
+						/**
+						 * Core services have the "DARIAH Core Service" keyword in the marketplace.
+						 * All other services have type "community", because "internal" services are
+						 * not sourced from marketplace but exist only in the knowledge base.
+						 */
+						type: isCoreService ? ServiceType.core : ServiceType.community,
 					},
 				});
 
