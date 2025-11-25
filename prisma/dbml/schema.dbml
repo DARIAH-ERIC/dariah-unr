@@ -291,7 +291,7 @@ Table working_groups {
   mailingList String
   memberTracking String
   name String [not null]
-  slug String
+  slug String [not null]
   startDate DateTime
   chairs contributions [not null]
   outreach working_group_outreach [not null]

@@ -568,7 +568,7 @@ model WorkingGroup {
   mailingList    String?   @map(name: "mailing_list")
   memberTracking String?   @map(name: "member_tracking")
   name           String
-  slug           String?
+  slug           String
   startDate      DateTime? @map(name: "start_date")
 
   chairs   Contribution[]
