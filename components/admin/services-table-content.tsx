@@ -8,7 +8,6 @@ import {
 	type Prisma,
 	ServiceAudience,
 	ServiceMarketplaceStatus,
-	type ServiceSize,
 	ServiceStatus,
 	ServiceType,
 } from "@prisma/client";
@@ -69,7 +68,6 @@ type Action =
 				include: {
 					countries: { select: { id: true } };
 					institutions: { select: { role: true; institution: { select: { id: true } } } };
-					size: { select: { id: true } };
 				};
 			}>;
 	  }
@@ -79,7 +77,6 @@ type Action =
 				include: {
 					countries: { select: { id: true } };
 					institutions: { select: { role: true; institution: { select: { id: true } } } };
-					size: { select: { id: true } };
 				};
 			}>;
 	  };
@@ -91,16 +88,6 @@ interface AdminServicesTableContentProps {
 			include: {
 				countries: { select: { id: true } };
 				institutions: { select: { role: true; institution: { select: { id: true } } } };
-				size: { select: { id: true } };
-			};
-		}>
-	>;
-	serviceSizes: Array<
-		Prisma.ServiceSizeGetPayload<{
-			select: {
-				id: true;
-				annualValue: true;
-				type: true;
 			};
 		}>
 	>;
@@ -109,7 +96,7 @@ interface AdminServicesTableContentProps {
 }
 
 export function AdminServicesTableContent(props: AdminServicesTableContentProps): ReactNode {
-	const { countries, institutions, services, serviceSizes, hideFilter } = props;
+	const { countries, institutions, services, hideFilter } = props;
 
 	const countriesById = useMemo(() => {
 		return keyByToMap(countries, (country) => {
@@ -122,12 +109,6 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 			return institution.id;
 		});
 	}, [institutions]);
-
-	const serviceSizesById = useMemo(() => {
-		return keyByToMap(serviceSizes, (serviceSize) => {
-			return serviceSize.id;
-		});
-	}, [serviceSizes]);
 
 	const [action, setAction] = useState<Action | null>(null);
 
@@ -142,7 +123,7 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 	});
 
 	const [sortDescriptor, setSortDescriptor] = useState({
-		column: "name" as "country" | "marketplaceStatus" | "name" | "size" | "status" | "type",
+		column: "name" as "country" | "marketplaceStatus" | "name" | "status" | "type",
 		direction: "ascending" as "ascending" | "descending",
 	});
 
@@ -159,16 +140,6 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 					return countryA.localeCompare(countryZ);
 				}
 
-				case "size": {
-					const idA = a.size.id;
-					const sizeA = serviceSizesById.get(idA)?.type ?? "";
-
-					const idZ = z.size.id;
-					const sizeZ = serviceSizesById.get(idZ)?.type ?? "";
-
-					return sizeA.localeCompare(sizeZ);
-				}
-
 				default: {
 					const valueA = a[sortDescriptor.column] ?? "";
 					const valueZ = z[sortDescriptor.column] ?? "";
@@ -183,7 +154,7 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 		}
 
 		return items;
-	}, [sortDescriptor, filteredItems, countriesById, serviceSizesById]);
+	}, [sortDescriptor, filteredItems, countriesById]);
 
 	const pagination = usePagination({ items });
 
@@ -243,9 +214,6 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 					<Column allowsSorting={true} id="status">
 						Status
 					</Column>
-					<Column allowsSorting={true} id="size">
-						Size
-					</Column>
 					<Column allowsSorting={true} id="type">
 						Type
 					</Column>
@@ -284,7 +252,6 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 									{row.countries[0]?.id ? countriesById.get(row.countries[0].id)?.name : undefined}
 								</Cell>
 								<Cell>{row.status}</Cell>
-								<Cell>{serviceSizesById.get(row.size.id)?.type}</Cell>
 								<Cell>{row.type}</Cell>
 								<Cell>
 									<span title={row.url[0] ?? undefined}>{row.url[0]}</span>
@@ -330,7 +297,6 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 				countriesById={countriesById}
 				institutionsById={institutionsById}
 				onClose={onDialogClose}
-				serviceSizesById={serviceSizesById}
 			/>
 			<EditServicesDialog
 				key={createKey("edit-service", action?.item?.id)}
@@ -338,15 +304,13 @@ export function AdminServicesTableContent(props: AdminServicesTableContentProps)
 				countriesById={countriesById}
 				institutionsById={institutionsById}
 				onClose={onDialogClose}
-				serviceSizesById={serviceSizesById}
 			/>
 			<DeleteServicesDialog
 				key={createKey("delete-service", action?.item?.id)}
 				action={action}
 				onClose={onDialogClose}
 			/>
-
-			<ServiceStatistics serviceSizesById={serviceSizesById} services={services} />
+			<ServiceStatistics services={services} />
 		</Fragment>
 	);
 }
@@ -424,12 +388,11 @@ interface CreateServicesDialogProps {
 	action: Action | null;
 	countriesById: Map<Country["id"], Country>;
 	institutionsById: Map<Institution["id"], Institution>;
-	serviceSizesById: Map<ServiceSize["id"], Pick<ServiceSize, "id" | "type">>;
 	onClose: () => void;
 }
 
 function CreateServicesDialog(props: CreateServicesDialogProps) {
-	const { action, countriesById, institutionsById, onClose, serviceSizesById } = props;
+	const { action, countriesById, institutionsById, onClose } = props;
 
 	const formId = useId();
 
@@ -460,7 +423,6 @@ function CreateServicesDialog(props: CreateServicesDialogProps) {
 										institutionsById={institutionsById}
 										onClose={close}
 										service={service}
-										serviceSizesById={serviceSizesById}
 									/>
 								</div>
 
@@ -481,12 +443,11 @@ interface EditServicesDialogProps {
 	action: Action | null;
 	countriesById: Map<Country["id"], Country>;
 	institutionsById: Map<Institution["id"], Institution>;
-	serviceSizesById: Map<ServiceSize["id"], Pick<ServiceSize, "id" | "type">>;
 	onClose: () => void;
 }
 
 function EditServicesDialog(props: EditServicesDialogProps) {
-	const { action, countriesById, institutionsById, onClose, serviceSizesById } = props;
+	const { action, countriesById, institutionsById, onClose } = props;
 
 	const formId = useId();
 
@@ -517,7 +478,6 @@ function EditServicesDialog(props: EditServicesDialogProps) {
 										institutionsById={institutionsById}
 										onClose={close}
 										service={service}
-										serviceSizesById={serviceSizesById}
 									/>
 								</div>
 
@@ -543,25 +503,15 @@ interface ServicesEditFormProps {
 		include: {
 			countries: { select: { id: true } };
 			institutions: { select: { role: true; institution: { select: { id: true } } } };
-			size: { select: { id: true } };
 		};
 	}> | null;
 	institutionsById: Map<Institution["id"], Institution>;
-	serviceSizesById: Map<ServiceSize["id"], Pick<ServiceSize, "id" | "type">>;
 	onClose: () => void;
 }
 
 function ServicesEditForm(props: ServicesEditFormProps) {
-	const {
-		countriesById,
-		formId,
-		formAction,
-		formState,
-		institutionsById,
-		service,
-		serviceSizesById,
-		onClose,
-	} = props;
+	const { countriesById, formId, formAction, formState, institutionsById, service, onClose } =
+		props;
 
 	const serviceStatuses = Object.values(ServiceStatus);
 	const serviceMarketplaceStatuses = Object.values(ServiceMarketplaceStatus);
@@ -646,21 +596,6 @@ function ServicesEditForm(props: ServicesEditFormProps) {
 					return (
 						<SelectItem key={serviceStatus} id={serviceStatus} textValue={serviceStatus}>
 							{serviceStatus}
-						</SelectItem>
-					);
-				})}
-			</SelectField>
-
-			<SelectField
-				defaultSelectedKey={service?.size.id ?? undefined}
-				isRequired={true}
-				label="Size"
-				name="size"
-			>
-				{Array.from(serviceSizesById.values()).map((serviceSize) => {
-					return (
-						<SelectItem key={serviceSize.id} id={serviceSize.id} textValue={serviceSize.type}>
-							{serviceSize.type}
 						</SelectItem>
 					);
 				})}
@@ -812,21 +747,13 @@ interface ServiceStatisticsProps {
 			include: {
 				countries: { select: { id: true } };
 				institutions: { select: { role: true; institution: { select: { id: true } } } };
-				size: { select: { id: true } };
 			};
 		}>
 	>;
-	serviceSizesById: Map<ServiceSize["id"], Pick<ServiceSize, "id" | "type">>;
 }
 
 function ServiceStatistics(props: ServiceStatisticsProps) {
-	const { services, serviceSizesById } = props;
-
-	const servicesBySize = useMemo(() => {
-		return groupByToMap(services, (service) => {
-			return service.size.id;
-		});
-	}, [services]);
+	const { services } = props;
 
 	const servicesByStatus = useMemo(() => {
 		return groupByToMap(services, (service) => {
@@ -844,22 +771,6 @@ function ServiceStatistics(props: ServiceStatisticsProps) {
 		<div className="grid gap-y-2 text-sm text-neutral-700 dark:text-neutral-300">
 			<p>There are currently {services.length} services in the database.</p>
 			<dl className="grid gap-y-2">
-				<div>
-					<dt className="text-xs font-semibold tracking-wide uppercase">Grouped by size</dt>
-					<dd>
-						<ul>
-							{Array.from(serviceSizesById.values()).map((size) => {
-								return (
-									<li key={size.id}>
-										<span>
-											{size.type}: {servicesBySize.get(size.id)?.length ?? 0}
-										</span>
-									</li>
-								);
-							})}
-						</ul>
-					</dd>
-				</div>
 				<div>
 					<dt className="text-xs font-semibold tracking-wide uppercase">Grouped by status</dt>
 					<dd>

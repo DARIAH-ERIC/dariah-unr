@@ -239,12 +239,6 @@ async function ingest() {
 				url: row.accessibleAT ? [row.accessibleAT] : undefined,
 				valueProposition: row["Value proposition"],
 				countries,
-				size: {
-					connect: {
-						/** This is a required field, but not present in the baserow database. */
-						id: ids.serviceSizes.get("small"),
-					},
-				},
 			},
 		});
 		ids.services.set(row.id, record.id);

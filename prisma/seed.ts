@@ -106,21 +106,9 @@ async function seed() {
 		},
 	});
 
-	const serviceSize = await db.serviceSize.create({
-		data: {
-			annualValue: 1,
-			type: "small",
-		},
-	});
-
 	const service = await db.service.create({
 		data: {
 			name: "Typesense",
-			size: {
-				connect: {
-					id: serviceSize.id,
-				},
-			},
 		},
 	});
 

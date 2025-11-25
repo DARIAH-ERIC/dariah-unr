@@ -168,11 +168,6 @@ async function createEntriesFromSshomp() {
 								return { id: country.id };
 							}),
 						},
-						size: {
-							connect: {
-								id: serviceSizeSmall.id,
-							},
-						},
 					},
 				});
 				log.info(`Created service "${String(name)}".`);

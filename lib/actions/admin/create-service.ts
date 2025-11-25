@@ -45,7 +45,6 @@ const formSchema = z.object({
 	type: z.enum(Object.values(ServiceType) as [ServiceType, ...Array<ServiceType>]).optional(),
 	url: z.array(z.string()).optional(),
 	valueProposition: z.string().optional(),
-	size: z.string(),
 	countries: z.array(z.string()).optional(),
 	institutions: z
 		.array(
@@ -117,7 +116,6 @@ export async function createServiceAction(
 		type,
 		url,
 		valueProposition,
-		size,
 		countries,
 		institutions,
 	} = result.data;
@@ -140,7 +138,6 @@ export async function createServiceAction(
 			type,
 			url,
 			valueProposition,
-			size,
 			countries,
 			institutions,
 		});

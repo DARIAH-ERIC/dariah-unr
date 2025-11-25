@@ -64,7 +64,6 @@ interface AdminCountryDashboardContentProps {
 							institution: true;
 						};
 					};
-					size: true;
 				};
 			};
 			software: {
@@ -82,7 +81,7 @@ interface AdminCountryDashboardContentProps {
 }
 
 export function AdminCountryDashboardContent(props: AdminCountryDashboardContentProps): ReactNode {
-	const { country, countries, institutions, persons, roles, serviceSizes, workingGroups } = props;
+	const { country, countries, institutions, persons, roles, workingGroups } = props;
 
 	const [updateDataFilter, setUpdateDataFilter] = useState("update_country_data");
 
@@ -165,7 +164,6 @@ export function AdminCountryDashboardContent(props: AdminCountryDashboardContent
 										countries={countries}
 										hideFilter={true}
 										institutions={institutions}
-										serviceSizes={serviceSizes}
 										services={country.services}
 									/>
 								</div>
