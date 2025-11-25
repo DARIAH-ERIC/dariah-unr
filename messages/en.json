@@ -186,6 +186,14 @@
 		"summary": "Summary",
 		"welcome": "Welcome"
 	},
+	"DashboardCountryPageNavigation": {
+		"links": {
+			"nc-data": "National Consortium",
+			"contributions": "Contributions",
+			"institutions": "Institutions",
+			"reports": "Reports"
+		}
+	},
 	"DashboardCountryReportNavigation": {
 		"links": {
 			"confirm": "Confirmation",
@@ -201,6 +209,13 @@
 			"welcome": "Welcome"
 		}
 	},
+	"DashboardCountryPage": {
+		"meta": {
+			"title": "National Dashboard"
+		},
+		"title": "National Dashboard",
+		"go-to-report": "Report for {year}"
+	},
 	"DashboardCountryReportPage": {
 		"meta": {
 			"title": "Report"
@@ -208,11 +223,11 @@
 		"title": "Report"
 	},
 	"DashboardPage": {
-		"lead-in": "Reprehenderit labore nostrud consectetur exercitation ea aliquip sunt officia ea culpa voluptate. Laborum excepteur do voluptate adipisicing consequat ipsum et elit dolore fugiat mollit. Eiusmod sunt et sit est ipsum aliquip est aliquip non eiusmod.",
+		"message": "You are not affiliated with a country",
 		"meta": {
-			"title": "Dashboard"
+			"title": "Dasboard not available"
 		},
-		"title": "Dashboard"
+		"title": "Dasboard not available"
 	},
 	"DashboardPageContent": {
 		"create-page-for-year": "Create report for {year}",

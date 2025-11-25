@@ -71,6 +71,23 @@ export async function getReportById(params: GetReportByIdParams) {
 	};
 }
 
+interface GetReportYearsByCountryCodeParams {
+	countryCode: Country["code"];
+}
+
+export function getReportYearsByCountryCode(params: GetReportYearsByCountryCodeParams) {
+	const { countryCode } = params;
+
+	return db.report.findMany({
+		where: {
+			country: {
+				code: countryCode,
+			},
+		},
+		select: { year: true },
+	});
+}
+
 interface GetReportByCountryCodeParams {
 	countryCode: Country["code"];
 	year: Report["year"];
