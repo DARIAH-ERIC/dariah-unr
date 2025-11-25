@@ -3,6 +3,7 @@
 import { keyByToMap } from "@acdh-oeaw/lib";
 import type { Contribution, Person, Prisma } from "@prisma/client";
 import { useListData } from "@react-stately/data";
+import slugify from "@sindresorhus/slugify";
 import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon, TrashIcon } from "lucide-react";
 import { useFormatter } from "next-intl";
 import {
@@ -429,6 +430,7 @@ function CreateWorkingGroupDialog(props: CreateWorkingGroupDialogProps) {
 
 								<div>
 									<WorkingGroupEditForm
+										action={action.kind}
 										chairsById={chairsById}
 										formAction={formAction}
 										formId={formId}
@@ -484,6 +486,7 @@ function EditWorkingGroupDialog(props: EditWorkingGroupDialogProps) {
 
 								<div>
 									<WorkingGroupEditForm
+										action="edit"
 										chairsById={chairsById}
 										formAction={formAction}
 										formId={formId}
@@ -508,6 +511,7 @@ function EditWorkingGroupDialog(props: EditWorkingGroupDialogProps) {
 }
 
 interface WorkingGroupEditFormProps {
+	action: "create" | "edit";
 	chairsById: Map<Contribution["id"], Contribution>;
 	persons: Array<Person>;
 	formId: string;
@@ -528,7 +532,7 @@ type WorkingGroupChair = {
 } & ({ id: string; _id?: undefined } | { _id: string; id?: undefined });
 
 function WorkingGroupEditForm(props: WorkingGroupEditFormProps) {
-	const { formId, formAction, formState, persons, workingGroup, onClose } = props;
+	const { action, formId, formAction, formState, persons, workingGroup, onClose } = props;
 
 	const chairs = useListData<WorkingGroupChair>({
 		initialItems: workingGroup?.chairs ?? [],
@@ -538,6 +542,8 @@ function WorkingGroupEditForm(props: WorkingGroupEditFormProps) {
 	});
 
 	const chairsLabelId = useId();
+
+	const [slugified, setSlugified] = useState("");
 
 	return (
 		<Form
@@ -551,12 +557,43 @@ function WorkingGroupEditForm(props: WorkingGroupEditFormProps) {
 		>
 			{workingGroup != null ? <input name="id" type="hidden" value={workingGroup.id} /> : null}
 
-			<TextInputField
-				defaultValue={workingGroup?.name}
-				isRequired={true}
-				label="Name"
-				name="name"
-			/>
+			{action === "create" ? (
+				<Fragment>
+					<TextInputField
+						isRequired={true}
+						label="Name"
+						name="name"
+						onChange={(value) => {
+							setSlugified(slugify(value));
+						}}
+					/>
+
+					<TextInputField
+						key={slugified}
+						defaultValue={slugified}
+						isRequired={true}
+						label="Slug"
+						name="slug"
+					/>
+				</Fragment>
+			) : (
+				<Fragment>
+					<TextInputField
+						defaultValue={workingGroup?.name}
+						isRequired={true}
+						label="Name"
+						name="name"
+					/>
+
+					<TextInputField
+						defaultValue={workingGroup?.slug}
+						isReadOnly={true}
+						isRequired={true}
+						label="Slug"
+						name="slug"
+					/>
+				</Fragment>
+			)}
 
 			<FormFieldArray aria-labelledby={chairsLabelId} className="flex flex-col gap-y-4">
 				<div

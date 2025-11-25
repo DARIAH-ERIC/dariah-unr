@@ -41,6 +41,7 @@ interface CreateWorkingGroupParams {
 	endDate?: WorkingGroup["endDate"];
 	mailingList?: WorkingGroup["mailingList"];
 	memberTracking?: WorkingGroup["memberTracking"];
+	slug: WorkingGroup["slug"];
 	startDate?: WorkingGroup["startDate"];
 }
 
@@ -52,6 +53,7 @@ export function createWorkingGroup(params: CreateWorkingGroupParams) {
 		mailingList,
 		memberTracking,
 		name,
+		slug,
 		startDate,
 	} = params;
 
@@ -61,6 +63,7 @@ export function createWorkingGroup(params: CreateWorkingGroupParams) {
 			mailingList,
 			memberTracking,
 			name,
+			slug,
 			startDate,
 			chairs: {
 				create: chairs.map((chair) => {
