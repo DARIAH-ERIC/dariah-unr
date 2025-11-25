@@ -97,31 +97,6 @@ export function getCountries() {
 	});
 }
 
-interface GetActiveMemberCountryIdsParams {
-	year: number;
-}
-
-export function getActiveMemberCountryIdsForYear(_params: GetActiveMemberCountryIdsParams) {
-	// const { year } = params;
-
-	return db.country.findMany({
-		where: {
-			/**
-			 * Note that it is currently not possible to record start and end dates for different
-			 * statuses. E.g. if a country becomes a member, and previously was a cooperating
-			 * partner, it is unclear what start date refers to.
-			 */
-			type: "member_country",
-			// /** Must have been active before the end of the year. */
-			// startDate: { lte: new Date(Date.UTC(year, 11, 31)) },
-			// /** Must still have been active after beginning of the year. */
-			// OR: [{ endDate: null }, { endDate: { gte: new Date(Date.UTC(year, 0, 1)) } }],
-		},
-		select: { id: true, name: true },
-		orderBy: { name: "asc" },
-	});
-}
-
 interface GetCountryIdByCountryCodeParams {
 	id: string;
 }
