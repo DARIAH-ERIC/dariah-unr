@@ -34,6 +34,23 @@ export function getWorkingGroupById(params: GetWorkingGroupByIdParams) {
 	});
 }
 
+interface GetWorkingGroupIdFromSlugParams {
+	slug: WorkingGroup["slug"];
+}
+
+export function getWorkingGroupIdFromSlug(params: GetWorkingGroupIdFromSlugParams) {
+	const { slug } = params;
+
+	return db.workingGroup.findFirst({
+		where: {
+			slug,
+		},
+		select: {
+			id: true,
+		},
+	});
+}
+
 interface CreateWorkingGroupParams {
 	name: WorkingGroup["name"];
 	chairs?: Array<{ personId: string; roleId: string; endDate?: Date; startDate?: Date }>;
