@@ -82,10 +82,6 @@ jobs:
           path: ${{ github.workspace }}/.next/cache
           key: ${{ matrix.os }}-nextjs-${{ hashFiles('pnpm-lock.yaml') }}
 
-      # TODO: local postgres instance for e2e tests
-      # TODO: create test user in local postgres instance for e2e tests
-      # TODO: ingest local postgres instance with seed/ingest for e2e tests
-
       - name: Build app
         run: pnpm run build
         env:
