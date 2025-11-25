@@ -201,10 +201,11 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 					<Column allowsSorting={true} defaultWidth="2fr" id="name" isRowHeader={true}>
 						Name
 					</Column>
+					<Column id="email">Email</Column>
+					<Column id="person">Person</Column>
 					<Column allowsSorting={true} id="country">
 						Country
 					</Column>
-					<Column id="email">Email</Column>
 					<Column allowsSorting={true} id="role">
 						Role
 					</Column>
@@ -238,8 +239,9 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 								<Cell>
 									<span title={row.name}>{row.name}</span>
 								</Cell>
-								<Cell>{row.country?.id ? countriesById.get(row.country.id)?.name : undefined}</Cell>
 								<Cell>{row.email}</Cell>
+								<Cell>{row.person?.id ? personsById.get(row.person.id)?.name : undefined}</Cell>
+								<Cell>{row.country?.id ? countriesById.get(row.country.id)?.name : undefined}</Cell>
 								<Cell>{row.role}</Cell>
 								<Cell>
 									<div className="flex justify-end">
