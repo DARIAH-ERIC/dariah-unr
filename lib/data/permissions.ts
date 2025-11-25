@@ -21,13 +21,8 @@ export function hasPersonWorkingGroupRole(params: HasPersonWorkingGroupRoleParam
 					in: role,
 				},
 			},
-			// FIXME: do not allow empty start date
-			// startDate: { lte: date },
-			// OR: [{ endDate: null }, { endDate: { gte: date } }],
-			AND: [
-				{ OR: [{ startDate: null }, { startDate: { lte: date } }] },
-				{ OR: [{ endDate: null }, { endDate: { gte: date } }] },
-			],
+			startDate: { lte: date },
+			OR: [{ endDate: null }, { endDate: { gte: date } }],
 		},
 	});
 }
