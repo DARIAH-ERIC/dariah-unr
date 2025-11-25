@@ -8,9 +8,9 @@ import type { SessionValidationResultSuccess } from "@/lib/server/auth/sessions"
 export async function assertAuthenticated(
 	roles?: Array<UserRole>,
 ): Promise<SessionValidationResultSuccess> {
-	const locale = await getLocale();
-
 	const { session, user } = await getCurrentSession();
+
+	const locale = await getLocale();
 
 	if (session == null) {
 		redirect({ href: "/auth/sign-in", locale });

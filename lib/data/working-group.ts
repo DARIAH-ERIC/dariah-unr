@@ -20,6 +20,20 @@ export function getWorkingGroups() {
 	});
 }
 
+interface GetWorkingGroupByIdParams {
+	id: WorkingGroup["id"];
+}
+
+export function getWorkingGroupById(params: GetWorkingGroupByIdParams) {
+	const { id } = params;
+
+	return db.workingGroup.findFirst({
+		where: {
+			id,
+		},
+	});
+}
+
 interface CreateWorkingGroupParams {
 	name: WorkingGroup["name"];
 	chairs?: Array<{ personId: string; roleId: string; endDate?: Date; startDate?: Date }>;

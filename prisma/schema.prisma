@@ -278,6 +278,7 @@ model Person {
 
   contributions Contribution[]
   institutions  Institution[]
+  users         User[]
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
@@ -663,8 +664,10 @@ model User {
   role     UserRole @default(contributor)
 
   countryId String? @map(name: "country_id") @db.Uuid
+  personId  String? @map(name: "person_id") @db.Uuid
 
   country  Country?  @relation(fields: [countryId], references: [id])
+  person   Person?   @relation(fields: [personId], references: [id])
   sessions Session[]
 
   @@map(name: "users")
