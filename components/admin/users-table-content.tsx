@@ -1,7 +1,7 @@
 "use client";
 
 import { keyByToMap } from "@acdh-oeaw/lib";
-import { type Country, type Prisma, UserRole } from "@prisma/client";
+import { type Country, type Person, type Prisma, UserRole } from "@prisma/client";
 import { KeyRoundIcon, MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { Fragment, type ReactNode, useActionState, useId, useMemo, useState } from "react";
 import type { Key } from "react-aria-components";
@@ -56,6 +56,7 @@ type Action =
 			item: Prisma.UserGetPayload<{
 				include: {
 					country: { select: { id: true } };
+					person: { select: { id: true } };
 				};
 			}>;
 	  }
@@ -64,6 +65,7 @@ type Action =
 			item: Prisma.UserGetPayload<{
 				include: {
 					country: { select: { id: true } };
+					person: { select: { id: true } };
 				};
 			}>;
 	  }
@@ -72,27 +74,38 @@ type Action =
 			item: Prisma.UserGetPayload<{
 				include: {
 					country: { select: { id: true } };
+					person: { select: { id: true } };
 				};
 			}>;
 	  };
 
 interface AdminUsersTableContentProps {
 	countries: Array<Country>;
+	persons: Array<Person>;
 	users: Array<
 		Prisma.UserGetPayload<{
-			include: { country: { select: { id: true } } };
+			include: {
+				country: { select: { id: true } };
+				person: { select: { id: true } };
+			};
 		}>
 	>;
 }
 
 export function AdminUsersTableContent(props: AdminUsersTableContentProps): ReactNode {
-	const { countries, users } = props;
+	const { countries, persons, users } = props;
 
 	const countriesById = useMemo(() => {
 		return keyByToMap(countries, (country) => {
 			return country.id;
 		});
 	}, [countries]);
+
+	const personsById = useMemo(() => {
+		return keyByToMap(persons, (person) => {
+			return person.id;
+		});
+	}, [persons]);
 
 	const [action, setAction] = useState<Action | null>(null);
 
@@ -185,13 +198,14 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 				sortDescriptor={sortDescriptor}
 			>
 				<TableHeader>
-					<Column allowsSorting={true} defaultWidth="2fr" id="name" isRowHeader={true}>
+					<Column allowsSorting={true} defaultWidth="1fr" id="name" isRowHeader={true}>
 						Name
 					</Column>
+					<Column id="email">Email</Column>
+					<Column id="person">Person</Column>
 					<Column allowsSorting={true} id="country">
 						Country
 					</Column>
-					<Column id="email">Email</Column>
 					<Column allowsSorting={true} id="role">
 						Role
 					</Column>
@@ -225,8 +239,9 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 								<Cell>
 									<span title={row.name}>{row.name}</span>
 								</Cell>
-								<Cell>{row.country?.id ? countriesById.get(row.country.id)?.name : undefined}</Cell>
 								<Cell>{row.email}</Cell>
+								<Cell>{row.person?.id ? personsById.get(row.person.id)?.name : undefined}</Cell>
+								<Cell>{row.country?.id ? countriesById.get(row.country.id)?.name : undefined}</Cell>
 								<Cell>{row.role}</Cell>
 								<Cell>
 									<div className="flex justify-end">
@@ -267,12 +282,14 @@ export function AdminUsersTableContent(props: AdminUsersTableContentProps): Reac
 				action={action}
 				countriesById={countriesById}
 				onClose={onDialogClose}
+				personsById={personsById}
 			/>
 			<EditUserDialog
 				key={createKey("edit-user", action?.item?.id)}
 				action={action}
 				countriesById={countriesById}
 				onClose={onDialogClose}
+				personsById={personsById}
 			/>
 			<UpdatePasswordDialog
 				key={createKey("update-password", action?.item?.id)}
@@ -361,10 +378,11 @@ interface CreateUserDialogProps {
 	action: Action | null;
 	countriesById: Map<Country["id"], Country>;
 	onClose: () => void;
+	personsById: Map<Person["id"], Person>;
 }
 
 function CreateUserDialog(props: CreateUserDialogProps) {
-	const { action, countriesById, onClose } = props;
+	const { action, countriesById, onClose, personsById } = props;
 
 	const formId = useId();
 
@@ -391,6 +409,7 @@ function CreateUserDialog(props: CreateUserDialogProps) {
 										formId={formId}
 										formState={formState}
 										onClose={close}
+										personsById={personsById}
 									/>
 								</div>
 
@@ -417,10 +436,11 @@ interface UserCreateFormProps {
 	formAction: (formData: FormData) => void;
 	formState: Awaited<ReturnType<typeof createUserAction>> | undefined;
 	onClose: () => void;
+	personsById: Map<Person["id"], Person>;
 }
 
 function UserCreateForm(props: UserCreateFormProps) {
-	const { countriesById, formId, formAction, formState, onClose } = props;
+	const { countriesById, formId, formAction, formState, onClose, personsById } = props;
 
 	const userRoles = Object.values(UserRole);
 
@@ -441,6 +461,16 @@ function UserCreateForm(props: UserCreateFormProps) {
 					return (
 						<SelectItem key={country.id} id={country.id} textValue={country.name}>
 							{country.name}
+						</SelectItem>
+					);
+				})}
+			</SelectField>
+
+			<SelectField label="Person" name="person">
+				{Array.from(personsById.values()).map((person) => {
+					return (
+						<SelectItem key={person.id} id={person.id} textValue={person.name}>
+							{person.name}
 						</SelectItem>
 					);
 				})}
@@ -477,10 +507,11 @@ interface EditUserDialogProps {
 	action: Action | null;
 	countriesById: Map<Country["id"], Country>;
 	onClose: () => void;
+	personsById: Map<Person["id"], Person>;
 }
 
 function EditUserDialog(props: EditUserDialogProps) {
-	const { action, countriesById, onClose } = props;
+	const { action, countriesById, onClose, personsById } = props;
 
 	const formId = useId();
 
@@ -509,6 +540,7 @@ function EditUserDialog(props: EditUserDialogProps) {
 										formId={formId}
 										formState={formState}
 										onClose={close}
+										personsById={personsById}
 										user={user}
 									/>
 								</div>
@@ -531,16 +563,18 @@ interface UserEditFormProps {
 	formId: string;
 	formAction: (formData: FormData) => void;
 	formState: Awaited<ReturnType<typeof createUserAction>> | undefined;
+	personsById: Map<Person["id"], Person>;
 	user: Prisma.UserGetPayload<{
 		include: {
 			country: { select: { id: true } };
+			person: { select: { id: true } };
 		};
 	}>;
 	onClose: () => void;
 }
 
 function UserEditForm(props: UserEditFormProps) {
-	const { countriesById, formId, formAction, formState, user, onClose } = props;
+	const { countriesById, formId, formAction, formState, user, onClose, personsById } = props;
 
 	const userRoles = Object.values(UserRole);
 
@@ -563,6 +597,16 @@ function UserEditForm(props: UserEditFormProps) {
 					return (
 						<SelectItem key={country.id} id={country.id} textValue={country.name}>
 							{country.name}
+						</SelectItem>
+					);
+				})}
+			</SelectField>
+
+			<SelectField defaultSelectedKey={user.person?.id} label="Person" name="person">
+				{Array.from(personsById.values()).map((person) => {
+					return (
+						<SelectItem key={person.id} id={person.id} textValue={person.name}>
+							{person.name}
 						</SelectItem>
 					);
 				})}

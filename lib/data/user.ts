@@ -44,6 +44,9 @@ export function getUsers() {
 			country: {
 				select: { id: true },
 			},
+			person: {
+				select: { id: true },
+			},
 		},
 	});
 }
@@ -53,10 +56,11 @@ interface UpdateUserParams {
 	name?: string;
 	role: User["role"];
 	countryId?: string;
+	personId?: string;
 }
 
 export function updateUser(params: UpdateUserParams) {
-	const { id, name, role, countryId } = params;
+	const { id, name, role, countryId, personId } = params;
 
 	return db.user.update({
 		where: {
@@ -70,6 +74,14 @@ export function updateUser(params: UpdateUserParams) {
 					? {
 							connect: {
 								id: countryId,
+							},
+						}
+					: undefined,
+			person:
+				personId != null
+					? {
+							connect: {
+								id: personId,
 							},
 						}
 					: undefined,
@@ -115,10 +127,11 @@ interface CreateFullUserParams {
 	password: string;
 	role: User["role"];
 	countryId?: string;
+	personId?: string;
 }
 
 export async function createFullUser(params: CreateFullUserParams) {
-	const { email, password, name, role, countryId } = params;
+	const { email, password, name, role, countryId, personId } = params;
 
 	return db.user.create({
 		data: {
@@ -131,6 +144,14 @@ export async function createFullUser(params: CreateFullUserParams) {
 					? {
 							connect: {
 								id: countryId,
+							},
+						}
+					: undefined,
+			person:
+				personId != null
+					? {
+							connect: {
+								id: personId,
 							},
 						}
 					: undefined,
