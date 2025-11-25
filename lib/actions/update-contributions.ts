@@ -5,12 +5,14 @@ import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
+import { env } from "@/config/env.config";
 import { createContribution } from "@/lib/data/contributions";
 import {
 	getReportComments,
 	updateReportComments,
 	updateReportContributionsCount,
 } from "@/lib/data/report";
+import { sendEmail } from "@/lib/email";
 import { getFormData } from "@/lib/get-form-data";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
 import { nonEmptyString } from "@/lib/schemas/utils";
@@ -86,7 +88,22 @@ export async function updateContributionsAction(
 
 		const report = await getReportComments({ id: reportId });
 		const comments = report?.comments as ReportCommentsSchema | undefined;
-		await updateReportComments({ id: reportId, comments: { ...comments, contributions: comment } });
+		const updatedReport = await updateReportComments({
+			id: reportId,
+			comments: { ...comments, contributions: comment },
+		});
+
+		if (comment) {
+			try {
+				await sendEmail({
+					from: env.EMAIL_ADDRESS,
+					subject: "[dariah-unr] comment submitted",
+					text: `A comment on the contributions report screen for ${String(updatedReport.year)} has been submitted by ${updatedReport.country.name}.\n\n${comment}`,
+				});
+			} catch (error) {
+				log.error(error);
+			}
+		}
 
 		revalidatePath(
 			"/[locale]/dashboard/reports/[year]/countries/[code]/edit/contributions",
