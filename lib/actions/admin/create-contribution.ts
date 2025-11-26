@@ -40,7 +40,7 @@ export async function createContributionAction(
 	previousFormState: FormState | undefined,
 	formData: FormData,
 ): Promise<FormState> {
-	const t = await getTranslations("actions.admin.createContribtion");
+	const t = await getTranslations("actions.admin.createContribution");
 
 	await assertAuthenticated(["admin"]);
 

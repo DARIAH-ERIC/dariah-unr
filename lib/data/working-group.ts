@@ -20,6 +20,25 @@ export function getWorkingGroups() {
 	});
 }
 
+interface GetActiveWorkingGroupIdsParams {
+	year: number;
+}
+
+export function getActiveWorkingGroupIdsForYear(_params: GetActiveWorkingGroupIdsParams) {
+	// const { year } = params;
+
+	return db.workingGroup.findMany({
+		where: {
+			// /** Must have been active before the end of the year. */
+			// startDate: { lte: new Date(Date.UTC(year, 11, 31)) },
+			// /** Must still have been active after beginning of the year. */
+			// OR: [{ endDate: null }, { endDate: { gte: new Date(Date.UTC(year, 0, 1)) } }],
+		},
+		select: { id: true, name: true },
+		orderBy: { name: "asc" },
+	});
+}
+
 interface GetWorkingGroupByIdParams {
 	id: WorkingGroup["id"];
 }

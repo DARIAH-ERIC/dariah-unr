@@ -12,13 +12,15 @@ import { createKey } from "@/lib/create-key";
 export function AdminSshompIngestFormContent(): ReactNode {
 	const [formState, formAction] = useActionState(ingestDataFromSshompAction, undefined);
 
+	const submitLabel = "Ingest";
+
 	return (
 		<Form
 			action={formAction}
 			className="grid gap-y-6"
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
-			<SubmitButton>Ingest</SubmitButton>
+			<SubmitButton>{submitLabel}</SubmitButton>
 
 			<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
 				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}

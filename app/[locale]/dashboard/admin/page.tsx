@@ -165,6 +165,14 @@ function DashboardAdminPageContent() {
 						Statistics for {year}
 					</Link>
 				</li>
+				<li>
+					<Link
+						className="grid place-content-center rounded-md border border-neutral-200 px-8 py-4 font-medium text-neutral-700 transition hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
+						href={createHref({ pathname: "/dashboard/admin/campaign" })}
+					>
+						Reporting campaign
+					</Link>
+				</li>
 			</ul>
 		</section>
 	);

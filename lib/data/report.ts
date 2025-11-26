@@ -14,6 +14,26 @@ import type {
 
 import { db } from "@/lib/db";
 
+interface GetOperationalCostThresholdsForYearParams {
+	year: number;
+}
+
+export function getOperationalCostThresholdsForYear(
+	params: GetOperationalCostThresholdsForYearParams,
+) {
+	const { year } = params;
+
+	return db.report.findMany({
+		where: {
+			year,
+		},
+		select: {
+			countryId: true,
+			operationalCostThreshold: true,
+		},
+	});
+}
+
 export function getReports() {
 	return db.report.findMany({
 		orderBy: {
@@ -69,12 +89,12 @@ export function getReportByCountryCode(params: GetReportByCountryCodeParams) {
 	});
 }
 
-interface CreateReportForCountryIdParams {
+interface GetReportByCountryIdParams {
 	countryId: Country["id"];
 	year: Report["year"];
 }
 
-export function getReportByCountryId(params: CreateReportForCountryIdParams) {
+export function getReportByCountryId(params: GetReportByCountryIdParams) {
 	const { countryId, year } = params;
 
 	return db.report.findFirst({
@@ -90,10 +110,11 @@ export function getReportByCountryId(params: CreateReportForCountryIdParams) {
 interface CreateReportForCountryIdParams {
 	countryId: Country["id"];
 	year: Report["year"];
+	operationalCostThreshold: number;
 }
 
 export function createReportForCountryId(params: CreateReportForCountryIdParams) {
-	const { countryId, year } = params;
+	const { countryId, operationalCostThreshold, year } = params;
 
 	return db.report.create({
 		data: {
@@ -102,6 +123,7 @@ export function createReportForCountryId(params: CreateReportForCountryIdParams)
 					id: countryId,
 				},
 			},
+			operationalCostThreshold,
 			year,
 		},
 	});

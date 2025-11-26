@@ -34,7 +34,7 @@ export async function deleteContributionAction(
 	previousFormState: FormState | undefined,
 	formData: FormData,
 ): Promise<FormState> {
-	const t = await getTranslations("actions.admin.deleteContribtion");
+	const t = await getTranslations("actions.admin.deleteContribution");
 
 	await assertAuthenticated(["admin"]);
 
