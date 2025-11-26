@@ -1,5 +1,6 @@
 "use client";
 
+import { EventSizeType, OutreachType, type RoleType, ServiceSizeType } from "@prisma/client";
 import { type ReactNode, useActionState, useId } from "react";
 
 import { SubmitButton } from "@/components/submit-button";
@@ -13,18 +14,39 @@ import { createKey } from "@/lib/create-key";
 
 interface AdminCampaignFormContentProps {
 	countries: Array<{ id: string; name: string; previousOperationalCostThreshold: number }>;
+	previousEventSizeValues: Record<
+		EventSizeType,
+		{ id: string; type: EventSizeType; annualValue: number }
+	>;
+	previousOutreachTypeValues: Record<
+		OutreachType,
+		{ id: string; type: OutreachType; annualValue: number }
+	>;
+	previousRoleTypeValues: Record<RoleType, { id: string; type: RoleType; annualValue: number }>;
+	previousServiceSizeValues: Record<
+		ServiceSizeType,
+		{ id: string; type: ServiceSizeType; annualValue: number }
+	>;
 	year: number;
 }
 
 export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): ReactNode {
-	const { countries, year } = props;
+	const {
+		countries,
+		previousEventSizeValues,
+		previousOutreachTypeValues,
+		previousRoleTypeValues,
+		previousServiceSizeValues,
+		year,
+	} = props;
 
 	const [formState, formAction] = useActionState(createCampaignAction, undefined);
 
 	const submitLabel = `Create campaign for ${String(year)}`;
 
-	const workingGroupReportingSectionId = useId();
+	const annualValuesSectionId = useId();
 	const operationalCostThresholdsSectionId = useId();
+	const workingGroupReportingSectionId = useId();
 
 	return (
 		<Form
@@ -82,6 +104,94 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 							/>
 						);
 					})}
+				</div>
+			</section>
+
+			<section
+				aria-labelledby={annualValuesSectionId}
+				className="flex flex-col gap-y-4"
+				role="group"
+			>
+				<h2 className="text-lg font-bold" id={annualValuesSectionId}>
+					Annual values
+				</h2>
+
+				<div role="group">
+					<h3>Event size values</h3>
+					<div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
+						{Object.values(EventSizeType).map((eventSize) => {
+							return (
+								<NumberInputField
+									key={eventSize}
+									defaultValue={previousEventSizeValues[eventSize].annualValue}
+									formatOptions={{ style: "currency", currency: "EUR" }}
+									isRequired={true}
+									label={eventSize}
+									minValue={0}
+									name={`eventSizeValues.${eventSize}`}
+								/>
+							);
+						})}
+					</div>
+				</div>
+
+				<div role="group">
+					<h3>Outreach type values</h3>
+					<div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
+						{Object.values(OutreachType).map((outreachType) => {
+							return (
+								<NumberInputField
+									key={outreachType}
+									defaultValue={previousOutreachTypeValues[outreachType].annualValue}
+									formatOptions={{ style: "currency", currency: "EUR" }}
+									isRequired={true}
+									label={outreachType}
+									minValue={0}
+									name={`outreachTypeValues.${outreachType}`}
+								/>
+							);
+						})}
+					</div>
+				</div>
+
+				<div role="group">
+					<h3>Role type values</h3>
+					<div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
+						{(["jrc_member", "national_coordinator", "wg_chair"] as Array<RoleType>).map(
+							(roleType) => {
+								return (
+									<NumberInputField
+										key={roleType}
+										defaultValue={previousRoleTypeValues[roleType].annualValue}
+										formatOptions={{ style: "currency", currency: "EUR" }}
+										isRequired={true}
+										label={roleType}
+										minValue={0}
+										name={`roleTypeValues.${roleType}`}
+									/>
+								);
+							},
+						)}
+					</div>
+				</div>
+
+				<div role="group">
+					<h3>Service size values</h3>
+					<div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
+						{Object.values(ServiceSizeType).map((serviceSizeType) => {
+							return (
+								<NumberInputField
+									key={serviceSizeType}
+									defaultValue={previousServiceSizeValues[serviceSizeType].annualValue}
+									formatOptions={{ style: "currency", currency: "EUR" }}
+									isRequired={true}
+									label={serviceSizeType}
+									minValue={0}
+									name={`serviceSizeValues.${serviceSizeType}`}
+								/>
+							);
+						})}
+					</div>
 				</div>
 			</section>
 
