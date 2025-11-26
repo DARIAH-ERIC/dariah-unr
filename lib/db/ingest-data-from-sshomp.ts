@@ -3,22 +3,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
-import { assert, createUrl, createUrlSearchParams, log, request } from "@acdh-oeaw/lib";
+import { createUrl, createUrlSearchParams, log, request } from "@acdh-oeaw/lib";
+import { ServiceType } from "@prisma/client";
 
 import { env } from "@/config/env.config";
 import { db } from "@/lib/db";
 
 export async function ingestDataFromSshomp() {
-	const serviceSizeSmall = await db.serviceSize.findFirst({
-		where: {
-			type: "small",
-		},
-		select: {
-			id: true,
-		},
-	});
-	assert(serviceSizeSmall);
-
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const entries: Array<any> = [];
 	let page = 1;
@@ -101,6 +92,11 @@ export async function ingestDataFromSshomp() {
 			.map((property: any) => {
 				return property.concept.label as string;
 			});
+
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const isCoreService = entry.properties.some((property: any) => {
+			return property.type.code === "keyword" && property.concept.label === "DARIAH Core Service";
+		});
 
 		if (resourceTypes.includes("Software")) {
 			/**
@@ -192,11 +188,12 @@ export async function ingestDataFromSshomp() {
 								return { id: country.id };
 							}),
 						},
-						size: {
-							connect: {
-								id: serviceSizeSmall.id,
-							},
-						},
+						/**
+						 * Core services have the "DARIAH Core Service" keyword in the marketplace.
+						 * All other services have type "community", because "internal" services are
+						 * not sourced from marketplace but exist only in the knowledge base.
+						 */
+						type: isCoreService ? ServiceType.core : ServiceType.community,
 					},
 				});
 
@@ -218,11 +215,12 @@ export async function ingestDataFromSshomp() {
 								return { id: country.id };
 							}),
 						},
-						// size: {
-						// 	connect: {
-						// 		id: serviceSizeSmall.id,
-						// 	},
-						// },
+						/**
+						 * Core services have the "DARIAH Core Service" keyword in the marketplace.
+						 * All other services have type "community", because "internal" services are
+						 * not sourced from marketplace but exist only in the knowledge base.
+						 */
+						type: isCoreService ? ServiceType.core : ServiceType.community,
 					},
 				});
 

@@ -449,12 +449,9 @@ model Service {
   url                     String[]
   valueProposition        String?                   @map(name: "value_proposition")
 
-  sizeId String @map(name: "size_id") @db.Uuid
-
   countries    Country[]
   institutions InstitutionToService[]
   reports      ServiceReport[]
-  size         ServiceSize            @relation(fields: [sizeId], references: [id])
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
@@ -474,12 +471,12 @@ model ServiceSize {
 
   annualValue Int             @map(name: "annual_value")
   type        ServiceSizeType
-
-  services Service[]
+  // year        Int
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
+  // @@unique([type, year])
   @@map(name: "service_sizes")
 }
 

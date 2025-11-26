@@ -7,7 +7,7 @@ import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import { getCountries } from "@/lib/data/country";
 import { getInstitutions } from "@/lib/data/institution";
-import { getServices, getServiceSizes } from "@/lib/data/service";
+import { getServices } from "@/lib/data/service";
 import type { IntlLocale } from "@/lib/i18n/locales";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
@@ -65,18 +65,16 @@ function DashboardAdminServicesPageContent() {
 }
 
 async function AdminServicesTable() {
-	const [countries, institutions, services, serviceSizes] = await Promise.all([
+	const [countries, institutions, services] = await Promise.all([
 		getCountries(),
 		getInstitutions(),
 		getServices(),
-		getServiceSizes(),
 	]);
 
 	return (
 		<AdminServicesTableContent
 			countries={countries}
 			institutions={institutions}
-			serviceSizes={serviceSizes}
 			services={services}
 		/>
 	);

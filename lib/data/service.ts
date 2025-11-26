@@ -21,9 +21,6 @@ export function getServicesByCountry(params: GetServicesByCountryParams) {
 		orderBy: {
 			name: "asc",
 		},
-		include: {
-			size: true,
-		},
 	});
 }
 
@@ -55,11 +52,6 @@ export function getServices() {
 				select: {
 					role: true,
 					institution: { select: { id: true } },
-				},
-			},
-			size: {
-				select: {
-					id: true,
 				},
 			},
 		},
@@ -98,7 +90,6 @@ interface UpdateServiceParams {
 	type?: Service["type"];
 	url?: Service["url"];
 	valueProposition?: Service["valueProposition"];
-	size?: string;
 	countries?: Array<string>;
 	institutions?: Array<{ institution: string; role: InstitutionServiceRole }>;
 }
@@ -122,7 +113,6 @@ export function updateService(params: UpdateServiceParams) {
 		type,
 		url,
 		valueProposition,
-		size,
 		countries,
 		institutions,
 	} = params;
@@ -148,14 +138,6 @@ export function updateService(params: UpdateServiceParams) {
 			type,
 			url,
 			valueProposition,
-
-			size: size
-				? {
-						connect: {
-							id: size,
-						},
-					}
-				: undefined,
 
 			countries:
 				countries != null && countries.length > 0
@@ -205,7 +187,6 @@ interface CreateFullServiceParams {
 	type?: Service["type"];
 	url?: Service["url"];
 	valueProposition?: Service["valueProposition"];
-	size: string;
 	countries?: Array<string>;
 	institutions?: Array<{ institution: string; role: InstitutionServiceRole }>;
 }
@@ -228,7 +209,6 @@ export function createFullService(params: CreateFullServiceParams) {
 		type,
 		url,
 		valueProposition,
-		size,
 		countries,
 		institutions,
 	} = params;
@@ -251,12 +231,6 @@ export function createFullService(params: CreateFullServiceParams) {
 			type,
 			url,
 			valueProposition,
-
-			size: {
-				connect: {
-					id: size,
-				},
-			},
 
 			countries:
 				countries != null && countries.length > 0

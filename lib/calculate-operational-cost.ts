@@ -13,6 +13,7 @@ import {
 } from "@/lib/data/report";
 import { getRoles } from "@/lib/data/role";
 import { getServicesByCountry, getServiceSizes } from "@/lib/data/service";
+import { groupServicesBySize } from "@/lib/group-services-by-size";
 
 interface CalculateOperationalCostParams {
 	countryId: Country["id"];
@@ -85,28 +86,7 @@ export async function calculateOperationalCost(
 		return outreach.type;
 	});
 
-	// FIXME: this needs to be moved to the database
-	// @see https://github.com/DARIAH-ERIC/dariah-unr/issues/143
-	const thresholds = {
-		small: 7_000,
-		large: 170_000,
-	};
-	const serviceReportsByServiceId = keyByToMap(serviceReports, (serviceReport) => {
-		return serviceReport.service.id;
-	});
-	const servicesBySize = groupByToMap(services, (service) => {
-		if (service.type === "core") return "core";
-
-		const report = serviceReportsByServiceId.get(service.id);
-		if (report == null) return "small";
-		const visits = report.kpis.find((report) => {
-			return report.unit === "visits";
-		})?.value;
-		if (visits == null) return "small";
-		if (visits > thresholds.large) return "large";
-		if (visits < thresholds.small) return "small";
-		return "medium";
-	});
+	const servicesBySize = groupServicesBySize(services, serviceReports);
 
 	const rolesByName = keyByToMap(roles, (role) => {
 		return role.name;
