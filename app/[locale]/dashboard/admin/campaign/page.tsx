@@ -1,4 +1,4 @@
-import { keyByToMap } from "@acdh-oeaw/lib";
+import { keyBy, keyByToMap } from "@acdh-oeaw/lib";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
@@ -6,6 +6,12 @@ import type { ReactNode } from "react";
 import { AdminCampaignFormContent } from "@/components/admin/campaign-form-content";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
+import {
+	getEventSizeValues,
+	getOutreachTypeValues,
+	getRoleTypeValues,
+	getServiceSizeValues,
+} from "@/lib/data/annual-values";
 import { getActiveMemberCountryIdsForYear } from "@/lib/data/country";
 import { getOperationalCostThresholdsForYear } from "@/lib/data/report";
 import type { IntlLocale } from "@/lib/i18n/locales";
@@ -44,9 +50,20 @@ export default async function DashboardAdminCampaignPage(
 
 	await assertAuthenticated(["admin"]);
 
-	const [_countries, previousOperationalCostThresholds] = await Promise.all([
+	const [
+		_countries,
+		previousOperationalCostThresholds,
+		previousEventSizeValues,
+		previousOutreachTypeValues,
+		previousRoleTypeValues,
+		previousServiceSizeValues,
+	] = await Promise.all([
 		getActiveMemberCountryIdsForYear({ year }),
 		getOperationalCostThresholdsForYear({ year: year - 1 }),
+		getEventSizeValues({ year: year - 1 }),
+		getOutreachTypeValues({ year: year - 1 }),
+		getRoleTypeValues({ year: year - 1 }),
+		getServiceSizeValues({ year: year - 1 }),
 	]);
 
 	const previousOperationalCostThresholdsByCountryId = keyByToMap(
@@ -76,7 +93,22 @@ export default async function DashboardAdminCampaignPage(
 			<PageTitle>{t("title")}</PageTitle>
 
 			<section className="grid gap-y-8">
-				<AdminCampaignFormContent countries={countries} year={year} />
+				<AdminCampaignFormContent
+					countries={countries}
+					previousEventSizeValues={keyBy(previousEventSizeValues, (value) => {
+						return value.type;
+					})}
+					previousOutreachTypeValues={keyBy(previousOutreachTypeValues, (value) => {
+						return value.type;
+					})}
+					previousRoleTypeValues={keyBy(previousRoleTypeValues, (value) => {
+						return value.type;
+					})}
+					previousServiceSizeValues={keyBy(previousServiceSizeValues, (value) => {
+						return value.type;
+					})}
+					year={year}
+				/>
 			</section>
 		</MainContent>
 	);
