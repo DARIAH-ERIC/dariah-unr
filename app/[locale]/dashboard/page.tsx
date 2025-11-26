@@ -1,19 +1,16 @@
 import type { Country } from "@prisma/client";
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
-import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { MainContent } from "@/components/main-content";
 import { PageLeadIn } from "@/components/page-lead-in";
 import { PageTitle } from "@/components/page-title";
-import { SubmitButton } from "@/components/submit-button";
 import { LinkButton } from "@/components/ui/link-button";
 import { getCountryById } from "@/lib/data/country";
-import { createReportForCountryId, getReportByCountryId } from "@/lib/data/report";
 import type { IntlLocale } from "@/lib/i18n/locales";
 import { createHref } from "@/lib/navigation/create-href";
-import { redirect } from "@/lib/navigation/navigation";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 interface DashboardPageProps {
@@ -99,39 +96,17 @@ interface DashboardPageContentProps {
 async function DashboardPageContent(props: DashboardPageContentProps) {
 	const { country, year } = props;
 
-	const locale = await getLocale();
 	const t = await getTranslations("DashboardPageContent");
-
-	const report = await getReportByCountryId({ countryId: country.id, year });
 
 	return (
 		<div className="my-2">
-			{report == null ? (
-				<form
-					action={async () => {
-						"use server";
-
-						await createReportForCountryId({ countryId: country.id, year });
-
-						redirect({
-							href: createHref({
-								pathname: `/dashboard/reports/${String(year)}/countries/${country.code}/edit/welcome`,
-							}),
-							locale,
-						});
-					}}
-				>
-					<SubmitButton>{t("create-page-for-year", { year: String(year) })}</SubmitButton>
-				</form>
-			) : (
-				<LinkButton
-					href={createHref({
-						pathname: `/dashboard/reports/${String(year)}/countries/${country.code}/edit/welcome`,
-					})}
-				>
-					{t("edit-page-for-year", { year: String(year) })}
-				</LinkButton>
-			)}
+			<LinkButton
+				href={createHref({
+					pathname: `/dashboard/reports/${String(year)}/countries/${country.code}/edit/welcome`,
+				})}
+			>
+				{t("edit-page-for-year", { year: String(year) })}
+			</LinkButton>
 		</div>
 	);
 }
