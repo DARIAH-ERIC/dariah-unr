@@ -691,8 +691,9 @@ enum ReportCampaignStatus {
 model ReportCampaign {
   id String @id @default(uuid()) @db.Uuid
 
-  status ReportCampaignStatus @default(in_progress)
-  year   Int
+  serviceSizeThresholds Json // could become a separate thing
+  status                ReportCampaignStatus @default(in_progress)
+  year                  Int
 
   // reports             Report[]
   // workingGroupReports WorkingGroupReport[]
