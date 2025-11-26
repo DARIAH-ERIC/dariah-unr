@@ -1,7 +1,8 @@
-import type { Metadata, ResolvingMetadata } from "next";
+import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 
+import { AdminCampaignFormContent } from "@/components/admin/campaign-form-content";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import type { IntlLocale } from "@/lib/i18n/locales";
@@ -13,10 +14,7 @@ interface DashboardAdminCampaignPageProps {
 	}>;
 }
 
-export async function generateMetadata(
-	props: DashboardAdminCampaignPageProps,
-	_parent: ResolvingMetadata,
-): Promise<Metadata> {
+export async function generateMetadata(props: DashboardAdminCampaignPageProps): Promise<Metadata> {
 	const { params } = props;
 
 	const { locale } = await params;
@@ -44,6 +42,10 @@ export default async function DashboardAdminCampaignPage(
 	return (
 		<MainContent className="container grid max-w-(--breakpoint-2xl)! content-start gap-y-8 py-8">
 			<PageTitle>{t("title")}</PageTitle>
+
+			<section className="grid gap-y-8">
+				<AdminCampaignFormContent />
+			</section>
 		</MainContent>
 	);
 }

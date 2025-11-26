@@ -3,16 +3,19 @@
 import { type ReactNode, useActionState } from "react";
 
 import { SubmitButton } from "@/components/submit-button";
+import { TextAreaField } from "@/components/ui/blocks/text-area-field";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
-import { ingestDataFromSshompAction } from "@/lib/actions/admin/sshomp";
+import { createCampaignAction } from "@/lib/actions/admin/create-campaign";
 import { createKey } from "@/lib/create-key";
 
-export function AdminSshompIngestFormContent(): ReactNode {
-	const [formState, formAction] = useActionState(ingestDataFromSshompAction, undefined);
+export function AdminCampaignFormContent(): ReactNode {
+	const [formState, formAction] = useActionState(createCampaignAction, undefined);
 
-	const submitLabel = "Ingest";
+	const year = new Date().getUTCFullYear() - 1;
+
+	const submitLabel = `Create campaign for ${String(year)}`;
 
 	return (
 		<Form
@@ -20,6 +23,16 @@ export function AdminSshompIngestFormContent(): ReactNode {
 			className="grid gap-y-6"
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
+			<input name="year" type="hidden" value={year} />
+
+			<TextAreaField
+				description="Questions for working groups"
+				isRequired={true}
+				label="Facultative questions"
+				name="facultativeQuestions"
+				rows={12}
+			/>
+
 			<SubmitButton>{submitLabel}</SubmitButton>
 
 			<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>

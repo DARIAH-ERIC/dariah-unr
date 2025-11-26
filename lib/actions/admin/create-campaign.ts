@@ -5,10 +5,15 @@ import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
+import { getActiveMemberCountryIds } from "@/lib/data/country";
+import { createReportForCountryId } from "@/lib/data/report";
+import { getActiveWorkingGroupIds } from "@/lib/data/working-group";
+import { ingestDataFromSshomp } from "@/lib/db/ingest-data-from-sshomp";
 import { getFormData } from "@/lib/get-form-data";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 const formSchema = z.object({
+	facultativeQuestions: z.string().nonempty(),
 	year: z.coerce.number().int().positive().min(2020),
 });
 
@@ -50,51 +55,38 @@ export async function createCampaignAction(
 		};
 	}
 
-	const { year: _year } = result.data;
+	const { facultativeQuestions, year } = result.data;
 
 	try {
-		// TODO:
+		// TODO: operational threshold values?
+		// TODO: kpi thresholds and annual values for service size?
+		// TODO: other annual values?
 
-		// 1. update all annual values
-		// - kpi thresholds for service size
-		// - ensure sshomp ingest is run?
+		const countries = await getActiveMemberCountryIds({ year });
 
-		// 2. create new report tables for every country and update operationalCostThreshold values
-		// - only if it is a member country?
-		// - only when start/end date are ok?
+		for (const country of countries) {
+			await createReportForCountryId({
+				countryId: country.id,
+				year,
+				operationalCostThreshold: 0.0,
+			});
+		}
 
-		// const countries = await db.country.findMany();
+		const workingGroups = await getActiveWorkingGroupIds({ year });
 
-		// for (const country of countries) {
-		// 	await db.report.create({
-		// 		data: {
-		// 			year,
-		// 			country: {
-		// 				connect: {
-		// 					id: country.id,
-		// 				},
-		// 			},
-		// 		},
-		// 	});
-		// }
+		for (const workingGroup of workingGroups) {
+			await db?.workingGroupReport.create({
+				data: {
+					workingGroupId: workingGroup.id,
+					year,
+					narrativeReport: "",
+					facultativeQuestions,
+				},
+			});
+		}
 
-		// 3. create new report tables for every working group and pre-populate fields with facultative questions
-		// - only when start/end date are ok?
-
-		// const workingGroups = await db.workingGroup.findMany();
-
-		// for (const workingGroup of workingGroups) {
-		// 	await db.report.create({
-		// 		data: {
-		// 			year,
-		// 			workingGroup: {
-		// 				connect: {
-		// 					id: workingGroup.id,
-		// 				},
-		// 			},
-		// 		},
-		// 	});
-		// }
+		/** Run sshoc marketplace ingest to ensure services and software are up to date. */
+		await ingestDataFromSshomp();
 
 		revalidatePath("/[locale]/dashboard/admin/campaign", "page");
 

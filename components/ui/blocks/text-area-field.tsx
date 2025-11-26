@@ -10,10 +10,11 @@ import { TextField, type TextFieldProps } from "@/components/ui/text-field";
 
 interface TextAreaFieldProps extends Omit<TextFieldProps, "children">, FieldProps {
 	placeholder?: string;
+	rows?: number;
 }
 
 export function TextAreaField(props: TextAreaFieldProps): ReactNode {
-	const { description, errorMessage, label, placeholder, ...rest } = props;
+	const { description, errorMessage, label, placeholder, rows, ...rest } = props;
 
 	return (
 		<TextField {...rest}>
@@ -23,7 +24,7 @@ export function TextAreaField(props: TextAreaFieldProps): ReactNode {
 					<RequiredIndicator isVisible={props.isRequired} />
 				</Label>
 			) : null}
-			<TextArea placeholder={placeholder} />
+			<TextArea placeholder={placeholder} rows={rows} />
 			{description != null ? <FieldDescription>{description}</FieldDescription> : null}
 			<FieldError>{errorMessage}</FieldError>
 		</TextField>
