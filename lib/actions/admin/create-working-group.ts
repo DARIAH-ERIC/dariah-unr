@@ -26,6 +26,7 @@ const formSchema = z.object({
 	contactEmail: z.string().optional(),
 	mailingList: z.string().optional(),
 	memberTracking: z.string().optional(),
+	slug: z.string(),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -66,7 +67,7 @@ export async function createWorkingGroupAction(
 		};
 	}
 
-	const { chairs, contactEmail, endDate, mailingList, memberTracking, name, startDate } =
+	const { chairs, contactEmail, endDate, mailingList, memberTracking, name, slug, startDate } =
 		result.data;
 
 	try {
@@ -84,6 +85,7 @@ export async function createWorkingGroupAction(
 			contactEmail,
 			mailingList,
 			memberTracking,
+			slug,
 		});
 
 		revalidatePath("/[locale]/dashboard/admin/working-groups", "page");
