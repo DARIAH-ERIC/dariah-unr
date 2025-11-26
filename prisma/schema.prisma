@@ -96,25 +96,6 @@ model Country {
   @@map(name: "countries")
 }
 
-enum EventSizeType {
-  dariah_commissioned
-  large
-  medium
-  small
-}
-
-model EventSize {
-  id String @id @default(uuid()) @db.Uuid
-
-  annualValue Int           @map(name: "annual_value")
-  type        EventSizeType
-
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @updatedAt @map(name: "updated_at")
-
-  @@map(name: "event_sizes")
-}
-
 model EventReport {
   id String @id @default(uuid()) @db.Uuid
 
@@ -206,18 +187,6 @@ model Outreach {
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
   @@map(name: "outreach")
-}
-
-model OutreachTypeValue {
-  id String @id @default(uuid()) @db.Uuid
-
-  annualValue Int          @map(name: "annual_value")
-  type        OutreachType
-
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @updatedAt @map(name: "updated_at")
-
-  @@map(name: "outreach_type_values")
 }
 
 model OutreachReport {
@@ -327,14 +296,17 @@ model Report {
   operationalCostDetail    Json?
   operationalCostThreshold Decimal?     @db.Decimal(12, 2)
   status                   ReportStatus @default(draft)
+  // TODO: year is unnecessary when we introduce ReportCampaign with relations to Report and WorkingGroupReport
   year                     Int
 
   countryId String @map(name: "country_id") @db.Uuid
+  // reportCampaignId String @map(name: "report_campaign_id") @db.Uuid
 
   country                    Country                     @relation(fields: [countryId], references: [id], onDelete: Cascade)
   eventReport                EventReport?
   outreachReports            OutreachReport[]
   projectsFundingLeverages   ProjectsFundingLeverage[]
+  // reportCampaign             ReportCampaign              @relation(fields: [reportCampaignId], references: [id])
   researchPolicyDevelopments ResearchPolicyDevelopment[]
   serviceReports             ServiceReport[]
 
@@ -390,9 +362,8 @@ enum RoleType {
 model Role {
   id String @id @default(uuid()) @db.Uuid
 
-  annualValue Int      @map(name: "annual_value")
-  name        String
-  type        RoleType
+  name String
+  type RoleType
 
   bodies        Body[]
   contributions Contribution[]
@@ -457,27 +428,6 @@ model Service {
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
   @@map(name: "services")
-}
-
-enum ServiceSizeType {
-  core
-  large
-  medium
-  small
-}
-
-model ServiceSize {
-  id String @id @default(uuid()) @db.Uuid
-
-  annualValue Int             @map(name: "annual_value")
-  type        ServiceSizeType
-  // year        Int
-
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @updatedAt @map(name: "updated_at")
-
-  // @@unique([type, year])
-  @@map(name: "service_sizes")
 }
 
 model ServiceReport {
@@ -587,10 +537,13 @@ model WorkingGroupReport {
   members              Int?
   narrativeReport      String       @map(name: "narrative_report")
   status               ReportStatus @default(draft)
+  // TODO: year is unnecessary when we introduce ReportCampaign with relations to Report and WorkingGroupReport
   year                 Int
 
+  // reportCampaignId String @map(name: "report_campaign_id") @db.Uuid
   workingGroupId String @map(name: "working_group_id") @db.Uuid
 
+  // reportCampaign     ReportCampaign      @relation(fields: [reportCampaignId], references: [id])
   workingGroup       WorkingGroup        @relation(fields: [workingGroupId], references: [id])
   workingGroupEvents WorkingGroupEvent[]
 
@@ -644,6 +597,116 @@ model WorkingGroupOutreach {
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
   @@map(name: "working_group_outreach")
+}
+
+// -------------------------------------------------------------------------------------------------
+
+enum EventSize {
+  dariah_commissioned
+  large
+  medium
+  small
+}
+
+model EventSizeValue {
+  id String @id @default(uuid()) @db.Uuid
+
+  annualValue Int       @map(name: "annual_value")
+  type        EventSize
+
+  reportCampaignId String @map(name: "report_campaign_id") @db.Uuid
+
+  reportCampaign ReportCampaign @relation(fields: [reportCampaignId], references: [id])
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@unique([reportCampaignId, type])
+  @@map(name: "event_sizes")
+}
+
+model OutreachTypeValue {
+  id String @id @default(uuid()) @db.Uuid
+
+  annualValue Int          @map(name: "annual_value")
+  type        OutreachType
+
+  reportCampaignId String @map(name: "report_campaign_id") @db.Uuid
+
+  reportCampaign ReportCampaign @relation(fields: [reportCampaignId], references: [id])
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@unique([reportCampaignId, type])
+  @@map(name: "outreach_type_values")
+}
+
+model RoleTypeValue {
+  id String @id @default(uuid()) @db.Uuid
+
+  annualValue Int      @map(name: "annual_value")
+  type        RoleType
+
+  reportCampaignId String @map(name: "report_campaign_id") @db.Uuid
+
+  reportCampaign ReportCampaign @relation(fields: [reportCampaignId], references: [id])
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@unique([reportCampaignId, type])
+  @@map(name: "role_values")
+}
+
+enum ServiceSize {
+  core
+  large
+  medium
+  small
+}
+
+model ServiceSizeValue {
+  id String @id @default(uuid()) @db.Uuid
+
+  annualValue Int         @map(name: "annual_value")
+  type        ServiceSize
+
+  reportCampaignId String @map(name: "report_campaign_id") @db.Uuid
+
+  reportCampaign ReportCampaign @relation(fields: [reportCampaignId], references: [id])
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@unique([reportCampaignId, type])
+  @@map(name: "service_sizes")
+}
+
+enum ReportCampaignStatus {
+  in_progress
+  done
+}
+
+model ReportCampaign {
+  id String @id @default(uuid()) @db.Uuid
+
+  status ReportCampaignStatus @default(in_progress)
+  year   Int
+
+  // reports             Report[]
+  // workingGroupReports WorkingGroupReport[]
+
+  eventSizeValues    EventSizeValue[]
+  outreachTypeValues OutreachTypeValue[]
+  roleTypeValues     RoleTypeValue[]
+  serviceSizeValues  ServiceSizeValue[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@index(fields: [year])
+  @@map(name: "report_campaigns")
 }
 
 // -------------------------------------------------------------------------------------------------
