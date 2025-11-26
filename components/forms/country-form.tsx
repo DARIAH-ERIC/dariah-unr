@@ -13,7 +13,7 @@ import { TiptapEditor } from "@/components/ui/blocks/tiptap-editor";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
-import { updateCountryAction } from "@/lib/actions/admin/update-country";
+import { updateCountryAction } from "@/lib/actions/update-country";
 import { createKey } from "@/lib/create-key";
 import { toDateValue } from "@/lib/to-date-value";
 

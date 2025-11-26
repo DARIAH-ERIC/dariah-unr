@@ -44,9 +44,9 @@ export async function updateCountryAction(
 	previousFormState: FormState | undefined,
 	formData: FormData,
 ): Promise<FormState> {
-	const t = await getTranslations("actions.admin.updateCountry");
+	const t = await getTranslations("actions.updateCountry");
 
-	await assertAuthenticated(["admin"]);
+	await assertAuthenticated(["national_coordinator", "admin"]);
 
 	const input = getFormData(formData);
 	const result = formSchema.safeParse(input);
@@ -90,6 +90,7 @@ export async function updateCountryAction(
 
 		revalidatePath("/[locale]/dashboard/admin/countries", "page");
 		revalidatePath(`/[locale]/dashboard/admin/countries/${code}`, "page");
+		revalidatePath(`/[locale]/dashboard/countries/${code}`, "page");
 
 		return {
 			status: "success" as const,

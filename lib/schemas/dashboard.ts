@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const dashboardCountryPageSections = [
-	"nc-data",
+	"national-consortium",
 	"contributions",
 	"institutions",
 	"reports",
@@ -9,7 +9,6 @@ export const dashboardCountryPageSections = [
 
 export const dashboardCountryPageParams = z.object({
 	code: z.string(),
-	section: z.enum(dashboardCountryPageSections).optional(),
 });
 
 export type DashboardCountryPageParams = z.infer<typeof dashboardCountryPageParams>;

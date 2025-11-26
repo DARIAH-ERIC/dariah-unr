@@ -161,6 +161,37 @@
 		},
 		"title": "Working groups"
 	},
+	"DashboardCountryLayout": {
+		"meta": {
+			"title": "National Dashboard - {name}"
+		},
+		"title": "National Dashboard - {name}"
+	},
+	"DashboardCountryNCPage": {
+		"meta": {
+			"title": "National Dashboard - {name} - National Consortium"
+		},
+		"title": "National Dashboard - {name} - National Consortium"
+	},
+	"DashboardCountryContributionsPage": {
+		"meta": {
+			"title": "National Dashboard - {name} - Contributions"
+		},
+		"title": "National Dashboard - {name} - Contributions"
+	},
+	"DashboardCountryInstitutionsPage": {
+		"meta": {
+			"title": "National Dashboard - {name} - Institutions"
+		},
+		"title": "National Dashboard - {name} - Institutions"
+	},
+	"DashboardCountryReportsPage": {
+		"meta": {
+			"title": "National Dashboard - {name} - Reports"
+		},
+		"title": "National Dashboard - {name} - Reports",
+		"go-to-report": "Report for {year}"
+	},
 	"DashboardCountryReportEditStepPage": {
 		"meta": {
 			"title": "Edit report"
@@ -188,7 +219,7 @@
 	},
 	"DashboardCountryPageNavigation": {
 		"links": {
-			"nc-data": "National Consortium",
+			"national-consortium": "National Consortium",
 			"contributions": "Contributions",
 			"institutions": "Institutions",
 			"reports": "Reports"
@@ -208,13 +239,6 @@
 			"summary": "Summary",
 			"welcome": "Welcome"
 		}
-	},
-	"DashboardCountryPage": {
-		"meta": {
-			"title": "National Dashboard"
-		},
-		"title": "National Dashboard",
-		"go-to-report": "Report for {year}"
 	},
 	"DashboardCountryReportPage": {
 		"meta": {
@@ -316,12 +340,6 @@
 					"default": "Failed to update contribution."
 				},
 				"success": "Successfully updated contribution."
-			},
-			"updateCountry": {
-				"errors": {
-					"default": "Failed to update country."
-				},
-				"success": "Successfully updated country."
 			},
 			"createInstitution": {
 				"errors": {
@@ -510,6 +528,12 @@
 				"default": "Failed to update contributions."
 			},
 			"success": "Successfully updated contributions."
+		},
+		"updateCountry": {
+			"errors": {
+				"default": "Failed to update country."
+			},
+			"success": "Successfully updated country."
 		},
 		"updateEventReport": {
 			"errors": {
