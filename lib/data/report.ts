@@ -14,6 +14,26 @@ import type {
 
 import { db } from "@/lib/db";
 
+interface GetOperationalCostThresholdsForYearParams {
+	year: number;
+}
+
+export function getOperationalCostThresholdsForYear(
+	params: GetOperationalCostThresholdsForYearParams,
+) {
+	const { year } = params;
+
+	return db.report.findMany({
+		where: {
+			year,
+		},
+		select: {
+			countryId: true,
+			operationalCostThreshold: true,
+		},
+	});
+}
+
 export function getReports() {
 	return db.report.findMany({
 		orderBy: {

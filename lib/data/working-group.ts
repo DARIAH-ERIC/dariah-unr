@@ -24,7 +24,7 @@ interface GetActiveWorkingGroupIdsParams {
 	year: number;
 }
 
-export function getActiveWorkingGroupIds(_params: GetActiveWorkingGroupIdsParams) {
+export function getActiveWorkingGroupIdsForYear(_params: GetActiveWorkingGroupIdsParams) {
 	// const { year } = params;
 
 	return db.workingGroup.findMany({
@@ -34,7 +34,8 @@ export function getActiveWorkingGroupIds(_params: GetActiveWorkingGroupIdsParams
 			// /** Must still have been active after beginning of the year. */
 			// OR: [{ endDate: null }, { endDate: { gte: new Date(Date.UTC(year, 0, 1)) } }],
 		},
-		select: { id: true },
+		select: { id: true, name: true },
+		orderBy: { name: "asc" },
 	});
 }
 

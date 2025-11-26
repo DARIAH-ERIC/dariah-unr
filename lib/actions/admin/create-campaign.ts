@@ -5,9 +5,9 @@ import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
-import { getActiveMemberCountryIds } from "@/lib/data/country";
+import { getActiveMemberCountryIdsForYear } from "@/lib/data/country";
 import { createReportForCountryId } from "@/lib/data/report";
-import { getActiveWorkingGroupIds } from "@/lib/data/working-group";
+import { getActiveWorkingGroupIdsForYear } from "@/lib/data/working-group";
 import { ingestDataFromSshomp } from "@/lib/db/ingest-data-from-sshomp";
 import { getFormData } from "@/lib/get-form-data";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
@@ -15,6 +15,8 @@ import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 const formSchema = z.object({
 	facultativeQuestions: z.string().nonempty(),
 	narrativeReport: z.string().nonempty(),
+	/** Maps country id to monetary value. */
+	operationalCostThresholds: z.record(z.string(), z.coerce.number().min(0)),
 	year: z.coerce.number().int().positive().min(2020),
 });
 
@@ -56,45 +58,41 @@ export async function createCampaignAction(
 		};
 	}
 
-	const { facultativeQuestions, year } = result.data;
+	const { facultativeQuestions, narrativeReport, operationalCostThresholds, year } = result.data;
 
 	try {
-		// TODO: operational threshold values?
-		// TODO: kpi thresholds and annual values for service size?
-		// TODO: other annual values?
+		// TODO: kpi thresholds and annual values for service size
+		// TODO: other annual values
 
-		const countries = await getActiveMemberCountryIds({ year });
+		const countries = await getActiveMemberCountryIdsForYear({ year });
 
 		for (const country of countries) {
 			await createReportForCountryId({
 				countryId: country.id,
+				operationalCostThreshold: operationalCostThresholds[country.id] ?? 0.0,
 				year,
-				operationalCostThreshold: 0.0,
 			});
 		}
 
-		const workingGroups = await getActiveWorkingGroupIds({ year });
+		const workingGroups = await getActiveWorkingGroupIdsForYear({ year });
 
 		for (const workingGroup of workingGroups) {
 			await db?.workingGroupReport.create({
 				data: {
+					facultativeQuestions,
+					narrativeReport,
 					workingGroupId: workingGroup.id,
 					year,
-					narrativeReport,
-					facultativeQuestions,
 				},
 			});
 		}
 
 		/**
-		 * Run sshoc marketplace ingest to ensure services and software are up to date.
+		 * Trigger sshoc marketplace ingest to ensure services and software are up to date.
 		 * But don't fail report generation when ingest fails (e.g. because sshoc api is down).
+		 * Note that this will probably not work when deployed in a serverless environment.
 		 */
-		try {
-			await ingestDataFromSshomp();
-		} catch (error) {
-			log.error("Failed to ingest data from sshoc marketplace.", error);
-		}
+		void ingestDataFromSshomp();
 
 		revalidatePath("/[locale]/dashboard/admin/campaign", "page");
 
