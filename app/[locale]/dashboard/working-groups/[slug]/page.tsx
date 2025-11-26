@@ -6,14 +6,14 @@ import type { ReactNode } from "react";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import { assertPermissions } from "@/lib/access-controls";
-import { getWorkingGroupById } from "@/lib/data/working-group";
+import { getWorkingGroupById, getWorkingGroupIdFromSlug } from "@/lib/data/working-group";
 import type { IntlLocale } from "@/lib/i18n/locales";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 interface DashboardWorkingGroupPageProps {
 	params: Promise<{
-		id: string;
 		locale: IntlLocale;
+		slug: string;
 	}>;
 }
 
@@ -25,7 +25,13 @@ export async function generateMetadata(props: DashboardWorkingGroupPageProps): P
 
 	const { user } = await assertAuthenticated();
 
-	const { id } = await params;
+	const { slug } = await params;
+
+	const result = await getWorkingGroupIdFromSlug({ slug });
+	if (result == null) {
+		notFound();
+	}
+	const { id } = result;
 
 	await assertPermissions(user, { kind: "working-group", id, action: "read" });
 
@@ -53,7 +59,13 @@ export default async function DashboardWorkingGroupPage(
 
 	const { user } = await assertAuthenticated();
 
-	const { id } = await params;
+	const { slug } = await params;
+
+	const result = await getWorkingGroupIdFromSlug({ slug });
+	if (result == null) {
+		notFound();
+	}
+	const { id } = result;
 
 	await assertPermissions(user, { kind: "working-group", id, action: "read" });
 

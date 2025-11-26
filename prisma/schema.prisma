@@ -565,6 +565,7 @@ model WorkingGroup {
   mailingList    String?   @map(name: "mailing_list")
   memberTracking String?   @map(name: "member_tracking")
   name           String
+  slug           String
   startDate      DateTime? @map(name: "start_date")
 
   chairs   Contribution[]
@@ -574,6 +575,7 @@ model WorkingGroup {
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
+  @@index(fields: [slug])
   @@map(name: "working_groups")
 }
 

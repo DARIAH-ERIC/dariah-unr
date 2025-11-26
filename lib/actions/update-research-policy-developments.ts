@@ -5,7 +5,9 @@ import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
+import { env } from "@/config/env.config";
 import { getReportComments, updateReportComments } from "@/lib/data/report";
+import { sendEmail } from "@/lib/email";
 import { getFormData } from "@/lib/get-form-data";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
@@ -58,10 +60,22 @@ export async function updateResearchPolicyDevelopmentsAction(
 	try {
 		const report = await getReportComments({ id: reportId });
 		const comments = report?.comments as ReportCommentsSchema | undefined;
-		await updateReportComments({
+		const updatedReport = await updateReportComments({
 			id: reportId,
 			comments: { ...comments, researchPolicyDevelopments: comment },
 		});
+
+		if (comment) {
+			try {
+				await sendEmail({
+					from: env.EMAIL_ADDRESS,
+					subject: "[dariah-unr] comment submitted",
+					text: `A comment on the research policy developments report screen for ${String(updatedReport.year)} has been submitted by ${updatedReport.country.name}.\n\n${comment}`,
+				});
+			} catch (error) {
+				log.error(error);
+			}
+		}
 
 		revalidatePath(
 			"/[locale]/dashboard/reports/[year]/countries/[code]/edit/research-policy-developments",

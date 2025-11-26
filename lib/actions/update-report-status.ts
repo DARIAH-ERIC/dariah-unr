@@ -68,7 +68,10 @@ export async function updateReportStatusAction(
 	try {
 		const report = await getReportComments({ id: reportId });
 		const comments = report?.comments as ReportCommentsSchema | undefined;
-		await updateReportComments({ id: reportId, comments: { ...comments, confirmation: comment } });
+		const updatedReport = await updateReportComments({
+			id: reportId,
+			comments: { ...comments, confirmation: comment },
+		});
 
 		const result = await updateReportStatus({ id: reportId });
 
@@ -80,7 +83,17 @@ export async function updateReportStatusAction(
 			operationalCostDetail: calculation as any,
 		});
 
-		revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/confirm", "page");
+		if (comment) {
+			try {
+				await sendEmail({
+					from: env.EMAIL_ADDRESS,
+					subject: "[dariah-unr] comment submitted",
+					text: `A comment on the report confirmation screen for ${String(updatedReport.year)} has been submitted by ${updatedReport.country.name}.\n\n${comment}`,
+				});
+			} catch (error) {
+				log.error(error);
+			}
+		}
 
 		try {
 			await sendEmail({
@@ -91,6 +104,8 @@ export async function updateReportStatusAction(
 		} catch (error) {
 			log.error(error);
 		}
+
+		revalidatePath("/[locale]/dashboard/reports/[year]/countries/[code]/edit/confirm", "page");
 
 		return {
 			status: "success" as const,
