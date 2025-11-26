@@ -87,8 +87,6 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 
 			<SubmitButton>{submitLabel}</SubmitButton>
 
-			<pre>{JSON.stringify(formState)}</pre>
-
 			<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
 				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}
 			</FormSuccessMessage>
