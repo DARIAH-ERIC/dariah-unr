@@ -21,7 +21,7 @@
 		"db:reset": "dotenv -c development -- prisma migrate reset --skip-seed",
 		"db:ui": "dotenv -c development -- prisma studio",
 		"dev": "next dev",
-		"dev:db": "docker run -d -e POSTGRES_DB=dariah_unr -e POSTGRES_USER=dariah_unr -e POSTGRES_PASSWORD=dariah_unr --name dariah_unr -p 5432:5432 --rm postgres",
+		"dev:db": "docker run -d -e POSTGRES_DB=dariah-unr -e POSTGRES_USER=dariah-unr -e POSTGRES_PASSWORD=dariah-unr --name dariah-unr -p 5432:5432 --rm postgres",
 		"format:check": "prettier . \"!./content/**\" --cache --check --ignore-path ./.gitignore",
 		"format:fix": "pnpm run format:check --write",
 		"lint:check": "run-p --continue-on-error \"lint:*:check\"",
