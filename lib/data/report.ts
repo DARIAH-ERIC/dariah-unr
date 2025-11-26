@@ -469,6 +469,13 @@ export function updateReportComments(params: UpdateReportCommentsParams) {
 		data: {
 			comments,
 		},
+		include: {
+			country: {
+				select: {
+					name: true,
+				},
+			},
+		},
 	});
 }
 
