@@ -14,6 +14,7 @@ import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 const formSchema = z.object({
 	facultativeQuestions: z.string().nonempty(),
+	narrativeReport: z.string().nonempty(),
 	year: z.coerce.number().int().positive().min(2020),
 });
 
@@ -79,14 +80,21 @@ export async function createCampaignAction(
 				data: {
 					workingGroupId: workingGroup.id,
 					year,
-					narrativeReport: "",
+					narrativeReport,
 					facultativeQuestions,
 				},
 			});
 		}
 
-		/** Run sshoc marketplace ingest to ensure services and software are up to date. */
-		await ingestDataFromSshomp();
+		/**
+		 * Run sshoc marketplace ingest to ensure services and software are up to date.
+		 * But don't fail report generation when ingest fails (e.g. because sshoc api is down).
+		 */
+		try {
+			await ingestDataFromSshomp();
+		} catch (error) {
+			log.error("Failed to ingest data from sshoc marketplace.", error);
+		}
 
 		revalidatePath("/[locale]/dashboard/admin/campaign", "page");
 

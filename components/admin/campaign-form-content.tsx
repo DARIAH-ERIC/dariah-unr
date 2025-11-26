@@ -26,7 +26,15 @@ export function AdminCampaignFormContent(): ReactNode {
 			<input name="year" type="hidden" value={year} />
 
 			<TextAreaField
-				description="Questions for working groups"
+				description="Questions for working group reporting"
+				isRequired={true}
+				label="Narrative questions"
+				name="narrativeReport"
+				rows={12}
+			/>
+
+			<TextAreaField
+				description="Questions for working group reporting"
 				isRequired={true}
 				label="Facultative questions"
 				name="facultativeQuestions"
