@@ -11,6 +11,8 @@ import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 const formSchema = z.object({
 	workingGroupReportId: z.string(),
+	facultativeQuestions: z.string(),
+	narrativeReport: z.string(),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -52,9 +54,13 @@ export async function updateWorkingGroupReportAction(
 	}
 
 	try {
-		const { workingGroupReportId } = result.data;
+		const { workingGroupReportId, facultativeQuestions, narrativeReport } = result.data;
 
-		await updateWorkingGroupReport({ workingGroupReportId });
+		await updateWorkingGroupReport({
+			facultativeQuestions,
+			narrativeReport,
+			workingGroupReportId,
+		});
 
 		revalidatePath("/[locale]/dashboard/working-groups/[slug]/reports/[year]/edit", "page");
 
