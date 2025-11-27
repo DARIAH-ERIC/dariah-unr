@@ -296,8 +296,6 @@ model Report {
   operationalCostDetail    Json?
   operationalCostThreshold Decimal?     @db.Decimal(12, 2)
   status                   ReportStatus @default(draft)
-  // TODO: year is unnecessary when we introduce ReportCampaign with relations to Report and WorkingGroupReport
-  year                     Int
 
   countryId        String @map(name: "country_id") @db.Uuid
   reportCampaignId String @map(name: "report_campaign_id") @db.Uuid
@@ -313,8 +311,8 @@ model Report {
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
-  @@unique([countryId, year])
-  @@index(fields: [year])
+  @@unique([countryId, reportCampaignId])
+  @@index(fields: [reportCampaignId])
   @@map(name: "reports")
 }
 
@@ -537,8 +535,6 @@ model WorkingGroupReport {
   members              Int?
   narrativeReport      String       @map(name: "narrative_report")
   status               ReportStatus @default(draft)
-  // TODO: year is unnecessary when we introduce ReportCampaign with relations to Report and WorkingGroupReport
-  year                 Int
 
   reportCampaignId String @map(name: "report_campaign_id") @db.Uuid
   workingGroupId   String @map(name: "working_group_id") @db.Uuid
@@ -550,8 +546,8 @@ model WorkingGroupReport {
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
-  @@unique([workingGroupId, year])
-  @@index(fields: [year])
+  @@unique([workingGroupId, reportCampaignId])
+  @@index(fields: [reportCampaignId])
   @@map(name: "working_group_reports")
 }
 

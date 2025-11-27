@@ -9,11 +9,12 @@ import { PageTitle } from "@/components/page-title";
 import {
 	getEventSizeValues,
 	getOutreachTypeValues,
+	getReportCampaignByYear,
 	getRoleTypeValues,
 	getServiceSizeValues,
-} from "@/lib/data/annual-values";
+} from "@/lib/data/campaign";
 import { getActiveMemberCountryIdsForYear } from "@/lib/data/country";
-import { getOperationalCostThresholdsForYear } from "@/lib/data/report";
+import { getOperationalCostThresholdsForReportCampaign } from "@/lib/data/report";
 import type { IntlLocale } from "@/lib/i18n/locales";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
@@ -50,33 +51,50 @@ export default async function DashboardAdminCampaignPage(
 
 	await assertAuthenticated(["admin"]);
 
-	const [
-		_countries,
-		previousOperationalCostThresholds,
-		previousEventSizeValues,
-		previousOutreachTypeValues,
-		previousRoleTypeValues,
-		previousServiceSizeValues,
-	] = await Promise.all([
+	const [_countries, previousCampaign] = await Promise.all([
 		getActiveMemberCountryIdsForYear({ year }),
-		getOperationalCostThresholdsForYear({ year: year - 1 }),
-		getEventSizeValues({ year: year - 1 }),
-		getOutreachTypeValues({ year: year - 1 }),
-		getRoleTypeValues({ year: year - 1 }),
-		getServiceSizeValues({ year: year - 1 }),
+		getReportCampaignByYear({ year: year - 1 }),
 	]);
 
-	const previousOperationalCostThresholdsByCountryId = keyByToMap(
-		previousOperationalCostThresholds,
-		(d) => {
-			return d.countryId;
-		},
-	);
+	async function getPreviousCampaignData(id: string | undefined) {
+		if (id == null) return null;
+
+		const [
+			previousOperationalCostThresholds,
+			previousEventSizeValues,
+			previousOutreachTypeValues,
+			previousRoleTypeValues,
+			previousServiceSizeValues,
+		] = await Promise.all([
+			getOperationalCostThresholdsForReportCampaign({ reportCampaignId: id }),
+			getEventSizeValues({ reportCampaignId: id }),
+			getOutreachTypeValues({ reportCampaignId: id }),
+			getRoleTypeValues({ reportCampaignId: id }),
+			getServiceSizeValues({ reportCampaignId: id }),
+		]);
+
+		const previousOperationalCostThresholdsByCountryId = keyByToMap(
+			previousOperationalCostThresholds,
+			(d) => {
+				return d.countryId;
+			},
+		);
+
+		return {
+			operationalCostThresholdsByCountryId: previousOperationalCostThresholdsByCountryId,
+			eventSizeValues: previousEventSizeValues,
+			outreachTypeValues: previousOutreachTypeValues,
+			roleTypeValues: previousRoleTypeValues,
+			serviceSizeValues: previousServiceSizeValues,
+		};
+	}
+
+	const previous = await getPreviousCampaignData(previousCampaign?.id);
 
 	const countries = [];
 
 	for (const country of _countries) {
-		const operationalCostThreshold = previousOperationalCostThresholdsByCountryId.get(
+		const operationalCostThreshold = previous?.operationalCostThresholdsByCountryId.get(
 			country.id,
 		)?.operationalCostThreshold;
 
@@ -95,18 +113,34 @@ export default async function DashboardAdminCampaignPage(
 			<section className="grid gap-y-8">
 				<AdminCampaignFormContent
 					countries={countries}
-					previousEventSizeValues={keyBy(previousEventSizeValues, (value) => {
-						return value.type;
-					})}
-					previousOutreachTypeValues={keyBy(previousOutreachTypeValues, (value) => {
-						return value.type;
-					})}
-					previousRoleTypeValues={keyBy(previousRoleTypeValues, (value) => {
-						return value.type;
-					})}
-					previousServiceSizeValues={keyBy(previousServiceSizeValues, (value) => {
-						return value.type;
-					})}
+					previousEventSizeValues={
+						previous != null
+							? keyBy(previous.eventSizeValues, (value) => {
+									return value.type;
+								})
+							: null
+					}
+					previousOutreachTypeValues={
+						previous != null
+							? keyBy(previous.outreachTypeValues, (value) => {
+									return value.type;
+								})
+							: null
+					}
+					previousRoleTypeValues={
+						previous != null
+							? keyBy(previous.roleTypeValues, (value) => {
+									return value.type;
+								})
+							: null
+					}
+					previousServiceSizeValues={
+						previous != null
+							? keyBy(previous.serviceSizeValues, (value) => {
+									return value.type;
+								})
+							: null
+					}
 					year={year}
 				/>
 			</section>

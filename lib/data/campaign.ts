@@ -42,6 +42,44 @@ export function getReportCampaignByYear(params: GetReportCampaignByYearParams) {
 	});
 }
 
+interface GetReportCampaignForReportIdParams {
+	reportId: string;
+}
+
+export function getReportCampaignForReportId(params: GetReportCampaignForReportIdParams) {
+	const { reportId } = params;
+
+	return db.reportCampaign.findFirst({
+		where: {
+			reports: {
+				some: {
+					id: reportId,
+				},
+			},
+		},
+	});
+}
+
+interface GetReportCampaignForWorkingGroupReportIdParams {
+	workingGroupReportId: string;
+}
+
+export function getReportCampaignForWorkingGroupReportId(
+	params: GetReportCampaignForWorkingGroupReportIdParams,
+) {
+	const { workingGroupReportId } = params;
+
+	return db.reportCampaign.findFirst({
+		where: {
+			workingGroupReports: {
+				some: {
+					id: workingGroupReportId,
+				},
+			},
+		},
+	});
+}
+
 interface CreateEventSizeValuesParams {
 	annualValue: number;
 	reportCampaignId: string;

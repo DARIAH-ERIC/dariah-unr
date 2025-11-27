@@ -160,7 +160,6 @@ Table reports {
   operationalCostDetail Json
   operationalCostThreshold Decimal
   status ReportStatus [not null, default: 'draft']
-  year Int [not null]
   countryId String [not null]
   reportCampaignId String [not null]
   country countries [not null]
@@ -174,7 +173,7 @@ Table reports {
   updatedAt DateTime [not null]
 
   indexes {
-    (countryId, year) [unique]
+    (countryId, reportCampaignId) [unique]
   }
 }
 
@@ -281,7 +280,6 @@ Table working_group_reports {
   members Int
   narrativeReport String [not null]
   status ReportStatus [not null, default: 'draft']
-  year Int [not null]
   reportCampaignId String [not null]
   workingGroupId String [not null]
   reportCampaign report_campaigns [not null]
@@ -291,7 +289,7 @@ Table working_group_reports {
   updatedAt DateTime [not null]
 
   indexes {
-    (workingGroupId, year) [unique]
+    (workingGroupId, reportCampaignId) [unique]
   }
 }
 
