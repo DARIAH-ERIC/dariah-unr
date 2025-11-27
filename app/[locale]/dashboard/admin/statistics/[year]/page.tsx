@@ -6,12 +6,13 @@ import { type ReactNode, Suspense } from "react";
 import { AdminStatisticsContent } from "@/components/admin/statistics-content";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
+import { getReportCampaignByYear } from "@/lib/data/campaign";
 import {
 	getContributionsCount,
 	getInstitutionsCount,
 	getOutreachCount,
 	getProjectFundingLeverages,
-	getReportsByYear,
+	getReportsByReportCampaignId,
 	getServicesCount,
 } from "@/lib/data/stats";
 import type { IntlLocale } from "@/lib/i18n/locales";
@@ -89,6 +90,9 @@ interface AdminStatisticsProps {
 async function AdminStatistics(props: AdminStatisticsProps) {
 	const { year } = props;
 
+	const campaign = await getReportCampaignByYear({ year });
+	if (campaign == null) notFound();
+
 	const [
 		reports,
 		outreachCount,
@@ -97,7 +101,7 @@ async function AdminStatistics(props: AdminStatisticsProps) {
 		institutionsCount,
 		contributionsCount,
 	] = await Promise.all([
-		getReportsByYear({ year }),
+		getReportsByReportCampaignId({ reportCampaignId: campaign.id }),
 		getOutreachCount({ year }),
 		getServicesCount({ year }),
 		getProjectFundingLeverages({ year }),

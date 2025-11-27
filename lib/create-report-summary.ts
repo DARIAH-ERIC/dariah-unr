@@ -6,11 +6,12 @@ import type {
 	ProjectScope,
 	Report,
 	ServiceKpiType,
-	ServiceSizeType,
+	ServiceSize,
 } from "@prisma/client";
 import { notFound } from "next/navigation";
 
 import type { CalculateOperationalCostParamsResult } from "@/lib/calculate-operational-cost";
+import { getReportCampaignForReportId } from "@/lib/data/campaign";
 import { getContributionsByCountryAndYear } from "@/lib/data/contributions";
 import { getCountyCodeByCountyId } from "@/lib/data/country";
 import { getPartnerInstitutionsByCountry } from "@/lib/data/institution";
@@ -95,7 +96,7 @@ export interface ReportSummaryParamsResult {
 				unit: ServiceKpiType;
 				value: number;
 			}>;
-			size: ServiceSizeType;
+			size: ServiceSize;
 		}>;
 	};
 	software: {
@@ -115,7 +116,9 @@ export async function createReportSummary(
 
 	const report = await getReportById({ id: reportId });
 	if (report == null) notFound();
-	const { year } = report;
+	const reportCampaign = await getReportCampaignForReportId({ reportId: report.id });
+	if (reportCampaign == null) notFound();
+	const { year } = reportCampaign;
 
 	const [
 		projectsFundingLeverages,
@@ -226,8 +229,7 @@ export async function createReportSummary(
 									return { unit: k.unit, value: k.value };
 								});
 							}),
-						// the calculated size, not the size property of the service
-						size: key as ServiceSizeType,
+						size: key as ServiceSize,
 					};
 				});
 			}),

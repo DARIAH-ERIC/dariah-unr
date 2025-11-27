@@ -7,7 +7,6 @@ import {
 	type Person,
 	type Prisma,
 	type Role,
-	type ServiceSize,
 	type WorkingGroup,
 } from "@prisma/client";
 import { Fragment, type ReactNode, useActionState, useId, useState } from "react";
@@ -76,7 +75,6 @@ interface AdminCountryDashboardContentProps {
 	institutions: Array<Institution>;
 	persons: Array<Person>;
 	roles: Array<Pick<Role, "id" | "name" | "type">>;
-	serviceSizes: Array<Omit<ServiceSize, "createdAt" | "updatedAt">>;
 	workingGroups: Array<WorkingGroup>;
 }
 

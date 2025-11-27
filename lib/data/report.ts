@@ -14,18 +14,18 @@ import type {
 
 import { db } from "@/lib/db";
 
-interface GetOperationalCostThresholdsForYearParams {
-	year: number;
+interface GetOperationalCostThresholdsForReportCampaignParams {
+	reportCampaignId: string;
 }
 
-export function getOperationalCostThresholdsForYear(
-	params: GetOperationalCostThresholdsForYearParams,
+export function getOperationalCostThresholdsForReportCampaign(
+	params: GetOperationalCostThresholdsForReportCampaignParams,
 ) {
-	const { year } = params;
+	const { reportCampaignId } = params;
 
 	return db.report.findMany({
 		where: {
-			year,
+			reportCampaignId,
 		},
 		select: {
 			countryId: true,
@@ -37,11 +37,18 @@ export function getOperationalCostThresholdsForYear(
 export function getReports() {
 	return db.report.findMany({
 		orderBy: {
-			year: "desc",
+			reportCampaign: {
+				year: "desc",
+			},
 		},
 		include: {
 			country: {
 				select: { id: true },
+			},
+			reportCampaign: {
+				select: {
+					year: true,
+				},
 			},
 		},
 	});
@@ -73,48 +80,46 @@ export async function getReportById(params: GetReportByIdParams) {
 
 interface GetReportByCountryCodeParams {
 	countryCode: Country["code"];
-	year: Report["year"];
+	reportCampaignId: string;
 }
 
 export function getReportByCountryCode(params: GetReportByCountryCodeParams) {
-	const { countryCode, year } = params;
+	const { countryCode, reportCampaignId } = params;
 
 	return db.report.findFirst({
 		where: {
 			country: {
 				code: countryCode,
 			},
-			year,
+			reportCampaignId,
 		},
 	});
 }
 
 interface GetReportByCountryIdParams {
 	countryId: Country["id"];
-	year: Report["year"];
+	reportCampaignId: string;
 }
 
 export function getReportByCountryId(params: GetReportByCountryIdParams) {
-	const { countryId, year } = params;
+	const { countryId, reportCampaignId } = params;
 
 	return db.report.findFirst({
 		where: {
-			country: {
-				id: countryId,
-			},
-			year,
+			countryId,
+			reportCampaignId,
 		},
 	});
 }
 
 interface CreateReportForCountryIdParams {
 	countryId: Country["id"];
-	year: Report["year"];
 	operationalCostThreshold: number;
+	reportCampaignId: string;
 }
 
 export function createReportForCountryId(params: CreateReportForCountryIdParams) {
-	const { countryId, operationalCostThreshold, year } = params;
+	const { countryId, operationalCostThreshold, reportCampaignId } = params;
 
 	return db.report.create({
 		data: {
@@ -124,7 +129,11 @@ export function createReportForCountryId(params: CreateReportForCountryIdParams)
 				},
 			},
 			operationalCostThreshold,
-			year,
+			reportCampaign: {
+				connect: {
+					id: reportCampaignId,
+				},
+			},
 		},
 	});
 }
@@ -149,7 +158,11 @@ export function updateReportStatus(params: UpdateReportStatusParams) {
 					name: true,
 				},
 			},
-			year: true,
+			reportCampaign: {
+				select: {
+					year: true,
+				},
+			},
 		},
 	});
 }
@@ -497,6 +510,11 @@ export function updateReportComments(params: UpdateReportCommentsParams) {
 					name: true,
 				},
 			},
+			reportCampaign: {
+				select: {
+					year: true,
+				},
+			},
 		},
 	});
 }
@@ -515,32 +533,6 @@ export function updateReportContributionsCount(params: UpdateReportContributions
 		},
 		data: {
 			contributionsCount,
-		},
-	});
-}
-
-export function getEventSizes() {
-	return db.eventSize.findMany({
-		orderBy: {
-			type: "asc",
-		},
-		select: {
-			annualValue: true,
-			id: true,
-			type: true,
-		},
-	});
-}
-
-export function getOutreachTypeValues() {
-	return db.outreachTypeValue.findMany({
-		orderBy: {
-			type: "asc",
-		},
-		select: {
-			annualValue: true,
-			id: true,
-			type: true,
 		},
 	});
 }
@@ -567,18 +559,18 @@ export function updateReportCalculation(params: UpdateReportCalculationParams) {
 
 interface GetReportStatusByCountryCodeParams {
 	countryCode: Country["code"];
-	year: Report["year"];
+	reportCampaignId: string;
 }
 
 export function getReportStatusByCountryCode(params: GetReportStatusByCountryCodeParams) {
-	const { countryCode, year } = params;
+	const { countryCode, reportCampaignId } = params;
 
 	return db.report.findFirst({
 		where: {
 			country: {
 				code: countryCode,
 			},
-			year,
+			reportCampaignId,
 		},
 		select: {
 			status: true,

@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
+import { getReportCampaignByYear } from "@/lib/data/campaign";
 import { getReportByCountryCode } from "@/lib/data/report";
 import type { IntlLocale } from "@/lib/i18n/locales";
 import { dashboardCountryReportPageParams } from "@/lib/schemas/dashboard";
@@ -67,7 +68,9 @@ interface DashboardCountryReportPageContentProps {
 async function DashboardCountryReportPageContent(props: DashboardCountryReportPageContentProps) {
 	const { code, year } = props;
 
-	const report = await getReportByCountryCode({ countryCode: code, year });
+	const campaign = await getReportCampaignByYear({ year });
+	if (campaign == null) notFound();
+	const report = await getReportByCountryCode({ countryCode: code, reportCampaignId: campaign.id });
 	if (report == null) notFound();
 
 	return null;

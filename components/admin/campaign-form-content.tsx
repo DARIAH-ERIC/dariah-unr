@@ -1,6 +1,6 @@
 "use client";
 
-import { EventSizeType, OutreachType, type RoleType, ServiceSizeType } from "@prisma/client";
+import { EventSize, OutreachType, type RoleType, ServiceSize } from "@prisma/client";
 import { type ReactNode, useActionState, useId } from "react";
 
 import { SubmitButton } from "@/components/submit-button";
@@ -15,18 +15,21 @@ import { createKey } from "@/lib/create-key";
 interface AdminCampaignFormContentProps {
 	countries: Array<{ id: string; name: string; previousOperationalCostThreshold: number }>;
 	previousEventSizeValues: Record<
-		EventSizeType,
-		{ id: string; type: EventSizeType; annualValue: number }
-	>;
+		EventSize,
+		{ id: string; type: EventSize; annualValue: number }
+	> | null;
 	previousOutreachTypeValues: Record<
 		OutreachType,
 		{ id: string; type: OutreachType; annualValue: number }
-	>;
-	previousRoleTypeValues: Record<RoleType, { id: string; type: RoleType; annualValue: number }>;
+	> | null;
+	previousRoleTypeValues: Record<
+		RoleType,
+		{ id: string; type: RoleType; annualValue: number }
+	> | null;
 	previousServiceSizeValues: Record<
-		ServiceSizeType,
-		{ id: string; type: ServiceSizeType; annualValue: number }
-	>;
+		ServiceSize,
+		{ id: string; type: ServiceSize; annualValue: number }
+	> | null;
 	year: number;
 }
 
@@ -119,11 +122,11 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 				<div role="group">
 					<h3>Event size values</h3>
 					<div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
-						{Object.values(EventSizeType).map((eventSize) => {
+						{Object.values(EventSize).map((eventSize) => {
 							return (
 								<NumberInputField
 									key={eventSize}
-									defaultValue={previousEventSizeValues[eventSize].annualValue}
+									defaultValue={previousEventSizeValues?.[eventSize].annualValue ?? 0}
 									formatOptions={{ style: "currency", currency: "EUR" }}
 									isRequired={true}
 									label={eventSize}
@@ -142,7 +145,7 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 							return (
 								<NumberInputField
 									key={outreachType}
-									defaultValue={previousOutreachTypeValues[outreachType].annualValue}
+									defaultValue={previousOutreachTypeValues?.[outreachType].annualValue ?? 0}
 									formatOptions={{ style: "currency", currency: "EUR" }}
 									isRequired={true}
 									label={outreachType}
@@ -162,7 +165,7 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 								return (
 									<NumberInputField
 										key={roleType}
-										defaultValue={previousRoleTypeValues[roleType].annualValue}
+										defaultValue={previousRoleTypeValues?.[roleType].annualValue ?? 0}
 										formatOptions={{ style: "currency", currency: "EUR" }}
 										isRequired={true}
 										label={roleType}
@@ -178,11 +181,11 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 				<div role="group">
 					<h3>Service size values</h3>
 					<div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
-						{Object.values(ServiceSizeType).map((serviceSizeType) => {
+						{Object.values(ServiceSize).map((serviceSizeType) => {
 							return (
 								<NumberInputField
 									key={serviceSizeType}
-									defaultValue={previousServiceSizeValues[serviceSizeType].annualValue}
+									defaultValue={previousServiceSizeValues?.[serviceSizeType].annualValue ?? 0}
 									formatOptions={{ style: "currency", currency: "EUR" }}
 									isRequired={true}
 									label={serviceSizeType}

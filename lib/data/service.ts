@@ -24,19 +24,6 @@ export function getServicesByCountry(params: GetServicesByCountryParams) {
 	});
 }
 
-export function getServiceSizes() {
-	return db.serviceSize.findMany({
-		orderBy: {
-			type: "asc",
-		},
-		select: {
-			annualValue: true,
-			id: true,
-			type: true,
-		},
-	});
-}
-
 export function getServices() {
 	return db.service.findMany({
 		orderBy: {

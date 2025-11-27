@@ -7,7 +7,6 @@ import { getCountries, getCountryAndRelationsByCode } from "@/lib/data/country";
 import { getInstitutions } from "@/lib/data/institution";
 import { getPersons } from "@/lib/data/person";
 import { getRoles } from "@/lib/data/role";
-import { getServiceSizes } from "@/lib/data/service";
 import { getWorkingGroups } from "@/lib/data/working-group";
 import type { IntlLocale } from "@/lib/i18n/locales";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
@@ -45,16 +44,14 @@ export default async function DashboardAdminCountryPage(
 
 	await assertAuthenticated(["admin"]);
 
-	const [country, countries, institutions, persons, roles, serviceSizes, workingGroups] =
-		await Promise.all([
-			getCountryAndRelationsByCode({ code: code }),
-			getCountries(),
-			getInstitutions(),
-			getPersons(),
-			getRoles(),
-			getServiceSizes(),
-			getWorkingGroups(),
-		]);
+	const [country, countries, institutions, persons, roles, workingGroups] = await Promise.all([
+		getCountryAndRelationsByCode({ code: code }),
+		getCountries(),
+		getInstitutions(),
+		getPersons(),
+		getRoles(),
+		getWorkingGroups(),
+	]);
 
 	return (
 		<div>
@@ -65,7 +62,6 @@ export default async function DashboardAdminCountryPage(
 					institutions={institutions}
 					persons={persons}
 					roles={roles}
-					serviceSizes={serviceSizes}
 					workingGroups={workingGroups}
 				/>
 			) : null}

@@ -10,9 +10,6 @@
 	"scripts": {
 		"analyze": "BUNDLE_ANALYZER=\"enabled\" next build --no-lint",
 		"build": "next build",
-		"db:create-annual-values": "dotenv -c development -- tsx ./prisma/create-annual-values.ts",
-		"db:create-country-ids-from-sshomp": "dotenv -c development -- tsx ./prisma/create-country-ids-from-sshomp.ts",
-		"db:create-operational-cost-thresholds": "dotenv -c development -- tsx ./prisma/create-operational-cost-thresholds.ts",
 		"db:update-password": "dotenv -c development -- tsx ./prisma/update-password.ts",
 		"db:deploy": "dotenv -c development -- prisma migrate deploy",
 		"db:generate": "dotenv -c development -- prisma generate",
