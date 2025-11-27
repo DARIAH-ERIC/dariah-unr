@@ -50,14 +50,6 @@ Table countries {
   updatedAt DateTime [not null]
 }
 
-Table event_sizes {
-  id String [pk]
-  annualValue Int [not null]
-  type EventSizeType [not null]
-  createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [not null]
-}
-
 Table event_reports {
   id String [pk]
   dariahCommissionedEvent String
@@ -108,14 +100,6 @@ Table outreach {
   countryId String
   country countries
   reports outreach_reports [not null]
-  createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [not null]
-}
-
-Table outreach_type_values {
-  id String [pk]
-  annualValue Int [not null]
-  type OutreachType [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
@@ -205,7 +189,6 @@ Table research_policy_developments {
 
 Table roles {
   id String [pk]
-  annualValue Int [not null]
   name String [not null]
   type RoleType [not null]
   bodies bodies [not null]
@@ -235,14 +218,6 @@ Table services {
   countries countries [not null]
   institutions institution_service [not null]
   reports service_reports [not null]
-  createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [not null]
-}
-
-Table service_sizes {
-  id String [pk]
-  annualValue Int [not null]
-  type ServiceSizeType [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
@@ -339,6 +314,75 @@ Table working_group_outreach {
   updatedAt DateTime [not null]
 }
 
+Table event_sizes {
+  id String [pk]
+  annualValue Int [not null]
+  type EventSize [not null]
+  reportCampaignId String [not null]
+  reportCampaign report_campaigns [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (reportCampaignId, type) [unique]
+  }
+}
+
+Table outreach_type_values {
+  id String [pk]
+  annualValue Int [not null]
+  type OutreachType [not null]
+  reportCampaignId String [not null]
+  reportCampaign report_campaigns [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (reportCampaignId, type) [unique]
+  }
+}
+
+Table role_values {
+  id String [pk]
+  annualValue Int [not null]
+  type RoleType [not null]
+  reportCampaignId String [not null]
+  reportCampaign report_campaigns [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (reportCampaignId, type) [unique]
+  }
+}
+
+Table service_sizes {
+  id String [pk]
+  annualValue Int [not null]
+  type ServiceSize [not null]
+  reportCampaignId String [not null]
+  reportCampaign report_campaigns [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (reportCampaignId, type) [unique]
+  }
+}
+
+Table report_campaigns {
+  id String [pk]
+  serviceSizeThresholds Json [not null]
+  status ReportCampaignStatus [not null, default: 'in_progress']
+  year Int [unique, not null]
+  eventSizeValues event_sizes [not null]
+  outreachTypeValues outreach_type_values [not null]
+  roleTypeValues role_values [not null]
+  serviceSizeValues service_sizes [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
 Table users {
   id String [pk]
   email String [unique, not null]
@@ -400,13 +444,6 @@ Enum CountryType {
   cooperating_partnership
   member_country
   other
-}
-
-Enum EventSizeType {
-  dariah_commissioned
-  large
-  medium
-  small
 }
 
 Enum InstitutionType {
@@ -506,13 +543,6 @@ Enum ServiceType {
   internal
 }
 
-Enum ServiceSizeType {
-  core
-  large
-  medium
-  small
-}
-
 Enum ServiceKpiType {
   downloads
   hits
@@ -548,6 +578,25 @@ Enum WorkingGroupEventRole {
 Enum WorkingGroupOutreachType {
   website
   social_media
+}
+
+Enum EventSize {
+  dariah_commissioned
+  large
+  medium
+  small
+}
+
+Enum ServiceSize {
+  core
+  large
+  medium
+  small
+}
+
+Enum ReportCampaignStatus {
+  in_progress
+  done
 }
 
 Enum UserRole {
@@ -595,6 +644,14 @@ Ref: working_group_reports.workingGroupId > working_groups.id
 Ref: working_group_events.reportId > working_group_reports.id
 
 Ref: working_group_outreach.workingGroupId > working_groups.id
+
+Ref: event_sizes.reportCampaignId > report_campaigns.id
+
+Ref: outreach_type_values.reportCampaignId > report_campaigns.id
+
+Ref: role_values.reportCampaignId > report_campaigns.id
+
+Ref: service_sizes.reportCampaignId > report_campaigns.id
 
 Ref: users.countryId > countries.id
 

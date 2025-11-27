@@ -693,7 +693,7 @@ model ReportCampaign {
 
   serviceSizeThresholds Json // could become a separate thing
   status                ReportCampaignStatus @default(in_progress)
-  year                  Int
+  year                  Int                  @unique
 
   // reports             Report[]
   // workingGroupReports WorkingGroupReport[]
