@@ -162,10 +162,12 @@ Table reports {
   status ReportStatus [not null, default: 'draft']
   year Int [not null]
   countryId String [not null]
+  reportCampaignId String [not null]
   country countries [not null]
   eventReport event_reports
   outreachReports outreach_reports [not null]
   projectsFundingLeverages projects_funding_leverage [not null]
+  reportCampaign report_campaigns [not null]
   researchPolicyDevelopments research_policy_developments [not null]
   serviceReports service_reports [not null]
   createdAt DateTime [default: `now()`, not null]
@@ -280,7 +282,9 @@ Table working_group_reports {
   narrativeReport String [not null]
   status ReportStatus [not null, default: 'draft']
   year Int [not null]
+  reportCampaignId String [not null]
   workingGroupId String [not null]
+  reportCampaign report_campaigns [not null]
   workingGroup working_groups [not null]
   workingGroupEvents working_group_events [not null]
   createdAt DateTime [default: `now()`, not null]
@@ -375,6 +379,8 @@ Table report_campaigns {
   serviceSizeThresholds Json [not null]
   status ReportCampaignStatus [not null, default: 'in_progress']
   year Int [unique, not null]
+  reports reports [not null]
+  workingGroupReports working_group_reports [not null]
   eventSizeValues event_sizes [not null]
   outreachTypeValues outreach_type_values [not null]
   roleTypeValues role_values [not null]
@@ -631,6 +637,8 @@ Ref: projects_funding_leverage.reportId > reports.id [delete: Cascade]
 
 Ref: reports.countryId > countries.id [delete: Cascade]
 
+Ref: reports.reportCampaignId > report_campaigns.id
+
 Ref: research_policy_developments.reportId > reports.id [delete: Cascade]
 
 Ref: service_reports.reportId > reports.id [delete: Cascade]
@@ -638,6 +646,8 @@ Ref: service_reports.reportId > reports.id [delete: Cascade]
 Ref: service_reports.serviceId > services.id [delete: Cascade]
 
 Ref: service_kpis.serviceReportId > service_reports.id [delete: Cascade]
+
+Ref: working_group_reports.reportCampaignId > report_campaigns.id
 
 Ref: working_group_reports.workingGroupId > working_groups.id
 

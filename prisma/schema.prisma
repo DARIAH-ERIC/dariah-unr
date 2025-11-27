@@ -299,14 +299,14 @@ model Report {
   // TODO: year is unnecessary when we introduce ReportCampaign with relations to Report and WorkingGroupReport
   year                     Int
 
-  countryId String @map(name: "country_id") @db.Uuid
-  // reportCampaignId String @map(name: "report_campaign_id") @db.Uuid
+  countryId        String @map(name: "country_id") @db.Uuid
+  reportCampaignId String @map(name: "report_campaign_id") @db.Uuid
 
   country                    Country                     @relation(fields: [countryId], references: [id], onDelete: Cascade)
   eventReport                EventReport?
   outreachReports            OutreachReport[]
   projectsFundingLeverages   ProjectsFundingLeverage[]
-  // reportCampaign             ReportCampaign              @relation(fields: [reportCampaignId], references: [id])
+  reportCampaign             ReportCampaign              @relation(fields: [reportCampaignId], references: [id])
   researchPolicyDevelopments ResearchPolicyDevelopment[]
   serviceReports             ServiceReport[]
 
@@ -540,10 +540,10 @@ model WorkingGroupReport {
   // TODO: year is unnecessary when we introduce ReportCampaign with relations to Report and WorkingGroupReport
   year                 Int
 
-  // reportCampaignId String @map(name: "report_campaign_id") @db.Uuid
-  workingGroupId String @map(name: "working_group_id") @db.Uuid
+  reportCampaignId String @map(name: "report_campaign_id") @db.Uuid
+  workingGroupId   String @map(name: "working_group_id") @db.Uuid
 
-  // reportCampaign     ReportCampaign      @relation(fields: [reportCampaignId], references: [id])
+  reportCampaign     ReportCampaign      @relation(fields: [reportCampaignId], references: [id])
   workingGroup       WorkingGroup        @relation(fields: [workingGroupId], references: [id])
   workingGroupEvents WorkingGroupEvent[]
 
@@ -695,8 +695,8 @@ model ReportCampaign {
   status                ReportCampaignStatus @default(in_progress)
   year                  Int                  @unique
 
-  // reports             Report[]
-  // workingGroupReports WorkingGroupReport[]
+  reports             Report[]
+  workingGroupReports WorkingGroupReport[]
 
   eventSizeValues    EventSizeValue[]
   outreachTypeValues OutreachTypeValue[]
