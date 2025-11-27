@@ -7,7 +7,6 @@ import { MainContent } from "@/components/main-content";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { getCountryById } from "@/lib/data/country";
 import type { IntlLocale } from "@/lib/i18n/locales";
-import { redirect } from "@/lib/navigation/navigation";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 interface DashboardPageProps {
@@ -63,7 +62,14 @@ export default async function DashboardPage(props: DashboardPageProps): Promise<
 		notFound();
 	}
 
-	const { code } = country;
-
-	return redirect({ href: `dashboard/countries/${code}`, locale });
+	return (
+		<MainContent className="container grid place-content-center py-8">
+			<Card>
+				<CardHeader>
+					<CardTitle>{t("title")}</CardTitle>
+				</CardHeader>
+				<p>{t("lead-in")}</p>
+			</Card>
+		</MainContent>
+	);
 }

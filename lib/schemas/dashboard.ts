@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const dashboardCountryPageSections = [
+	"index",
 	"national-consortium",
 	"contributions",
 	"institutions",

@@ -85,13 +85,12 @@ export default async function DashboardCountryLayout(
 		<MainContent className="container grid content-start gap-8 py-8">
 			<PageTitle>{t("title", { name })}</PageTitle>
 			{["admin", "national_coordinator"].includes(user.role) ? (
-				<>
-					<DashboardCountryNavigation code={code} />
-					{children}
-				</>
+				<DashboardCountryNavigation code={code} />
 			) : (
-				children
+				//todo: new component with only overview, reports
+				<DashboardCountryNavigation code={code} />
 			)}
+			{children}
 		</MainContent>
 	);
 }
@@ -119,7 +118,10 @@ async function DashboardCountryNavigation(
 							<AppNavLink
 								className="ml-auto gap-x-2 rounded-b-none border-transparent text-sm whitespace-nowrap aria-[current]:border-b-2 aria-[current]:border-current lg:pb-4"
 								href={createHref({
-									pathname: `/dashboard/countries/${code}/${navItem}`,
+									pathname:
+										navItem === "index"
+											? `/dashboard/countries/${code}`
+											: `/dashboard/countries/${code}/${navItem}`,
 								})}
 							>
 								{t(`links.${navItem}`)}

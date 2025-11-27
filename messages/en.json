@@ -219,6 +219,7 @@
 	},
 	"DashboardCountryPageNavigation": {
 		"links": {
+			"index": "Welcome",
 			"national-consortium": "National Consortium",
 			"contributions": "Contributions",
 			"institutions": "Institutions",
@@ -247,11 +248,12 @@
 		"title": "Report"
 	},
 	"DashboardPage": {
-		"message": "You are not affiliated with a country",
 		"meta": {
-			"title": "Dasboard not available"
+			"title": "National Dasboard"
 		},
-		"title": "Dasboard not available"
+		"lead-in": "Lorem ipsum",
+		"title": "National Dasboard",
+		"no-country-message": "You are not affiliated with a country"
 	},
 	"DashboardPageContent": {
 		"create-page-for-year": "Create report for {year}",
