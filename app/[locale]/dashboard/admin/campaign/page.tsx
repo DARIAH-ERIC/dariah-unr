@@ -120,10 +120,10 @@ export default async function DashboardAdminCampaignPage(
 			<section className="grid gap-y-8">
 				<AdminCampaignFormContent
 					countries={countries}
-					previousEventSizeValues={{ ...previousEventSizeValues }}
-					previousOutreachTypeValues={{ ...previousOutreachTypeValues }}
-					previousRoleTypeValues={{ ...previousRoleTypeValues }}
-					previousServiceSizeValues={{ ...previousServiceSizeValues }}
+					previousEventSizeValues={previousEventSizeValues}
+					previousOutreachTypeValues={previousOutreachTypeValues}
+					previousRoleTypeValues={previousRoleTypeValues}
+					previousServiceSizeValues={previousServiceSizeValues}
 					year={year}
 				/>
 			</section>
