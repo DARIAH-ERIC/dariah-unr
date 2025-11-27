@@ -50,6 +50,13 @@ export default async function DashboardPage(props: DashboardPageProps): Promise<
 					<CardHeader>
 						<CardTitle>{t("title")}</CardTitle>
 					</CardHeader>
+
+					<figure className="w-1/2">
+						{
+							// eslint-disable-next-line @next/next/no-img-element
+							<img alt="" src="/assets/images/gordon-shumway.png" />
+						}
+					</figure>
 					<p>{t("no-country-message")}</p>
 				</Card>
 			</MainContent>
