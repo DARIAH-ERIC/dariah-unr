@@ -153,7 +153,7 @@ export async function createCampaignAction(
 			await createReportForCountryId({
 				countryId: country.id,
 				operationalCostThreshold: operationalCostThresholds[country.id] ?? 0.0,
-				year,
+				reportCampaignId: reportCampaign.id,
 			});
 		}
 
@@ -165,7 +165,7 @@ export async function createCampaignAction(
 					facultativeQuestions,
 					narrativeReport,
 					workingGroupId: workingGroup.id,
-					year,
+					reportCampaignId: reportCampaign.id,
 				},
 			});
 		}

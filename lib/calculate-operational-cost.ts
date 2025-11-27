@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import {
 	getEventSizeValues,
 	getOutreachTypeValues,
+	getReportCampaignForReportId,
 	getRoleTypeValues,
 	getServiceSizeValues,
 } from "@/lib/data/campaign";
@@ -49,7 +50,10 @@ export async function calculateOperationalCost(
 
 	const report = await getReportById({ id: reportId });
 	if (report == null) notFound();
-	const { year, reportCampaignId } = report;
+	const { reportCampaignId } = report;
+	const campaign = await getReportCampaignForReportId({ reportId: report.id });
+	if (campaign == null) notFound();
+	const { year } = campaign;
 
 	const [
 		contributions,

@@ -45,6 +45,11 @@ export function getReports() {
 			country: {
 				select: { id: true },
 			},
+			reportCampaign: {
+				select: {
+					year: true,
+				},
+			},
 		},
 	});
 }
@@ -503,6 +508,11 @@ export function updateReportComments(params: UpdateReportCommentsParams) {
 			country: {
 				select: {
 					name: true,
+				},
+			},
+			reportCampaign: {
+				select: {
+					year: true,
 				},
 			},
 		},

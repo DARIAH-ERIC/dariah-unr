@@ -1,15 +1,15 @@
 import { db } from "@/lib/db";
 
-interface GetReportsByYearParams {
-	year: number;
+interface GetReportsByReportCampaignIdParams {
+	reportCampaignId: string;
 }
 
-export function getReportsByYear(params: GetReportsByYearParams) {
-	const { year } = params;
+export function getReportsByReportCampaignId(params: GetReportsByReportCampaignIdParams) {
+	const { reportCampaignId } = params;
 
 	return db.report.findMany({
 		where: {
-			year,
+			reportCampaignId,
 		},
 		include: {
 			eventReport: true,
