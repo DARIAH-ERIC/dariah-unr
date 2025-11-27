@@ -189,6 +189,7 @@
 		"meta": {
 			"title": "National Dashboard - {name} - Reports"
 		},
+		"lead-in": "This is where you will complete your annual reporting for the Unified National Reports. The information requested is the same as previous years, and this new format will allow us to create a better integration of data from one year to the next.  You may complete the UNR over several sessions, just make sure to save. As well, multiple users can be logged in and contribute, though please keep in mind that there is no dynamic saving here - if two of your staff members are working simultaneously, the most recent save will overwrite the other.  If at any point you have questions, don't hesitate to reach out to your DCO helper or the UNR email alias.",
 		"title": "National Dashboard - {name} - Reports",
 		"go-to-report": "Report for {year}"
 	},
@@ -251,7 +252,7 @@
 		"meta": {
 			"title": "National Dasboard"
 		},
-		"lead-in": "Lorem ipsum",
+		"lead-in": "Welcome to the DARIAH National Coordinator Dashboard!",
 		"title": "National Dasboard",
 		"no-country-message": "You are not affiliated with a country"
 	},

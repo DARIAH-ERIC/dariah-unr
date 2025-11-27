@@ -79,7 +79,7 @@ export default async function DashboardCountryContributionsPage(
 	]);
 
 	return (
-		<section className="grid gap-4">
+		<section className="grid w-full gap-4">
 			<ContributionsTableContent
 				contributions={contributions}
 				countries={[country]}

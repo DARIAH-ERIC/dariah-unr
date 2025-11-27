@@ -71,7 +71,7 @@ export default async function DashboardCountryInstitutionsPage(
 	const institutions = await getInstitutionsByCountry({ countryId: country.id });
 
 	return (
-		<section className="grid gap-4">
+		<section className="grid w-full gap-4">
 			<InstitutionsTableContent countries={[country]} institutions={institutions} />
 		</section>
 	);

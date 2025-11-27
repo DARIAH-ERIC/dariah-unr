@@ -1,12 +1,14 @@
 import { z } from "zod";
 
-export const dashboardCountryPageSections = [
+export const dashboardCountryPageNCSections = [
 	"index",
 	"national-consortium",
 	"contributions",
 	"institutions",
 	"reports",
 ] as const;
+
+export const dashboardCountryPageSections = ["index", "reports"] as const;
 
 export const dashboardCountryPageParams = z.object({
 	code: z.string(),

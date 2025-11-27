@@ -74,24 +74,27 @@ export default async function DashboardCountryReportsPage(
 	const reports = await getReportYearsByCountryCode({ countryCode: country.code });
 
 	return (
-		<section className="flex flex-col gap-y-4 md:w-1/2">
-			{reports
-				.sort((a, b) => {
-					return a.year - b.year;
-				})
-				.map((report) => {
-					const { year } = report;
-					return (
-						<LinkButton
-							key={`y_${String(year)}`}
-							href={createHref({
-								pathname: `/dashboard/countries/${country.code}/reports/${String(year)}/edit/welcome`,
-							})}
-						>
-							{t("go-to-report", { year: String(year) })}
-						</LinkButton>
-					);
-				})}
+		<section className="grid gap-8">
+			<p className="prose">{t("lead-in")}</p>
+			<div className="flex flex-col gap-y-4 md:w-1/2">
+				{reports
+					.sort((a, b) => {
+						return a.year - b.year;
+					})
+					.map((report) => {
+						const { year } = report;
+						return (
+							<LinkButton
+								key={`y_${String(year)}`}
+								href={createHref({
+									pathname: `/dashboard/countries/${country.code}/reports/${String(year)}/edit/welcome`,
+								})}
+							>
+								{t("go-to-report", { year: String(year) })}
+							</LinkButton>
+						);
+					})}
+			</div>
 		</section>
 	);
 }

@@ -81,7 +81,7 @@ export default async function DashboardCountryReportEditStepPage(
 	const steps = dashboardCountryReportSteps;
 
 	return (
-		<section className="grid content-start gap-8 py-8">
+		<section className="grid content-start gap-8">
 			<h2 className="hidden print:block">{t("print-title", { year: String(year) })}</h2>
 			<DashboardCountryReportNavigation
 				className="print:hidden"

@@ -4,13 +4,16 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { AppNavLink } from "@/components/app-nav-link";
-import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import { assertPermissions } from "@/lib/access-controls";
 import { getCountryByCode } from "@/lib/data/country";
 import type { IntlLocale } from "@/lib/i18n/locales";
 import { createHref } from "@/lib/navigation/create-href";
-import { dashboardCountryPageParams, dashboardCountryPageSections } from "@/lib/schemas/dashboard";
+import {
+	dashboardCountryPageNCSections,
+	dashboardCountryPageParams,
+	dashboardCountryPageSections,
+} from "@/lib/schemas/dashboard";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 interface DashboardCountryLayoutProps {
@@ -82,16 +85,59 @@ export default async function DashboardCountryLayout(
 	await assertPermissions(user, { kind: "country", id, action: "read" });
 
 	return (
-		<MainContent className="container grid content-start gap-8 py-8">
+		<main className="container grid content-start gap-8 py-8">
 			<PageTitle>{t("title", { name })}</PageTitle>
-			{["admin", "national_coordinator"].includes(user.role) ? (
-				<DashboardCountryNavigation code={code} />
-			) : (
-				//todo: new component with only overview, reports
-				<DashboardCountryNavigation code={code} />
-			)}
-			{children}
-		</MainContent>
+			<div className="flex max-w-(--breakpoint-lg) flex-row gap-8">
+				<aside>
+					{["admin", "national_coordinator"].includes(user.role) ? (
+						<DashboardCountryNCNavigation code={code} />
+					) : (
+						//todo: new component with only overview, reports
+						<DashboardCountryNavigation code={code} />
+					)}
+				</aside>
+				{children}
+			</div>
+		</main>
+	);
+}
+
+interface DashboardCountryNCNavigationProps {
+	code: string;
+	className?: string;
+}
+
+async function DashboardCountryNCNavigation(
+	props: DashboardCountryNCNavigationProps,
+): Promise<ReactNode> {
+	const { className, code } = props;
+
+	const t = await getTranslations("DashboardCountryPageNavigation");
+
+	const navItems = dashboardCountryPageNCSections;
+
+	return (
+		<nav className={className}>
+			<ul className="flex flex-col">
+				{navItems.map((navItem) => {
+					return (
+						<li key={navItem}>
+							<AppNavLink
+								className="ml-auto gap-x-2 rounded-b-none border-transparent text-sm whitespace-nowrap"
+								href={createHref({
+									pathname:
+										navItem === "index"
+											? `/dashboard/countries/${code}`
+											: `/dashboard/countries/${code}/${navItem}`,
+								})}
+							>
+								{t(`links.${navItem}`)}
+							</AppNavLink>
+						</li>
+					);
+				})}
+			</ul>
+		</nav>
 	);
 }
 
@@ -111,12 +157,12 @@ async function DashboardCountryNavigation(
 
 	return (
 		<nav className={className}>
-			<ul className="flex w-fit flex-wrap border-b">
+			<ul className="flex flex-col">
 				{navItems.map((navItem) => {
 					return (
 						<li key={navItem}>
 							<AppNavLink
-								className="ml-auto gap-x-2 rounded-b-none border-transparent text-sm whitespace-nowrap aria-[current]:border-b-2 aria-[current]:border-current lg:pb-4"
+								className="ml-auto gap-x-2 rounded-b-none border-transparent text-sm whitespace-nowrap"
 								href={createHref({
 									pathname:
 										navItem === "index"
