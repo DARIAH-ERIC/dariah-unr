@@ -18,6 +18,30 @@ export function createReportCampaign(params: CreateReportCampaignParams) {
 	});
 }
 
+interface GetReportCampaignByIdParams {
+	id: string;
+}
+
+export function getReportCampaignById(params: GetReportCampaignByIdParams) {
+	const { id } = params;
+
+	return db.reportCampaign.findFirst({
+		where: { id },
+	});
+}
+
+interface GetReportCampaignByYearParams {
+	year: number;
+}
+
+export function getReportCampaignByYear(params: GetReportCampaignByYearParams) {
+	const { year } = params;
+
+	return db.reportCampaign.findFirst({
+		where: { year },
+	});
+}
+
 interface CreateEventSizeValuesParams {
 	annualValue: number;
 	reportCampaignId: string;
@@ -33,6 +57,18 @@ export function createEventSizeValue(params: CreateEventSizeValuesParams) {
 			reportCampaignId,
 			type,
 		},
+	});
+}
+
+interface GetEventSizeValuesParams {
+	reportCampaignId: string;
+}
+
+export function getEventSizeValues(params: GetEventSizeValuesParams) {
+	const { reportCampaignId } = params;
+
+	return db.eventSizeValue.findMany({
+		where: { reportCampaignId },
 	});
 }
 
@@ -54,6 +90,18 @@ export function createOutreachTypeValue(params: CreateOutreachTypeValuesParams) 
 	});
 }
 
+interface GetOutreachTypeValuesParams {
+	reportCampaignId: string;
+}
+
+export function getOutreachTypeValues(params: GetOutreachTypeValuesParams) {
+	const { reportCampaignId } = params;
+
+	return db.outreachTypeValue.findMany({
+		where: { reportCampaignId },
+	});
+}
+
 interface CreateRoleTypeValuesParams {
 	annualValue: number;
 	reportCampaignId: string;
@@ -72,6 +120,18 @@ export function createRoleTypeValue(params: CreateRoleTypeValuesParams) {
 	});
 }
 
+interface GetRoleTypeValuesParams {
+	reportCampaignId: string;
+}
+
+export function getRoleTypeValues(params: GetRoleTypeValuesParams) {
+	const { reportCampaignId } = params;
+
+	return db.roleTypeValue.findMany({
+		where: { reportCampaignId },
+	});
+}
+
 interface CreateServiceSizeValuesParams {
 	annualValue: number;
 	reportCampaignId: string;
@@ -87,5 +147,17 @@ export function createServiceSizeValue(params: CreateServiceSizeValuesParams) {
 			reportCampaignId,
 			type,
 		},
+	});
+}
+
+interface GetServiceSizeValuesParams {
+	reportCampaignId: string;
+}
+
+export function getServiceSizeValues(params: GetServiceSizeValuesParams) {
+	const { reportCampaignId } = params;
+
+	return db.serviceSizeValue.findMany({
+		where: { reportCampaignId },
 	});
 }
