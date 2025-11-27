@@ -23,8 +23,6 @@ import { ServiceReportsForm } from "@/components/forms/service-reports-form";
 import { SoftwareForm } from "@/components/forms/software-form";
 import { Link } from "@/components/link";
 import { LoadingIndicator } from "@/components/loading-indicator";
-import { MainContent } from "@/components/main-content";
-import { PageTitle } from "@/components/page-title";
 import { getCountryByCode } from "@/lib/data/country";
 import { getReportByCountryCode, getReportStatusByCountryCode } from "@/lib/data/report";
 import type { IntlLocale } from "@/lib/i18n/locales";
@@ -83,11 +81,8 @@ export default async function DashboardCountryReportEditStepPage(
 	const steps = dashboardCountryReportSteps;
 
 	return (
-		<MainContent className="container grid content-start gap-8 py-8">
-			<PageTitle className="print:hidden">{t("title")}</PageTitle>
-			<PageTitle className="hidden print:block">
-				{t("print-title", { year: String(year) })}
-			</PageTitle>
+		<section className="grid content-start gap-8">
+			<h2 className="hidden print:block">{t("print-title", { year: String(year) })}</h2>
 			<DashboardCountryReportNavigation
 				className="print:hidden"
 				code={code}
@@ -95,7 +90,7 @@ export default async function DashboardCountryReportEditStepPage(
 				year={year}
 			/>
 			<DashboardCountryReportEditStepPageContent code={code} step={step} user={user} year={year} />
-		</MainContent>
+		</section>
 	);
 }
 
