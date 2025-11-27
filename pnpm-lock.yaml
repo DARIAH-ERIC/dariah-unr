@@ -13,8 +13,8 @@ importers:
   .:
     dependencies:
       '@acdh-oeaw/lib':
-        specifier: ^0.3.5
-        version: 0.3.5
+        specifier: ^0.3.7
+        version: 0.3.7
       '@acdh-oeaw/mdx-lib':
         specifier: ^0.1.4
         version: 0.1.4
@@ -377,9 +377,9 @@ packages:
     resolution: {integrity: sha512-yNAjUxcoqvEXX+YsqWqOqCOJeFg6oYL2Q+bVdhu6LEQU1MGpcMbo7haSTX12X8UYZjIU6oWpHrZfdKZZxRH23Q==}
     engines: {node: '>=20', pnpm: '>=9'}
 
-  '@acdh-oeaw/lib@0.3.5':
-    resolution: {integrity: sha512-4IwV5uMlO3skseYjlY12jx3OFL8IqEm5XzlYkcf2o74PXrKLWbT046YlK4uw3fmS0ZDWmuWrXuCYKnPlY+vvMQ==}
-    engines: {node: '>=22', pnpm: 10.x}
+  '@acdh-oeaw/lib@0.3.7':
+    resolution: {integrity: sha512-ayIAgoslwm60grK0H2g5D2rust5PS3+35gMqNILmQN3AT4Vr4MGepSTxu9nko8It8E8wcN+OG8DTkfiKz9vrPg==}
+    engines: {node: '>=22'}
 
   '@acdh-oeaw/mdx-lib@0.1.4':
     resolution: {integrity: sha512-pEkDuErxA0/dk3eKO+pUTnCSoybxDiru53YtHs3Y/isksOAc4F2WRcZ9uo2oqeNzmvKxoD6hcYo4S6R+PJProg==}
@@ -6891,7 +6891,7 @@ snapshots:
 
   '@acdh-oeaw/lib@0.1.12': {}
 
-  '@acdh-oeaw/lib@0.3.5': {}
+  '@acdh-oeaw/lib@0.3.7': {}
 
   '@acdh-oeaw/mdx-lib@0.1.4':
     dependencies:
