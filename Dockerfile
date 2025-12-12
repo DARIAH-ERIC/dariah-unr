@@ -118,7 +118,7 @@ RUN pnpm add -g prisma@6
 COPY --chown=node:node ./prisma/schema.prisma ./prisma/schema.prisma
 COPY --chown=node:node ./prisma/migrations ./prisma/migrations
 
-COPY --from=build --chown=node:node /app/next.config.js ./
+COPY --from=build --chown=node:node /app/next.config.ts ./
 COPY --from=build --chown=node:node /app/public ./public
 COPY --from=build --chown=node:node /app/content ./content
 COPY --from=build --chown=node:node /app/.next/standalone ./
