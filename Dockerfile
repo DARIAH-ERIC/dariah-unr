@@ -42,7 +42,7 @@ ARG NEXT_PUBLIC_SENTRY_PROJECT
 # disable validation for runtime environment variables
 ENV ENV_VALIDATION=public
 
-RUN pnpm install --frozen-lockfile --offline
+RUN pnpm install --frozen-lockfile --prefer-offline
 
 ENV BUILD_MODE=standalone
 ENV NODE_ENV=production
