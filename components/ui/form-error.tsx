@@ -22,7 +22,8 @@ export const formErrorStyles = variants({
 export type FormErrorStyles = VariantProps<typeof formErrorStyles>;
 
 export interface FormErrorProps
-	extends Omit<ComponentPropsWithoutRef<"div">, "aria-atomic" | "aria-live" | "aria-relevant">,
+	extends
+		Omit<ComponentPropsWithoutRef<"div">, "aria-atomic" | "aria-live" | "aria-relevant">,
 		FormErrorStyles {}
 
 export function FormError(props: FormErrorProps) {

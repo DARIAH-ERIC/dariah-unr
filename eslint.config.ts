@@ -1,4 +1,4 @@
-import { resolve } from "node:path";
+import * as path from "node:path";
 
 import baseConfig from "@acdh-oeaw/eslint-config";
 import nextConfig from "@acdh-oeaw/eslint-config-next";
@@ -14,11 +14,15 @@ const config = defineConfig([
 	baseConfig,
 	reactConfig,
 	nextConfig,
-	tailwindcssConfig,
 	{
+		name: "tailwindcss-config",
+		extends: [tailwindcssConfig],
+		rules: {
+			"better-tailwindcss/no-unknown-classes": ["error", { ignore: ["lead", "not-richtext"] }],
+		},
 		settings: {
-			tailwindcss: {
-				config: resolve("./styles/index.css"),
+			"better-tailwindcss": {
+				entryPoint: path.resolve("./styles/index.css"),
 			},
 		},
 	},

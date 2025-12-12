@@ -22,7 +22,8 @@ export const formSuccessStyles = variants({
 export type FormSuccessStyles = VariantProps<typeof formSuccessStyles>;
 
 export interface FormSuccessProps
-	extends Omit<ComponentPropsWithoutRef<"div">, "aria-atomic" | "aria-live" | "aria-relevant">,
+	extends
+		Omit<ComponentPropsWithoutRef<"div">, "aria-atomic" | "aria-live" | "aria-relevant">,
 		FormSuccessStyles {}
 
 export function FormSuccess(props: FormSuccessProps) {

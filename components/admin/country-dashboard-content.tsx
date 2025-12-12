@@ -108,6 +108,7 @@ export function AdminCountryDashboardContent(props: AdminCountryDashboardContent
 			</div>
 
 			<div className="mt-8">
+				{/* eslint-disable-next-line @eslint-react/jsx-no-iife */}
 				{(() => {
 					switch (updateDataFilter) {
 						case "update_country_data": {
