@@ -112,28 +112,9 @@ jobs:
             "NEXT_PUBLIC_SENTRY_ORG=${{ vars.NEXT_PUBLIC_SENTRY_ORG }}"
             "NEXT_PUBLIC_SENTRY_PROJECT=${{ vars.NEXT_PUBLIC_SENTRY_PROJECT }}"
           secrets: |
-            "AUTH_SECRET=${{ secrets.K8S_SECRET_AUTH_SECRET }}"
-            "EMAIL_CONTACT_ADDRESS=${{ secrets.K8S_SECRET_EMAIL_CONTACT_ADDRESS }}"
-            "EMAIL_SMTP_PORT=${{ vars.K8S_SECRET_EMAIL_SMTP_PORT }}"
-            "EMAIL_SMTP_SERVER=${{ vars.K8S_SECRET_EMAIL_SMTP_SERVER }}"
-            "DATABASE_DIRECT_URL=${{ secrets.K8S_SECRET_DATABASE_DIRECT_URL }}"
-            "DATABASE_URL=${{ secrets.K8S_SECRET_DATABASE_URL }}"
-            "IMGPROXY_BASE_URL=${{ vars.K8S_SECRET_IMGPROXY_BASE_URL }}"
-            "IMGPROXY_KEY=${{ secrets.K8S_SECRET_IMGPROXY_KEY }}"
-            "IMGPROXY_SALT=${{ secrets.K8S_SECRET_IMGPROXY_SALT }}"
             "KEYSTATIC_GITHUB_CLIENT_ID=${{ secrets.K8S_SECRET_KEYSTATIC_GITHUB_CLIENT_ID }}"
             "KEYSTATIC_GITHUB_CLIENT_SECRET=${{ secrets.K8S_SECRET_KEYSTATIC_GITHUB_CLIENT_SECRET }}"
             "KEYSTATIC_SECRET=${{ secrets.K8S_SECRET_KEYSTATIC_SECRET }}"
-            "S3_ACCESS_KEY=${{ secrets.K8S_SECRET_S3_ACCESS_KEY }}"
-            "S3_SECRET_KEY=${{ secrets.K8S_SECRET_S3_SECRET_KEY }}"
-            "S3_BUCKET=${{ vars.K8S_SECRET_S3_BUCKET }}"
-            "S3_HOST=${{ vars.K8S_SECRET_S3_HOST }}"
-            "S3_PORT=${{ vars.K8S_SECRET_S3_PORT }}"
-            "S3_PROTOCOL=${{ vars.K8S_SECRET_S3_PROTOCOL }}"
-            "SSHOC_MARKETPLACE_API_BASE_URL=${{ vars.K8S_SECRET_SSHOC_MARKETPLACE_API_BASE_URL }}"
-            "SSHOC_MARKETPLACE_BASE_URL=${{ vars.K8S_SECRET_SSHOC_MARKETPLACE_BASE_URL }}"
-            "SSHOC_MARKETPLACE_PASSWORD=${{ secrets.K8S_SECRET_SSHOC_MARKETPLACE_PASSWORD }}"
-            "SSHOC_MARKETPLACE_USER_NAME=${{ secrets.K8S_SECRET_SSHOC_MARKETPLACE_USER_NAME }}"
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
