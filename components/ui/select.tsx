@@ -93,8 +93,7 @@ export const selectValueStyles = variants({
 export type SelectValueStyles = VariantProps<typeof selectValueStyles>;
 
 export interface SelectValueProps<T extends object>
-	extends AriaSelectValueProps<T>,
-		SelectValueStyles {}
+	extends AriaSelectValueProps<T>, SelectValueStyles {}
 
 export function SelectValue<T extends object>(props: SelectValueProps<T>) {
 	const { children, className, ...rest } = props;
@@ -177,8 +176,7 @@ export const selectListBoxStyles = variants({
 export type SelectListBoxStyles = VariantProps<typeof selectListBoxStyles>;
 
 export interface SelectListBoxProps<T extends object>
-	extends AriaSelectListBoxProps<T>,
-		SelectListBoxStyles {}
+	extends AriaSelectListBoxProps<T>, SelectListBoxStyles {}
 
 export function SelectListBox<T extends object>(props: SelectListBoxProps<T>) {
 	const { children, className, ...rest } = props;
@@ -208,8 +206,7 @@ export const selectListBoxItemStyles = variants({
 export type SelectListBoxItemStyles = VariantProps<typeof selectListBoxItemStyles>;
 
 export interface SelectListBoxItemProps<T extends object>
-	extends AriaSelectListBoxItemProps<T>,
-		SelectListBoxItemStyles {
+	extends AriaSelectListBoxItemProps<T>, SelectListBoxItemStyles {
 	/** Require text value because we add a checkmark icon. */
 	textValue: NonNullable<AriaSelectListBoxItemProps<T>["textValue"]>;
 }

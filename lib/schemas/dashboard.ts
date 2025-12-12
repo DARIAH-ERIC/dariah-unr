@@ -1,5 +1,21 @@
 import { z } from "zod";
 
+export const dashboardCountryPageNCSections = [
+	"index",
+	"national-consortium",
+	"contributions",
+	"institutions",
+	"reports",
+] as const;
+
+export const dashboardCountryPageSections = ["index", "reports"] as const;
+
+export const dashboardCountryPageParams = z.object({
+	code: z.string(),
+});
+
+export type DashboardCountryPageParams = z.infer<typeof dashboardCountryPageParams>;
+
 export const dashboardCountryReportPageParams = z.object({
 	code: z.string(),
 	year: z.coerce.number().int().positive().min(2020),

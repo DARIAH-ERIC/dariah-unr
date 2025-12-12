@@ -22,8 +22,7 @@ export const dateFieldStyles = variants({
 export type DateFieldStyles = VariantProps<typeof dateFieldStyles>;
 
 export interface DateFieldProps<T extends AriaDateValue>
-	extends AriaDateFieldProps<T>,
-		DateFieldStyles {}
+	extends AriaDateFieldProps<T>, DateFieldStyles {}
 
 export function DateField<T extends AriaDateValue>(props: DateFieldProps<T>) {
 	const { children, className, ...rest } = props;

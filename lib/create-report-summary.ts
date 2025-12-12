@@ -12,7 +12,7 @@ import { notFound } from "next/navigation";
 
 import type { CalculateOperationalCostParamsResult } from "@/lib/calculate-operational-cost";
 import { getContributionsByCountryAndYear } from "@/lib/data/contributions";
-import { getCountyCodeByCountyId } from "@/lib/data/country";
+import { getCountryCodeByCountryId } from "@/lib/data/country";
 import { getPartnerInstitutionsByCountry } from "@/lib/data/institution";
 import { getOutreachByCountry } from "@/lib/data/outreach";
 import {
@@ -129,7 +129,7 @@ export async function createReportSummary(
 	] = await Promise.all([
 		getProjectsFundingLeverages({ reportId }),
 		getSoftwareByCountry({ countryId }),
-		getCountyCodeByCountyId({ id: countryId }),
+		getCountryCodeByCountryId({ id: countryId }),
 		getOutreachByCountry({ countryId }),
 		getOutreachReports({ reportId }),
 		getServiceReports({ reportId }),

@@ -18,8 +18,7 @@ export const fieldDescriptionStyles = variants({
 export type FieldDescriptionStyles = VariantProps<typeof fieldDescriptionStyles>;
 
 export interface FieldDescriptionProps
-	extends Omit<AriaFieldDescriptionProps, "slot">,
-		FieldDescriptionStyles {}
+	extends Omit<AriaFieldDescriptionProps, "slot">, FieldDescriptionStyles {}
 
 export function FieldDescription(props: FieldDescriptionProps) {
 	const { children, className, ...rest } = props;

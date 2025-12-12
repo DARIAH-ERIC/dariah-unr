@@ -1,0 +1,16 @@
+# package manager
+pnpm-lock.yaml
+pnpm-workspace.yaml
+
+# prettier does not support mdx v3
+# @see {@link https://github.com/prettier/prettier/issues/12209}
+*.mdx
+
+# content
+/content
+
+# public assets
+/public
+
+# e2e test snapshots
+/e2e/snapshots

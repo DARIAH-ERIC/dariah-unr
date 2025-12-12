@@ -161,6 +161,38 @@
 		},
 		"title": "Working groups"
 	},
+	"DashboardCountryLayout": {
+		"meta": {
+			"title": "National Dashboard - {name}"
+		},
+		"title": "National Dashboard - {name}"
+	},
+	"DashboardCountryNCPage": {
+		"meta": {
+			"title": "National Dashboard - {name} - National Consortium"
+		},
+		"title": "National Dashboard - {name} - National Consortium"
+	},
+	"DashboardCountryContributionsPage": {
+		"meta": {
+			"title": "National Dashboard - {name} - Contributions"
+		},
+		"title": "National Dashboard - {name} - Contributions"
+	},
+	"DashboardCountryInstitutionsPage": {
+		"meta": {
+			"title": "National Dashboard - {name} - Institutions"
+		},
+		"title": "National Dashboard - {name} - Institutions"
+	},
+	"DashboardCountryReportsPage": {
+		"meta": {
+			"title": "National Dashboard - {name} - Reports"
+		},
+		"lead-in": "This is where you will complete your annual reporting for the Unified National Reports. The information requested is the same as previous years, and this new format will allow us to create a better integration of data from one year to the next.  You may complete the UNR over several sessions, just make sure to save. As well, multiple users can be logged in and contribute, though please keep in mind that there is no dynamic saving here - if two of your staff members are working simultaneously, the most recent save will overwrite the other.  If at any point you have questions, don't hesitate to reach out to your DCO helper or the UNR email alias.",
+		"title": "National Dashboard - {name} - Reports",
+		"go-to-report": "Report for {year}"
+	},
 	"DashboardCountryReportEditStepPage": {
 		"meta": {
 			"title": "Edit report"
@@ -186,6 +218,15 @@
 		"summary": "Summary",
 		"welcome": "Welcome"
 	},
+	"DashboardCountryPageNavigation": {
+		"links": {
+			"index": "Welcome",
+			"national-consortium": "National Consortium",
+			"contributions": "Contributions",
+			"institutions": "Institutions",
+			"reports": "Reports"
+		}
+	},
 	"DashboardCountryReportNavigation": {
 		"links": {
 			"confirm": "Confirmation",
@@ -208,11 +249,12 @@
 		"title": "Report"
 	},
 	"DashboardPage": {
-		"lead-in": "Reprehenderit labore nostrud consectetur exercitation ea aliquip sunt officia ea culpa voluptate. Laborum excepteur do voluptate adipisicing consequat ipsum et elit dolore fugiat mollit. Eiusmod sunt et sit est ipsum aliquip est aliquip non eiusmod.",
 		"meta": {
-			"title": "Dashboard"
+			"title": "National Dasboard"
 		},
-		"title": "Dashboard"
+		"lead-in": "Welcome to the DARIAH National Coordinator Dashboard!",
+		"title": "National Dasboard",
+		"no-country-message": "You are not affiliated with a country"
 	},
 	"DashboardPageContent": {
 		"create-page-for-year": "Create report for {year}",
@@ -323,12 +365,6 @@
 					"default": "Failed to update contribution."
 				},
 				"success": "Successfully updated contribution."
-			},
-			"updateCountry": {
-				"errors": {
-					"default": "Failed to update country."
-				},
-				"success": "Successfully updated country."
 			},
 			"createInstitution": {
 				"errors": {
@@ -517,6 +553,12 @@
 				"default": "Failed to update contributions."
 			},
 			"success": "Successfully updated contributions."
+		},
+		"updateCountry": {
+			"errors": {
+				"default": "Failed to update country."
+			},
+			"success": "Successfully updated country."
 		},
 		"updateEventReport": {
 			"errors": {

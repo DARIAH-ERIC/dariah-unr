@@ -1,14 +1,15 @@
-overrides:
-  "@prisma/generator-helper": "$prisma"
-  "@prisma/internals": "$prisma"
-
 onlyBuiltDependencies:
-  - "@prisma/client"
-  - "@prisma/engines"
-  - "@sentry/cli"
+  - '@prisma/client'
+  - '@prisma/engines'
+  - '@sentry/cli'
+  - '@swc/core'
   - bcrypt
   - esbuild
   - prisma
   - sharp
   - simple-git-hooks
   - unrs-resolver
+
+overrides:
+  '@prisma/generator-helper': $prisma
+  '@prisma/internals': $prisma

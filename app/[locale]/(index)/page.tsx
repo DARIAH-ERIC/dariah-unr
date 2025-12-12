@@ -1,5 +1,4 @@
 import type { Metadata, ResolvingMetadata } from "next";
-import { useTranslations } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 
@@ -8,6 +7,8 @@ import { MainContent } from "@/components/main-content";
 import { LinkButton } from "@/components/ui/link-button";
 import type { IntlLocale } from "@/lib/i18n/locales";
 import { createHref } from "@/lib/navigation/create-href";
+import { getDashboardPath } from "@/lib/navigation/get-dashboard-path";
+import { getCurrentSession } from "@/lib/server/auth/get-current-session";
 
 interface IndexPageProps {
 	params: Promise<{
@@ -49,8 +50,10 @@ export default async function IndexPage(props: IndexPageProps): Promise<ReactNod
 	);
 }
 
-function IndexPageHeroSection(): ReactNode {
-	const t = useTranslations("IndexPageHeroSection");
+async function IndexPageHeroSection(): Promise<ReactNode> {
+	const { user } = await getCurrentSession();
+	const t = await getTranslations("IndexPageHeroSection");
+	const dashboardPath = await getDashboardPath(user);
 
 	return (
 		<section className="mx-auto grid w-full max-w-(--breakpoint-lg) content-start justify-items-center gap-y-4 px-4 py-8 text-center md:py-16">
@@ -65,7 +68,7 @@ function IndexPageHeroSection(): ReactNode {
 				{t("lead-in")}
 			</div>
 			<div className="my-3 flex items-center gap-x-4">
-				<LinkButton href={createHref({ pathname: "/dashboard" })}>
+				<LinkButton href={createHref({ pathname: dashboardPath })}>
 					{t("go-to-dashboard")}
 				</LinkButton>
 				<LinkButton href={createHref({ pathname: "/documentation/guidelines" })} variant="outline">
