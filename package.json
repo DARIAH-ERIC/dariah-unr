@@ -6,13 +6,6 @@
 	"engines": {
 		"node": "^24"
 	},
-	"devEngines": {
-		"runtime": {
-			"name": "node",
-			"version": "^24",
-			"onFail": "download"
-		}
-	},
 	"packageManager": "pnpm@10.25.0",
 	"scripts": {
 		"analyze": "BUNDLE_ANALYZER=\"enabled\" next build --experimental-next-config-strip-types --no-lint --webpack",
