@@ -10,8 +10,7 @@ import { FieldError } from "@/components/ui/field-error";
 import { Label } from "@/components/ui/label";
 
 interface DateInputFieldProps<T extends DateValue>
-	extends Omit<DateFieldProps<T>, "children">,
-		FieldProps {}
+	extends Omit<DateFieldProps<T>, "children">, FieldProps {}
 
 export function DateInputField<T extends DateValue>(props: DateInputFieldProps<T>): ReactNode {
 	const { description, errorMessage, label, ...rest } = props;

@@ -30,8 +30,9 @@ import { createKey } from "@/lib/create-key";
 import { createHref } from "@/lib/navigation/create-href";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
 
-interface ServiceReportWithKpis
-	extends Prisma.ServiceReportGetPayload<{ include: { kpis: true; service: true } }> {}
+interface ServiceReportWithKpis extends Prisma.ServiceReportGetPayload<{
+	include: { kpis: true; service: true };
+}> {}
 
 interface ServiceReportsFormContentProps {
 	comments: ReportCommentsSchema["serviceReports"];

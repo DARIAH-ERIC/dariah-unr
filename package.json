@@ -29,7 +29,7 @@
 		"db:ui": "dotenv -c development -- prisma studio",
 		"dev": "next dev --experimental-next-config-strip-types",
 		"dev:db": "docker run -d -e POSTGRES_DB=dariah-unr -e POSTGRES_USER=dariah-unr -e POSTGRES_PASSWORD=dariah-unr --name dariah-unr -p 5432:5432 --rm postgres",
-		"format:check": "prettier . \"!./content/**\" --cache --check --ignore-path ./.gitignore",
+		"format:check": "prettier . --cache --check",
 		"format:fix": "pnpm run format:check --write",
 		"lint:check": "run-p --continue-on-error \"lint:*:check\"",
 		"lint:fix": "run-p --continue-on-error \"lint:*:fix\"",
@@ -141,7 +141,7 @@
 		"is-in-ci": "^2.0.0",
 		"lint-staged": "^16.2.6",
 		"npm-run-all2": "^8.0.4",
-		"prettier": "^3.6.2",
+		"prettier": "^3.7.4",
 		"prisma": "^6.19.0",
 		"prisma-dbml-generator": "^0.12.0",
 		"remark-frontmatter": "^5.0.0",
@@ -174,7 +174,7 @@
 	},
 	"lint-staged": {
 		"*.@(js|ts|tsx)": [
-			"eslint --cache --fix",
+			"eslint --fix",
 			"prettier --cache --write"
 		],
 		"*.@(css)": [

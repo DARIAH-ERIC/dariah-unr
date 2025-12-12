@@ -99,8 +99,7 @@ export const dialogDescriptionStyles = variants({
 export type DialogDescriptionStyles = VariantProps<typeof dialogDescriptionStyles>;
 
 export interface DialogDescriptionProps
-	extends AriaDialogDescriptionProps,
-		DialogDescriptionStyles {}
+	extends AriaDialogDescriptionProps, DialogDescriptionStyles {}
 
 export function DialogDescription(props: DialogDescriptionProps) {
 	const { children, className, ...rest } = props;
@@ -145,8 +144,7 @@ export const dialogCloseButtonStyles = variants({
 export type DialogCloseButtonStyles = VariantProps<typeof dialogCloseButtonStyles>;
 
 export interface DialogCloseButtonProps
-	extends Omit<AriaDialogCloseButtonProps, "children">,
-		DialogCloseButtonStyles {
+	extends Omit<AriaDialogCloseButtonProps, "children">, DialogCloseButtonStyles {
 	"aria-label": string;
 }
 
@@ -176,8 +174,7 @@ export const dialogCancelButtonStyles = variants({
 export type DialogCancelButtonStyles = VariantProps<typeof dialogCancelButtonStyles>;
 
 export interface DialogCancelButtonProps
-	extends AriaDialogCancelButtonProps,
-		DialogCancelButtonStyles {}
+	extends AriaDialogCancelButtonProps, DialogCancelButtonStyles {}
 
 export function DialogCancelButton(props: DialogCancelButtonProps) {
 	const { children, className, onPress, variant = "plain", ...rest } = props;
@@ -206,8 +203,7 @@ export const dialogActionButtonStyles = variants({
 export type DialogActionButtonStyles = VariantProps<typeof dialogActionButtonStyles>;
 
 export interface DialogActionButtonProps
-	extends AriaDialogActionButtonProps,
-		DialogActionButtonStyles {}
+	extends AriaDialogActionButtonProps, DialogActionButtonStyles {}
 
 export function DialogActionButton(props: DialogActionButtonProps) {
 	const { children, className, onPress, ...rest } = props;

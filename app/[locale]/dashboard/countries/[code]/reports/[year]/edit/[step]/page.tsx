@@ -94,8 +94,7 @@ export default async function DashboardCountryReportEditStepPage(
 	);
 }
 
-interface DashboardCountryReportEditStepPageContentProps
-	extends DashboardCountryReportEditStepPageParams {
+interface DashboardCountryReportEditStepPageContentProps extends DashboardCountryReportEditStepPageParams {
 	user: User;
 }
 
