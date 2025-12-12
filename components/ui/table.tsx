@@ -32,7 +32,7 @@ export { TableBody };
 
 export function Table(props: TableProps) {
 	return (
-		<ResizableTableContainer className="relative scroll-pt-[2.281rem] overflow-auto rounded-lg border border-neutral-200 dark:border-neutral-600 dark:border-neutral-800">
+		<ResizableTableContainer className="relative scroll-pt-[2.281rem] overflow-auto rounded-lg border border-neutral-200 dark:border-neutral-800">
 			<AriaTable {...props} className="border-separate border-spacing-0" />
 		</ResizableTableContainer>
 	);

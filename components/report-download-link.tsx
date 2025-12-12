@@ -16,6 +16,7 @@ export function ReportDownloadLink(props: ReportDownloadLinkProps) {
 	useEffect(() => {
 		const blob = new Blob([JSON.stringify(reportSummary, null, 2)], { type: "application/json" });
 		const href = URL.createObjectURL(blob);
+		// eslint-disable-next-line react-hooks/set-state-in-effect
 		setHref(href);
 
 		return () => {
