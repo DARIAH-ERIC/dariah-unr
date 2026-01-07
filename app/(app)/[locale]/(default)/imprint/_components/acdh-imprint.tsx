@@ -36,7 +36,7 @@ interface AcdhImprintProps {
 }
 
 export async function AcdhImprint(props: Readonly<AcdhImprintProps>): Promise<ReactNode> {
-	"use cache";
+	// "use cache";
 
 	const { locale } = props;
 

@@ -1,15 +1,22 @@
 import type { Metadata } from "next";
-import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { Suspense, type ReactNode } from "react";
 import * as v from "valibot";
 
 import { Main } from "@/app/(app)/[locale]/(default)/_components/main";
+import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
+import { assertAuthorized } from "@/lib/auth/assert-authorized";
 import { getCountries } from "@/lib/queries/countries";
 
 interface DashboardAdminCountriesPageProps extends PageProps<"/[locale]/dashboard/admin/countries"> {}
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata(
+	_props: Readonly<DashboardAdminCountriesPageProps>,
+): Promise<Metadata> {
+	const { user } = await assertAuthenticated();
+
+	await assertAuthorized({ user, roles: ["admin"] });
+
 	const t = await getTranslations("DashboardAdminCountriesPage");
 
 	const title = t("meta.title");
@@ -24,12 +31,16 @@ export async function generateMetadata(): Promise<Metadata> {
 	return metadata;
 }
 
-export default function DashboardAdminCountriesPage(
+export default async function DashboardAdminCountriesPage(
 	props: Readonly<DashboardAdminCountriesPageProps>,
-): ReactNode {
+): Promise<ReactNode> {
 	const { searchParams } = props;
 
-	const t = useTranslations("DashboardAdminCountriesPage");
+	const { user } = await assertAuthenticated();
+
+	await assertAuthorized({ user, roles: ["admin"] });
+
+	const t = await getTranslations("DashboardAdminCountriesPage");
 
 	return (
 		<Main className="container flex-1 px-8 py-12 xs:px-16">

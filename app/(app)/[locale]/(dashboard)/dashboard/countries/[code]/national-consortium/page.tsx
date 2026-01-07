@@ -1,15 +1,32 @@
 import type { Metadata } from "next";
-import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { Suspense, type ReactNode } from "react";
-
+import type * as schema from "@/db/schema";
 import { Main } from "@/app/(app)/[locale]/(default)/_components/main";
+import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
+import { assertPermissions } from "@/lib/auth/assert-permissions";
 import { getCountryByCode } from "@/lib/queries/countries";
 import { notFound } from "next/navigation";
 
 interface DashboardCountryNationalConsortiumPageProps extends PageProps<"/[locale]/dashboard/countries/[code]/national-consortium"> {}
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata(
+	props: Readonly<DashboardCountryNationalConsortiumPageProps>,
+): Promise<Metadata> {
+	const { params } = props;
+
+	const { user } = await assertAuthenticated();
+
+	const { code } = await params;
+
+	const country = await getCountryByCode({ code });
+
+	if (country == null) {
+		notFound();
+	}
+
+	await assertPermissions(user, { kind: "country", id: country.id, action: "read" });
+
 	const t = await getTranslations("DashboardCountryNationalConsortiumPage");
 
 	const title = t("meta.title");
@@ -24,32 +41,12 @@ export async function generateMetadata(): Promise<Metadata> {
 	return metadata;
 }
 
-export default function DashboardCountryNationalConsortiumPage(
+export default async function DashboardCountryNationalConsortiumPage(
 	props: Readonly<DashboardCountryNationalConsortiumPageProps>,
-): ReactNode {
-	const { params } = props;
-
-	const t = useTranslations("DashboardCountryNationalConsortiumPage");
-
-	return (
-		<Main className="container flex-1 px-8 py-12 xs:px-16">
-			<h1>{t("title")}</h1>
-			<Suspense>
-				<NationalConsortiumTable params={params} />
-			</Suspense>
-		</Main>
-	);
-}
-
-interface NationalConsortiumTableProps extends Pick<
-	DashboardCountryNationalConsortiumPageProps,
-	"params"
-> {}
-
-async function NationalConsortiumTable(
-	props: Readonly<NationalConsortiumTableProps>,
 ): Promise<ReactNode> {
 	const { params } = props;
+
+	const { user } = await assertAuthenticated();
 
 	const { code } = await params;
 
@@ -58,6 +55,30 @@ async function NationalConsortiumTable(
 	if (country == null) {
 		notFound();
 	}
+
+	await assertPermissions(user, { kind: "country", id: country.id, action: "read" });
+
+	const t = await getTranslations("DashboardCountryNationalConsortiumPage");
+
+	return (
+		<Main className="container flex-1 px-8 py-12 xs:px-16">
+			<h1>{t("title")}</h1>
+			<Suspense>
+				<NationalConsortiumTable country={country} />
+			</Suspense>
+		</Main>
+	);
+}
+
+interface NationalConsortiumTableProps {
+	country: Pick<
+		typeof schema.countries.$inferSelect,
+		"id" | "code" | "name" | "consortiumName" | "type" | "logo" | "startDate" | "endDate"
+	>;
+}
+
+function NationalConsortiumTable(props: Readonly<NationalConsortiumTableProps>): ReactNode {
+	const { country } = props;
 
 	return <pre>{JSON.stringify(country, null, 2)}</pre>;
 }

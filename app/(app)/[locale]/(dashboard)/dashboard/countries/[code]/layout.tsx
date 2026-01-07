@@ -1,46 +1,19 @@
+import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
+import { assertPermissions } from "@/lib/auth/assert-permissions";
 import { getCountryByCode } from "@/lib/queries/countries";
-// import type { Metadata } from "next";
-// import { useTranslations } from "next-intl";
-// import { getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 
 interface DashboardCountryLayoutProps extends LayoutProps<"/[locale]/dashboard/countries/[code]"> {}
 
-// export async function generateMetadata(): Promise<Metadata> {
-// 	const t = await getTranslations("DashboardCountryLayout");
-
-// 	const title = t("meta.title");
-
-// 	const metadata: Metadata = {
-// 		title,
-// 		openGraph: {
-// 			title,
-// 		},
-// 	};
-
-// 	return metadata;
-// }
-
-export default function DashboardCountryLayout(
+export async function generateMetadata(
 	props: Readonly<DashboardCountryLayoutProps>,
-): ReactNode {
-	const { children, params } = props;
-
-	// const t = useTranslations("DashboardCountryLayout");
-
-	return (
-		<div>
-			<CountryInfo params={params} />
-			{children}
-		</div>
-	);
-}
-
-interface CountryInfoProps extends Pick<DashboardCountryLayoutProps, "params"> {}
-
-async function CountryInfo(props: Readonly<CountryInfoProps>): Promise<ReactNode> {
+): Promise<Metadata> {
 	const { params } = props;
+
+	const { user } = await assertAuthenticated();
 
 	const { code } = await params;
 
@@ -50,5 +23,45 @@ async function CountryInfo(props: Readonly<CountryInfoProps>): Promise<ReactNode
 		notFound();
 	}
 
-	return <div>{JSON.stringify(country, null, 2)}</div>;
+	await assertPermissions(user, { kind: "country", id: country.id, action: "read" });
+
+	const t = await getTranslations("DashboardCountryLayout");
+
+	const title = t("meta.title");
+
+	const metadata: Metadata = {
+		title,
+		openGraph: {
+			title,
+		},
+	};
+
+	return metadata;
+}
+
+export default async function DashboardCountryLayout(
+	props: Readonly<DashboardCountryLayoutProps>,
+): Promise<ReactNode> {
+	const { children, params } = props;
+
+	const { user } = await assertAuthenticated();
+
+	const { code } = await params;
+
+	const country = await getCountryByCode({ code });
+
+	if (country == null) {
+		notFound();
+	}
+
+	await assertPermissions(user, { kind: "country", id: country.id, action: "read" });
+
+	// const t = await getTranslations("DashboardCountryLayout");
+
+	return (
+		<div>
+			<div>{JSON.stringify(country, null, 2)}</div>
+			{children}
+		</div>
+	);
 }

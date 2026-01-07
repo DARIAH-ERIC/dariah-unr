@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { Suspense, type ReactNode } from "react";
 import * as v from "valibot";
@@ -7,10 +6,29 @@ import * as v from "valibot";
 import { Main } from "@/app/(app)/[locale]/(default)/_components/main";
 import { getReportByCountryCodeAndYear } from "@/lib/queries/reports";
 import { notFound } from "next/navigation";
+import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
+import { getCountryByCode } from "@/lib/queries/countries";
+import { assertPermissions } from "@/lib/auth/assert-permissions";
 
 interface DashboardCountryReportByYearPageProps extends PageProps<"/[locale]/dashboard/countries/[code]/reports/[year]"> {}
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata(
+	props: Readonly<DashboardCountryReportByYearPageProps>,
+): Promise<Metadata> {
+	const { params } = props;
+
+	const { user } = await assertAuthenticated();
+
+	const { code } = await params;
+
+	const country = await getCountryByCode({ code });
+
+	if (country == null) {
+		notFound();
+	}
+
+	await assertPermissions(user, { kind: "country", id: country.id, action: "read" });
+
 	const t = await getTranslations("DashboardCountryReportByYearPage");
 
 	const title = t("meta.title");
@@ -25,12 +43,24 @@ export async function generateMetadata(): Promise<Metadata> {
 	return metadata;
 }
 
-export default function DashboardCountryReportByYearPage(
+export default async function DashboardCountryReportByYearPage(
 	props: Readonly<DashboardCountryReportByYearPageProps>,
-): ReactNode {
+): Promise<ReactNode> {
 	const { params } = props;
 
-	const t = useTranslations("DashboardCountryReportByYearPage");
+	const { user } = await assertAuthenticated();
+
+	const { code } = await params;
+
+	const country = await getCountryByCode({ code });
+
+	if (country == null) {
+		notFound();
+	}
+
+	await assertPermissions(user, { kind: "country", id: country.id, action: "read" });
+
+	const t = await getTranslations("DashboardCountryReportByYearPage");
 
 	return (
 		<Main className="container flex-1 px-8 py-12 xs:px-16">

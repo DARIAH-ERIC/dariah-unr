@@ -9,9 +9,23 @@ export const relations = defineRelations(schema, (r) => {
 				to: r.roles.id.through(r.bodyToRole.b),
 			}),
 		},
-		roles: {
-			bodies: r.many.bodies(),
-			contributions: r.many.contributions(),
+		contributions: {
+			country: r.one.countries({
+				from: r.contributions.countryId,
+				to: r.countries.id,
+			}),
+			person: r.one.persons({
+				from: r.contributions.personId,
+				to: r.persons.id,
+			}),
+			role: r.one.roles({
+				from: r.contributions.roleId,
+				to: r.roles.id,
+			}),
+			workingGroup: r.one.workingGroups({
+				from: r.contributions.workingGroupId,
+				to: r.workingGroups.id,
+			}),
 		},
 		countries: {
 			institutions: r.many.institutions({
@@ -34,6 +48,12 @@ export const relations = defineRelations(schema, (r) => {
 				to: r.persons.id.through(r.users.personId),
 			}),
 		},
+		eventReports: {
+			report: r.one.reports({
+				from: r.eventReports.reportId,
+				to: r.reports.id,
+			}),
+		},
 		institutions: {
 			countries: r.many.countries(),
 			persons: r.many.persons({
@@ -43,66 +63,6 @@ export const relations = defineRelations(schema, (r) => {
 			services: r.many.services({
 				from: r.institutions.id.through(r.institutionService.institutionId),
 				to: r.services.id.through(r.institutionService.serviceId),
-			}),
-		},
-		services: {
-			countries: r.many.countries(),
-			institutions: r.many.institutions(),
-			reports: r.many.reports(),
-			serviceSize: r.one.serviceSizes({
-				from: r.services.sizeId,
-				to: r.serviceSizes.id,
-			}),
-		},
-		software: {
-			countries: r.many.countries(),
-		},
-		persons: {
-			institutions: r.many.institutions(),
-			contributions: r.many.contributions(),
-			countries: r.many.countries(),
-		},
-		contributions: {
-			country: r.one.countries({
-				from: r.contributions.countryId,
-				to: r.countries.id,
-			}),
-			person: r.one.persons({
-				from: r.contributions.personId,
-				to: r.persons.id,
-			}),
-			role: r.one.roles({
-				from: r.contributions.roleId,
-				to: r.roles.id,
-			}),
-			workingGroup: r.one.workingGroups({
-				from: r.contributions.workingGroupId,
-				to: r.workingGroups.id,
-			}),
-		},
-		workingGroups: {
-			contributions: r.many.contributions(),
-			workingGroupOutreachs: r.many.workingGroupOutreach(),
-			workingGroupReports: r.many.workingGroupReports(),
-		},
-		eventReports: {
-			report: r.one.reports({
-				from: r.eventReports.reportId,
-				to: r.reports.id,
-			}),
-		},
-		reports: {
-			eventReports: r.many.eventReports(),
-			outreachs: r.many.outreach(),
-			projects: r.many.projects(),
-			country: r.one.countries({
-				from: r.reports.countryId,
-				to: r.countries.id,
-			}),
-			researchPolicyDevelopments: r.many.researchPolicyDevelopments(),
-			services: r.many.services({
-				from: r.reports.id.through(r.serviceReports.reportId),
-				to: r.services.id.through(r.serviceReports.serviceId),
 			}),
 		},
 		outreach: {
@@ -124,10 +84,29 @@ export const relations = defineRelations(schema, (r) => {
 		outreachReports: {
 			outreachKpis: r.many.outreachKpis(),
 		},
+		persons: {
+			institutions: r.many.institutions(),
+			contributions: r.many.contributions(),
+			countries: r.many.countries(),
+		},
 		projects: {
 			report: r.one.reports({
 				from: r.projects.reportId,
 				to: r.reports.id,
+			}),
+		},
+		reports: {
+			country: r.one.countries({
+				from: r.reports.countryId,
+				to: r.countries.id,
+			}),
+			eventReports: r.many.eventReports(),
+			outreachs: r.many.outreach(),
+			projects: r.many.projects(),
+			researchPolicyDevelopments: r.many.researchPolicyDevelopments(),
+			services: r.many.services({
+				from: r.reports.id.through(r.serviceReports.reportId),
+				to: r.services.id.through(r.serviceReports.serviceId),
 			}),
 		},
 		researchPolicyDevelopments: {
@@ -136,10 +115,23 @@ export const relations = defineRelations(schema, (r) => {
 				to: r.reports.id,
 			}),
 		},
+		roles: {
+			bodies: r.many.bodies(),
+			contributions: r.many.contributions(),
+		},
 		serviceKpis: {
 			serviceReport: r.one.serviceReports({
 				from: r.serviceKpis.serviceReportId,
 				to: r.serviceReports.id,
+			}),
+		},
+		services: {
+			countries: r.many.countries(),
+			institutions: r.many.institutions(),
+			reports: r.many.reports(),
+			serviceSize: r.one.serviceSizes({
+				from: r.services.sizeId,
+				to: r.serviceSizes.id,
 			}),
 		},
 		serviceReports: {
@@ -152,10 +144,13 @@ export const relations = defineRelations(schema, (r) => {
 			user: r.one.users({
 				from: r.sessions.userId,
 				to: r.users.id,
+				optional: false,
 			}),
 		},
+		software: {
+			countries: r.many.countries(),
+		},
 		users: {
-			sessions: r.many.sessions(),
 			country: r.one.countries({
 				from: r.users.countryId,
 				to: r.countries.id,
@@ -164,6 +159,12 @@ export const relations = defineRelations(schema, (r) => {
 				from: r.users.personId,
 				to: r.persons.id,
 			}),
+			sessions: r.many.sessions(),
+		},
+		workingGroups: {
+			contributions: r.many.contributions(),
+			workingGroupOutreachs: r.many.workingGroupOutreach(),
+			workingGroupReports: r.many.workingGroupReports(),
 		},
 		workingGroupEvents: {
 			workingGroupReport: r.one.workingGroupReports({
@@ -172,11 +173,11 @@ export const relations = defineRelations(schema, (r) => {
 			}),
 		},
 		workingGroupReports: {
-			workingGroupEvents: r.many.workingGroupEvents(),
 			workingGroup: r.one.workingGroups({
 				from: r.workingGroupReports.workingGroupId,
 				to: r.workingGroups.id,
 			}),
+			workingGroupEvents: r.many.workingGroupEvents(),
 		},
 		workingGroupOutreach: {
 			workingGroup: r.one.workingGroups({

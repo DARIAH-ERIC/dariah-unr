@@ -1,31 +1,42 @@
-// import type { Metadata } from "next";
-// import { useTranslations } from "next-intl";
-// import { getTranslations } from "next-intl/server";
+import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
+import { assertAuthorized } from "@/lib/auth/assert-authorized";
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 interface DashboardAdminLayoutProps extends LayoutProps<"/[locale]/dashboard/admin"> {}
 
-// export async function generateMetadata(): Promise<Metadata> {
-// 	const t = await getTranslations("DashboardAdminLayout");
+export async function generateMetadata(
+	_props: Readonly<DashboardAdminLayoutProps>,
+): Promise<Metadata> {
+	const { user } = await assertAuthenticated();
 
-// 	const title = t("meta.title");
+	await assertAuthorized({ user, roles: ["admin"] });
 
-// 	const metadata: Metadata = {
-// 		title,
-// 		openGraph: {
-// 			title,
-// 		},
-// 	};
+	const t = await getTranslations("DashboardAdminLayout");
 
-// 	return metadata;
-// }
+	const title = t("meta.title");
 
-export default function DashboardAdminLayout(
+	const metadata: Metadata = {
+		title,
+		openGraph: {
+			title,
+		},
+	};
+
+	return metadata;
+}
+
+export default async function DashboardAdminLayout(
 	props: Readonly<DashboardAdminLayoutProps>,
-): ReactNode {
+): Promise<ReactNode> {
 	const { children } = props;
 
-	// const t = useTranslations("DashboardAdminLayout");
+	const { user } = await assertAuthenticated();
+
+	await assertAuthorized({ user, roles: ["admin"] });
+
+	// const t = await getTranslations("DashboardAdminLayout");
 
 	return <div>{children}</div>;
 }

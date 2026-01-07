@@ -53,6 +53,10 @@ const result = createEnv({
 				S3_PORT: v.pipe(v.string(), v.toNumber(), v.integer(), v.minValue(1)),
 				S3_PROTOCOL: v.optional(v.picklist(["http", "https"]), "https"),
 				S3_SECRET_KEY: v.pipe(v.string(), v.nonEmpty()),
+				SSHOC_MARKETPLACE_API_BASE_URL: v.pipe(v.string(), v.url()),
+				SSHOC_MARKETPLACE_BASE_URL: v.pipe(v.string(), v.url()),
+				SSHOC_MARKETPLACE_PASSWORD: v.pipe(v.string(), v.nonEmpty()),
+				SSHOC_MARKETPLACE_USER_NAME: v.pipe(v.string(), v.nonEmpty()),
 			});
 
 			const result = v.safeParse(schema, environment);
@@ -157,6 +161,10 @@ const result = createEnv({
 		S3_PORT: process.env.S3_PORT,
 		S3_PROTOCOL: process.env.S3_PROTOCOL,
 		S3_SECRET_KEY: process.env.S3_SECRET_KEY,
+		SSHOC_MARKETPLACE_API_BASE_URL: process.env.SSHOC_MARKETPLACE_API_BASE_URL,
+		SSHOC_MARKETPLACE_BASE_URL: process.env.SSHOC_MARKETPLACE_BASE_URL,
+		SSHOC_MARKETPLACE_PASSWORD: process.env.SSHOC_MARKETPLACE_PASSWORD,
+		SSHOC_MARKETPLACE_USER_NAME: process.env.SSHOC_MARKETPLACE_USER_NAME,
 	},
 	validation: v.parse(
 		v.optional(v.picklist(["disabled", "enabled", "public"]), "enabled"),

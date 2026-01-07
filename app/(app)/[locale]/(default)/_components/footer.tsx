@@ -116,7 +116,7 @@ export function Footer(props: Readonly<FooterProps>): ReactNode {
 
 // eslint-disable-next-line @typescript-eslint/require-await
 async function CurrentYear() {
-	"use cache";
+	// "use cache";
 
 	return new Date().getUTCFullYear();
 }

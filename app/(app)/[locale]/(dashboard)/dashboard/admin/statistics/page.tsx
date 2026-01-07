@@ -1,11 +1,20 @@
 import type { Metadata } from "next";
-import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { Main } from "@/app/(app)/[locale]/(default)/_components/main";
+import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
+import { assertAuthorized } from "@/lib/auth/assert-authorized";
 
-export async function generateMetadata(): Promise<Metadata> {
+interface DashboardAdminStatisticsPageProps extends PageProps<"/[locale]/dashboard/admin/statistics"> {}
+
+export async function generateMetadata(
+	_props: Readonly<DashboardAdminStatisticsPageProps>,
+): Promise<Metadata> {
+	const { user } = await assertAuthenticated();
+
+	await assertAuthorized({ user, roles: ["admin"] });
+
 	const t = await getTranslations("DashboardAdminStatisticsPage");
 
 	const title = t("meta.title");
@@ -20,8 +29,14 @@ export async function generateMetadata(): Promise<Metadata> {
 	return metadata;
 }
 
-export default function DashboardAdminStatisticsPage(): ReactNode {
-	const t = useTranslations("DashboardAdminStatisticsPage");
+export default async function DashboardAdminStatisticsPage(
+	_props: Readonly<DashboardAdminStatisticsPageProps>,
+): Promise<ReactNode> {
+	const { user } = await assertAuthenticated();
+
+	await assertAuthorized({ user, roles: ["admin"] });
+
+	const t = await getTranslations("DashboardAdminStatisticsPage");
 
 	return (
 		<Main className="container flex-1 px-8 py-12 xs:px-16">

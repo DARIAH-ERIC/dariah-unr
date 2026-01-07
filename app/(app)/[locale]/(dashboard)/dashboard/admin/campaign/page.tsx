@@ -1,11 +1,20 @@
 import type { Metadata } from "next";
-import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { Main } from "@/app/(app)/[locale]/(default)/_components/main";
+import { assertAuthorized } from "@/lib/auth/assert-authorized";
+import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
 
-export async function generateMetadata(): Promise<Metadata> {
+interface DashboardAdminCampaignPageProps extends PageProps<"/[locale]/dashboard/admin/campaign"> {}
+
+export async function generateMetadata(
+	_props: Readonly<DashboardAdminCampaignPageProps>,
+): Promise<Metadata> {
+	const { user } = await assertAuthenticated();
+
+	await assertAuthorized({ user, roles: ["admin"] });
+
 	const t = await getTranslations("DashboardAdminCampaignPage");
 
 	const title = t("meta.title");
@@ -20,8 +29,14 @@ export async function generateMetadata(): Promise<Metadata> {
 	return metadata;
 }
 
-export default function DashboardAdminCampaignPage(): ReactNode {
-	const t = useTranslations("DashboardAdminCampaignPage");
+export default async function DashboardAdminCampaignPage(
+	_props: Readonly<DashboardAdminCampaignPageProps>,
+): Promise<ReactNode> {
+	const { user } = await assertAuthenticated();
+
+	await assertAuthorized({ user, roles: ["admin"] });
+
+	const t = await getTranslations("DashboardAdminCampaignPage");
 
 	return (
 		<Main className="container flex-1 px-8 py-12 xs:px-16">

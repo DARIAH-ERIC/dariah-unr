@@ -26,6 +26,19 @@ jobs:
         os: [ubuntu-24.04]
 
     env:
+      DATABASE_HOST: "localhost"
+      DATABASE_NAME: "dariah-knowledge-base"
+      DATABASE_PASSWORD: "dariah-knowledge-base"
+      DATABASE_PORT: "5432"
+      DATABASE_USER: "dariah-knowledge-base"
+      EMAIL_ADDRESS: "acdh@example.com"
+      EMAIL_SMTP_PORT: "1025"
+      EMAIL_SMTP_SERVER: "localhost"
+      IMGPROXY_BASE_URL: "http://localhost:8080"
+      IMGPROXY_KEY: "56dad738f7e2f7ce59dbe686064388fb39aa48df0a71008f2938934b53e05995"
+      IMGPROXY_PORT: "8080"
+      IMGPROXY_SALT: "de6a626df18990abdfba354b374775f0"
+      MAILPIT_API_BASE_URL: "http://localhost:8025"
       NEXT_PUBLIC_APP_BASE_URL: "http://localhost:3000"
       NEXT_PUBLIC_APP_BOTS: "disabled"
       NEXT_PUBLIC_APP_IMPRINT_CUSTOM_CONFIG: "disabled"
@@ -34,6 +47,16 @@ jobs:
       NEXT_PUBLIC_APP_MATOMO_BASE_URL: "${{ vars.NEXT_PUBLIC_APP_MATOMO_BASE_URL }}"
       NEXT_PUBLIC_APP_MATOMO_ID: "${{ vars.NEXT_PUBLIC_APP_MATOMO_ID }}"
       NEXT_PUBLIC_APP_SERVICE_ID: "${{ vars.SERVICE_ID }}"
+      S3_ACCESS_KEY: "2f3375d8b78c596cad249f1e790cee93"
+      S3_BUCKET_NAME: "dariah-knowledge-base"
+      S3_HOST: "localhost"
+      S3_PORT: "9000"
+      S3_PROTOCOL: "http"
+      S3_SECRET_KEY: "4774d235fe2d74e82de15f3cf934e2f2b3cd020e211a596d024cb02992f12033"
+      SSHOC_MARKETPLACE_API_BASE_URL: "${{ vars.K8S_SECRET_SSHOC_MARKETPLACE_API_BASE_URL }}"
+      SSHOC_MARKETPLACE_BASE_URL: "${{ vars.K8S_SECRET_SSHOC_MARKETPLACE_BASE_URL }}"
+      SSHOC_MARKETPLACE_PASSWORD: "${{ secrets.K8S_SECRET_SSHOC_MARKETPLACE_PASSWORD }}"
+      SSHOC_MARKETPLACE_USER_NAME: "${{ secrets.K8S_SECRET_SSHOC_MARKETPLACE_USER_NAME }}"
 
     steps:
       - name: Checkout repository

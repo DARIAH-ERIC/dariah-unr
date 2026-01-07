@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { Suspense, type ReactNode } from "react";
 import * as v from "valibot";
@@ -7,10 +6,29 @@ import * as v from "valibot";
 import { Main } from "@/app/(app)/[locale]/(default)/_components/main";
 import { getWorkingGroupReportByWorkingGroupSlugAndYear } from "@/lib/queries/working-group-reports";
 import { notFound } from "next/navigation";
+import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
+import { getWorkingGroupBySlug } from "@/lib/queries/working-groups";
+import { assertPermissions } from "@/lib/auth/assert-permissions";
 
 interface DashboardWorkingGroupReportByYearEditPageProps extends PageProps<"/[locale]/dashboard/working-groups/[slug]/reports/[year]/edit"> {}
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata(
+	props: Readonly<DashboardWorkingGroupReportByYearEditPageProps>,
+): Promise<Metadata> {
+	const { params } = props;
+
+	const { user } = await assertAuthenticated();
+
+	const { slug } = await params;
+
+	const workingGroup = await getWorkingGroupBySlug({ slug });
+
+	if (workingGroup == null) {
+		notFound();
+	}
+
+	await assertPermissions(user, { kind: "working-group", id: workingGroup.id, action: "read" });
+
 	const t = await getTranslations("DashboardWorkingGroupReportByYearEditPage");
 
 	const title = t("meta.title");
@@ -25,12 +43,24 @@ export async function generateMetadata(): Promise<Metadata> {
 	return metadata;
 }
 
-export default function DashboardWorkingGroupReportByYearEditPage(
+export default async function DashboardWorkingGroupReportByYearEditPage(
 	props: Readonly<DashboardWorkingGroupReportByYearEditPageProps>,
-): ReactNode {
+): Promise<ReactNode> {
 	const { params } = props;
 
-	const t = useTranslations("DashboardWorkingGroupReportByYearEditPage");
+	const { user } = await assertAuthenticated();
+
+	const { slug } = await params;
+
+	const workingGroup = await getWorkingGroupBySlug({ slug });
+
+	if (workingGroup == null) {
+		notFound();
+	}
+
+	await assertPermissions(user, { kind: "working-group", id: workingGroup.id, action: "read" });
+
+	const t = await getTranslations("DashboardWorkingGroupReportByYearEditPage");
 
 	return (
 		<Main className="container flex-1 px-8 py-12 xs:px-16">

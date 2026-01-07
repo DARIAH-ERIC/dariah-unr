@@ -5,6 +5,7 @@
 		"editorconfig.editorconfig",
 		"github.vscode-github-actions",
 		"lokalise.i18n-ally",
+		"matt-meyers.vscode-dbml",
 		"mikestead.dotenv",
 		"ms-playwright.playwright",
 		"prettier.prettier-vscode",

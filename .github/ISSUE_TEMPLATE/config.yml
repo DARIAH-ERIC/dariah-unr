@@ -1,5 +1,4 @@
 blank_issues_enabled: false
-# contact_links:
-#   - name:
-#     url:
-#     about:
+contact_links:
+  - name: DARIAH Helpdesk
+    about: Please contact info@dariah.eu if you require support.

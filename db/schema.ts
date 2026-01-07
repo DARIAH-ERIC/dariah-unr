@@ -273,7 +273,7 @@ export const institutionToPerson = p.pgTable(
 );
 
 export const bodies = p.pgTable("bodies", {
-	id: p.uuid("id").primaryKey(),
+	id: p.uuid("id").primaryKey().defaultRandom(),
 	acronym: p.text("acronym"),
 	name: p.text("name").notNull(),
 	type: bodyType("type").notNull(),
@@ -285,7 +285,7 @@ export const bodies = p.pgTable("bodies", {
 });
 
 export const contributions = p.pgTable("contributions", {
-	id: p.uuid("id").primaryKey(),
+	id: p.uuid("id").primaryKey().defaultRandom(),
 	endDate: p.timestamp("end_date", { precision: 3 }),
 	startDate: p.timestamp("start_date", { precision: 3 }),
 	countryId: p.uuid("country_id").references(
@@ -328,7 +328,7 @@ export const contributions = p.pgTable("contributions", {
 export const countries = p.pgTable(
 	"countries",
 	{
-		id: p.uuid("id").primaryKey(),
+		id: p.uuid("id").primaryKey().defaultRandom(),
 		code: p.text("code").notNull(),
 		endDate: p.timestamp("end_date", { precision: 3 }),
 		logo: p.text("logo"),
@@ -352,7 +352,7 @@ export const countries = p.pgTable(
 export const eventReports = p.pgTable(
 	"event_reports",
 	{
-		id: p.uuid("id").primaryKey(),
+		id: p.uuid("id").primaryKey().defaultRandom(),
 		dariahCommissionedEvent: p.text("dariah_commissioned_event"),
 		largeMeetings: p.integer("large_meetings"),
 		mediumMeetings: p.integer("medium_meetings"),
@@ -381,7 +381,7 @@ export const eventReports = p.pgTable(
 );
 
 export const eventSizes = p.pgTable("event_sizes", {
-	id: p.uuid("id").primaryKey(),
+	id: p.uuid("id").primaryKey().defaultRandom(),
 	annualValue: p.integer("annual_value").notNull(),
 	type: eventSizeType("type").notNull(),
 	createdAt: p
@@ -429,7 +429,7 @@ export const institutionService = p.pgTable(
 );
 
 export const institutions = p.pgTable("institutions", {
-	id: p.uuid("id").primaryKey(),
+	id: p.uuid("id").primaryKey().defaultRandom(),
 	endDate: p.timestamp("end_date", { precision: 3 }),
 	name: p.text("name").notNull(),
 	ror: p.text("ror"),
@@ -444,7 +444,7 @@ export const institutions = p.pgTable("institutions", {
 });
 
 export const outreach = p.pgTable("outreach", {
-	id: p.uuid("id").primaryKey(),
+	id: p.uuid("id").primaryKey().defaultRandom(),
 	endDate: p.timestamp("end_date", { precision: 3 }),
 	name: p.text("name").notNull(),
 	startDate: p.timestamp("start_date", { precision: 3 }),
@@ -464,7 +464,7 @@ export const outreach = p.pgTable("outreach", {
 });
 
 export const outreachKpis = p.pgTable("outreach_kpis", {
-	id: p.uuid("id").primaryKey(),
+	id: p.uuid("id").primaryKey().defaultRandom(),
 	unit: outreachKpiType("unit").notNull(),
 	value: p.integer("value").notNull(),
 	outreachReportId: p
@@ -484,7 +484,7 @@ export const outreachKpis = p.pgTable("outreach_kpis", {
 });
 
 export const outreachReports = p.pgTable("outreach_reports", {
-	id: p.uuid("id").primaryKey(),
+	id: p.uuid("id").primaryKey().defaultRandom(),
 	outreachId: p
 		.uuid("outreach_id")
 		.notNull()
@@ -511,7 +511,7 @@ export const outreachReports = p.pgTable("outreach_reports", {
 });
 
 export const outreachTypeValues = p.pgTable("outreach_type_values", {
-	id: p.uuid("id").primaryKey(),
+	id: p.uuid("id").primaryKey().defaultRandom(),
 	annualValue: p.integer("annual_value").notNull(),
 	type: outreachType("type").notNull(),
 	createdAt: p
@@ -522,7 +522,7 @@ export const outreachTypeValues = p.pgTable("outreach_type_values", {
 });
 
 export const persons = p.pgTable("persons", {
-	id: p.uuid("id").primaryKey(),
+	id: p.uuid("id").primaryKey().defaultRandom(),
 	email: p.text("email"),
 	name: p.text("name").notNull(),
 	orcid: p.text("orcid"),
@@ -534,7 +534,7 @@ export const persons = p.pgTable("persons", {
 });
 
 export const projects = p.pgTable("projects", {
-	id: p.uuid("id").primaryKey(),
+	id: p.uuid("id").primaryKey().defaultRandom(),
 	amount: p.numeric("amount", { precision: 12, scale: 2 }),
 	funders: p.text("funders"),
 	name: p.text("name").notNull(),
@@ -561,7 +561,7 @@ export const projects = p.pgTable("projects", {
 export const reports = p.pgTable(
 	"reports",
 	{
-		id: p.uuid("id").primaryKey(),
+		id: p.uuid("id").primaryKey().defaultRandom(),
 		comments: p.jsonb("comments"),
 		contributionsCount: p.integer("contributions_count"),
 		operationalCost: p.numeric("operational_cost", { precision: 12, scale: 2 }),
@@ -595,7 +595,7 @@ export const reports = p.pgTable(
 );
 
 export const researchPolicyDevelopments = p.pgTable("research_policy_developments", {
-	id: p.uuid("id").primaryKey(),
+	id: p.uuid("id").primaryKey().defaultRandom(),
 	level: researchPolicyLevel("level").notNull(),
 	name: p.text("name").notNull(),
 	outcome: p.text("outcome"),
@@ -616,7 +616,7 @@ export const researchPolicyDevelopments = p.pgTable("research_policy_development
 });
 
 export const roles = p.pgTable("roles", {
-	id: p.uuid("id").primaryKey(),
+	id: p.uuid("id").primaryKey().defaultRandom(),
 	annualValue: p.integer("annual_value").notNull(),
 	name: p.text("name").notNull(),
 	type: roleType("type").notNull(),
@@ -628,7 +628,7 @@ export const roles = p.pgTable("roles", {
 });
 
 export const serviceKpis = p.pgTable("service_kpis", {
-	id: p.uuid("id").primaryKey(),
+	id: p.uuid("id").primaryKey().defaultRandom(),
 	unit: serviceKpiType("unit").notNull(),
 	value: p.integer("value").notNull(),
 	serviceReportId: p
@@ -648,7 +648,7 @@ export const serviceKpis = p.pgTable("service_kpis", {
 });
 
 export const serviceReports = p.pgTable("service_reports", {
-	id: p.uuid("id").primaryKey(),
+	id: p.uuid("id").primaryKey().defaultRandom(),
 	reportId: p
 		.uuid("report_id")
 		.notNull()
@@ -675,7 +675,7 @@ export const serviceReports = p.pgTable("service_reports", {
 });
 
 export const serviceSizes = p.pgTable("service_sizes", {
-	id: p.uuid("id").primaryKey(),
+	id: p.uuid("id").primaryKey().defaultRandom(),
 	annualValue: p.integer("annual_value").notNull(),
 	type: serviceSizeType("type").notNull(),
 	createdAt: p
@@ -686,7 +686,7 @@ export const serviceSizes = p.pgTable("service_sizes", {
 });
 
 export const services = p.pgTable("services", {
-	id: p.uuid("id").primaryKey(),
+	id: p.uuid("id").primaryKey().defaultRandom(),
 	agreements: p.text("agreements"),
 	audience: serviceAudience("audience"),
 	dariahBranding: p.boolean("dariah_branding"),
@@ -736,7 +736,7 @@ export const sessions = p.pgTable("sessions", {
 });
 
 export const software = p.pgTable("software", {
-	id: p.uuid("id").primaryKey(),
+	id: p.uuid("id").primaryKey().defaultRandom(),
 	comment: p.text("comment"),
 	name: p.text("name").notNull(),
 	marketplaceStatus: softwareMarketplaceStatus("marketplace_status"),
@@ -753,7 +753,7 @@ export const software = p.pgTable("software", {
 export const users = p.pgTable(
 	"users",
 	{
-		id: p.uuid("id").primaryKey(),
+		id: p.uuid("id").primaryKey().defaultRandom(),
 		email: p.text("email").notNull(),
 		name: p.text("name").notNull(),
 		password: p.text("password").notNull(),
@@ -777,7 +777,7 @@ export const users = p.pgTable(
 );
 
 export const workingGroupEvents = p.pgTable("working_group_events", {
-	id: p.uuid("id").primaryKey(),
+	id: p.uuid("id").primaryKey().defaultRandom(),
 	date: p.timestamp("date", { precision: 3 }),
 	role: workingGroupEventRole("role").notNull(),
 	title: p.text("title").notNull(),
@@ -794,7 +794,7 @@ export const workingGroupEvents = p.pgTable("working_group_events", {
 });
 
 export const workingGroupOutreach = p.pgTable("working_group_outreach", {
-	id: p.uuid("id").primaryKey(),
+	id: p.uuid("id").primaryKey().defaultRandom(),
 	endDate: p.timestamp("end_date", { precision: 3 }),
 	name: p.text("name").notNull(),
 	startDate: p.timestamp("start_date", { precision: 3 }),
@@ -819,7 +819,7 @@ export const workingGroupOutreach = p.pgTable("working_group_outreach", {
 export const workingGroupReports = p.pgTable(
 	"working_group_reports",
 	{
-		id: p.uuid("id").primaryKey(),
+		id: p.uuid("id").primaryKey().defaultRandom(),
 		comments: p.jsonb("comments"),
 		facultativeQuestions: p.text("facultative_questions").notNull(),
 		members: p.integer("members"),
@@ -854,7 +854,7 @@ export const workingGroupReports = p.pgTable(
 export const workingGroups = p.pgTable(
 	"working_groups",
 	{
-		id: p.uuid("id").primaryKey(),
+		id: p.uuid("id").primaryKey().defaultRandom(),
 		endDate: p.timestamp("end_date", { precision: 3 }),
 		name: p.text("name").notNull(),
 		startDate: p.timestamp("start_date", { precision: 3 }),

@@ -22,7 +22,7 @@ export function ColorSchemeSelect(props: Readonly<ColorSchemeSelectProps>): Reac
 	const value = kind === "system" ? "system" : colorScheme;
 
 	return (
-		<label>
+		<label className="text-sm">
 			<span className="sr-only">{label}</span>
 			<select
 				onChange={(event) => {

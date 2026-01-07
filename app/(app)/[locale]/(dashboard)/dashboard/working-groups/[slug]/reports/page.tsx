@@ -1,15 +1,34 @@
 import type { Metadata } from "next";
-import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { Suspense, type ReactNode } from "react";
 import * as v from "valibot";
 
 import { Main } from "@/app/(app)/[locale]/(default)/_components/main";
+import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
+import { assertPermissions } from "@/lib/auth/assert-permissions";
 import { getWorkingGroupReportsByWorkingGroupSlug } from "@/lib/queries/working-group-reports";
+import { getWorkingGroupBySlug } from "@/lib/queries/working-groups";
+import { notFound } from "next/navigation";
 
 interface DashboardWorkingGroupReportsPageProps extends PageProps<"/[locale]/dashboard/working-groups/[slug]/reports"> {}
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata(
+	props: Readonly<DashboardWorkingGroupReportsPageProps>,
+): Promise<Metadata> {
+	const { params } = props;
+
+	const { user } = await assertAuthenticated();
+
+	const { slug } = await params;
+
+	const workingGroup = await getWorkingGroupBySlug({ slug });
+
+	if (workingGroup == null) {
+		notFound();
+	}
+
+	await assertPermissions(user, { kind: "working-group", id: workingGroup.id, action: "read" });
+
 	const t = await getTranslations("DashboardWorkingGroupReportsPage");
 
 	const title = t("meta.title");
@@ -24,12 +43,24 @@ export async function generateMetadata(): Promise<Metadata> {
 	return metadata;
 }
 
-export default function DashboardWorkingGroupReportsPage(
+export default async function DashboardWorkingGroupReportsPage(
 	props: Readonly<DashboardWorkingGroupReportsPageProps>,
-): ReactNode {
+): Promise<ReactNode> {
 	const { params, searchParams } = props;
 
-	const t = useTranslations("DashboardWorkingGroupReportsPage");
+	const { user } = await assertAuthenticated();
+
+	const { slug } = await params;
+
+	const workingGroup = await getWorkingGroupBySlug({ slug });
+
+	if (workingGroup == null) {
+		notFound();
+	}
+
+	await assertPermissions(user, { kind: "working-group", id: workingGroup.id, action: "read" });
+
+	const t = await getTranslations("DashboardWorkingGroupReportsPage");
 
 	return (
 		<Main className="container flex-1 px-8 py-12 xs:px-16">

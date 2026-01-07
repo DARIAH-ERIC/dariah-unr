@@ -1,4 +1,23 @@
 {
+	"AuthLayout": {
+		"meta": {
+			"title": "Authentication"
+		},
+		"title": "Authentication"
+	},
+	"AuthSignInPage": {
+		"meta": {
+			"title": "Sign in"
+		},
+		"title": "Sign in"
+	},
+	"AuthUnauthorizedPage": {
+		"message": "You are not authorized to view this page",
+		"meta": {
+			"title": "Unauthorized"
+		},
+		"title": "Unauthorized"
+	},
 	"ColorSchemeSelect": {
 		"change-color-scheme": "Change color scheme",
 		"color-schemes": {
@@ -12,6 +31,18 @@
 			"title": "Contact"
 		},
 		"title": "Contact"
+	},
+	"DashboardLayout": {
+		"meta": {
+			"title": "Dashboard"
+		},
+		"title": "Dashboard"
+	},
+	"DashboardAdminLayout": {
+		"meta": {
+			"title": "Admin dashboard"
+		},
+		"title": "Admin dashboard"
 	},
 	"DashboardAdminPage": {
 		"meta": {
@@ -109,6 +140,12 @@
 		},
 		"title": "Admin dashboard - Working groups reports"
 	},
+	"DashboardCountryLayout": {
+		"meta": {
+			"title": "Country dashboard"
+		},
+		"title": "Country dashboard"
+	},
 	"DashboardCountryPage": {
 		"meta": {
 			"title": "Country dashboard"
@@ -150,6 +187,12 @@
 			"title": "Country dashboard - Edit report"
 		},
 		"title": "Country dashboard - Edit report"
+	},
+	"DashboardWorkingGroupLayout": {
+		"meta": {
+			"title": "Working group dashboard"
+		},
+		"title": "Working group dashboard"
 	},
 	"DashboardWorkingGroupPage": {
 		"meta": {
