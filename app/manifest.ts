@@ -4,9 +4,7 @@ import { defaultLocale } from "@/lib/i18n/locales";
 import { getMetadata } from "@/lib/i18n/metadata";
 
 export default async function manifest(): Promise<MetadataRoute.Manifest> {
-	const locale = defaultLocale;
-
-	const meta = await getMetadata(locale);
+	const meta = await getMetadata(defaultLocale);
 
 	return {
 		name: meta.manifest.name,

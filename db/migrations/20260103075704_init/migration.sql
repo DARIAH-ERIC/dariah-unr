@@ -1,0 +1,407 @@
+-- Current sql file was generated after introspecting the database
+-- If you want to run this migration please uncomment this code before executing migrations
+-- CREATE SCHEMA "dariah_unr";
+-- --> statement-breakpoint
+-- CREATE TYPE "dariah_unr"."BodyType" AS ENUM('bod', 'dco', 'ga', 'jrc', 'ncc', 'sb', 'smt');--> statement-breakpoint
+-- CREATE TYPE "dariah_unr"."CountryType" AS ENUM('cooperating_partnership', 'member_country', 'other');--> statement-breakpoint
+-- CREATE TYPE "dariah_unr"."EventSizeType" AS ENUM('dariah_commissioned', 'large', 'medium', 'small');--> statement-breakpoint
+-- CREATE TYPE "dariah_unr"."InstitutionServiceRole" AS ENUM('content_provider', 'service_owner', 'service_provider', 'technical_contact');--> statement-breakpoint
+-- CREATE TYPE "dariah_unr"."InstitutionType" AS ENUM('cooperating_partner', 'national_coordinating_institution', 'national_representative_institution', 'other', 'partner_institution');--> statement-breakpoint
+-- CREATE TYPE "dariah_unr"."OutreachKpiType" AS ENUM('engagement', 'followers', 'impressions', 'mention', 'new_content', 'page_views', 'posts', 'reach', 'subscribers', 'unique_visitors', 'views', 'watch_time');--> statement-breakpoint
+-- CREATE TYPE "dariah_unr"."OutreachType" AS ENUM('national_website', 'social_media', 'national_social_media');--> statement-breakpoint
+-- CREATE TYPE "dariah_unr"."ProjectScope" AS ENUM('eu', 'national', 'regional');--> statement-breakpoint
+-- CREATE TYPE "dariah_unr"."ReportStatus" AS ENUM('draft', 'final');--> statement-breakpoint
+-- CREATE TYPE "dariah_unr"."ResearchPolicyLevel" AS ENUM('eu', 'international', 'institutional', 'national', 'regional');--> statement-breakpoint
+-- CREATE TYPE "dariah_unr"."RoleType" AS ENUM('dco_member', 'director', 'national_coordinator', 'national_coordinator_deputy', 'national_representative', 'jrc_member', 'scientific_board_member', 'smt_member', 'wg_chair', 'wg_member', 'national_representative_deputy', 'national_consortium_contact', 'cooperating_partner_contact');--> statement-breakpoint
+-- CREATE TYPE "dariah_unr"."ServiceAudience" AS ENUM('dariah_team', 'global', 'national_local');--> statement-breakpoint
+-- CREATE TYPE "dariah_unr"."ServiceKpiType" AS ENUM('downloads', 'hits', 'items', 'jobs_processed', 'page_views', 'registered_users', 'searches', 'sessions', 'unique_users', 'visits', 'websites_hosted');--> statement-breakpoint
+-- CREATE TYPE "dariah_unr"."ServiceMarketplaceStatus" AS ENUM('no', 'not_applicable', 'yes');--> statement-breakpoint
+-- CREATE TYPE "dariah_unr"."ServiceSizeType" AS ENUM('core', 'large', 'medium', 'small');--> statement-breakpoint
+-- CREATE TYPE "dariah_unr"."ServiceStatus" AS ENUM('discontinued', 'in_preparation', 'live', 'needs_review', 'to_be_discontinued');--> statement-breakpoint
+-- CREATE TYPE "dariah_unr"."ServiceType" AS ENUM('community', 'core', 'internal');--> statement-breakpoint
+-- CREATE TYPE "dariah_unr"."SoftwareMarketplaceStatus" AS ENUM('added_as_external_id', 'added_as_item', 'no', 'not_applicable');--> statement-breakpoint
+-- CREATE TYPE "dariah_unr"."SoftwareStatus" AS ENUM('maintained', 'needs_review', 'not_maintained');--> statement-breakpoint
+-- CREATE TYPE "dariah_unr"."UserRole" AS ENUM('admin', 'contributor', 'national_coordinator');--> statement-breakpoint
+-- CREATE TYPE "dariah_unr"."WorkingGroupEventRole" AS ENUM('organiser', 'presenter');--> statement-breakpoint
+-- CREATE TYPE "dariah_unr"."WorkingGroupOutreachType" AS ENUM('website', 'social_media');--> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."_BodyToRole" (
+-- "A" uuid,
+-- "B" uuid,
+-- CONSTRAINT "_BodyToRole_AB_pkey" PRIMARY KEY("A","B")
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."_CountryToInstitution" (
+-- "A" uuid,
+-- "B" uuid,
+-- CONSTRAINT "_CountryToInstitution_AB_pkey" PRIMARY KEY("A","B")
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."_CountryToService" (
+-- "A" uuid,
+-- "B" uuid,
+-- CONSTRAINT "_CountryToService_AB_pkey" PRIMARY KEY("A","B")
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."_CountryToSoftware" (
+-- "A" uuid,
+-- "B" uuid,
+-- CONSTRAINT "_CountryToSoftware_AB_pkey" PRIMARY KEY("A","B")
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."_InstitutionToPerson" (
+-- "A" uuid,
+-- "B" uuid,
+-- CONSTRAINT "_InstitutionToPerson_AB_pkey" PRIMARY KEY("A","B")
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."_prisma_migrations" (
+-- "id" varchar(36) PRIMARY KEY,
+-- "checksum" varchar(64) NOT NULL,
+-- "finished_at" timestamp with time zone,
+-- "migration_name" varchar(255) NOT NULL,
+-- "logs" text,
+-- "rolled_back_at" timestamp with time zone,
+-- "started_at" timestamp with time zone DEFAULT now() NOT NULL,
+-- "applied_steps_count" integer DEFAULT 0 NOT NULL
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."bodies" (
+-- "id" uuid PRIMARY KEY,
+-- "acronym" text,
+-- "name" text NOT NULL,
+-- "type" "dariah_unr"."BodyType" NOT NULL,
+-- "created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+-- "updated_at" timestamp(3) NOT NULL
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."contributions" (
+-- "id" uuid PRIMARY KEY,
+-- "end_date" timestamp(3),
+-- "start_date" timestamp(3),
+-- "country_id" uuid,
+-- "person_id" uuid NOT NULL,
+-- "role_id" uuid NOT NULL,
+-- "working_group_id" uuid,
+-- "created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+-- "updated_at" timestamp(3) NOT NULL
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."countries" (
+-- "id" uuid PRIMARY KEY,
+-- "code" text NOT NULL,
+-- "end_date" timestamp(3),
+-- "logo" text,
+-- "marketplace_id" integer,
+-- "name" text NOT NULL,
+-- "start_date" timestamp(3),
+-- "type" "dariah_unr"."CountryType" NOT NULL,
+-- "created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+-- "updated_at" timestamp(3) NOT NULL,
+-- "description" text,
+-- "consortium_name" text
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."event_reports" (
+-- "id" uuid PRIMARY KEY,
+-- "dariah_commissioned_event" text,
+-- "large_meetings" integer,
+-- "medium_meetings" integer,
+-- "reusable_outcomes" text,
+-- "small_meetings" integer,
+-- "report_id" uuid NOT NULL,
+-- "created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+-- "updated_at" timestamp(3) NOT NULL
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."event_sizes" (
+-- "id" uuid PRIMARY KEY,
+-- "annual_value" integer NOT NULL,
+-- "type" "dariah_unr"."EventSizeType" NOT NULL,
+-- "created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+-- "updated_at" timestamp(3) NOT NULL
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."institution_service" (
+-- "role" "dariah_unr"."InstitutionServiceRole" NOT NULL,
+-- "institution_id" uuid NOT NULL,
+-- "service_id" uuid NOT NULL
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."institutions" (
+-- "id" uuid PRIMARY KEY,
+-- "end_date" timestamp(3),
+-- "name" text NOT NULL,
+-- "ror" text,
+-- "start_date" timestamp(3),
+-- "types" "dariah_unr"."InstitutionType"[],
+-- "url" text[],
+-- "created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+-- "updated_at" timestamp(3) NOT NULL
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."outreach" (
+-- "id" uuid PRIMARY KEY,
+-- "end_date" timestamp(3),
+-- "name" text NOT NULL,
+-- "start_date" timestamp(3),
+-- "type" "dariah_unr"."OutreachType" NOT NULL,
+-- "url" text NOT NULL,
+-- "country_id" uuid,
+-- "created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+-- "updated_at" timestamp(3) NOT NULL
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."outreach_kpis" (
+-- "id" uuid PRIMARY KEY,
+-- "unit" "dariah_unr"."OutreachKpiType" NOT NULL,
+-- "value" integer NOT NULL,
+-- "outreach_report_id" uuid NOT NULL,
+-- "created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+-- "updated_at" timestamp(3) NOT NULL
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."outreach_reports" (
+-- "id" uuid PRIMARY KEY,
+-- "outreach_id" uuid NOT NULL,
+-- "report_id" uuid NOT NULL,
+-- "created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+-- "updated_at" timestamp(3) NOT NULL
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."outreach_type_values" (
+-- "id" uuid PRIMARY KEY,
+-- "annual_value" integer NOT NULL,
+-- "type" "dariah_unr"."OutreachType" NOT NULL,
+-- "created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+-- "updated_at" timestamp(3) NOT NULL
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."persons" (
+-- "id" uuid PRIMARY KEY,
+-- "email" text,
+-- "name" text NOT NULL,
+-- "orcid" text,
+-- "created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+-- "updated_at" timestamp(3) NOT NULL
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."projects_funding_leverage" (
+-- "id" uuid PRIMARY KEY,
+-- "amount" numeric(12,2),
+-- "funders" text,
+-- "name" text NOT NULL,
+-- "project_months" integer,
+-- "scope" "dariah_unr"."ProjectScope",
+-- "start_date" timestamp(3),
+-- "total_amount" numeric(12,2),
+-- "report_id" uuid NOT NULL,
+-- "created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+-- "updated_at" timestamp(3) NOT NULL
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."reports" (
+-- "id" uuid PRIMARY KEY,
+-- "comments" jsonb,
+-- "contributionsCount" integer,
+-- "operationalCost" numeric(12,2),
+-- "operationalCostDetail" jsonb,
+-- "operationalCostThreshold" numeric(12,2),
+-- "status" "dariah_unr"."ReportStatus" DEFAULT 'draft'::"dariah_unr"."ReportStatus" NOT NULL,
+-- "year" integer NOT NULL,
+-- "country_id" uuid NOT NULL,
+-- "created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+-- "updated_at" timestamp(3) NOT NULL
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."research_policy_developments" (
+-- "id" uuid PRIMARY KEY,
+-- "level" "dariah_unr"."ResearchPolicyLevel" NOT NULL,
+-- "name" text NOT NULL,
+-- "outcome" text,
+-- "report_id" uuid NOT NULL,
+-- "created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+-- "updated_at" timestamp(3) NOT NULL
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."roles" (
+-- "id" uuid PRIMARY KEY,
+-- "annual_value" integer NOT NULL,
+-- "name" text NOT NULL,
+-- "type" "dariah_unr"."RoleType" NOT NULL,
+-- "created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+-- "updated_at" timestamp(3) NOT NULL
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."service_kpis" (
+-- "id" uuid PRIMARY KEY,
+-- "unit" "dariah_unr"."ServiceKpiType" NOT NULL,
+-- "value" integer NOT NULL,
+-- "service_report_id" uuid NOT NULL,
+-- "created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+-- "updated_at" timestamp(3) NOT NULL
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."service_reports" (
+-- "id" uuid PRIMARY KEY,
+-- "report_id" uuid NOT NULL,
+-- "service_id" uuid NOT NULL,
+-- "created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+-- "updated_at" timestamp(3) NOT NULL
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."service_sizes" (
+-- "id" uuid PRIMARY KEY,
+-- "annual_value" integer NOT NULL,
+-- "type" "dariah_unr"."ServiceSizeType" NOT NULL,
+-- "created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+-- "updated_at" timestamp(3) NOT NULL
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."services" (
+-- "id" uuid PRIMARY KEY,
+-- "agreements" text,
+-- "audience" "dariah_unr"."ServiceAudience",
+-- "dariah_branding" boolean,
+-- "eosc_onboarding" boolean,
+-- "marketplace_status" "dariah_unr"."ServiceMarketplaceStatus",
+-- "marketplace_id" text,
+-- "monitoring" boolean,
+-- "name" text NOT NULL,
+-- "private_supplier" boolean,
+-- "status" "dariah_unr"."ServiceStatus",
+-- "technical_contact" text,
+-- "technical_readiness_level" integer,
+-- "type" "dariah_unr"."ServiceType",
+-- "url" text[],
+-- "value_proposition" text,
+-- "size_id" uuid NOT NULL,
+-- "created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+-- "updated_at" timestamp(3) NOT NULL,
+-- "comment" text
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."sessions" (
+-- "id" text PRIMARY KEY,
+-- "secret_hash" bytea NOT NULL,
+-- "created_at" timestamp(3) NOT NULL,
+-- "last_verified_at" timestamp(3) NOT NULL,
+-- "user_id" uuid NOT NULL
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."software" (
+-- "id" uuid PRIMARY KEY,
+-- "comment" text,
+-- "name" text NOT NULL,
+-- "marketplace_status" "dariah_unr"."SoftwareMarketplaceStatus",
+-- "marketplace_id" text,
+-- "status" "dariah_unr"."SoftwareStatus",
+-- "url" text[],
+-- "created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+-- "updated_at" timestamp(3) NOT NULL
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."users" (
+-- "id" uuid PRIMARY KEY,
+-- "email" text NOT NULL,
+-- "name" text NOT NULL,
+-- "password" text NOT NULL,
+-- "role" "dariah_unr"."UserRole" DEFAULT 'contributor'::"dariah_unr"."UserRole" NOT NULL,
+-- "country_id" uuid,
+-- "person_id" uuid
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."working_group_events" (
+-- "id" uuid PRIMARY KEY,
+-- "date" timestamp(3),
+-- "role" "dariah_unr"."WorkingGroupEventRole" NOT NULL,
+-- "title" text NOT NULL,
+-- "url" text NOT NULL,
+-- "report_id" uuid NOT NULL
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."working_group_outreach" (
+-- "id" uuid PRIMARY KEY,
+-- "end_date" timestamp(3),
+-- "name" text NOT NULL,
+-- "start_date" timestamp(3),
+-- "type" "dariah_unr"."OutreachType" NOT NULL,
+-- "url" text NOT NULL,
+-- "working_group_id" uuid NOT NULL,
+-- "created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+-- "updated_at" timestamp(3) NOT NULL
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."working_group_reports" (
+-- "id" uuid PRIMARY KEY,
+-- "comments" jsonb,
+-- "facultative_questions" text NOT NULL,
+-- "members" integer,
+-- "narrative_report" text NOT NULL,
+-- "status" "dariah_unr"."ReportStatus" DEFAULT 'draft'::"dariah_unr"."ReportStatus" NOT NULL,
+-- "year" integer NOT NULL,
+-- "working_group_id" uuid NOT NULL,
+-- "created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+-- "updated_at" timestamp(3) NOT NULL
+-- );
+-- --> statement-breakpoint
+-- CREATE TABLE "dariah_unr"."working_groups" (
+-- "id" uuid PRIMARY KEY,
+-- "end_date" timestamp(3),
+-- "name" text NOT NULL,
+-- "start_date" timestamp(3),
+-- "created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+-- "updated_at" timestamp(3) NOT NULL,
+-- "mailing_list" text,
+-- "member_tracking" text,
+-- "contact_email" text,
+-- "slug" text NOT NULL
+-- );
+-- --> statement-breakpoint
+-- CREATE INDEX "_BodyToRole_B_index" ON "dariah_unr"."_BodyToRole" ("B");--> statement-breakpoint
+-- CREATE INDEX "_CountryToInstitution_B_index" ON "dariah_unr"."_CountryToInstitution" ("B");--> statement-breakpoint
+-- CREATE INDEX "_CountryToService_B_index" ON "dariah_unr"."_CountryToService" ("B");--> statement-breakpoint
+-- CREATE INDEX "_CountryToSoftware_B_index" ON "dariah_unr"."_CountryToSoftware" ("B");--> statement-breakpoint
+-- CREATE INDEX "_InstitutionToPerson_B_index" ON "dariah_unr"."_InstitutionToPerson" ("B");--> statement-breakpoint
+-- CREATE INDEX "countries_code_idx" ON "dariah_unr"."countries" ("code");--> statement-breakpoint
+-- CREATE UNIQUE INDEX "event_reports_report_id_key" ON "dariah_unr"."event_reports" ("report_id");--> statement-breakpoint
+-- CREATE UNIQUE INDEX "institution_service_institution_id_role_service_id_key" ON "dariah_unr"."institution_service" ("institution_id","role","service_id");--> statement-breakpoint
+-- CREATE UNIQUE INDEX "reports_country_id_year_key" ON "dariah_unr"."reports" ("country_id","year");--> statement-breakpoint
+-- CREATE INDEX "reports_year_idx" ON "dariah_unr"."reports" ("year");--> statement-breakpoint
+-- CREATE UNIQUE INDEX "users_email_key" ON "dariah_unr"."users" ("email");--> statement-breakpoint
+-- CREATE UNIQUE INDEX "working_group_reports_working_group_id_year_key" ON "dariah_unr"."working_group_reports" ("working_group_id","year");--> statement-breakpoint
+-- CREATE INDEX "working_group_reports_year_idx" ON "dariah_unr"."working_group_reports" ("year");--> statement-breakpoint
+-- CREATE INDEX "working_groups_slug_idx" ON "dariah_unr"."working_groups" ("slug");--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."_BodyToRole" ADD CONSTRAINT "_BodyToRole_A_fkey" FOREIGN KEY ("A") REFERENCES "dariah_unr"."bodies"("id") ON DELETE CASCADE ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."_BodyToRole" ADD CONSTRAINT "_BodyToRole_B_fkey" FOREIGN KEY ("B") REFERENCES "dariah_unr"."roles"("id") ON DELETE CASCADE ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."_CountryToInstitution" ADD CONSTRAINT "_CountryToInstitution_A_fkey" FOREIGN KEY ("A") REFERENCES "dariah_unr"."countries"("id") ON DELETE CASCADE ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."_CountryToInstitution" ADD CONSTRAINT "_CountryToInstitution_B_fkey" FOREIGN KEY ("B") REFERENCES "dariah_unr"."institutions"("id") ON DELETE CASCADE ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."_CountryToService" ADD CONSTRAINT "_CountryToService_A_fkey" FOREIGN KEY ("A") REFERENCES "dariah_unr"."countries"("id") ON DELETE CASCADE ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."_CountryToService" ADD CONSTRAINT "_CountryToService_B_fkey" FOREIGN KEY ("B") REFERENCES "dariah_unr"."services"("id") ON DELETE CASCADE ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."_CountryToSoftware" ADD CONSTRAINT "_CountryToSoftware_A_fkey" FOREIGN KEY ("A") REFERENCES "dariah_unr"."countries"("id") ON DELETE CASCADE ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."_CountryToSoftware" ADD CONSTRAINT "_CountryToSoftware_B_fkey" FOREIGN KEY ("B") REFERENCES "dariah_unr"."software"("id") ON DELETE CASCADE ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."_InstitutionToPerson" ADD CONSTRAINT "_InstitutionToPerson_A_fkey" FOREIGN KEY ("A") REFERENCES "dariah_unr"."institutions"("id") ON DELETE CASCADE ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."_InstitutionToPerson" ADD CONSTRAINT "_InstitutionToPerson_B_fkey" FOREIGN KEY ("B") REFERENCES "dariah_unr"."persons"("id") ON DELETE CASCADE ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."contributions" ADD CONSTRAINT "contributions_country_id_fkey" FOREIGN KEY ("country_id") REFERENCES "dariah_unr"."countries"("id") ON DELETE SET NULL ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."contributions" ADD CONSTRAINT "contributions_person_id_fkey" FOREIGN KEY ("person_id") REFERENCES "dariah_unr"."persons"("id") ON DELETE CASCADE ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."contributions" ADD CONSTRAINT "contributions_role_id_fkey" FOREIGN KEY ("role_id") REFERENCES "dariah_unr"."roles"("id") ON DELETE CASCADE ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."contributions" ADD CONSTRAINT "contributions_working_group_id_fkey" FOREIGN KEY ("working_group_id") REFERENCES "dariah_unr"."working_groups"("id") ON DELETE SET NULL ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."event_reports" ADD CONSTRAINT "event_reports_report_id_fkey" FOREIGN KEY ("report_id") REFERENCES "dariah_unr"."reports"("id") ON DELETE CASCADE ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."institution_service" ADD CONSTRAINT "institution_service_institution_id_fkey" FOREIGN KEY ("institution_id") REFERENCES "dariah_unr"."institutions"("id") ON DELETE CASCADE ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."institution_service" ADD CONSTRAINT "institution_service_service_id_fkey" FOREIGN KEY ("service_id") REFERENCES "dariah_unr"."services"("id") ON DELETE CASCADE ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."outreach" ADD CONSTRAINT "outreach_country_id_fkey" FOREIGN KEY ("country_id") REFERENCES "dariah_unr"."countries"("id") ON DELETE CASCADE ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."outreach_kpis" ADD CONSTRAINT "outreach_kpis_outreach_report_id_fkey" FOREIGN KEY ("outreach_report_id") REFERENCES "dariah_unr"."outreach_reports"("id") ON DELETE CASCADE ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."outreach_reports" ADD CONSTRAINT "outreach_reports_outreach_id_fkey" FOREIGN KEY ("outreach_id") REFERENCES "dariah_unr"."outreach"("id") ON DELETE CASCADE ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."outreach_reports" ADD CONSTRAINT "outreach_reports_report_id_fkey" FOREIGN KEY ("report_id") REFERENCES "dariah_unr"."reports"("id") ON DELETE CASCADE ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."projects_funding_leverage" ADD CONSTRAINT "projects_funding_leverage_report_id_fkey" FOREIGN KEY ("report_id") REFERENCES "dariah_unr"."reports"("id") ON DELETE CASCADE ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."reports" ADD CONSTRAINT "reports_country_id_fkey" FOREIGN KEY ("country_id") REFERENCES "dariah_unr"."countries"("id") ON DELETE CASCADE ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."research_policy_developments" ADD CONSTRAINT "research_policy_developments_report_id_fkey" FOREIGN KEY ("report_id") REFERENCES "dariah_unr"."reports"("id") ON DELETE CASCADE ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."service_kpis" ADD CONSTRAINT "service_kpis_service_report_id_fkey" FOREIGN KEY ("service_report_id") REFERENCES "dariah_unr"."service_reports"("id") ON DELETE CASCADE ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."service_reports" ADD CONSTRAINT "service_reports_report_id_fkey" FOREIGN KEY ("report_id") REFERENCES "dariah_unr"."reports"("id") ON DELETE CASCADE ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."service_reports" ADD CONSTRAINT "service_reports_service_id_fkey" FOREIGN KEY ("service_id") REFERENCES "dariah_unr"."services"("id") ON DELETE CASCADE ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."services" ADD CONSTRAINT "services_size_id_fkey" FOREIGN KEY ("size_id") REFERENCES "dariah_unr"."service_sizes"("id") ON DELETE RESTRICT ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."sessions" ADD CONSTRAINT "sessions_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "dariah_unr"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."users" ADD CONSTRAINT "users_country_id_fkey" FOREIGN KEY ("country_id") REFERENCES "dariah_unr"."countries"("id") ON DELETE SET NULL ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."users" ADD CONSTRAINT "users_person_id_fkey" FOREIGN KEY ("person_id") REFERENCES "dariah_unr"."persons"("id") ON DELETE SET NULL ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."working_group_events" ADD CONSTRAINT "working_group_events_report_id_fkey" FOREIGN KEY ("report_id") REFERENCES "dariah_unr"."working_group_reports"("id") ON DELETE RESTRICT ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."working_group_outreach" ADD CONSTRAINT "working_group_outreach_working_group_id_fkey" FOREIGN KEY ("working_group_id") REFERENCES "dariah_unr"."working_groups"("id") ON DELETE RESTRICT ON UPDATE CASCADE;--> statement-breakpoint
+-- ALTER TABLE "dariah_unr"."working_group_reports" ADD CONSTRAINT "working_group_reports_working_group_id_fkey" FOREIGN KEY ("working_group_id") REFERENCES "dariah_unr"."working_groups"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

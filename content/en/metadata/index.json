@@ -1,15 +1,44 @@
 {
-	"description": "Key performance indicators for DARIAH member countries.",
-	"title": "DARIAH Knowledge Base",
+	"creator": "DARIAH-EU",
+	"description": "DARIAH Unified National Reporting",
+	"title": "DARIAH UNR",
 	"manifest": {
-		"description": "Key performance indicators for DARIAH member countries.",
-		"name": "DARIAH Knowledge Base",
-		"short-name": "DARIAH Knowledge Base"
+		"description": "DARIAH Unified National Reporting",
+		"name": "DARIAH Unified National Reporting",
+		"short-name": "DARIAH UNR"
 	},
 	"social": [
 		{
+			"kind": "bluesky",
+			"href": "https://bsky.app/profile/dariaheu.bsky.social"
+		},
+		{
+			"kind": "email",
+			"href": "info@dariah.eu"
+		},
+		{
+			"kind": "flickr",
+			"href": "https://www.flickr.com/photos/142235661@N08/albums/with/72157695786965901"
+		},
+		{
+			"kind": "linkedin",
+			"href": "https://www.linkedin.com/company/dariah-eric"
+		},
+		{
+			"kind": "mastodon",
+			"href": "https://mastodon.social/@dariaheu"
+		},
+		{
 			"kind": "twitter",
 			"href": "https://x.com/dariaheu"
+		},
+		{
+			"kind": "website",
+			"href": "https://www.dariah.eu"
+		},
+		{
+			"kind": "youtube",
+			"href": "www.youtube.com/@DariahEurope"
 		}
 	]
 }

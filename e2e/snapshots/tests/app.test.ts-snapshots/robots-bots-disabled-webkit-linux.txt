@@ -1,0 +1,4 @@
+User-Agent: *
+Disallow: /
+
+Host: http://localhost:3000

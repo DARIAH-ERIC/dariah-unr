@@ -1,9 +1,11 @@
 {
 	"css.validate": false,
+	"debug.toolBarLocation": "docked",
 	"editor.codeActionsOnSave": {
 		"source.fixAll": "explicit"
 	},
 	"editor.defaultFormatter": "prettier.prettier-vscode",
+	"editor.detectIndentation": false,
 	"editor.formatOnSave": true,
 	"editor.inlayHints.enabled": "offUnlessPressed",
 	"editor.linkedEditing": true,
@@ -13,12 +15,20 @@
 	"editor.rulers": [100],
 	"editor.stickyScroll.enabled": true,
 	"eslint.enable": true,
+	"eslint.options": {
+		"flags": ["unstable_native_nodejs_ts_config"]
+	},
 	"eslint.validate": ["javascript", "typescript", "typescriptreact"],
 	"files.associations": {
 		"*.css": "tailwindcss"
 	},
 	"files.eol": "\n",
+	"files.watcherExclude": {
+		"**/.next/**": true
+	},
 	"i18n-ally.annotations": false,
+	"i18n-ally.displayLanguage": "en",
+	"i18n-ally.enabledFrameworks": ["next-intl"],
 	"i18n-ally.keepFulfilled": true,
 	"i18n-ally.keystyle": "nested",
 	"i18n-ally.localesPaths": ["./messages"],
@@ -26,38 +36,39 @@
 	"i18n-ally.sortKeys": true,
 	"i18n-ally.tabStyle": "tab",
 	"less.validate": false,
-	"mdx.server.enable": true,
-	"prettier.ignorePath": ".gitignore",
-	"prisma.pinToPrisma6": true,
 	"scss.validate": false,
+	"search.exclude": {
+		"**/.next/**": true
+	},
 	"stylelint.enable": true,
 	"stylelint.snippet": ["css", "postcss", "tailwindcss"],
 	"stylelint.validate": ["css", "postcss", "tailwindcss"],
-	"tailwindCSS.experimental.classRegex": [
-		["cn\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
-		["variants\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
-	],
+	"tailwindCSS.classFunctions": ["cn", "styles"],
 	"tailwindCSS.validate": true,
 	"terminal.integrated.enablePersistentSessions": false,
 	"typescript.enablePromptUseWorkspaceTsdk": true,
 	"typescript.inlayHints.parameterNames.enabled": "all",
 	"typescript.preferences.autoImportFileExcludePatterns": [
+		"lucide-react",
 		"next/router.d.ts",
 		"next/dist/client/router.d.ts"
 	],
 	"typescript.preferences.importModuleSpecifier": "non-relative",
 	"typescript.preferences.preferTypeOnlyAutoImports": true,
 	"typescript.tsdk": "node_modules/typescript/lib",
+	"workbench.editor.customLabels.patterns": {
+		"**/app/**/error.tsx": "${dirname} - error",
+		"**/app/**/forbidden.tsx": "${dirname} - forbidden",
+		"**/app/**/layout.tsx": "${dirname} - layout",
+		"**/app/**/loading.tsx": "${dirname} - loading",
+		"**/app/**/not-found.tsx": "${dirname} - not-found",
+		"**/app/**/page.tsx": "${dirname} - page",
+		"**/app/**/template.tsx": "${dirname} - template",
+		"**/app/**/unauthorized.tsx": "${dirname} - unauthorized"
+	},
 	"workbench.editor.labelFormat": "medium",
 	"workbench.tree.enableStickyScroll": true,
 	"[markdown]": {
 		"editor.wordWrap": "on"
-	},
-	"[mdx]": {
-		"editor.formatOnSave": false,
-		"editor.wordWrap": "on"
-	},
-	"[prisma]": {
-		"editor.defaultFormatter": "Prisma.prisma"
 	}
 }

@@ -3,12 +3,11 @@
 		"bradlc.vscode-tailwindcss",
 		"dbaeumer.vscode-eslint",
 		"editorconfig.editorconfig",
+		"github.vscode-github-actions",
 		"lokalise.i18n-ally",
-		"matt-meyers.vscode-dbml",
 		"mikestead.dotenv",
 		"ms-playwright.playwright",
 		"prettier.prettier-vscode",
-		"stylelint.vscode-stylelint",
-		"unifiedjs.vscode-mdx"
+		"stylelint.vscode-stylelint"
 	]
 }

@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-restricted-imports */
+
 import { createNavigation } from "next-intl/navigation";
-import type { ComponentPropsWithRef, FC } from "react";
+import type { ComponentProps, ReactNode } from "react";
 
 import { routing } from "@/lib/i18n/routing";
 
@@ -11,29 +13,33 @@ const {
 	useRouter,
 } = createNavigation(routing);
 
-/** FIXME: @see https://github.com/amannn/next-intl/issues/823 */
+/** @see {@link https://github.com/amannn/next-intl/issues/823} */
 const redirect: typeof _redirect = _redirect;
 
 export { getPathname, redirect, usePathname, useRouter };
 
 export { useSearchParams } from "next/navigation";
 
-export type LocaleLinkProps = Omit<ComponentPropsWithRef<typeof Link>, "href"> & {
+export interface LocaleLinkProps extends Omit<ComponentProps<typeof Link>, "href"> {
 	href: string | undefined;
-};
+}
 
-export const LocaleLink = Link as FC<LocaleLinkProps>;
+export const LocaleLink = Link as (props: LocaleLinkProps) => ReactNode;
+
+//
 
 export interface NavigationAction {
 	type: "action";
-	onAction: () => void;
 	label: string;
+	icon?: ReactNode;
+	onAction: () => void;
 }
 
 export interface NavigationLink {
 	type: "link";
-	href: string;
 	label: string;
+	icon?: ReactNode;
+	href: string;
 }
 
 export interface NavigationSeparator {
@@ -45,6 +51,7 @@ export type NavigationMenuItem = NavigationLink | NavigationSeparator | Navigati
 export interface NavigationMenu {
 	type: "menu";
 	label: string;
+	icon?: ReactNode;
 	children: Record<string, NavigationMenuItem>;
 }
 
@@ -53,3 +60,5 @@ export type NavigationItem =
 	| NavigationLink
 	| NavigationSeparator
 	| NavigationMenu;
+
+export type NavigationConfig = Record<string, NavigationItem>;

@@ -1,15 +1,18 @@
 onlyBuiltDependencies:
-  - '@prisma/client'
-  - '@prisma/engines'
+  - '@parcel/watcher'
   - '@sentry/cli'
   - '@swc/core'
+  - '@tailwindcss/oxide'
   - bcrypt
   - esbuild
-  - prisma
+  - node
   - sharp
   - simple-git-hooks
   - unrs-resolver
 
-overrides:
-  '@prisma/generator-helper': $prisma
-  '@prisma/internals': $prisma
+patchedDependencies:
+  next: patches/next.patch
+
+shellEmulator: true
+
+strictDepBuilds: true

@@ -1,40 +1,7 @@
-# dariah knowledge base
+# dariah unr
 
-application for key performance indicators.
+dariah unified national reporting, deployed at <https://dariah-unr.acdh-ch-dev.oeaw.ac.at>.
 
-## how to run
+## development
 
-prerequisites:
-
-- [node.js v24](https://nodejs.org/en/download)
-- [pnpm v10](https://pnpm.io/installation)
-
-> [!TIP]
->
-> you can use `pnpm` to install the required node.js version with `pnpm env use 24 --global`
-
-set required environment variables in `.env.local`:
-
-```bash
-cp .env.local.example .env.local
-```
-
-adjust environment variables in `.github/workflows/validate.yml` and
-`.github/workflows/build-deploy.yml`.
-
-install dependencies:
-
-```bash
-pnpm install
-```
-
-run a development server on [http://localhost:3000](http://localhost:3000):
-
-```bash
-pnpm run dev
-```
-
-## data model
-
-inspect the data model as [prisma schema](./prisma/schema.prisma) or
-[svg diagram](./public/assets/content/documentation/data-model/data-model.svg).
+see [documentation](./docs/contributing.md).

@@ -1,147 +1,78 @@
-import type { Country, Software } from "@prisma/client";
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
-import { db } from "@/lib/db";
+import { db } from "@/db/client";
+import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
+import { assertAuthorized } from "@/lib/auth/assert-authorized";
 
-export function getSoftware() {
-	return db.software.findMany({
-		orderBy: {
-			name: "asc",
+interface GetSoftwareParams {
+	limit: number;
+	offset: number;
+}
+
+export async function getSoftware(params: GetSoftwareParams) {
+	const { user } = await assertAuthenticated();
+	await assertAuthorized({ user });
+
+	const { limit, offset } = params;
+
+	return db.query.software.findMany({
+		columns: {
+			id: true,
+			name: true,
+			status: true,
+			url: true,
+			marketplaceStatus: true,
+			marketplaceId: true,
+			comment: true,
 		},
-		include: {
+		with: {
 			countries: {
-				select: {
+				columns: {
 					id: true,
+					code: true,
+					name: true,
 				},
 			},
-		},
-	});
-}
-
-interface GetSoftwareByCountryParams {
-	countryId: Country["id"];
-}
-
-export function getSoftwareByCountry(params: GetSoftwareByCountryParams) {
-	const { countryId } = params;
-
-	return db.software.findMany({
-		where: {
-			countries: {
-				some: {
-					id: countryId,
-				},
-			},
-			status: "maintained",
 		},
 		orderBy: {
-			name: "asc",
+			updatedAt: "desc",
 		},
+		limit,
+		offset,
 	});
 }
 
-interface CreateSoftwareParams {
-	name: Software["name"];
-	url: Software["url"];
-	countryId: Country["id"];
+interface GetSoftwareByIdParams {
+	id: string;
 }
 
-export function createSoftware(params: CreateSoftwareParams) {
-	const { countryId, name, url } = params;
+export async function getSoftwareById(params: GetSoftwareByIdParams) {
+	const { user } = await assertAuthenticated();
+	await assertAuthorized({ user });
 
-	return db.software.create({
-		data: {
-			name,
-			url,
-			status: "maintained",
-			countries: {
-				connect: {
-					id: countryId,
-				},
-			},
-		},
-	});
-}
-
-interface DeleteSoftwareParams {
-	id: Software["id"];
-}
-
-export function deleteSoftware(params: DeleteSoftwareParams) {
 	const { id } = params;
 
-	return db.software.delete({
+	return db.query.software.findFirst({
 		where: {
 			id,
 		},
-	});
-}
-
-interface UpdateSoftwareParams {
-	id: Software["id"];
-	comment?: Software["comment"];
-	name: Software["name"];
-	marketplaceStatus?: Software["marketplaceStatus"];
-	marketplaceId?: Software["marketplaceId"];
-	status?: Software["status"];
-	url?: Software["url"];
-	countries?: Array<string>;
-}
-
-export function updateSoftware(params: UpdateSoftwareParams) {
-	const { id, comment, name, marketplaceId, marketplaceStatus, status, url, countries } = params;
-
-	return db.software.update({
-		where: {
-			id,
+		columns: {
+			id: true,
+			name: true,
+			status: true,
+			url: true,
+			marketplaceStatus: true,
+			marketplaceId: true,
+			comment: true,
 		},
-		data: {
-			comment,
-			name,
-			marketplaceId,
-			marketplaceStatus,
-			status,
-			url,
-			countries:
-				countries != null && countries.length > 0
-					? {
-							set: countries.map((id) => {
-								return { id };
-							}),
-						}
-					: undefined,
-		},
-	});
-}
-
-interface CreateFullSoftwareParams {
-	comment?: Software["comment"];
-	name: Software["name"];
-	marketplaceStatus?: Software["marketplaceStatus"];
-	marketplaceId?: Software["marketplaceId"];
-	status?: Software["status"];
-	url?: Software["url"];
-	countries?: Array<string>;
-}
-
-export function createFullSoftware(params: CreateFullSoftwareParams) {
-	const { comment, name, marketplaceId, marketplaceStatus, status, url, countries } = params;
-
-	return db.software.create({
-		data: {
-			comment,
-			name,
-			marketplaceId,
-			marketplaceStatus,
-			status,
-			url,
-			countries:
-				countries != null && countries.length > 0
-					? {
-							connect: countries.map((id) => {
-								return { id };
-							}),
-						}
-					: undefined,
+		with: {
+			countries: {
+				columns: {
+					id: true,
+					code: true,
+					name: true,
+				},
+			},
 		},
 	});
 }

@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: dariah-unr
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_USER: ${DATABASE_USER}
+      # for psql
+      PGDATABASE: ${DATABASE_NAME}
+      PGPASSWORD: ${DATABASE_PASSWORD}
+      PGUSER: ${DATABASE_USER}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql
+
+volumes:
+  postgres-data:
+    name: dariah-unr-postgres-data
+
+networks:
+  default:
+    name: dariah-unr

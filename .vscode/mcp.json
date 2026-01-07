@@ -1,0 +1,16 @@
+{
+	"servers": {
+		"next-devtools": {
+			"command": "npx",
+			"args": ["-y", "next-devtools-mcp@latest"]
+		},
+		"playwright": {
+			"command": "npx",
+			"args": ["-y", "@playwright/mcp@latest"]
+		},
+		"react-aria": {
+			"command": "npx",
+			"args": ["-y", "@react-aria/mcp@latest"]
+		}
+	}
+}

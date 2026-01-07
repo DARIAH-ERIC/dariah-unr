@@ -1,53 +1,5 @@
 {
-	"AppFooter": {
-		"links": {
-			"contact": "Contact",
-			"imprint": "Imprint",
-			"privacy-policy": "Privacy policy",
-			"terms-of-use": "Terms of use"
-		},
-		"navigation-secondary": "Secondary"
-	},
-	"AppHeader": {
-		"links": {
-			"dashboard": "Dashboard",
-			"documentation": "Documentation",
-			"home": "Home"
-		},
-		"navigation-menu": "Navigation menu",
-		"navigation-primary": "Primary",
-		"toggle-navigation-menu": "Toggle navigation menu"
-	},
-	"AuthControls": {
-		"admin-dashboard": "Admin dashboard",
-		"sign-in": "Sign in",
-		"sign-out": "Sign out",
-		"toggle-user-menu": "Toggle user menu"
-	},
-	"AuthErrorPage": {
-		"meta": {
-			"title": "Error"
-		},
-		"title": "Error"
-	},
-	"AuthSignInPage": {
-		"meta": {
-			"title": "Sign in"
-		},
-		"title": "Sign in"
-	},
-	"AuthUnauthorizedPage": {
-		"message": "You are not authorized to view this page.",
-		"meta": {
-			"title": "Not authorized"
-		},
-		"title": "Not authorized"
-	},
-	"CalculationResult": {
-		"confirmation-success-message": "You have reached your financial in-kind threshold.",
-		"summary-success-message": "You have reached your financial in-kind threshold, congratulations! You have nothing further to do."
-	},
-	"ColorSchemeSwitcher": {
+	"ColorSchemeSelect": {
 		"change-color-scheme": "Change color scheme",
 		"color-schemes": {
 			"dark": "Dark",
@@ -55,17 +7,7 @@
 			"system": "System"
 		}
 	},
-	"ConfirmationForm": {
-		"confirmation-info": "This report has already been submitted."
-	},
-	"ContactForm": {
-		"email": "Email",
-		"message": "Message",
-		"send": "Send",
-		"subject": "Subject"
-	},
 	"ContactPage": {
-		"lead-in": "If you have any questions, don't hesitate to contact us.",
 		"meta": {
 			"title": "Contact"
 		},
@@ -79,196 +21,175 @@
 	},
 	"DashboardAdminCampaignPage": {
 		"meta": {
-			"title": "Reporting campaign"
+			"title": "Admin dashboard - Campaign"
 		},
-		"title": "Reporting campaign"
+		"title": "Admin dashboard - Campaign"
 	},
 	"DashboardAdminContributionsPage": {
 		"meta": {
-			"title": "Contributions"
+			"title": "Admin dashboard - Contributions"
 		},
-		"title": "Contributions"
+		"title": "Admin dashboard - Contributions"
 	},
 	"DashboardAdminCountriesPage": {
 		"meta": {
-			"title": "Countries"
+			"title": "Admin dashboard - Countries"
 		},
-		"title": "Countries"
+		"title": "Admin dashboard - Countries"
 	},
 	"DashboardAdminInstitutionsPage": {
 		"meta": {
-			"title": "Institutions"
+			"title": "Admin dashboard - Institutions"
 		},
-		"title": "Institutions"
+		"title": "Admin dashboard - Institutions"
 	},
 	"DashboardAdminOutreachPage": {
 		"meta": {
-			"title": "Outreach"
+			"title": "Admin dashboard - Outreach"
 		},
-		"title": "Outreach"
+		"title": "Admin dashboard - Outreach"
 	},
 	"DashboardAdminPersonsPage": {
 		"meta": {
-			"title": "Persons"
+			"title": "Admin dashboard - Persons"
 		},
-		"title": "Persons"
+		"title": "Admin dashboard - Persons"
 	},
-	"DashboardAdminProjectsFundingsPage": {
+	"DashboardAdminProjectsPage": {
 		"meta": {
-			"title": "Project fundings"
+			"title": "Admin dashboard - Projects"
 		},
-		"title": "Project fundings"
+		"title": "Admin dashboard - Projects"
 	},
 	"DashboardAdminReportsPage": {
 		"meta": {
-			"title": "Reports"
+			"title": "Admin dashboard - Reports"
 		},
-		"title": "Reports"
+		"title": "Admin dashboard - Reports"
 	},
 	"DashboardAdminServicesPage": {
 		"meta": {
-			"title": "Services"
+			"title": "Admin dashboard - Services"
 		},
-		"title": "Services"
+		"title": "Admin dashboard - Services"
 	},
 	"DashboardAdminSoftwarePage": {
 		"meta": {
-			"title": "Software"
+			"title": "Admin dashboard - Software"
 		},
-		"title": "Software"
+		"title": "Admin dashboard - Software"
 	},
-	"DashboardAdminSshompIngestPage": {
+	"DashboardAdminSshocPage": {
 		"meta": {
-			"title": "SSH Open Marketplace import"
+			"title": "Admin dashboard - SSHOC marketplace"
 		},
-		"title": "SSH Open Marketplace import"
+		"title": "Admin dashboard - SSHOC marketplace"
 	},
 	"DashboardAdminStatisticsPage": {
 		"meta": {
-			"title": "Statistics"
+			"title": "Admin dashboard - Statistics"
 		},
-		"title": "Statistics"
+		"title": "Admin dashboard - Statistics"
 	},
 	"DashboardAdminUsersPage": {
 		"meta": {
-			"title": "Users"
+			"title": "Admin dashboard - Users"
 		},
-		"title": "Users"
+		"title": "Admin dashboard - Users"
 	},
 	"DashboardAdminWorkingGroupsPage": {
 		"meta": {
-			"title": "Working groups"
+			"title": "Admin dashboard - Working groups"
 		},
-		"title": "Working groups"
+		"title": "Admin dashboard - Working groups"
 	},
-	"DashboardCountryLayout": {
+	"DashboardAdminWorkingGroupReportsPage": {
 		"meta": {
-			"title": "National Dashboard - {name}"
+			"title": "Admin dashboard - Working groups reports"
 		},
-		"title": "National Dashboard - {name}"
+		"title": "Admin dashboard - Working groups reports"
 	},
-	"DashboardCountryNCPage": {
+	"DashboardCountryPage": {
 		"meta": {
-			"title": "National Dashboard - {name} - National Consortium"
+			"title": "Country dashboard"
 		},
-		"title": "National Dashboard - {name} - National Consortium"
+		"title": "Country dashboard"
 	},
 	"DashboardCountryContributionsPage": {
 		"meta": {
-			"title": "National Dashboard - {name} - Contributions"
+			"title": "Country dashboard - Contributions"
 		},
-		"title": "National Dashboard - {name} - Contributions"
+		"title": "Country dashboard - Contributions"
 	},
 	"DashboardCountryInstitutionsPage": {
 		"meta": {
-			"title": "National Dashboard - {name} - Institutions"
+			"title": "Country dashboard - Institutions"
 		},
-		"title": "National Dashboard - {name} - Institutions"
+		"title": "Country dashboard - Institutions"
+	},
+	"DashboardCountryNationalConsortiumPage": {
+		"meta": {
+			"title": "Country dashboard - National consortium"
+		},
+		"title": "Country dashboard - National consortium"
 	},
 	"DashboardCountryReportsPage": {
 		"meta": {
-			"title": "National Dashboard - {name} - Reports"
+			"title": "Country dashboard - Reports"
 		},
-		"lead-in": "This is where you will complete your annual reporting for the Unified National Reports. The information requested is the same as previous years, and this new format will allow us to create a better integration of data from one year to the next.  You may complete the UNR over several sessions, just make sure to save. As well, multiple users can be logged in and contribute, though please keep in mind that there is no dynamic saving here - if two of your staff members are working simultaneously, the most recent save will overwrite the other.  If at any point you have questions, don't hesitate to reach out to your DCO helper or the UNR email alias.",
-		"title": "National Dashboard - {name} - Reports",
-		"go-to-report": "Report for {year}"
+		"title": "Country dashboard - Reports"
 	},
-	"DashboardCountryReportEditStepPage": {
+	"DashboardCountryReportByYearPage": {
 		"meta": {
-			"title": "Edit report"
+			"title": "Country dashboard - Report"
 		},
-		"title": "Edit report",
-		"print-title": "Report {year}"
+		"title": "Country dashboard - Report"
 	},
-	"DashboardCountryReportEditStepNavigation": {
-		"next": "Next",
-		"previous": "Previous"
-	},
-	"DashboardCountryReportEditStepPageContent": {
-		"confirm-information": "Confirm information",
-		"contributions": "Contributors",
-		"events": "Events",
-		"institutions": "Institutions",
-		"outreach": "Outreach",
-		"project-funding-leverage": "Project funding leverage",
-		"publications": "Publications",
-		"research-policy-developments": "Research policy developments",
-		"services": "Services",
-		"software": "Software",
-		"summary": "Summary",
-		"welcome": "Welcome"
-	},
-	"DashboardCountryPageNavigation": {
-		"links": {
-			"index": "Welcome",
-			"national-consortium": "National Consortium",
-			"contributions": "Contributions",
-			"institutions": "Institutions",
-			"reports": "Reports"
-		}
-	},
-	"DashboardCountryReportNavigation": {
-		"links": {
-			"confirm": "Confirmation",
-			"institutions": "Institutions",
-			"contributions": "Contributors",
-			"events": "Events",
-			"outreach": "Outreach",
-			"services": "Services",
-			"software": "Software",
-			"publications": "Publications",
-			"project-funding-leverage": "Project funding",
-			"summary": "Summary",
-			"welcome": "Welcome"
-		}
-	},
-	"DashboardCountryReportPage": {
+	"DashboardCountryReportByYearEditPage": {
 		"meta": {
-			"title": "Report"
+			"title": "Country dashboard - Edit report"
 		},
-		"title": "Report"
-	},
-	"DashboardPage": {
-		"meta": {
-			"title": "National Dasboard"
-		},
-		"lead-in": "Welcome to the DARIAH National Coordinator Dashboard!",
-		"title": "National Dasboard",
-		"no-country-message": "You are not affiliated with a country"
-	},
-	"DashboardPageContent": {
-		"create-page-for-year": "Create report for {year}",
-		"edit-page-for-year": "Edit report for {year}"
+		"title": "Country dashboard - Edit report"
 	},
 	"DashboardWorkingGroupPage": {
 		"meta": {
-			"title": "Working group - {name}"
+			"title": "Working group dashboard"
 		},
-		"title": "Working group - {name}"
+		"title": "Working group dashboard"
 	},
-	"Error": {
-		"something-went-wrong": "Something went wrong!",
-		"try-again": "Try again"
+	"DashboardWorkingGroupReportsPage": {
+		"meta": {
+			"title": "Working group dashboard - Reports"
+		},
+		"title": "Working group dashboard - Reports"
+	},
+	"DashboardWorkingGroupReportByYearPage": {
+		"meta": {
+			"title": "Working group dashboard - Report"
+		},
+		"title": "Working group dashboard - Report"
+	},
+	"DashboardWorkingGroupReportByYearEditPage": {
+		"meta": {
+			"title": "Working group dashboard - Edit report"
+		},
+		"title": "Working group dashboard - Edit report"
+	},
+	"DefaultLayout": {
+		"skip-link": "Skip to main content"
+	},
+	"ErrorPage": {
+		"meta": {
+			"title": "Error"
+		},
+		"reset": "Try again",
+		"title": "Something went wrong"
+	},
+	"GlobalNotFoundPage": {
+		"meta": {
+			"title": "Page not found"
+		},
+		"title": "Page not found"
 	},
 	"ImprintPage": {
 		"meta": {
@@ -276,30 +197,13 @@
 		},
 		"title": "Imprint"
 	},
-	"IndexPage": {},
-	"IndexPageHeroSection": {
-		"badge": "DARIAH Knowledge Base",
-		"go-to-dashboard": "Go to dashboard",
-		"lead-in": "Welcome to the DARIAH National Coordinator Dashboard! This portal is designed to collect valuable data necessary for the evaluation and measurement of DARIAH-EU and its national consortia. If you are a National Coordinator, or part of a National Consortium staff, please login.",
-		"read-documentation": "Read documentation",
-		"title": "We want to see performance indicators!"
+	"IndexPage": {
+		"title": "Home"
 	},
-	"Loading": {
-		"loading": "Loading"
-	},
-	"LocaleLayout": {
-		"skip-to-main-content": "Skip to main content"
-	},
-	"LocaleSwitcher": {
-		"current-locale": "Current language: {locale}",
-		"switch-locale": "Switch locale",
-		"switch-locale-to": "Switch to {locale}"
-	},
-	"NotFoundPage": {
-		"meta": {
-			"title": "Page not found"
-		},
-		"title": "Page not found"
+	"LocaleSelect": {
+		"change-locale": "Switch locale",
+		"change-locale-to": "Switch to {locale}",
+		"current-locale": "Current language: {locale}"
 	},
 	"PrivacyPolicyPage": {
 		"meta": {
@@ -307,313 +211,57 @@
 		},
 		"title": "Privacy policy"
 	},
-	"SignInForm": {
-		"email": "Email",
-		"password": "Password",
-		"sign-in": "Sign in"
-	},
 	"TermsOfUsePage": {
 		"meta": {
 			"title": "Terms of use"
 		},
 		"title": "Terms of use"
 	},
-	"actions": {
-		"admin": {
-			"createCampaign": {
-				"errors": {
-					"default": "Could not initiate reporting campaign."
+	"(default)": {
+		"Footer": {
+			"navigation": {
+				"items": {
+					"contact": "Contact",
+					"home": "Home",
+					"imprint": "Imprint",
+					"privacy-policy": "Privacy policy",
+					"terms-of-use": "Terms of use"
 				},
-				"success": "Successfully initiated reporting campaign."
+				"label": "Secondary"
 			},
-			"createContribution": {
-				"errors": {
-					"default": "Could not create contribution."
+			"navigation-social-media": {
+				"items": {
+					"bluesky": "Bluesky",
+					"email": "Email",
+					"facebook": "Facebook",
+					"flickr": "Flickr",
+					"github": "GitHub",
+					"instagram": "Instagram",
+					"linkedin": "LinkedIn",
+					"mastodon": "Mastodon",
+					"orcid": "ORCID",
+					"rss": "RSS",
+					"twitter": "Twitter",
+					"website": "Website",
+					"youtube": "YouTube"
 				},
-				"success": "Successfully created contribution."
-			},
-			"deleteContribution": {
-				"errors": {
-					"default": "Could not delete contribution."
-				},
-				"success": "Successfully deleted contribution."
-			},
-			"updateContribution": {
-				"errors": {
-					"default": "Failed to update contribution."
-				},
-				"success": "Successfully updated contribution."
-			},
-			"createInstitution": {
-				"errors": {
-					"default": "Could not create institution."
-				},
-				"success": "Successfully created institution."
-			},
-			"deleteInstitution": {
-				"errors": {
-					"default": "Could not delete institution."
-				},
-				"success": "Successfully deleted institution."
-			},
-			"updateInstitution": {
-				"errors": {
-					"default": "Failed to update institution."
-				},
-				"success": "Successfully updated institution."
-			},
-			"createOutreach": {
-				"errors": {
-					"default": "Could not create outreach."
-				},
-				"success": "Successfully created outreach."
-			},
-			"deleteOutreach": {
-				"errors": {
-					"default": "Could not delete outreach."
-				},
-				"success": "Successfully deleted outreach."
-			},
-			"updateOutreach": {
-				"errors": {
-					"default": "Failed to update outreach."
-				},
-				"success": "Successfully updated outreach."
-			},
-			"createPerson": {
-				"errors": {
-					"default": "Could not create person."
-				},
-				"success": "Successfully created person."
-			},
-			"deletePerson": {
-				"errors": {
-					"default": "Could not delete person."
-				},
-				"success": "Successfully deleted person."
-			},
-			"updatePerson": {
-				"errors": {
-					"default": "Failed to update person."
-				},
-				"success": "Successfully updated person."
-			},
-			"createProjectFunding": {
-				"errors": {
-					"default": "Could not create project funding."
-				},
-				"success": "Successfully created project funding."
-			},
-			"deleteProjectFunding": {
-				"errors": {
-					"default": "Could not delete project funding."
-				},
-				"success": "Successfully deleted project funding."
-			},
-			"updateProjectFunding": {
-				"errors": {
-					"default": "Failed to update project funding."
-				},
-				"success": "Successfully updated project funding."
-			},
-			"createService": {
-				"errors": {
-					"default": "Could not create service."
-				},
-				"success": "Successfully created service."
-			},
-			"deleteService": {
-				"errors": {
-					"default": "Could not delete service."
-				},
-				"success": "Successfully deleted service."
-			},
-			"updateService": {
-				"errors": {
-					"default": "Failed to update service."
-				},
-				"success": "Successfully updated service."
-			},
-			"createSoftware": {
-				"errors": {
-					"default": "Could not create software."
-				},
-				"success": "Successfully created software."
-			},
-			"deleteSoftware": {
-				"errors": {
-					"default": "Could not delete software."
-				},
-				"success": "Successfully deleted software."
-			},
-			"updateSoftware": {
-				"errors": {
-					"default": "Failed to update software."
-				},
-				"success": "Successfully updated software."
-			},
-			"createUser": {
-				"errors": {
-					"default": "Could not create user."
-				},
-				"success": "Successfully created user."
-			},
-			"deleteUser": {
-				"errors": {
-					"default": "Could not delete user."
-				},
-				"success": "Successfully deleted user."
-			},
-			"updateUser": {
-				"errors": {
-					"default": "Failed to update user."
-				},
-				"success": "Successfully updated user."
-			},
-			"createWorkingGroup": {
-				"errors": {
-					"default": "Could not create working group."
-				},
-				"success": "Successfully created working group."
-			},
-			"deleteWorkingGroup": {
-				"errors": {
-					"default": "Could not delete working group."
-				},
-				"success": "Successfully deleted working group."
-			},
-			"updateWorkingGroup": {
-				"errors": {
-					"default": "Could not update working group."
-				},
-				"success": "Successfully updated working group."
+				"label": "Social media"
 			}
 		},
-		"createImage": {
-			"errors": {
-				"DefaultImageCreationError": "Unable to create image."
-			},
-			"success": "Successfully uploaded image."
-		},
-		"createOutreach": {
-			"errors": {
-				"default": "Could not create outreach."
-			},
-			"success": "Successfully created outreach."
-		},
-		"ingestDataFromSshomp": {
-			"errors": {
-				"default": "Could not import software and services."
-			},
-			"success": "Successfully imported software and services."
-		},
-		"sendEmail": {
-			"errors": {
-				"default": "Failed to send email."
-			},
-			"success": "Successfully sent email."
-		},
-		"signIn": {
-			"errors": {
-				"CredentialsSignInError": "Sign in failed. Check if the details you provided are correct.",
-				"DefaultAuthError": "Unable to sign in."
-			},
-			"success": "Successfully signed in."
-		},
-		"updateContributionEndDate": {
-			"errors": {
-				"default": "Failed to remove contribution."
-			},
-			"success": "Successfully removed contribution."
-		},
-		"updateContributions": {
-			"errors": {
-				"default": "Failed to update contributions."
-			},
-			"success": "Successfully updated contributions."
-		},
-		"updateCountry": {
-			"errors": {
-				"default": "Failed to update country."
-			},
-			"success": "Successfully updated country."
-		},
-		"updateEventReport": {
-			"errors": {
-				"default": "Failed to update events."
-			},
-			"success": "Successfully updated events."
-		},
-		"updateInstitution": {
-			"errors": {
-				"default": "Failed to update institution."
-			},
-			"success": "Successfully updated institution."
-		},
-		"updateInstitutions": {
-			"errors": {
-				"default": "Failed to update institutions."
-			},
-			"success": "Successfully updated institutions."
-		},
-		"updateOutreachReports": {
-			"errors": {
-				"default": "Failed to update outreach."
-			},
-			"success": "Successfully updated outreach."
-		},
-		"updatePerson": {
-			"errors": {
-				"default": "Failed to update person."
-			},
-			"success": "Successfully updated person."
-		},
-		"updateProjectsFundingLeverages": {
-			"errors": {
-				"default": "Failed to update project fundings."
-			},
-			"success": "Successfully updated project fundings."
-		},
-		"updatePublications": {
-			"errors": {
-				"default": "Failed to update publications."
-			},
-			"success": "Successfully updated publications."
-		},
-		"updateReport": {
-			"errors": {
-				"default": "Failed to update report."
-			},
-			"success": "Successfully updated report."
-		},
-		"updateResearchPolicyDevelopments": {
-			"errors": {
-				"default": "Failed to update research policy developments."
-			},
-			"success": "Successfully updated research policy developments."
-		},
-		"updateServiceReports": {
-			"errors": {
-				"default": "Failed to update services."
-			},
-			"success": "Successfully updated services."
-		},
-		"updateSoftware": {
-			"errors": {
-				"default": "Failed to update software."
-			},
-			"success": "Successfully updated software."
-		},
-		"updateUsers": {
-			"errors": {
-				"default": "Failed to update users."
-			},
-			"success": "Successfully updated users."
-		}
-	},
-	"ui": {
-		"Dialog": {
-			"close": "Close"
+		"Header": {
+			"navigation": {
+				"drawer": {
+					"close": "Close navigation menu",
+					"label": "Navigation menu",
+					"open": "Open navigation menu"
+				},
+				"items": {
+					"documentation": "Documentation",
+					"dashboard": "Dashboard",
+					"home": "Home"
+				},
+				"label": "Main"
+			}
 		}
 	}
 }

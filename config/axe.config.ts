@@ -3,7 +3,7 @@ import type { Spec } from "axe-core";
 export const config: Pick<Spec, "rules"> = {
 	rules: [
 		/**
-		 * @see https://react-spectrum.adobe.com/react-aria/accessibility.html#testing
+		 * @see {@link https://react-spectrum.adobe.com/react-aria/accessibility.html#testing}
 		 */
 		{
 			id: "aria-hidden-focus",

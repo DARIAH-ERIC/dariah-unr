@@ -1,254 +1,167 @@
-import type { Contribution, Country, Person, Role, WorkingGroup } from "@prisma/client";
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
-import { db } from "@/lib/db";
+import { db } from "@/db/client";
+import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
+import { assertAuthorized } from "@/lib/auth/assert-authorized";
 
-export function getContributions() {
-	return db.contribution.findMany();
+interface GetContributionsParams {
+	limit: number;
+	offset: number;
 }
 
-export function getContributionsWithDetails() {
-	return db.contribution.findMany({
-		include: {
+export async function getContributions(params: GetContributionsParams) {
+	const { user } = await assertAuthenticated();
+	await assertAuthorized({ user });
+
+	const { limit, offset } = params;
+
+	return db.query.contributions.findMany({
+		columns: {
+			id: true,
+			startDate: true,
+			endDate: true,
+		},
+		with: {
 			country: {
-				select: {
+				columns: {
 					id: true,
+					code: true,
 					name: true,
 				},
 			},
 			person: {
-				select: {
+				columns: {
 					id: true,
 					name: true,
 				},
 			},
 			role: {
-				select: {
+				columns: {
 					id: true,
 					name: true,
 				},
 			},
 			workingGroup: {
-				select: {
+				columns: {
 					id: true,
+					slug: true,
 					name: true,
 				},
-			},
-		},
-	});
-}
-
-interface GetContributionsByCountryAndYearParams {
-	countryId: Country["id"];
-	year: number;
-}
-
-export function getContributionsByCountryAndYear(params: GetContributionsByCountryAndYearParams) {
-	const { countryId, year } = params;
-
-	return db.contribution.findMany({
-		where: {
-			OR: [
-				{
-					endDate: null,
-				},
-				{
-					endDate: { gte: new Date(Date.UTC(year, 0, 1)) },
-				},
-			],
-			country: {
-				id: countryId,
 			},
 		},
 		orderBy: {
-			startDate: "asc",
+			updatedAt: "desc",
 		},
-		include: {
-			person: {
-				select: {
-					id: true,
-					name: true,
-				},
-			},
-			role: {
-				select: {
-					id: true,
-					name: true,
-				},
-			},
-			workingGroup: {
-				select: {
-					id: true,
-					name: true,
-				},
-			},
-		},
+		limit,
+		offset,
 	});
 }
 
-interface GetContributionsByCountryParams {
-	countryId: Country["id"];
-}
-
-export function getContributionsByCountry(params: GetContributionsByCountryParams) {
-	const { countryId } = params;
-
-	return db.contribution.findMany({
-		where: {
-			country: {
-				id: countryId,
-			},
-		},
-		orderBy: {
-			startDate: "asc",
-		},
-		include: {
-			country: true,
-			person: {
-				select: {
-					id: true,
-					name: true,
-				},
-			},
-			role: {
-				select: {
-					id: true,
-					name: true,
-				},
-			},
-			workingGroup: {
-				select: {
-					id: true,
-					name: true,
-				},
-			},
-		},
-	});
-}
-
-interface CreateContributionParams {
-	countryId?: Country["id"];
-	personId: Person["id"];
-	roleId: Role["id"];
-	startDate?: Contribution["startDate"];
-	endDate?: Contribution["startDate"];
-	workingGroupId?: WorkingGroup["id"];
-}
-
-export function createContribution(params: CreateContributionParams) {
-	const { countryId, personId, roleId, startDate, endDate, workingGroupId } = params;
-
-	return db.contribution.create({
-		data: {
-			country:
-				countryId != null
-					? {
-							connect: {
-								id: countryId,
-							},
-						}
-					: undefined,
-			person: {
-				connect: {
-					id: personId,
-				},
-			},
-			role: {
-				connect: {
-					id: roleId,
-				},
-			},
-			endDate,
-			startDate,
-			workingGroup:
-				workingGroupId != null
-					? {
-							connect: {
-								id: workingGroupId,
-							},
-						}
-					: undefined,
-		},
-	});
-}
-
-interface DeleteContributionParams {
+interface GetContributionByIdParams {
 	id: string;
 }
 
-export function deleteContribution(params: DeleteContributionParams) {
+export async function getContributionById(params: GetContributionByIdParams) {
+	const { user } = await assertAuthenticated();
+	await assertAuthorized({ user });
+
 	const { id } = params;
 
-	return db.contribution.delete({
+	return db.query.contributions.findFirst({
 		where: {
 			id,
 		},
-	});
-}
-
-interface UpdateContributionEndDateParams {
-	endDate: Contribution["endDate"];
-	id: Contribution["id"];
-}
-
-export function updateContributionEndDate(params: UpdateContributionEndDateParams) {
-	const { endDate, id } = params;
-
-	return db.contribution.update({
-		where: {
-			id,
+		columns: {
+			id: true,
+			startDate: true,
+			endDate: true,
 		},
-		data: {
-			endDate,
-		},
-	});
-}
-
-interface UpdateContributionParams {
-	id: Contribution["id"];
-	personId: Contribution["personId"];
-	roleId: Contribution["roleId"];
-	countryId?: Contribution["countryId"];
-	startDate?: Contribution["startDate"];
-	endDate?: Contribution["endDate"];
-	workingGroupId?: Contribution["workingGroupId"];
-}
-
-export function updateContribution(params: UpdateContributionParams) {
-	const { id, personId, countryId, roleId, startDate, endDate, workingGroupId } = params;
-
-	return db.contribution.update({
-		where: {
-			id,
-		},
-		data: {
-			country:
-				countryId != null
-					? {
-							connect: {
-								id: countryId,
-							},
-						}
-					: undefined,
+		with: {
+			country: {
+				columns: {
+					id: true,
+					code: true,
+					name: true,
+				},
+			},
 			person: {
-				connect: {
-					id: personId,
+				columns: {
+					id: true,
+					name: true,
 				},
 			},
 			role: {
-				connect: {
-					id: roleId,
+				columns: {
+					id: true,
+					name: true,
 				},
 			},
-			startDate,
-			endDate,
-			workingGroup:
-				workingGroupId != null
-					? {
-							connect: {
-								id: workingGroupId,
-							},
-						}
-					: undefined,
+			workingGroup: {
+				columns: {
+					id: true,
+					slug: true,
+					name: true,
+				},
+			},
 		},
+	});
+}
+
+interface GetContributionsByCountryCodeParams {
+	code: string;
+	limit: number;
+	offset: number;
+}
+
+export async function getContributionsByCountryCode(params: GetContributionsByCountryCodeParams) {
+	const { user } = await assertAuthenticated();
+	await assertAuthorized({ user });
+
+	const { code, limit, offset } = params;
+
+	return db.query.contributions.findMany({
+		where: {
+			country: {
+				code,
+			},
+		},
+		columns: {
+			id: true,
+			startDate: true,
+			endDate: true,
+		},
+		with: {
+			country: {
+				columns: {
+					id: true,
+					code: true,
+					name: true,
+				},
+			},
+			person: {
+				columns: {
+					id: true,
+					name: true,
+				},
+			},
+			role: {
+				columns: {
+					id: true,
+					name: true,
+				},
+			},
+			workingGroup: {
+				columns: {
+					id: true,
+					slug: true,
+					name: true,
+				},
+			},
+		},
+		orderBy: {
+			updatedAt: "desc",
+		},
+		limit,
+		offset,
 	});
 }

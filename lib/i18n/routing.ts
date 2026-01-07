@@ -9,6 +9,12 @@ export const localePrefix = {
 	},
 } as const satisfies LocalePrefix<typeof locales>;
 
+type GetPrefixes<T> = {
+	[K in keyof T]: T[K] extends `/${infer U}` ? U : never;
+}[keyof T];
+
+export type Prefixes = GetPrefixes<(typeof localePrefix)["prefixes"]>;
+
 export const routing = defineRouting({
 	defaultLocale,
 	/**

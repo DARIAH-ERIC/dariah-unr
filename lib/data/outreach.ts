@@ -1,197 +1,76 @@
-import type { Country, Outreach } from "@prisma/client";
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
-import { db } from "@/lib/db";
+import { db } from "@/db/client";
+import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
+import { assertAuthorized } from "@/lib/auth/assert-authorized";
 
-export function getOutreach() {
-	return db.outreach.findMany({
-		orderBy: {
-			name: "asc",
+interface GetOutreachParams {
+	limit: number;
+	offset: number;
+}
+
+export async function getOutreach(params: GetOutreachParams) {
+	const { user } = await assertAuthenticated();
+	await assertAuthorized({ user });
+
+	const { limit, offset } = params;
+
+	return db.query.outreach.findMany({
+		columns: {
+			id: true,
+			name: true,
+			type: true,
+			startDate: true,
+			endDate: true,
+			url: true,
 		},
-		include: {
+		with: {
 			country: {
-				select: {
+				columns: {
 					id: true,
+					code: true,
+					name: true,
 				},
 			},
 		},
-	});
-}
-
-interface GetOutreachByCountryParams {
-	countryId: Country["id"];
-}
-
-export function getOutreachByCountry(params: GetOutreachByCountryParams) {
-	const { countryId } = params;
-
-	return db.outreach.findMany({
-		where: {
-			country: {
-				id: countryId,
-			},
-			endDate: null,
-		},
 		orderBy: {
-			name: "asc",
+			updatedAt: "desc",
 		},
+		limit,
+		offset,
 	});
 }
 
-interface GetOutreachUrlsByCountryParams {
-	countryId: Country["id"];
+interface GetOutreachByIdParams {
+	id: string;
 }
 
-export function getOutreachUrlsByCountry(params: GetOutreachUrlsByCountryParams) {
-	const { countryId } = params;
+export async function getOutreachById(params: GetOutreachByIdParams) {
+	const { user } = await assertAuthenticated();
+	await assertAuthorized({ user });
 
-	return db.outreach.findMany({
-		where: {
-			country: {
-				id: countryId,
-			},
-			endDate: null,
-		},
-		orderBy: {
-			name: "asc",
-		},
-		select: {
-			type: true,
-			url: true,
-		},
-	});
-}
-
-interface GetSocialMediaByCountryParams {
-	countryId: Country["id"];
-}
-
-export function getSocialMediaByCountry(params: GetSocialMediaByCountryParams) {
-	const { countryId } = params;
-
-	return db.outreach.findMany({
-		where: {
-			country: {
-				id: countryId,
-			},
-			endDate: null,
-			type: "social_media",
-		},
-		orderBy: {
-			name: "asc",
-		},
-		select: {
-			url: true,
-		},
-	});
-}
-
-interface CreateOutreachParams {
-	name: Outreach["name"];
-	type: Outreach["type"];
-	url: Outreach["url"];
-	country?: string;
-	startDate?: Outreach["startDate"];
-	endDate?: Outreach["endDate"];
-}
-
-export function createOutreach(params: CreateOutreachParams) {
-	const { name, type, url, country, startDate, endDate } = params;
-
-	return db.outreach.create({
-		data: {
-			name,
-			type,
-			url,
-			startDate,
-			endDate,
-			country:
-				country != null
-					? {
-							connect: {
-								id: country,
-							},
-						}
-					: undefined,
-		},
-	});
-}
-
-interface DeleteOutreachParams {
-	id: Outreach["id"];
-}
-
-export function deleteOutreach(params: DeleteOutreachParams) {
 	const { id } = params;
 
-	return db.outreach.delete({
+	return db.query.outreach.findFirst({
 		where: {
 			id,
 		},
-	});
-}
-
-interface UpdateOutreachParams {
-	id: Outreach["id"];
-	name: Outreach["name"];
-	type: Outreach["type"];
-	url: Outreach["url"];
-	country?: string;
-	startDate?: Outreach["startDate"];
-	endDate?: Outreach["endDate"];
-}
-
-export function updateOutreach(params: UpdateOutreachParams) {
-	const { id, name, type, url, country, startDate, endDate } = params;
-
-	return db.outreach.update({
-		where: {
-			id,
+		columns: {
+			id: true,
+			name: true,
+			type: true,
+			startDate: true,
+			endDate: true,
+			url: true,
 		},
-		data: {
-			name,
-			type,
-			url,
-			startDate,
-			endDate,
-			country:
-				country != null
-					? {
-							connect: {
-								id: country,
-							},
-						}
-					: undefined,
-		},
-	});
-}
-
-interface CreateFullOutreachParams {
-	name: Outreach["name"];
-	type: Outreach["type"];
-	url: Outreach["url"];
-	country?: string;
-	startDate?: Outreach["startDate"];
-	endDate?: Outreach["endDate"];
-}
-
-export function createFullOutreach(params: CreateFullOutreachParams) {
-	const { name, type, url, country, startDate, endDate } = params;
-
-	return db.outreach.create({
-		data: {
-			name,
-			type,
-			url,
-			startDate,
-			endDate,
-			country:
-				country != null
-					? {
-							connect: {
-								id: country,
-							},
-						}
-					: undefined,
+		with: {
+			country: {
+				columns: {
+					id: true,
+					code: true,
+					name: true,
+				},
+			},
 		},
 	});
 }

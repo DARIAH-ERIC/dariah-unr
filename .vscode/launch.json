@@ -2,11 +2,9 @@
 	"configurations": [
 		{
 			"name": "Apps: Web (server-side)",
+			"type": "node-terminal",
 			"request": "launch",
-			"runtimeArgs": ["run", "dev"],
-			"runtimeExecutable": "pnpm",
-			"skipFiles": ["<node_internals>/**"],
-			"type": "node"
+			"command": "pnpm run dev --inspect"
 		},
 		{
 			"name": "Apps: Web (client-side)",

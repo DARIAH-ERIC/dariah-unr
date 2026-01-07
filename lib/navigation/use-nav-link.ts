@@ -1,15 +1,10 @@
-import type { ComponentPropsWithRef } from "react";
-
-import type { Link } from "@/components/link";
 import { env } from "@/config/env.config";
 import { createFullUrl } from "@/lib/navigation/create-full-url";
-import { usePathname } from "@/lib/navigation/navigation";
+import { type LocaleLinkProps, usePathname } from "@/lib/navigation/navigation";
 
-type LinkProps = ComponentPropsWithRef<typeof Link>;
+interface UseNavLinkParams extends Pick<LocaleLinkProps, "aria-current" | "href"> {}
 
-interface UseNavLinkParams extends Pick<LinkProps, "aria-current" | "href"> {}
-
-interface UseNavLinkReturnValue extends Pick<LinkProps, "aria-current"> {}
+interface UseNavLinkReturnValue extends Pick<LocaleLinkProps, "aria-current"> {}
 
 export function useNavLink(params: UseNavLinkParams): UseNavLinkReturnValue {
 	const { "aria-current": ariaCurrent, href } = params;

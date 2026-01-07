@@ -22,7 +22,7 @@ jobs:
           elif [ "${{ github.ref }}" = "refs/heads/develop" ]; then
             ENVIRONMENT="development"
             APP_NAME_SUFFIX="-development"
-          elif [ "${{github.event_name}}" = "pull_request"]; then
+          elif [ "${{github.event_name}}" = "pull_request" ]; then
             ENVIRONMENT="pr/${{ github.event.pull_request.number }}"
             APP_NAME_SUFFIX="-pr-${{ github.event.pull_request.number }}"
           else
@@ -33,7 +33,7 @@ jobs:
           echo "APP_NAME_SUFFIX=$APP_NAME_SUFFIX" >> $GITHUB_OUTPUT
     outputs:
       environment: "${{ steps.environment.outputs.ENVIRONMENT }}"
-      app_name: "dariah-unr${{ steps.environment.outputs.APP_NAME_SUFFIX }}"
+      app_name: "frontend${{ steps.environment.outputs.APP_NAME_SUFFIX }}"
       registry: "ghcr.io"
       image: "${{ github.repository }}"
 
@@ -42,7 +42,7 @@ jobs:
     needs: [env]
     runs-on: ubuntu-24.04
     environment:
-      name: ${{ needs.env.outputs.environment }}
+      name: "${{ needs.env.outputs.environment }}"
     steps:
       - name: Generate public URL
         id: public_url
@@ -77,9 +77,9 @@ jobs:
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
-          registry: ${{ needs.env.outputs.registry }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: "${{ needs.env.outputs.registry }}"
+          username: "${{ github.actor }}"
+          password: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -95,52 +95,24 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: "${{ steps.meta.outputs.tags }}"
+          labels: "${{ steps.meta.outputs.labels }}"
           build-args: |
             "NEXT_PUBLIC_APP_BASE_URL=${{ needs.vars.outputs.public_url }}"
-            "NEXT_PUBLIC_BOTS=${{ vars.NEXT_PUBLIC_BOTS }}"
-            "NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=${{ vars.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }}"
-            "NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=${{ vars.NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG }}"
-            "NEXT_PUBLIC_KEYSTATIC_GITHUB_REPO_NAME=${{ vars.NEXT_PUBLIC_KEYSTATIC_GITHUB_REPO_NAME }}"
-            "NEXT_PUBLIC_KEYSTATIC_GITHUB_REPO_OWNER=${{ vars.NEXT_PUBLIC_KEYSTATIC_GITHUB_REPO_OWNER }}"
-            "NEXT_PUBLIC_KEYSTATIC_MODE=${{ vars.NEXT_PUBLIC_KEYSTATIC_MODE }}"
-            "NEXT_PUBLIC_MATOMO_BASE_URL=${{ vars.NEXT_PUBLIC_MATOMO_BASE_URL }}"
-            "NEXT_PUBLIC_MATOMO_ID=${{ vars.NEXT_PUBLIC_MATOMO_ID }}"
-            "NEXT_PUBLIC_REDMINE_ID=${{ vars.SERVICE_ID }}"
-            "NEXT_PUBLIC_SENTRY_DSN=${{ vars.NEXT_PUBLIC_SENTRY_DSN }}"
-            "NEXT_PUBLIC_SENTRY_ORG=${{ vars.NEXT_PUBLIC_SENTRY_ORG }}"
-            "NEXT_PUBLIC_SENTRY_PROJECT=${{ vars.NEXT_PUBLIC_SENTRY_PROJECT }}"
-          secrets: |
-            "AUTH_SECRET=${{ secrets.K8S_SECRET_AUTH_SECRET }}"
-            "EMAIL_CONTACT_ADDRESS=${{ secrets.K8S_SECRET_EMAIL_CONTACT_ADDRESS }}"
-            "EMAIL_SMTP_PORT=${{ vars.K8S_SECRET_EMAIL_SMTP_PORT }}"
-            "EMAIL_SMTP_SERVER=${{ vars.K8S_SECRET_EMAIL_SMTP_SERVER }}"
-            "DATABASE_DIRECT_URL=${{ secrets.K8S_SECRET_DATABASE_DIRECT_URL }}"
-            "DATABASE_URL=${{ secrets.K8S_SECRET_DATABASE_URL }}"
-            "IMGPROXY_BASE_URL=${{ vars.K8S_SECRET_IMGPROXY_BASE_URL }}"
-            "IMGPROXY_KEY=${{ secrets.K8S_SECRET_IMGPROXY_KEY }}"
-            "IMGPROXY_SALT=${{ secrets.K8S_SECRET_IMGPROXY_SALT }}"
-            "KEYSTATIC_GITHUB_CLIENT_ID=${{ secrets.K8S_SECRET_KEYSTATIC_GITHUB_CLIENT_ID }}"
-            "KEYSTATIC_GITHUB_CLIENT_SECRET=${{ secrets.K8S_SECRET_KEYSTATIC_GITHUB_CLIENT_SECRET }}"
-            "KEYSTATIC_SECRET=${{ secrets.K8S_SECRET_KEYSTATIC_SECRET }}"
-            "S3_ACCESS_KEY=${{ secrets.K8S_SECRET_S3_ACCESS_KEY }}"
-            "S3_SECRET_KEY=${{ secrets.K8S_SECRET_S3_SECRET_KEY }}"
-            "S3_BUCKET=${{ vars.K8S_SECRET_S3_BUCKET }}"
-            "S3_HOST=${{ vars.K8S_SECRET_S3_HOST }}"
-            "S3_PORT=${{ vars.K8S_SECRET_S3_PORT }}"
-            "S3_PROTOCOL=${{ vars.K8S_SECRET_S3_PROTOCOL }}"
-            "SSHOC_MARKETPLACE_API_BASE_URL=${{ vars.K8S_SECRET_SSHOC_MARKETPLACE_API_BASE_URL }}"
-            "SSHOC_MARKETPLACE_BASE_URL=${{ vars.K8S_SECRET_SSHOC_MARKETPLACE_BASE_URL }}"
-            "SSHOC_MARKETPLACE_PASSWORD=${{ secrets.K8S_SECRET_SSHOC_MARKETPLACE_PASSWORD }}"
-            "SSHOC_MARKETPLACE_USER_NAME=${{ secrets.K8S_SECRET_SSHOC_MARKETPLACE_USER_NAME }}"
+            "NEXT_PUBLIC_APP_BOTS=${{ vars.NEXT_PUBLIC_APP_BOTS }}"
+            "NEXT_PUBLIC_APP_GOOGLE_SITE_VERIFICATION=${{ vars.NEXT_PUBLIC_APP_GOOGLE_SITE_VERIFICATION }}"
+            "NEXT_PUBLIC_APP_IMPRINT_CUSTOM_CONFIG=${{ vars.NEXT_PUBLIC_APP_IMPRINT_CUSTOM_CONFIG }}"
+            "NEXT_PUBLIC_APP_IMPRINT_SERVICE_BASE_URL=${{ vars.NEXT_PUBLIC_APP_IMPRINT_SERVICE_BASE_URL }}"
+            "NEXT_PUBLIC_APP_MATOMO_BASE_URL=${{ vars.NEXT_PUBLIC_APP_MATOMO_BASE_URL }}"
+            "NEXT_PUBLIC_APP_MATOMO_ID=${{ vars.NEXT_PUBLIC_APP_MATOMO_ID }}"
+            "NEXT_PUBLIC_APP_SERVICE_ID=${{ vars.SERVICE_ID }}"
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
   deploy:
     name: Deploy docker image
     needs: [env, vars, build]
-    uses: dariah-eric/gl-autodevops-minimal-port/.github/workflows/deploy.yml@main
+    uses: acdh-oeaw/gl-autodevops-minimal-port/.github/workflows/deploy.yml@main
     secrets: inherit
     with:
       environment: "${{ needs.env.outputs.environment }}"
