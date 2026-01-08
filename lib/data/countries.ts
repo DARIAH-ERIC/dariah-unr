@@ -2,7 +2,7 @@
 
 import { db } from "@/db/client";
 import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
-import { assertAuthorized } from "@/lib/auth/assert-authorized";
+import { assertPermissions } from "@/lib/auth/assert-permissions";
 
 interface GetCountriesParams {
 	limit: number;
@@ -11,7 +11,7 @@ interface GetCountriesParams {
 
 export async function getCountries(params: GetCountriesParams) {
 	const { user } = await assertAuthenticated();
-	await assertAuthorized({ user });
+	await assertPermissions(user, { kind: "admin" });
 
 	const { limit, offset } = params;
 
@@ -40,7 +40,7 @@ interface GetCountryByIdParams {
 
 export async function getCountryById(params: GetCountryByIdParams) {
 	const { user } = await assertAuthenticated();
-	await assertAuthorized({ user });
+	await assertPermissions(user, { kind: "admin" });
 
 	const { id } = params;
 
@@ -67,7 +67,7 @@ interface GetCountryByCodeParams {
 
 export async function getCountryByCode(params: GetCountryByCodeParams) {
 	const { user } = await assertAuthenticated();
-	await assertAuthorized({ user });
+	await assertPermissions(user, { kind: "admin" });
 
 	const { code } = params;
 

@@ -2,7 +2,7 @@
 
 import { db } from "@/db/client";
 import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
-import { assertAuthorized } from "@/lib/auth/assert-authorized";
+import { assertPermissions } from "@/lib/auth/assert-permissions";
 
 interface GetWorkingGroupsParams {
 	limit: number;
@@ -11,7 +11,7 @@ interface GetWorkingGroupsParams {
 
 export async function getWorkingGroups(params: GetWorkingGroupsParams) {
 	const { user } = await assertAuthenticated();
-	await assertAuthorized({ user });
+	await assertPermissions(user, { kind: "admin" });
 
 	const { limit, offset } = params;
 
@@ -40,7 +40,7 @@ interface GetWorkingGroupByIdParams {
 
 export async function getWorkingGroupById(params: GetWorkingGroupByIdParams) {
 	const { user } = await assertAuthenticated();
-	await assertAuthorized({ user });
+	await assertPermissions(user, { kind: "admin" });
 
 	const { id } = params;
 
@@ -67,7 +67,7 @@ interface GetWorkingGroupBySlugParams {
 
 export async function getWorkingGroupBySlug(params: GetWorkingGroupBySlugParams) {
 	const { user } = await assertAuthenticated();
-	await assertAuthorized({ user });
+	await assertPermissions(user, { kind: "admin" });
 
 	const { slug } = params;
 

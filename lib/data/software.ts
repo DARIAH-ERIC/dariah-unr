@@ -2,7 +2,7 @@
 
 import { db } from "@/db/client";
 import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
-import { assertAuthorized } from "@/lib/auth/assert-authorized";
+import { assertPermissions } from "@/lib/auth/assert-permissions";
 
 interface GetSoftwareParams {
 	limit: number;
@@ -11,7 +11,7 @@ interface GetSoftwareParams {
 
 export async function getSoftware(params: GetSoftwareParams) {
 	const { user } = await assertAuthenticated();
-	await assertAuthorized({ user });
+	await assertPermissions(user, { kind: "admin" });
 
 	const { limit, offset } = params;
 
@@ -48,7 +48,7 @@ interface GetSoftwareByIdParams {
 
 export async function getSoftwareById(params: GetSoftwareByIdParams) {
 	const { user } = await assertAuthenticated();
-	await assertAuthorized({ user });
+	await assertPermissions(user, { kind: "admin" });
 
 	const { id } = params;
 

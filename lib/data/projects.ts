@@ -2,7 +2,7 @@
 
 import { db } from "@/db/client";
 import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
-import { assertAuthorized } from "@/lib/auth/assert-authorized";
+import { assertPermissions } from "@/lib/auth/assert-permissions";
 
 interface GetProjectsParams {
 	limit: number;
@@ -11,7 +11,7 @@ interface GetProjectsParams {
 
 export async function getProjects(params: GetProjectsParams) {
 	const { user } = await assertAuthenticated();
-	await assertAuthorized({ user });
+	await assertPermissions(user, { kind: "admin" });
 
 	const { limit, offset } = params;
 
@@ -40,7 +40,7 @@ interface GetProjectByIdParams {
 
 export async function getProjectById(params: GetProjectByIdParams) {
 	const { user } = await assertAuthenticated();
-	await assertAuthorized({ user });
+	await assertPermissions(user, { kind: "admin" });
 
 	const { id } = params;
 

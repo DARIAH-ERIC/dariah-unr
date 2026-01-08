@@ -2,7 +2,7 @@
 
 import { db } from "@/db/client";
 import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
-import { assertAuthorized } from "@/lib/auth/assert-authorized";
+import { assertPermissions } from "@/lib/auth/assert-permissions";
 
 interface GetReportsParams {
 	limit: number;
@@ -11,7 +11,7 @@ interface GetReportsParams {
 
 export async function getReports(params: GetReportsParams) {
 	const { user } = await assertAuthenticated();
-	await assertAuthorized({ user });
+	await assertPermissions(user, { kind: "admin" });
 
 	const { limit, offset } = params;
 
@@ -49,7 +49,7 @@ interface GetReportByIdParams {
 
 export async function getReportById(params: GetReportByIdParams) {
 	const { user } = await assertAuthenticated();
-	await assertAuthorized({ user });
+	await assertPermissions(user, { kind: "admin" });
 
 	const { id } = params;
 
@@ -87,7 +87,7 @@ interface GetReportsByCountryCodeParams {
 
 export async function getReportsByCountryCode(params: GetReportsByCountryCodeParams) {
 	const { user } = await assertAuthenticated();
-	await assertAuthorized({ user });
+	await assertPermissions(user, { kind: "admin" });
 
 	const { code, limit, offset } = params;
 
@@ -131,7 +131,7 @@ interface GetReportByCountryCodeAndYearParams {
 
 export async function getReportByCountryCodeAndYear(params: GetReportByCountryCodeAndYearParams) {
 	const { user } = await assertAuthenticated();
-	await assertAuthorized({ user });
+	await assertPermissions(user, { kind: "admin" });
 
 	const { code, year } = params;
 

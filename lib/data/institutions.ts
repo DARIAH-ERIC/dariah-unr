@@ -2,7 +2,7 @@
 
 import { db } from "@/db/client";
 import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
-import { assertAuthorized } from "@/lib/auth/assert-authorized";
+import { assertPermissions } from "@/lib/auth/assert-permissions";
 
 interface GetInstitutionsParams {
 	limit: number;
@@ -11,7 +11,7 @@ interface GetInstitutionsParams {
 
 export async function getInstitutions(params: GetInstitutionsParams) {
 	const { user } = await assertAuthenticated();
-	await assertAuthorized({ user });
+	await assertPermissions(user, { kind: "admin" });
 
 	const { limit, offset } = params;
 
@@ -48,7 +48,7 @@ interface GetInstitutionByIdParams {
 
 export async function getInstitutionById(params: GetInstitutionByIdParams) {
 	const { user } = await assertAuthenticated();
-	await assertAuthorized({ user });
+	await assertPermissions(user, { kind: "admin" });
 
 	const { id } = params;
 
@@ -85,7 +85,7 @@ interface GetInstitutionsByCountryCodeParams {
 
 export async function getInstitutionsByCountryCode(params: GetInstitutionsByCountryCodeParams) {
 	const { user } = await assertAuthenticated();
-	await assertAuthorized({ user });
+	await assertPermissions(user, { kind: "admin" });
 
 	const { code, limit, offset } = params;
 

@@ -60,7 +60,7 @@ export default async function DashboardLayout(
 									return null;
 								}
 
-								return <div key={contribution.id}>{contribution.workingGroup?.name}</div>;
+								return <div key={contribution.id}>{contribution.workingGroup.name}</div>;
 							})}
 						</div>
 					</section>

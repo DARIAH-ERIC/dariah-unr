@@ -5,7 +5,7 @@ import { hash } from "bcrypt";
 import { db } from "@/db/client";
 import * as schema from "@/db/schema";
 import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
-import { assertAuthorized } from "@/lib/auth/assert-authorized";
+import { assertPermissions } from "@/lib/auth/assert-permissions";
 import { eq } from "drizzle-orm";
 
 interface GetUsersParams {
@@ -15,7 +15,7 @@ interface GetUsersParams {
 
 export async function getUsers(params: GetUsersParams) {
 	const { user } = await assertAuthenticated();
-	await assertAuthorized({ user });
+	await assertPermissions(user, { kind: "admin" });
 
 	const { limit, offset } = params;
 
@@ -52,7 +52,7 @@ interface GetUserByIdParams {
 
 export async function getUserById(params: GetUserByIdParams) {
 	const { user } = await assertAuthenticated();
-	await assertAuthorized({ user });
+	await assertPermissions(user, { kind: "admin" });
 
 	const { id } = params;
 
@@ -87,7 +87,7 @@ interface GetUserByEmailParams {
 
 export async function getUserByEmail(params: GetUserByEmailParams) {
 	const { user } = await assertAuthenticated();
-	await assertAuthorized({ user });
+	await assertPermissions(user, { kind: "admin" });
 
 	const { email } = params;
 

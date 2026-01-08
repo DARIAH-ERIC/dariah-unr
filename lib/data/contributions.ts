@@ -2,7 +2,7 @@
 
 import { db } from "@/db/client";
 import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
-import { assertAuthorized } from "@/lib/auth/assert-authorized";
+import { assertPermissions } from "@/lib/auth/assert-permissions";
 
 interface GetContributionsParams {
 	limit: number;
@@ -11,7 +11,7 @@ interface GetContributionsParams {
 
 export async function getContributions(params: GetContributionsParams) {
 	const { user } = await assertAuthenticated();
-	await assertAuthorized({ user });
+	await assertPermissions(user, { kind: "admin" });
 
 	const { limit, offset } = params;
 
@@ -63,7 +63,7 @@ interface GetContributionByIdParams {
 
 export async function getContributionById(params: GetContributionByIdParams) {
 	const { user } = await assertAuthenticated();
-	await assertAuthorized({ user });
+	await assertPermissions(user, { kind: "admin" });
 
 	const { id } = params;
 
@@ -115,7 +115,7 @@ interface GetContributionsByCountryCodeParams {
 
 export async function getContributionsByCountryCode(params: GetContributionsByCountryCodeParams) {
 	const { user } = await assertAuthenticated();
-	await assertAuthorized({ user });
+	await assertPermissions(user, { kind: "admin" });
 
 	const { code, limit, offset } = params;
 

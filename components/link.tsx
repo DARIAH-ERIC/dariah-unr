@@ -38,12 +38,12 @@ export function Link(props: Readonly<LinkProps>): ReactNode {
 	/** Ensure `className` is passed to `mergProps` only once to avoid duplication. */
 	const { className: _, ref: forwardedRef, ...interactionProps } = props;
 
-	const ref = useRef<HTMLAnchorElement | HTMLSpanElement>(null);
-	const linkRef = useObjectRef(
+	const linkRef = useRef<HTMLAnchorElement | HTMLSpanElement>(null);
+	const mergedRef = useObjectRef(
 		useMemo(() => {
 			// eslint-disable-next-line react-hooks/refs
-			return mergeRefs(forwardedRef, ref);
-		}, [forwardedRef, ref]),
+			return mergeRefs(forwardedRef, linkRef);
+		}, [forwardedRef, linkRef]),
 	);
 
 	const isDisabled = interactionProps.isDisabled === true;
@@ -51,8 +51,8 @@ export function Link(props: Readonly<LinkProps>): ReactNode {
 	const isLinkElement = Boolean(interactionProps.href) && !isDisabled;
 	const ElementType: ElementType = isLinkElement ? LocaleLink : "span";
 
-	const { focusableProps } = useFocusable(interactionProps, linkRef);
-	const { pressProps, isPressed } = usePress({ ...interactionProps, ref: linkRef });
+	const { focusableProps } = useFocusable(interactionProps, mergedRef);
+	const { pressProps, isPressed } = usePress({ ...interactionProps, ref: mergedRef });
 	const { hoverProps, isHovered } = useHover(interactionProps);
 	const { focusProps, isFocused, isFocusVisible } = useFocusRing();
 
@@ -70,7 +70,7 @@ export function Link(props: Readonly<LinkProps>): ReactNode {
 
 	return (
 		<ElementType
-			ref={linkRef}
+			ref={mergedRef}
 			{...mergeProps(
 				renderProps,
 				filterDOMProps(props, { labelable: true, isLink: isLinkElement }),

@@ -2,7 +2,7 @@
 
 import { db } from "@/db/client";
 import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
-import { assertAuthorized } from "@/lib/auth/assert-authorized";
+import { assertPermissions } from "@/lib/auth/assert-permissions";
 
 interface GetWorkingGroupReportsParams {
 	limit: number;
@@ -11,7 +11,7 @@ interface GetWorkingGroupReportsParams {
 
 export async function getWorkingGroupReports(params: GetWorkingGroupReportsParams) {
 	const { user } = await assertAuthenticated();
-	await assertAuthorized({ user });
+	await assertPermissions(user, { kind: "admin" });
 
 	const { limit, offset } = params;
 
@@ -48,7 +48,7 @@ interface GetWorkingGroupReportByIdParams {
 
 export async function getWorkingGroupReportById(params: GetWorkingGroupReportByIdParams) {
 	const { user } = await assertAuthenticated();
-	await assertAuthorized({ user });
+	await assertPermissions(user, { kind: "admin" });
 
 	const { id } = params;
 
@@ -87,7 +87,7 @@ export async function getWorkingGroupReportsByWorkingGroupSlug(
 	params: GetWorkingGroupReportsByWorkingGroupSlugParams,
 ) {
 	const { user } = await assertAuthenticated();
-	await assertAuthorized({ user });
+	await assertPermissions(user, { kind: "admin" });
 
 	const { limit, offset, slug } = params;
 
@@ -132,7 +132,7 @@ export async function getWorkingGroupReportByWorkingGroupSlugAndYear(
 	params: GetWorkingGroupReportByWorkingGroupSlugAndYearParams,
 ) {
 	const { user } = await assertAuthenticated();
-	await assertAuthorized({ user });
+	await assertPermissions(user, { kind: "admin" });
 
 	const { slug, year } = params;
 

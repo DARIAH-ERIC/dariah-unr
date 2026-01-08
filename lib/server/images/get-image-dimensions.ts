@@ -19,6 +19,7 @@ export async function getImageDimensions(
 
 		const contentType = response.headers.get("content-type");
 
+		// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
 		if (!contentType?.startsWith("image/")) return null;
 
 		const dimensions =
@@ -35,7 +36,7 @@ export async function getImageDimensions(
 
 	const dimensions = src.endsWith(".svg")
 		? await getSvgDimensions(stream as ReadableStream<Uint8Array>)
-		: // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
+		: // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
 			await imageDimensionsFromStream(stream as any);
 
 	return dimensions ?? null;

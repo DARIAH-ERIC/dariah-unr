@@ -22,6 +22,7 @@ export default function IndexPage(): ReactNode {
 	return (
 		<Main className="container flex-1 px-8 py-12 xs:px-16">
 			<h1>{t("title")}</h1>
+			<p>{t("message")}</p>
 		</Main>
 	);
 }
