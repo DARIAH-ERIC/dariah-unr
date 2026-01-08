@@ -3,18 +3,12 @@ import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { Main } from "@/app/(app)/[locale]/(default)/_components/main";
-import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
-import { assertAuthorized } from "@/lib/auth/assert-authorized";
 
 interface AuthUnauthorizedPageProps extends PageProps<"/[locale]/dashboard/admin"> {}
 
 export async function generateMetadata(
 	_props: Readonly<AuthUnauthorizedPageProps>,
 ): Promise<Metadata> {
-	const { user } = await assertAuthenticated();
-
-	await assertAuthorized({ user, roles: ["admin"] });
-
 	const t = await getTranslations("AuthUnauthorizedPage");
 
 	const title = t("meta.title");

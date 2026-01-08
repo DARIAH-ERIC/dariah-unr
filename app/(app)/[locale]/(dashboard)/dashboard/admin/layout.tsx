@@ -1,5 +1,5 @@
 import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
-import { assertAuthorized } from "@/lib/auth/assert-authorized";
+import { assertPermissions } from "@/lib/auth/assert-permissions";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
@@ -11,7 +11,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
 	const { user } = await assertAuthenticated();
 
-	await assertAuthorized({ user, roles: ["admin"] });
+	await assertPermissions(user, { kind: "admin" });
 
 	const t = await getTranslations("DashboardAdminLayout");
 
@@ -34,7 +34,7 @@ export default async function DashboardAdminLayout(
 
 	const { user } = await assertAuthenticated();
 
-	await assertAuthorized({ user, roles: ["admin"] });
+	await assertPermissions(user, { kind: "admin" });
 
 	// const t = await getTranslations("DashboardAdminLayout");
 

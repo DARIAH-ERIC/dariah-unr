@@ -5,8 +5,19 @@ import * as v from "valibot";
 
 import { Main } from "@/app/(app)/[locale]/(default)/_components/main";
 import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
-import { assertAuthorized } from "@/lib/auth/assert-authorized";
 import { getContributions } from "@/lib/queries/contributions";
+import { assertPermissions } from "@/lib/auth/assert-permissions";
+
+const SearchParamsSchema = v.object({
+	limit: v.optional(
+		v.pipe(v.string(), v.nonEmpty(), v.toNumber(), v.integer(), v.minValue(1), v.maxValue(100)),
+		"10",
+	),
+	offset: v.optional(
+		v.pipe(v.string(), v.nonEmpty(), v.toNumber(), v.integer(), v.minValue(0)),
+		"0",
+	),
+});
 
 interface DashboardAdminContributionsPageProps extends PageProps<"/[locale]/dashboard/admin/contributions"> {}
 
@@ -15,7 +26,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
 	const { user } = await assertAuthenticated();
 
-	await assertAuthorized({ user, roles: ["admin"] });
+	await assertPermissions(user, { kind: "admin" });
 
 	const t = await getTranslations("DashboardAdminContributionsPage");
 
@@ -38,7 +49,7 @@ export default async function DashboardAdminContributionsPage(
 
 	const { user } = await assertAuthenticated();
 
-	await assertAuthorized({ user, roles: ["admin"] });
+	await assertPermissions(user, { kind: "admin" });
 
 	const t = await getTranslations("DashboardAdminContributionsPage");
 
@@ -51,17 +62,6 @@ export default async function DashboardAdminContributionsPage(
 		</Main>
 	);
 }
-
-const SearchParamsSchema = v.object({
-	limit: v.optional(
-		v.pipe(v.string(), v.nonEmpty(), v.toNumber(), v.integer(), v.minValue(1), v.maxValue(100)),
-		"10",
-	),
-	offset: v.optional(
-		v.pipe(v.string(), v.nonEmpty(), v.toNumber(), v.integer(), v.minValue(0)),
-		"0",
-	),
-});
 
 interface AdminContributionsTableProps extends Pick<
 	DashboardAdminContributionsPageProps,

@@ -4,10 +4,11 @@ import type { ReactNode } from "react";
 
 import { Main } from "@/app/(app)/[locale]/(default)/_components/main";
 import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
-import { assertAuthorized } from "@/lib/auth/assert-authorized";
 import { getCurrentSession } from "@/lib/auth/get-current-session";
 import { redirect } from "@/lib/navigation/navigation";
 import * as v from "valibot";
+import { assertPermissions } from "@/lib/auth/assert-permissions";
+import { SignInForm } from "@/app/(app)/[locale]/(auth)/auth/sign-in/_components/sign-in-form";
 
 const SearchParamsSchema = v.object({
 	callbackUrl: v.fallback(v.optional(v.pipe(v.string(), v.nonEmpty())), undefined),
@@ -18,7 +19,7 @@ interface AuthSignInPageProps extends PageProps<"/[locale]/dashboard/admin"> {}
 export async function generateMetadata(_props: Readonly<AuthSignInPageProps>): Promise<Metadata> {
 	const { user } = await assertAuthenticated();
 
-	await assertAuthorized({ user, roles: ["admin"] });
+	await assertPermissions(user, { kind: "admin" });
 
 	const t = await getTranslations("AuthSignInPage");
 

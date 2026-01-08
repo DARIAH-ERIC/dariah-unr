@@ -6,7 +6,18 @@ import * as v from "valibot";
 import { Main } from "@/app/(app)/[locale]/(default)/_components/main";
 import { getServices } from "@/lib/queries/services";
 import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
-import { assertAuthorized } from "@/lib/auth/assert-authorized";
+import { assertPermissions } from "@/lib/auth/assert-permissions";
+
+const SearchParamsSchema = v.object({
+	limit: v.optional(
+		v.pipe(v.string(), v.nonEmpty(), v.toNumber(), v.integer(), v.minValue(1), v.maxValue(100)),
+		"10",
+	),
+	offset: v.optional(
+		v.pipe(v.string(), v.nonEmpty(), v.toNumber(), v.integer(), v.minValue(0)),
+		"0",
+	),
+});
 
 interface DashboardAdminServicesPageProps extends PageProps<"/[locale]/dashboard/admin/services"> {}
 
@@ -15,7 +26,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
 	const { user } = await assertAuthenticated();
 
-	await assertAuthorized({ user, roles: ["admin"] });
+	await assertPermissions(user, { kind: "admin" });
 
 	const t = await getTranslations("DashboardAdminServicesPage");
 
@@ -38,7 +49,7 @@ export default async function DashboardAdminServicesPage(
 
 	const { user } = await assertAuthenticated();
 
-	await assertAuthorized({ user, roles: ["admin"] });
+	await assertPermissions(user, { kind: "admin" });
 
 	const t = await getTranslations("DashboardAdminServicesPage");
 
@@ -51,17 +62,6 @@ export default async function DashboardAdminServicesPage(
 		</Main>
 	);
 }
-
-const SearchParamsSchema = v.object({
-	limit: v.optional(
-		v.pipe(v.string(), v.nonEmpty(), v.toNumber(), v.integer(), v.minValue(1), v.maxValue(100)),
-		"10",
-	),
-	offset: v.optional(
-		v.pipe(v.string(), v.nonEmpty(), v.toNumber(), v.integer(), v.minValue(0)),
-		"0",
-	),
-});
 
 interface AdminServicesTableProps extends Pick<DashboardAdminServicesPageProps, "searchParams"> {}
 

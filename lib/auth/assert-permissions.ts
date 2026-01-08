@@ -7,6 +7,7 @@ import { redirect } from "@/lib/navigation/navigation";
 import type { User } from "@/lib/auth/sessions";
 
 type PermissionRequest =
+	| { kind: "admin" }
 	| { kind: "country"; id: string; action: "read" | "read-write" | "confirm" }
 	| { kind: "working-group"; id: string; action: "read" | "read-write" | "confirm" };
 
@@ -17,6 +18,10 @@ export const hasPermissions = cache(async function hasPermissions(
 ): Promise<boolean> {
 	if (user.role === "admin") {
 		return true;
+	}
+
+	if (request.kind === "admin") {
+		return false;
 	}
 
 	if (request.kind === "country") {

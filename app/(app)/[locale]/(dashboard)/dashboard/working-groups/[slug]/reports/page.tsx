@@ -10,6 +10,17 @@ import { getWorkingGroupReportsByWorkingGroupSlug } from "@/lib/queries/working-
 import { getWorkingGroupBySlug } from "@/lib/queries/working-groups";
 import { notFound } from "next/navigation";
 
+const SearchParamsSchema = v.object({
+	limit: v.optional(
+		v.pipe(v.string(), v.nonEmpty(), v.toNumber(), v.integer(), v.minValue(1), v.maxValue(100)),
+		"10",
+	),
+	offset: v.optional(
+		v.pipe(v.string(), v.nonEmpty(), v.toNumber(), v.integer(), v.minValue(0)),
+		"0",
+	),
+});
+
 interface DashboardWorkingGroupReportsPageProps extends PageProps<"/[locale]/dashboard/working-groups/[slug]/reports"> {}
 
 export async function generateMetadata(
@@ -71,17 +82,6 @@ export default async function DashboardWorkingGroupReportsPage(
 		</Main>
 	);
 }
-
-const SearchParamsSchema = v.object({
-	limit: v.optional(
-		v.pipe(v.string(), v.nonEmpty(), v.toNumber(), v.integer(), v.minValue(1), v.maxValue(100)),
-		"10",
-	),
-	offset: v.optional(
-		v.pipe(v.string(), v.nonEmpty(), v.toNumber(), v.integer(), v.minValue(0)),
-		"0",
-	),
-});
 
 interface WorkingGroupReportsTableProps extends DashboardWorkingGroupReportsPageProps {}
 

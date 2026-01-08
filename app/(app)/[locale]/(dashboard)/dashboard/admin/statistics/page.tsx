@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 
 import { Main } from "@/app/(app)/[locale]/(default)/_components/main";
 import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
-import { assertAuthorized } from "@/lib/auth/assert-authorized";
+import { assertPermissions } from "@/lib/auth/assert-permissions";
 
 interface DashboardAdminStatisticsPageProps extends PageProps<"/[locale]/dashboard/admin/statistics"> {}
 
@@ -13,7 +13,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
 	const { user } = await assertAuthenticated();
 
-	await assertAuthorized({ user, roles: ["admin"] });
+	await assertPermissions(user, { kind: "admin" });
 
 	const t = await getTranslations("DashboardAdminStatisticsPage");
 
@@ -34,7 +34,7 @@ export default async function DashboardAdminStatisticsPage(
 ): Promise<ReactNode> {
 	const { user } = await assertAuthenticated();
 
-	await assertAuthorized({ user, roles: ["admin"] });
+	await assertPermissions(user, { kind: "admin" });
 
 	const t = await getTranslations("DashboardAdminStatisticsPage");
 

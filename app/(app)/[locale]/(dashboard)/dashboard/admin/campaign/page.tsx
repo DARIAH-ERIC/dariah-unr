@@ -3,8 +3,8 @@ import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { Main } from "@/app/(app)/[locale]/(default)/_components/main";
-import { assertAuthorized } from "@/lib/auth/assert-authorized";
 import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
+import { assertPermissions } from "@/lib/auth/assert-permissions";
 
 interface DashboardAdminCampaignPageProps extends PageProps<"/[locale]/dashboard/admin/campaign"> {}
 
@@ -13,7 +13,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
 	const { user } = await assertAuthenticated();
 
-	await assertAuthorized({ user, roles: ["admin"] });
+	await assertPermissions(user, { kind: "admin" });
 
 	const t = await getTranslations("DashboardAdminCampaignPage");
 
@@ -34,7 +34,7 @@ export default async function DashboardAdminCampaignPage(
 ): Promise<ReactNode> {
 	const { user } = await assertAuthenticated();
 
-	await assertAuthorized({ user, roles: ["admin"] });
+	await assertPermissions(user, { kind: "admin" });
 
 	const t = await getTranslations("DashboardAdminCampaignPage");
 

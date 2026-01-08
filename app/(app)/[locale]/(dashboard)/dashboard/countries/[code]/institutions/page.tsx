@@ -10,6 +10,17 @@ import { getCountryByCode } from "@/lib/queries/countries";
 import { assertPermissions } from "@/lib/auth/assert-permissions";
 import { notFound } from "next/navigation";
 
+const SearchParamsSchema = v.object({
+	limit: v.optional(
+		v.pipe(v.string(), v.nonEmpty(), v.toNumber(), v.integer(), v.minValue(1), v.maxValue(100)),
+		"10",
+	),
+	offset: v.optional(
+		v.pipe(v.string(), v.nonEmpty(), v.toNumber(), v.integer(), v.minValue(0)),
+		"0",
+	),
+});
+
 interface DashboardCountryInstitutionsPageProps extends PageProps<"/[locale]/dashboard/countries/[code]/institutions"> {}
 
 export async function generateMetadata(
@@ -71,17 +82,6 @@ export default async function DashboardCountryInstitutionsPage(
 		</Main>
 	);
 }
-
-const SearchParamsSchema = v.object({
-	limit: v.optional(
-		v.pipe(v.string(), v.nonEmpty(), v.toNumber(), v.integer(), v.minValue(1), v.maxValue(100)),
-		"10",
-	),
-	offset: v.optional(
-		v.pipe(v.string(), v.nonEmpty(), v.toNumber(), v.integer(), v.minValue(0)),
-		"0",
-	),
-});
 
 interface CountryInstitutionsTableProps extends DashboardCountryInstitutionsPageProps {}
 
