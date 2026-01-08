@@ -689,7 +689,7 @@ function ServicesEditForm(props: ServicesEditFormProps) {
 					name="dariahBranding"
 					type="checkbox"
 				/>
-				<span className="text-sm leading-normal font-medium text-neutral-950 transition select-none disabled:opacity-50 dark:text-neutral-0">
+				<span className="text-sm/normal font-medium text-neutral-950 transition select-none disabled:opacity-50 dark:text-neutral-0">
 					DARIAH branding
 				</span>
 			</label>
@@ -700,7 +700,7 @@ function ServicesEditForm(props: ServicesEditFormProps) {
 					name="eoscOnboarding"
 					type="checkbox"
 				/>
-				<span className="text-sm leading-normal font-medium text-neutral-950 transition select-none disabled:opacity-50 dark:text-neutral-0">
+				<span className="text-sm/normal font-medium text-neutral-950 transition select-none disabled:opacity-50 dark:text-neutral-0">
 					EOSC onboarding
 				</span>
 			</label>
@@ -711,7 +711,7 @@ function ServicesEditForm(props: ServicesEditFormProps) {
 					name="monitoring"
 					type="checkbox"
 				/>
-				<span className="text-sm leading-normal font-medium text-neutral-950 transition select-none disabled:opacity-50 dark:text-neutral-0">
+				<span className="text-sm/normal font-medium text-neutral-950 transition select-none disabled:opacity-50 dark:text-neutral-0">
 					Monitoring
 				</span>
 			</label>
@@ -722,7 +722,7 @@ function ServicesEditForm(props: ServicesEditFormProps) {
 					name="privateSupplier"
 					type="checkbox"
 				/>
-				<span className="text-sm leading-normal font-medium text-neutral-950 transition select-none disabled:opacity-50 dark:text-neutral-0">
+				<span className="text-sm/normal font-medium text-neutral-950 transition select-none disabled:opacity-50 dark:text-neutral-0">
 					Private supplier
 				</span>
 			</label>

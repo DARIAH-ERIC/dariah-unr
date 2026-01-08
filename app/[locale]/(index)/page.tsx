@@ -57,7 +57,7 @@ async function IndexPageHeroSection(): Promise<ReactNode> {
 
 	return (
 		<section className="mx-auto grid w-full max-w-(--breakpoint-lg) content-start justify-items-center gap-y-4 px-4 py-8 text-center md:py-16">
-			<div className="flex items-center gap-2 rounded-lg bg-neutral-100 px-3 py-1 text-sm leading-tight font-medium dark:bg-neutral-800">
+			<div className="flex items-center gap-2 rounded-lg bg-neutral-100 px-3 py-1 text-sm/tight font-medium dark:bg-neutral-800">
 				<Logo className="size-4 shrink-0 text-brand" />
 				<span>{t("badge")}</span>
 			</div>

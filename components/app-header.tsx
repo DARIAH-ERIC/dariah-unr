@@ -45,7 +45,7 @@ export async function AppHeader() {
 									<AppNavLink href={link.href}>
 										{id === "home" ? (
 											<div className="inline-flex items-center gap-2.5">
-												<Logo className="size-6 shrink-0 " />
+												<Logo className="size-6 shrink-0" />
 												<span className="sr-only sm:not-sr-only">{link.label}</span>
 											</div>
 										) : (
