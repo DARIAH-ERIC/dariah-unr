@@ -1,10 +1,9 @@
-import type { Metadata } from "next";
-import { getLocale, getTranslations } from "next-intl/server";
 import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
-import type { ReactNode } from "react";
-import { redirect } from "@/lib/navigation/navigation";
-import { notFound } from "next/navigation";
 import { getCountryById } from "@/lib/queries/countries";
+import { getWorkingGroupsByPersonId } from "@/lib/queries/working-groups";
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
+import type { ReactNode } from "react";
 
 interface DashboardLayoutProps extends LayoutProps<"/[locale]/dashboard"> {}
 
@@ -26,33 +25,48 @@ export async function generateMetadata(_props: Readonly<DashboardLayoutProps>): 
 }
 
 export default async function DashboardLayout(
-	_props: Readonly<DashboardLayoutProps>,
+	props: Readonly<DashboardLayoutProps>,
 ): Promise<ReactNode> {
-	// const { children } = props;
+	const { children } = props;
 
 	const { user } = await assertAuthenticated();
 
-	const locale = await getLocale();
+	const isAdmin = user.role === "admin";
+	const country = user.countryId != null ? await getCountryById({ id: user.countryId }) : null;
+	const contributions =
+		user.personId != null ? await getWorkingGroupsByPersonId({ personId: user.personId }) : [];
 
-	if (user.role === "admin") {
-		redirect({ href: "/dashboard/admin", locale });
-	}
+	return (
+		<div>
+			<aside>
+				{isAdmin ? (
+					<section>
+						<h2>Administrator</h2>
+					</section>
+				) : null}
 
-	if (user.countryId != null) {
-		const country = await getCountryById({ id: user.countryId });
+				{country ? (
+					<section>
+						<h2>{country.name}</h2>
+					</section>
+				) : null}
 
-		if (country == null) {
-			notFound();
-		}
+				{contributions.length > 0 ? (
+					<section>
+						<h2>Working groups</h2>
+						<div>
+							{contributions.map((contribution) => {
+								if (contribution.workingGroup == null) {
+									return null;
+								}
 
-		redirect({ href: `/dashboard/countries/${country.code}`, locale });
-	}
-
-	if (user.personId != null) {
-		// TODO:
-	}
-
-	// const t = await getTranslations("DashboardLayout");
-
-	notFound();
+								return <div key={contribution.id}>{contribution.workingGroup?.name}</div>;
+							})}
+						</div>
+					</section>
+				) : null}
+			</aside>
+			{children}
+		</div>
+	);
 }

@@ -38,6 +38,12 @@
 		},
 		"title": "Dashboard"
 	},
+	"DashboardPage": {
+		"meta": {
+			"title": "Dashboard"
+		},
+		"title": "Dashboard"
+	},
 	"DashboardAdminLayout": {
 		"meta": {
 			"title": "Admin dashboard"

@@ -87,3 +87,44 @@ export async function getWorkingGroupBySlug(params: GetWorkingGroupBySlugParams)
 		},
 	});
 }
+
+interface GetWorkingGroupsByPersonIdParams {
+	personId: string;
+}
+
+export function getWorkingGroupsByPersonId(params: GetWorkingGroupsByPersonIdParams) {
+	const { personId } = params;
+
+	return db.query.contributions.findMany({
+		where: {
+			person: {
+				id: personId,
+			},
+			role: {
+				type: { in: ["wg_chair", "wg_member"] },
+			},
+			workingGroup: {
+				id: { isNotNull: true },
+			},
+		},
+		columns: {
+			id: true,
+			endDate: true,
+			startDate: true,
+		},
+		with: {
+			person: {
+				columns: {
+					id: true,
+				},
+			},
+			workingGroup: {
+				columns: {
+					id: true,
+					slug: true,
+					name: true,
+				},
+			},
+		},
+	});
+}
