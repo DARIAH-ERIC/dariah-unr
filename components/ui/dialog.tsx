@@ -2,7 +2,7 @@
 
 import { chain } from "@react-aria/utils";
 import { XIcon } from "lucide-react";
-import { type ComponentPropsWithoutRef, useContext } from "react";
+import { type ComponentPropsWithoutRef, use } from "react";
 import {
 	Button as AriaDialogCloseButton,
 	type ButtonProps as AriaDialogCloseButtonProps,
@@ -152,7 +152,7 @@ export function DialogCloseButton(props: DialogCloseButtonProps) {
 	const { className, onPress, ...rest } = props;
 
 	// eslint-disable-next-line @typescript-eslint/unbound-method
-	const { close } = useContext(AriaOverlayTriggerStateContext)!;
+	const { close } = use(AriaOverlayTriggerStateContext)!;
 
 	return (
 		<AriaDialogCloseButton
@@ -180,7 +180,7 @@ export function DialogCancelButton(props: DialogCancelButtonProps) {
 	const { children, className, onPress, variant = "plain", ...rest } = props;
 
 	// eslint-disable-next-line @typescript-eslint/unbound-method
-	const { close } = useContext(AriaOverlayTriggerStateContext)!;
+	const { close } = use(AriaOverlayTriggerStateContext)!;
 
 	return (
 		<AriaDialogCancelButton
@@ -209,7 +209,7 @@ export function DialogActionButton(props: DialogActionButtonProps) {
 	const { children, className, onPress, ...rest } = props;
 
 	// eslint-disable-next-line @typescript-eslint/unbound-method
-	const { close } = useContext(AriaOverlayTriggerStateContext)!;
+	const { close } = use(AriaOverlayTriggerStateContext)!;
 
 	return (
 		<AriaDialogActionButton

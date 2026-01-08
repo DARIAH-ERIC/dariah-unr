@@ -676,7 +676,7 @@ async function DashboardCountryReportNavigation(
 					return (
 						<li key={step}>
 							<AppNavLink
-								className="ml-auto gap-x-2 rounded-b-none border-transparent text-sm whitespace-nowrap aria-[current]:border-b-2 aria-[current]:border-current lg:pb-4"
+								className="ml-auto gap-x-2 rounded-b-none border-transparent text-sm whitespace-nowrap lg:pb-4 aria-[current]:border-b-2 aria-[current]:border-current"
 								href={createHref({
 									pathname: `/dashboard/countries/${code}/reports/${String(year)}/edit/${step}`,
 								})}

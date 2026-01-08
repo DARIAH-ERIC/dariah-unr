@@ -13,7 +13,7 @@ export function FormTitle(props: FormTitleProps): ReactNode {
 	return (
 		<h2
 			className={cn(
-				"text-md leading-tight font-semibold tracking-tighter text-balance text-neutral-950 sm:text-lg md:text-xl dark:text-neutral-0",
+				"text-base/tight font-semibold tracking-tighter text-balance text-neutral-950 sm:text-lg md:text-xl dark:text-neutral-0",
 				className,
 			)}
 		>

@@ -420,7 +420,7 @@ function InstitutionEditForm(props: InstitutionEditFormProps) {
 			{/* TODO: Multiple types */}
 			<FormFieldArray aria-labelledby={institutionTypesLabelId} className="flex flex-col gap-y-4">
 				<div
-					className="text-sm leading-tight font-semibold tracking-tight text-neutral-950 dark:text-neutral-0"
+					className="text-sm/tight font-semibold tracking-tight text-neutral-950 dark:text-neutral-0"
 					id={institutionTypesLabelId}
 				>
 					Institution types

@@ -1,7 +1,7 @@
 "use client";
 
 import { chain } from "@react-aria/utils";
-import { type ReactNode, useContext } from "react";
+import { type ReactNode, use } from "react";
 import { OverlayTriggerStateContext } from "react-aria-components";
 
 import { AppNavLink } from "@/components/app-nav-link";
@@ -13,7 +13,7 @@ export function AppMobileNavLink(props: AppMobileNavLinkProps): ReactNode {
 	const { children, onClick, ...rest } = props;
 
 	// eslint-disable-next-line @typescript-eslint/unbound-method
-	const { close } = useContext(OverlayTriggerStateContext)!;
+	const { close } = use(OverlayTriggerStateContext)!;
 
 	return (
 		<AppNavLink {...rest} onClick={chain(onClick, close)}>
