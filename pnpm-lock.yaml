@@ -13,7 +13,7 @@ importers:
   .:
     dependencies:
       '@acdh-oeaw/lib':
-        specifier: ^0.3.5
+        specifier: ^0.3.7
         version: 0.3.7
       '@acdh-oeaw/mdx-lib':
         specifier: ^0.1.4
