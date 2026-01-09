@@ -1,10 +1,9 @@
-import { createUrl, createUrlSearchParams, isErr } from "@acdh-oeaw/lib";
+import { createUrl, createUrlSearchParams, isErr, HttpError, request } from "@acdh-oeaw/lib";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 
 import { env } from "@/config/env.config";
 import type { IntlLocale } from "@/lib/i18n/locales";
-import { HttpError, request } from "@/lib/utils/request";
 
 async function getImprintHtml(locale: IntlLocale): Promise<string> {
 	const url = createUrl({
