@@ -1,6 +1,6 @@
-# dariah knowledge base
+# dariah reporting
 
-application for key performance indicators.
+application to collect key performance indicators for dariah member countries.
 
 ## how to run
 
