@@ -1,5 +1,5 @@
 import type { Metadata, ResolvingMetadata } from "next";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { Logo } from "@/components/logo";
@@ -7,7 +7,7 @@ import { MainContent } from "@/components/main-content";
 import { LinkButton } from "@/components/ui/link-button";
 import type { IntlLocale } from "@/lib/i18n/locales";
 import { createHref } from "@/lib/navigation/create-href";
-import { getDashboardPath } from "@/lib/navigation/get-dashboard-path";
+import { redirect } from "@/lib/navigation/navigation";
 import { getCurrentSession } from "@/lib/server/auth/get-current-session";
 
 interface IndexPageProps {
@@ -51,9 +51,14 @@ export default async function IndexPage(props: IndexPageProps): Promise<ReactNod
 }
 
 async function IndexPageHeroSection(): Promise<ReactNode> {
-	const { user } = await getCurrentSession();
+	const { session } = await getCurrentSession();
+
+	const locale = await getLocale();
 	const t = await getTranslations("IndexPageHeroSection");
-	const dashboardPath = await getDashboardPath(user);
+
+	if (session != null) {
+		redirect({ href: "/dashboard", locale });
+	}
 
 	return (
 		<section className="mx-auto grid w-full max-w-(--breakpoint-lg) content-start justify-items-center gap-y-4 px-4 py-8 text-center md:py-16">
@@ -68,10 +73,14 @@ async function IndexPageHeroSection(): Promise<ReactNode> {
 				{t("lead-in")}
 			</div>
 			<div className="my-3 flex items-center gap-x-4">
-				<LinkButton href={createHref({ pathname: dashboardPath })}>
-					{t("go-to-dashboard")}
+				<LinkButton className="min-w-44" href={createHref({ pathname: "/auth/sign-in" })}>
+					{t("sign-in")}
 				</LinkButton>
-				<LinkButton href={createHref({ pathname: "/documentation/guidelines" })} variant="outline">
+				<LinkButton
+					className="min-w-44"
+					href={createHref({ pathname: "/documentation/guidelines" })}
+					variant="outline"
+				>
 					{t("read-documentation")}
 				</LinkButton>
 			</div>
