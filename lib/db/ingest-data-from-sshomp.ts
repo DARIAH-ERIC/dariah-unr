@@ -191,7 +191,7 @@ export async function ingestDataFromSshomp() {
 						/**
 						 * Core services have the "DARIAH Core Service" keyword in the marketplace.
 						 * All other services have type "community", because "internal" services are
-						 * not sourced from marketplace but exist only in the knowledge base.
+						 * not sourced from marketplace but exist only in the database.
 						 */
 						type: isCoreService ? ServiceType.core : ServiceType.community,
 					},
@@ -218,7 +218,7 @@ export async function ingestDataFromSshomp() {
 						/**
 						 * Core services have the "DARIAH Core Service" keyword in the marketplace.
 						 * All other services have type "community", because "internal" services are
-						 * not sourced from marketplace but exist only in the knowledge base.
+						 * not sourced from marketplace but exist only in the database.
 						 */
 						type: isCoreService ? ServiceType.core : ServiceType.community,
 					},
