@@ -380,6 +380,7 @@ enum RoleType {
   national_coordinator_deputy
   national_representative
   national_representative_deputy
+  jrc_chair
   jrc_member
   scientific_board_member
   smt_member
@@ -387,6 +388,7 @@ enum RoleType {
   wg_member
   national_consortium_contact
   cooperating_partner_contact
+  ncc_chair
 }
 
 model Role {

@@ -90,8 +90,8 @@ export async function calculateOperationalCost(
 
 	const servicesBySize = groupServicesBySize(services, serviceReports);
 
-	const rolesByName = keyByToMap(roles, (role) => {
-		return role.name;
+	const rolesByType = keyByToMap(roles, (role) => {
+		return role.type;
 	});
 
 	const eventSizesByType = keyByToMap(eventSizes, (eventSize) => {
@@ -113,12 +113,17 @@ export async function calculateOperationalCost(
 	const largeServicesCount = servicesBySize.get("large")?.length ?? 0;
 	const coreServicesCount = servicesBySize.get("core")?.length ?? 0;
 
-	const ncRole = rolesByName.get("National Coordinator")!;
-	const jrcRole = rolesByName.get("JRC member")!;
-	const wgRole = rolesByName.get("WG chair")!;
+	const ncRole = rolesByType.get("national_coordinator")!;
+	const jrcRole = rolesByType.get("jrc_member")!;
+	const jrcChairRole = rolesByType.get("jrc_chair")!;
+	const nccRole = rolesByType.get("ncc_chair")!;
+	const wgRole = rolesByType.get("wg_chair")!;
 
 	const ncCost = (contributionsByRole.get(ncRole.id)?.length ?? 0) * ncRole.annualValue;
 	const jrcCost = (contributionsByRole.get(jrcRole.id)?.length ?? 0) * jrcRole.annualValue;
+	const jrcChairCost =
+		(contributionsByRole.get(jrcChairRole.id)?.length ?? 0) * jrcChairRole.annualValue;
+	const nccCost = (contributionsByRole.get(nccRole.id)?.length ?? 0) * nccRole.annualValue;
 	const wgCost = (contributionsByRole.get(wgRole.id)?.length ?? 0) * wgRole.annualValue;
 
 	const eventsSmallCost = (eventSizesByType.get("small")?.annualValue ?? 0) * smallMeetingsCount;
@@ -146,6 +151,8 @@ export async function calculateOperationalCost(
 	const operationalCost =
 		ncCost +
 		jrcCost +
+		jrcChairCost +
+		nccCost +
 		wgCost +
 		eventsSmallCost +
 		eventsMediumCost +
