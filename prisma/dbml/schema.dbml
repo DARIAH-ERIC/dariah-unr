@@ -65,6 +65,7 @@ Table event_reports {
   mediumMeetings Int
   reusableOutcomes String
   smallMeetings Int
+  veryLargeMeetings Int
   reportId String [unique, not null]
   report reports [not null]
   createdAt DateTime [default: `now()`, not null]
@@ -407,6 +408,7 @@ Enum EventSizeType {
   large
   medium
   small
+  very_large
 }
 
 Enum InstitutionType {

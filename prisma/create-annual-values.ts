@@ -112,12 +112,14 @@ function getAnnualValues() {
 	};
 
 	const events: Record<EventSizeType, number> = {
+		/** Meetings with more than 100 people. */
+		very_large: 10_000,
 		/** Meetings with more than 50 people. */
-		large: 10_000,
+		large: 5_000,
 		/** Meetings with 20-50 people. */
-		medium: 5_000,
+		medium: 2_500,
 		/** Meetings with less than 20 people. */
-		small: 1_000,
+		small: 500,
 		/** DARIAH annual event. */
 		dariah_commissioned: 50_000,
 	};
