@@ -101,6 +101,7 @@ enum EventSizeType {
   large
   medium
   small
+  very_large
 }
 
 model EventSize {
@@ -119,10 +120,11 @@ model EventReport {
   id String @id @default(uuid()) @db.Uuid
 
   dariahCommissionedEvent String? @map(name: "dariah_commissioned_event")
-  largeMeetings           Int?    @map(name: "large_meetings")
+  largeMeetings           Int?    @map(name: "very_large_meetings")
   mediumMeetings          Int?    @map(name: "medium_meetings")
   reusableOutcomes        String? @map(name: "reusable_outcomes")
   smallMeetings           Int?    @map(name: "small_meetings")
+  veryLargeMeetings       Int?    @map(name: "large_meetings")
 
   reportId String @unique @map(name: "report_id") @db.Uuid
 

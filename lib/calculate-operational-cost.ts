@@ -28,6 +28,7 @@ export interface CalculateOperationalCostParamsResult {
 			small: number;
 			medium: number;
 			large: number;
+			veryLarge: number;
 			dariah: number;
 		};
 		services: {
@@ -76,6 +77,7 @@ export async function calculateOperationalCost(
 		return contribution.role.id;
 	});
 
+	const veryLargeMeetingsCount = report.eventReport?.veryLargeMeetings ?? 0;
 	const largeMeetingsCount = report.eventReport?.largeMeetings ?? 0;
 	const mediumMeetingsCount = report.eventReport?.mediumMeetings ?? 0;
 	const smallMeetingsCount = report.eventReport?.smallMeetings ?? 0;
@@ -122,6 +124,8 @@ export async function calculateOperationalCost(
 	const eventsSmallCost = (eventSizesByType.get("small")?.annualValue ?? 0) * smallMeetingsCount;
 	const eventsMediumCost = (eventSizesByType.get("medium")?.annualValue ?? 0) * mediumMeetingsCount;
 	const eventsLargeCost = (eventSizesByType.get("large")?.annualValue ?? 0) * largeMeetingsCount;
+	const eventsVeryLargeCost =
+		(eventSizesByType.get("very_large")?.annualValue ?? 0) * veryLargeMeetingsCount;
 	const dariahEventCost =
 		(eventSizesByType.get("dariah_commissioned")?.annualValue ?? 0) * dariahEventsCount;
 
@@ -146,6 +150,7 @@ export async function calculateOperationalCost(
 		eventsSmallCost +
 		eventsMediumCost +
 		eventsLargeCost +
+		eventsVeryLargeCost +
 		dariahEventCost +
 		websiteCost +
 		socialMediaCost +
@@ -162,6 +167,7 @@ export async function calculateOperationalCost(
 				small: smallMeetingsCount,
 				medium: mediumMeetingsCount,
 				large: largeMeetingsCount,
+				veryLarge: veryLargeMeetingsCount,
 				dariah: dariahEventsCount,
 			},
 			services: {
