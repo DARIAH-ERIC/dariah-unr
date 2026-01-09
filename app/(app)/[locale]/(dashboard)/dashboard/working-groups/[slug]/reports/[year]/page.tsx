@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { Suspense, type ReactNode } from "react";
+import { type ReactNode,Suspense } from "react";
 import * as v from "valibot";
 
 import { Main } from "@/app/(app)/[locale]/(default)/_components/main";
-import { getWorkingGroupReportByWorkingGroupSlugAndYear } from "@/lib/queries/working-group-reports";
-import { notFound } from "next/navigation";
 import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
-import { getWorkingGroupBySlug } from "@/lib/queries/working-groups";
 import { assertPermissions } from "@/lib/auth/assert-permissions";
+import { getWorkingGroupReportByWorkingGroupSlugAndYear } from "@/lib/queries/working-group-reports";
+import { getWorkingGroupBySlug } from "@/lib/queries/working-groups";
 
 interface DashboardWorkingGroupReportByYearPageProps extends PageProps<"/[locale]/dashboard/working-groups/[slug]/reports/[year]"> {}
 

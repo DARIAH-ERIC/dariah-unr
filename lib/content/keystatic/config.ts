@@ -1,8 +1,8 @@
 import { config as createConfig } from "@keystatic/core";
-import { Logo } from "@/lib/content/keystatic/logo";
-// import { withI18nPrefix } from "@acdh-oeaw/keystatic-lib";
 
+// import { withI18nPrefix } from "@acdh-oeaw/keystatic-lib";
 import { env } from "@/config/env.config";
+import { Logo } from "@/lib/content/keystatic/logo";
 import { defaultLocale, getIntlLanguage } from "@/lib/i18n/locales";
 
 const _prefix = getIntlLanguage(defaultLocale);

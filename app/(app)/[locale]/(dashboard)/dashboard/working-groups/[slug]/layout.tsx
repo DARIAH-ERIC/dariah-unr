@@ -1,10 +1,11 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
+import type { ReactNode } from "react";
+
 import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
 import { assertPermissions } from "@/lib/auth/assert-permissions";
 import { getWorkingGroupBySlug } from "@/lib/queries/working-groups";
-import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
-import { notFound } from "next/navigation";
-import type { ReactNode } from "react";
 
 interface DashboardWorkingGroupLayoutProps extends LayoutProps<"/[locale]/dashboard/working-groups/[slug]"> {}
 

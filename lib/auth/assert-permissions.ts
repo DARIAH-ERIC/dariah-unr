@@ -2,9 +2,9 @@ import { includes } from "@acdh-oeaw/lib";
 import { getLocale } from "next-intl/server";
 import { cache } from "react";
 
-import { hasPersonWorkingGroupRole } from "@/lib/queries/permissions";
-import { redirect } from "@/lib/navigation/navigation";
 import type { User } from "@/lib/auth/sessions";
+import { redirect } from "@/lib/navigation/navigation";
+import { hasPersonWorkingGroupRole } from "@/lib/queries/permissions";
 
 type PermissionRequest =
 	| { kind: "admin" }

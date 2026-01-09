@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
 import { hash } from "bcrypt";
+import { eq } from "drizzle-orm";
 
 import { db } from "@/db/client";
 import * as schema from "@/db/schema";
 import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
 import { assertPermissions } from "@/lib/auth/assert-permissions";
-import { eq } from "drizzle-orm";
 
 interface GetUsersParams {
 	limit: number;

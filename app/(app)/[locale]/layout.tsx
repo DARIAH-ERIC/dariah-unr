@@ -1,7 +1,7 @@
 import { createUrl } from "@acdh-oeaw/lib";
 import type { Metadata } from "next";
-import { getLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { getLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 import { jsonLdScriptProps } from "react-schemaorg";
 import type { WebSite, WithContext } from "schema-dts";

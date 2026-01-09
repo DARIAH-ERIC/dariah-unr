@@ -1,9 +1,11 @@
-import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
-import { getCountryById } from "@/lib/queries/countries";
-import { getWorkingGroupsByPersonId } from "@/lib/queries/working-groups";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
+
+import { DashboardSidebar } from "@/app/(app)/[locale]/(dashboard)/dashboard/_components/dashboard-sidebar";
+import { DashboardSidebarNavigation } from "@/app/(app)/[locale]/(dashboard)/dashboard/_components/dashboard-sidebar-navigation";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
 
 interface DashboardLayoutProps extends LayoutProps<"/[locale]/dashboard"> {}
 
@@ -29,44 +31,19 @@ export default async function DashboardLayout(
 ): Promise<ReactNode> {
 	const { children } = props;
 
-	const { user } = await assertAuthenticated();
-
-	const isAdmin = user.role === "admin";
-	const country = user.countryId != null ? await getCountryById({ id: user.countryId }) : null;
-	const contributions =
-		user.personId != null ? await getWorkingGroupsByPersonId({ personId: user.personId }) : [];
+	await assertAuthenticated();
 
 	return (
-		<div>
-			<aside>
-				{isAdmin ? (
-					<section>
-						<h2>Administrator</h2>
-					</section>
-				) : null}
+		<div className="relative isolate flex h-full flex-col">
+			<SidebarProvider>
+				<DashboardSidebar intent="float" />
 
-				{country ? (
-					<section>
-						<h2>{country.name}</h2>
-					</section>
-				) : null}
+				<SidebarInset>
+					<DashboardSidebarNavigation />
 
-				{contributions.length > 0 ? (
-					<section>
-						<h2>Working groups</h2>
-						<div>
-							{contributions.map((contribution) => {
-								if (contribution.workingGroup == null) {
-									return null;
-								}
-
-								return <div key={contribution.id}>{contribution.workingGroup.name}</div>;
-							})}
-						</div>
-					</section>
-				) : null}
-			</aside>
-			{children}
+					<div className="p-4 lg:p-6">{children}</div>
+				</SidebarInset>
+			</SidebarProvider>
 		</div>
 	);
 }

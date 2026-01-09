@@ -1,11 +1,11 @@
 import "server-only";
 
-import * as schema from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 import { activityCheckIntervalSeconds, inactivityTimeoutSeconds } from "@/config/auth.config";
 import { db } from "@/db/client";
+import * as schema from "@/db/schema";
 import { constantTimeEqual, generateSecureRandomString, hashSecret } from "@/lib/auth/utils";
-import { eq } from "drizzle-orm";
 
 type DbSession = typeof schema.sessions.$inferSelect;
 export type Session = DbSession;

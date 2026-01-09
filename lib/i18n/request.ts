@@ -1,5 +1,5 @@
-import { getRequestConfig, type GetRequestConfigParams } from "next-intl/server";
 import * as rootParams from "next/root-params";
+import { getRequestConfig, type GetRequestConfigParams } from "next-intl/server";
 
 import { formats } from "@/lib/i18n/formats";
 import { type IntlLocale, isValidLocale, timeZone } from "@/lib/i18n/locales";

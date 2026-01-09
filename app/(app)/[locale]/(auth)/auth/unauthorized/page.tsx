@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 
 import { Main } from "@/app/(app)/[locale]/(default)/_components/main";
 
-interface AuthUnauthorizedPageProps extends PageProps<"/[locale]/dashboard/admin"> {}
+interface AuthUnauthorizedPageProps extends PageProps<"/[locale]/auth/unauthorized"> {}
 
 export async function generateMetadata(
 	_props: Readonly<AuthUnauthorizedPageProps>,

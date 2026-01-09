@@ -1,4 +1,4 @@
-import { createUrl, createUrlSearchParams, isErr, HttpError, request } from "@acdh-oeaw/lib";
+import { createUrl, createUrlSearchParams, HttpError, isErr, request } from "@acdh-oeaw/lib";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 
