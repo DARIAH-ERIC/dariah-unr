@@ -75,7 +75,7 @@ COPY --chown=node:node ./entrypoint.sh ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh
 
 # Prisma CLI is used in entrypoint script to apply migrations.
-RUN pnpm add -g prisma@6
+RUN pnpm add -g prisma@6 --allow-build=@prisma/engines --allow-build=prisma
 
 COPY --chown=node:node ./prisma/schema.prisma ./prisma/schema.prisma
 COPY --chown=node:node ./prisma/migrations ./prisma/migrations
