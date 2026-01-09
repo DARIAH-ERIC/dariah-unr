@@ -59,18 +59,22 @@ const plugins: Array<(config: Config) => Config> = [
 	}),
 	function createSentryPlugin(config) {
 		return withSentryConfig(config, {
-			disableLogger: true,
 			org: env.NEXT_PUBLIC_SENTRY_ORG,
 			project: env.NEXT_PUBLIC_SENTRY_PROJECT,
-			reactComponentAnnotation: {
-				enabled: true,
-			},
 			silent: env.CI !== true,
 			/**
 			 * Uncomment to route browser requests to sentry through a next.js rewrite to circumvent
 			 * ad-blockers.
 			 */
 			// tunnelRoute: true,
+			webpack: {
+				reactComponentAnnotation: {
+					enabled: true,
+				},
+				treeshake: {
+					removeDebugLogging: true,
+				},
+			},
 			widenClientFileUpload: true,
 		});
 	},
