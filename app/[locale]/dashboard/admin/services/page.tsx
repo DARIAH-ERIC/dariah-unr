@@ -5,6 +5,7 @@ import { type ReactNode, Suspense } from "react";
 import { AdminServicesTableContent } from "@/components/admin/services-table-content";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
+import { assertPermissions } from "@/lib/access-controls";
 import { getCountries } from "@/lib/data/country";
 import { getInstitutions } from "@/lib/data/institution";
 import { getServices } from "@/lib/data/service";
@@ -43,7 +44,8 @@ export default async function DashboardAdminServicesPage(
 
 	const t = await getTranslations("DashboardAdminServicesPage");
 
-	await assertAuthenticated(["admin"]);
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
 	return (
 		<MainContent className="container grid max-w-(--breakpoint-2xl)! content-start gap-y-8 py-8">

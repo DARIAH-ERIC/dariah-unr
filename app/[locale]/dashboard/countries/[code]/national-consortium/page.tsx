@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { EditCountryWrapper } from "@/components/forms/country-form";
+import { assertPermissions } from "@/lib/access-controls";
 import { getCountryByCode } from "@/lib/data/country";
 import type { IntlLocale } from "@/lib/i18n/locales";
 import { dashboardCountryPageParams } from "@/lib/schemas/dashboard";
@@ -24,7 +25,7 @@ export async function generateMetadata(
 
 	const { locale } = await params;
 
-	await assertAuthenticated(["admin", "national_coordinator"]);
+	const { user } = await assertAuthenticated();
 
 	const result = dashboardCountryPageParams.safeParse(await params);
 
@@ -37,6 +38,8 @@ export async function generateMetadata(
 	if (country == null) notFound();
 
 	const { name } = country;
+
+	await assertPermissions(user, { kind: "country", id: country.id, action: "edit-metadata" });
 
 	const _t = await getTranslations({ locale, namespace: "DashboardCountryNCPage" });
 
@@ -55,7 +58,7 @@ export default async function DashboardCountryNCPage(
 	const { locale } = await params;
 	setRequestLocale(locale);
 
-	await assertAuthenticated(["admin", "national_coordinator"]);
+	const { user } = await assertAuthenticated();
 
 	const result = dashboardCountryPageParams.safeParse(await params);
 
@@ -66,6 +69,8 @@ export default async function DashboardCountryNCPage(
 	const country = await getCountryByCode({ code });
 
 	if (country == null) notFound();
+
+	await assertPermissions(user, { kind: "country", id: country.id, action: "edit-metadata" });
 
 	return <EditCountryWrapper country={country} />;
 }

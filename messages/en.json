@@ -167,6 +167,14 @@
 		},
 		"title": "National Dashboard - {name}"
 	},
+	"DashboardCountryPage": {
+		"lead-in": "Welcome to the DARIAH National Coordinator Dashboard!",
+		"meta": {
+			"title": "National Dashboard - {name}"
+		},
+		"no-country-message": "You are not affiliated with a country",
+		"title": "National Dashboard - {name}"
+	},
 	"DashboardCountryNCPage": {
 		"meta": {
 			"title": "National Dashboard - {name} - National Consortium"
@@ -250,11 +258,9 @@
 	},
 	"DashboardPage": {
 		"meta": {
-			"title": "National Dasboard"
+			"title": "Dashboard"
 		},
-		"lead-in": "Welcome to the DARIAH National Coordinator Dashboard!",
-		"title": "National Dasboard",
-		"no-country-message": "You are not affiliated with a country"
+		"title": "Dashboard"
 	},
 	"DashboardPageContent": {
 		"create-page-for-year": "Create report for {year}",

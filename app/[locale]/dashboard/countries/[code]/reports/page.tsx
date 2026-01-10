@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { LinkButton } from "@/components/ui/link-button";
+import { assertPermissions } from "@/lib/access-controls";
 import { getCountryByCode } from "@/lib/data/country";
 import { getReportYearsByCountryCode } from "@/lib/data/report";
 import type { IntlLocale } from "@/lib/i18n/locales";
@@ -26,7 +27,7 @@ export async function generateMetadata(
 
 	const { locale } = await params;
 
-	await assertAuthenticated(["admin", "national_coordinator", "contributor"]);
+	const { user } = await assertAuthenticated();
 
 	const result = dashboardCountryPageParams.safeParse(await params);
 
@@ -39,6 +40,8 @@ export async function generateMetadata(
 	if (country == null) notFound();
 
 	const { name } = country;
+
+	await assertPermissions(user, { kind: "country", id: country.id, action: "read-write" });
 
 	const _t = await getTranslations({ locale, namespace: "DashboardCountryReportsPage" });
 
@@ -59,7 +62,7 @@ export default async function DashboardCountryReportsPage(
 
 	const t = await getTranslations({ locale, namespace: "DashboardCountryReportsPage" });
 
-	await assertAuthenticated(["admin", "national_coordinator", "contributor"]);
+	const { user } = await assertAuthenticated();
 
 	const result = dashboardCountryPageParams.safeParse(await params);
 
@@ -70,6 +73,8 @@ export default async function DashboardCountryReportsPage(
 	const country = await getCountryByCode({ code });
 
 	if (country == null) notFound();
+
+	await assertPermissions(user, { kind: "country", id: country.id, action: "read-write" });
 
 	const reports = await getReportYearsByCountryCode({ countryCode: country.code });
 

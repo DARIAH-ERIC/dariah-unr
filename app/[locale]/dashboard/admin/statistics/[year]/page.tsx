@@ -6,6 +6,7 @@ import { type ReactNode, Suspense } from "react";
 import { AdminStatisticsContent } from "@/components/admin/statistics-content";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
+import { assertPermissions } from "@/lib/access-controls";
 import { getReportCampaignByYear } from "@/lib/data/campaign";
 import {
 	getContributionsCount,
@@ -52,7 +53,8 @@ export default async function DashboardAdminStatisticsPage(
 
 	const t = await getTranslations("DashboardAdminStatisticsPage");
 
-	await assertAuthenticated(["admin"]);
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
 	const result = dashboardAdminStatisticsPageParams.safeParse(await params);
 	if (!result.success) notFound();

@@ -63,7 +63,8 @@ export default async function DashboardWorkingGroupsPage(
 
 	const t = await getTranslations("DashboardWorkingGroupsPage");
 
-	await assertAuthenticated(["admin"]);
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
 	const workingGroups = await getWorkingGroups();
 

@@ -5,6 +5,7 @@ import { type ReactNode, Suspense } from "react";
 import { AdminOutreachTableContent } from "@/components/admin/outreach-table-content";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
+import { assertPermissions } from "@/lib/access-controls";
 import { getCountries } from "@/lib/data/country";
 import { getOutreach } from "@/lib/data/outreach";
 import type { IntlLocale } from "@/lib/i18n/locales";
@@ -42,7 +43,8 @@ export default async function DashboardAdminOutreachPage(
 
 	const t = await getTranslations("DashboardAdminOutreachPage");
 
-	await assertAuthenticated(["admin"]);
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
 	return (
 		<MainContent className="container grid max-w-(--breakpoint-2xl)! content-start gap-y-8 py-8">

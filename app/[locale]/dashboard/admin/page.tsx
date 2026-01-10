@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { Link } from "@/components/link";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
+import { assertPermissions } from "@/lib/access-controls";
 import type { IntlLocale } from "@/lib/i18n/locales";
 import { createHref } from "@/lib/navigation/create-href";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
@@ -41,7 +42,8 @@ export default async function DashboardAdminPage(
 
 	const t = await getTranslations("DashboardAdminPage");
 
-	await assertAuthenticated(["admin"]);
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
 	return (
 		<MainContent className="container grid content-start gap-y-8 py-8">

@@ -5,6 +5,7 @@ import { type ReactNode, Suspense } from "react";
 import { AdminProjectsFundingsTableContent } from "@/components/admin/projects-fundings-table-content";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
+import { assertPermissions } from "@/lib/access-controls";
 import { getProjectsFundingLeverages } from "@/lib/data/project-funding-leverage";
 import type { IntlLocale } from "@/lib/i18n/locales";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
@@ -41,7 +42,8 @@ export default async function DashboardAdminProjectFundingsPage(
 
 	const t = await getTranslations("DashboardAdminProjectsFundingsPage");
 
-	await assertAuthenticated(["admin"]);
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
 	return (
 		<MainContent className="container grid max-w-(--breakpoint-2xl)! content-start gap-y-8 py-8">

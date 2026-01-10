@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { AdminCountryDashboardContent } from "@/components/admin/country-dashboard-content";
+import { assertPermissions } from "@/lib/access-controls";
 import { getCountries, getCountryAndRelationsByCode } from "@/lib/data/country";
 import { getInstitutions } from "@/lib/data/institution";
 import { getPersons } from "@/lib/data/person";
@@ -42,7 +43,8 @@ export default async function DashboardAdminCountryPage(
 	const { code, locale } = await params;
 	setRequestLocale(locale);
 
-	await assertAuthenticated(["admin"]);
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
 	const [country, countries, institutions, persons, roles, workingGroups] = await Promise.all([
 		getCountryAndRelationsByCode({ code: code }),

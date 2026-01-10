@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { InstitutionsTableContent } from "@/components/institutions-table-content";
+import { assertPermissions } from "@/lib/access-controls";
 import { getCountryByCode } from "@/lib/data/country";
 import { getInstitutionsByCountry } from "@/lib/data/institution";
 import type { IntlLocale } from "@/lib/i18n/locales";
@@ -25,19 +26,25 @@ export async function generateMetadata(
 
 	const { locale } = await params;
 
-	await assertAuthenticated(["admin", "national_coordinator"]);
+	const { user } = await assertAuthenticated();
 
 	const result = dashboardCountryPageParams.safeParse(await params);
 
-	if (!result.success) notFound();
+	if (!result.success) {
+		notFound();
+	}
 
 	const { code } = result.data;
 
 	const country = await getCountryByCode({ code });
 
-	if (country == null) notFound();
+	if (country == null) {
+		notFound();
+	}
 
 	const { name } = country;
+
+	await assertPermissions(user, { kind: "country", id: country.id, action: "edit-metadata" });
 
 	const _t = await getTranslations({ locale, namespace: "DashboardCountryInstitutionsPage" });
 
@@ -56,17 +63,23 @@ export default async function DashboardCountryInstitutionsPage(
 	const { locale } = await params;
 	setRequestLocale(locale);
 
-	await assertAuthenticated(["admin", "national_coordinator"]);
+	const { user } = await assertAuthenticated();
 
 	const result = dashboardCountryPageParams.safeParse(await params);
 
-	if (!result.success) notFound();
+	if (!result.success) {
+		notFound();
+	}
 
 	const { code } = result.data;
 
 	const country = await getCountryByCode({ code });
 
-	if (country == null) notFound();
+	if (country == null) {
+		notFound();
+	}
+
+	await assertPermissions(user, { kind: "country", id: country.id, action: "edit-metadata" });
 
 	const institutions = await getInstitutionsByCountry({ countryId: country.id });
 

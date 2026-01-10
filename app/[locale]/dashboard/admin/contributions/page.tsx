@@ -5,6 +5,7 @@ import { type ReactNode, Suspense } from "react";
 import { AdminContributionsTableContent } from "@/components/admin/contributions-table-content";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
+import { assertPermissions } from "@/lib/access-controls";
 import { getContributionsWithDetails } from "@/lib/data/contributions";
 import { getCountries } from "@/lib/data/country";
 import { getPersons } from "@/lib/data/person";
@@ -45,7 +46,8 @@ export default async function DashboardAdminContributionsPage(
 
 	const t = await getTranslations("DashboardAdminContributionsPage");
 
-	await assertAuthenticated(["admin"]);
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
 	return (
 		<MainContent className="container grid max-w-(--breakpoint-2xl)! content-start gap-y-8 py-8">

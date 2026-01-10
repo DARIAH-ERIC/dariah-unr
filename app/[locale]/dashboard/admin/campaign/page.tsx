@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 import { AdminCampaignFormContent } from "@/components/admin/campaign-form-content";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
+import { assertPermissions } from "@/lib/access-controls";
 import {
 	getEventSizeValues,
 	getOutreachTypeValues,
@@ -49,7 +50,8 @@ export default async function DashboardAdminCampaignPage(
 
 	const year = new Date().getUTCFullYear() - 1;
 
-	await assertAuthenticated(["admin"]);
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
 	const [_countries, previousCampaign] = await Promise.all([
 		getActiveMemberCountryIdsForYear({ year }),

@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { ContributionsTableContent } from "@/components/contributions-table-content";
+import { assertPermissions } from "@/lib/access-controls";
 import { getContributionsByCountry } from "@/lib/data/contributions";
 import { getCountryByCode } from "@/lib/data/country";
 import { getPersons } from "@/lib/data/person";
@@ -28,19 +29,24 @@ export async function generateMetadata(
 
 	const { locale } = await params;
 
-	await assertAuthenticated(["admin", "national_coordinator"]);
+	const { user } = await assertAuthenticated();
 
 	const result = dashboardCountryPageParams.safeParse(await params);
 
-	if (!result.success) notFound();
-
+	if (!result.success) {
+		notFound();
+	}
 	const { code } = result.data;
 
 	const country = await getCountryByCode({ code });
 
-	if (country == null) notFound();
+	if (country == null) {
+		notFound();
+	}
 
 	const { name } = country;
+
+	await assertPermissions(user, { kind: "country", id: country.id, action: "edit-metadata" });
 
 	const _t = await getTranslations({ locale, namespace: "DashboardCountryContributionsPage" });
 
@@ -59,17 +65,23 @@ export default async function DashboardCountryContributionsPage(
 	const { locale } = await params;
 	setRequestLocale(locale);
 
-	await assertAuthenticated(["admin", "national_coordinator"]);
+	const { user } = await assertAuthenticated();
 
 	const result = dashboardCountryPageParams.safeParse(await params);
 
-	if (!result.success) notFound();
+	if (!result.success) {
+		notFound();
+	}
 
 	const { code } = result.data;
 
 	const country = await getCountryByCode({ code });
 
-	if (country == null) notFound();
+	if (country == null) {
+		notFound();
+	}
+
+	await assertPermissions(user, { kind: "country", id: country.id, action: "edit-metadata" });
 
 	const [contributions, persons, workingGroups, roles] = await Promise.all([
 		getContributionsByCountry({ countryId: country.id }),

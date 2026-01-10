@@ -5,6 +5,7 @@ import { type ReactNode, Suspense } from "react";
 import { AdminWorkingGroupsTableContent } from "@/components/admin/working-groups-table-content";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
+import { assertPermissions } from "@/lib/access-controls";
 import { getContributions } from "@/lib/data/contributions";
 import { getPersons } from "@/lib/data/person";
 import { getWorkingGroups } from "@/lib/data/working-group";
@@ -43,7 +44,8 @@ export default async function DashboardAdminWorkingGroupsPage(
 
 	const t = await getTranslations("DashboardAdminWorkingGroupsPage");
 
-	await assertAuthenticated(["admin"]);
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
 	return (
 		<MainContent className="container grid max-w-(--breakpoint-2xl)! content-start gap-y-8 py-8">

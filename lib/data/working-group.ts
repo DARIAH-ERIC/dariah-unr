@@ -20,6 +20,33 @@ export function getWorkingGroups() {
 	});
 }
 
+interface GetWorkingGroupsByPersonIdParams {
+	personId: string;
+}
+
+export function getWorkingGroupsByPersonId(params: GetWorkingGroupsByPersonIdParams) {
+	const { personId } = params;
+
+	return db.contribution.findMany({
+		where: {
+			personId,
+			role: {
+				type: { in: ["wg_chair", "wg_member"] },
+			},
+			workingGroupId: { not: null },
+		},
+		select: {
+			id: true,
+			workingGroup: {
+				select: {
+					slug: true,
+					name: true,
+				},
+			},
+		},
+	});
+}
+
 interface GetActiveWorkingGroupIdsParams {
 	year: number;
 }

@@ -7,6 +7,7 @@ import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
 import { env } from "@/config/env.config";
+import { assertPermissions } from "@/lib/access-controls";
 import { calculateOperationalCost } from "@/lib/calculate-operational-cost";
 import {
 	getReportComments,
@@ -48,7 +49,7 @@ export async function updateReportStatusAction(
 ): Promise<FormState> {
 	const t = await getTranslations("actions.updateReport");
 
-	await assertAuthenticated(["admin", "national_coordinator"]);
+	const { user } = await assertAuthenticated();
 
 	const input = getFormData(formData);
 	const result = formSchema.safeParse(input);
@@ -64,6 +65,8 @@ export async function updateReportStatusAction(
 	}
 
 	const { comment, countryId, reportId } = result.data;
+
+	await assertPermissions(user, { kind: "country", id: countryId, action: "confirm" });
 
 	try {
 		const report = await getReportComments({ id: reportId });

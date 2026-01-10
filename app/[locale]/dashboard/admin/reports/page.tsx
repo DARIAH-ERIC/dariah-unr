@@ -5,6 +5,7 @@ import { type ReactNode, Suspense } from "react";
 import { AdminReportsTableContent } from "@/components/admin/reports-table-content";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
+import { assertPermissions } from "@/lib/access-controls";
 import { getCountries } from "@/lib/data/country";
 import { getReports } from "@/lib/data/report";
 import type { IntlLocale } from "@/lib/i18n/locales";
@@ -42,7 +43,8 @@ export default async function DashboardAdminReportsPage(
 
 	const t = await getTranslations("DashboardAdminReportsPage");
 
-	await assertAuthenticated(["admin"]);
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
 	return (
 		<MainContent className="container grid max-w-(--breakpoint-2xl)! content-start gap-y-8 py-8">

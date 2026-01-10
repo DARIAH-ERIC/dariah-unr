@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { AdminSshompIngestFormContent } from "@/components/admin/sshomp-ingest-form-content";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
+import { assertPermissions } from "@/lib/access-controls";
 import type { IntlLocale } from "@/lib/i18n/locales";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
@@ -40,7 +41,8 @@ export default async function DashboardAdminSshompIngestPage(
 
 	const t = await getTranslations("DashboardAdminSshompIngestPage");
 
-	await assertAuthenticated(["admin"]);
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
 	return (
 		<MainContent className="container grid max-w-(--breakpoint-2xl)! content-start gap-y-8 py-8">
