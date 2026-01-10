@@ -44,7 +44,15 @@ const formSchema = z.object({
 	/** Maps type to monetary value. */
 	roleTypeValues: z.object(
 		Object.fromEntries(
-			(["jrc_member", "national_coordinator", "wg_chair"] as Array<RoleType>).map((key) => {
+			(
+				[
+					"jrc_member",
+					"jrc_chair",
+					"national_coordinator",
+					"ncc_chair",
+					"wg_chair",
+				] as Array<RoleType>
+			).map((key) => {
 				return [key, z.coerce.number().min(0)];
 			}),
 		),

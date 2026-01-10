@@ -78,23 +78,6 @@ export async function getReportById(params: GetReportByIdParams) {
 	};
 }
 
-interface GetReportYearsByCountryCodeParams {
-	countryCode: Country["code"];
-}
-
-export function getReportYearsByCountryCode(params: GetReportYearsByCountryCodeParams) {
-	const { countryCode } = params;
-
-	return db.report.findMany({
-		where: {
-			country: {
-				code: countryCode,
-			},
-		},
-		select: { year: true },
-	});
-}
-
 interface GetReportByCountryCodeParams {
 	countryCode: Country["code"];
 	reportCampaignId: string;
@@ -109,6 +92,88 @@ export function getReportByCountryCode(params: GetReportByCountryCodeParams) {
 				code: countryCode,
 			},
 			reportCampaignId,
+		},
+	});
+}
+
+interface GetReportsByCountryIdParams {
+	countryId: Country["id"];
+}
+
+export function getReportsByCountryId(params: GetReportsByCountryIdParams) {
+	const { countryId } = params;
+
+	return db.report.findMany({
+		where: {
+			country: {
+				id: countryId,
+			},
+		},
+		select: {
+			reportCampaign: {
+				select: {
+					year: true,
+				},
+			},
+		},
+		orderBy: {
+			reportCampaign: {
+				year: "desc",
+			},
+		},
+	});
+}
+
+interface GetReportsByCountryCodeParams {
+	countryCode: Country["code"];
+}
+
+export function getReportsByCountryCode(params: GetReportsByCountryCodeParams) {
+	const { countryCode } = params;
+
+	return db.report.findMany({
+		where: {
+			country: {
+				code: countryCode,
+			},
+		},
+		select: {
+			reportCampaign: {
+				select: {
+					year: true,
+				},
+			},
+		},
+		orderBy: {
+			reportCampaign: {
+				year: "desc",
+			},
+		},
+	});
+}
+
+interface GetReportYearsByCountryCodeParams {
+	countryCode: Country["code"];
+}
+
+export function getReportYearsByCountryCode(params: GetReportYearsByCountryCodeParams) {
+	const { countryCode } = params;
+
+	return db.reportCampaign.findMany({
+		where: {
+			reports: {
+				some: {
+					country: {
+						code: countryCode,
+					},
+				},
+			},
+		},
+		select: {
+			year: true,
+		},
+		orderBy: {
+			year: "desc",
 		},
 	});
 }
