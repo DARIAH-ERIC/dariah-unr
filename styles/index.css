@@ -1,3 +1,4 @@
+/* stylelint-disable no-duplicate-selectors */
 /* stylelint-disable color-no-hex */
 /* stylelint-disable custom-property-empty-line-before */
 
@@ -158,12 +159,13 @@
 		color-scheme: dark;
 	}
 
-	:root, [data-ui-color-scheme="light"]: {
+	:root,
+	[data-ui-color-scheme="light"] {
 		background-color: var(--color-neutral-0);
 		color: var(--color-neutral-600);
 	}
 
-	[data-ui-color-scheme="dark"]: {
+	[data-ui-color-scheme="dark"] {
 		background-color: var(--color-neutral-900);
 		color: var(--color-neutral-400);
 	}

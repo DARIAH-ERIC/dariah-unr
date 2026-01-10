@@ -100,10 +100,11 @@ model EventReport {
   id String @id @default(uuid()) @db.Uuid
 
   dariahCommissionedEvent String? @map(name: "dariah_commissioned_event")
-  largeMeetings           Int?    @map(name: "large_meetings")
+  largeMeetings           Int?    @map(name: "very_large_meetings")
   mediumMeetings          Int?    @map(name: "medium_meetings")
   reusableOutcomes        String? @map(name: "reusable_outcomes")
   smallMeetings           Int?    @map(name: "small_meetings")
+  veryLargeMeetings       Int?    @map(name: "large_meetings")
 
   reportId String @unique @map(name: "report_id") @db.Uuid
 
@@ -348,6 +349,7 @@ enum RoleType {
   national_coordinator_deputy
   national_representative
   national_representative_deputy
+  jrc_chair
   jrc_member
   scientific_board_member
   smt_member
@@ -355,6 +357,7 @@ enum RoleType {
   wg_member
   national_consortium_contact
   cooperating_partner_contact
+  ncc_chair
 }
 
 model Role {
@@ -602,6 +605,7 @@ enum EventSize {
   large
   medium
   small
+  very_large
 }
 
 model EventSizeValue {

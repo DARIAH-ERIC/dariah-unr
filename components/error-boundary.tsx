@@ -67,9 +67,9 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 		if (this.state.status === "error") {
 			return (
 				// eslint-disable-next-line @typescript-eslint/unbound-method
-				<ErrorBoundaryContext.Provider value={{ error: this.state.error, reset: this.reset }}>
+				<ErrorBoundaryContext value={{ error: this.state.error, reset: this.reset }}>
 					{this.props.fallback}
-				</ErrorBoundaryContext.Provider>
+				</ErrorBoundaryContext>
 			);
 		}
 

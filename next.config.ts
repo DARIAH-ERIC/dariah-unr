@@ -1,23 +1,14 @@
-/** @typedef {import('next').NextConfig} NextConfig */
-
 import createBundleAnalyzerPlugin from "@next/bundle-analyzer";
 import createMdxPlugin from "@next/mdx";
 import localesPlugin from "@react-aria/optimize-locales-plugin";
 import { withSentryConfig } from "@sentry/nextjs";
+import type { NextConfig as Config } from "next";
 import createI18nPlugin from "next-intl/plugin";
 
 import { env } from "./config/env.config.js";
 import { config as mdxConfig } from "./config/mdx.config.js";
 
-/** @type {NextConfig} */
-const config = {
-	eslint: {
-		dirs: [process.cwd()],
-		ignoreDuringBuilds: true,
-	},
-	experimental: {
-		taint: true,
-	},
+const config: Config = {
 	logging: {
 		fetches: {
 			fullUrl: true,
@@ -26,8 +17,7 @@ const config = {
 	output: env.BUILD_MODE,
 	pageExtensions: ["ts", "tsx", "md", "mdx"],
 	redirects() {
-		/** @type {Awaited<ReturnType<NonNullable<NextConfig["redirects"]>>>} */
-		const redirects = [
+		const redirects: Awaited<ReturnType<NonNullable<Config["redirects"]>>> = [
 			{
 				source: "/admin",
 				destination: "/keystatic",
@@ -54,8 +44,7 @@ const config = {
 	},
 };
 
-/** @type {Array<(config: NextConfig) => NextConfig>} */
-const plugins = [
+const plugins: Array<(config: Config) => Config> = [
 	createBundleAnalyzerPlugin({ enabled: env.BUNDLE_ANALYZER === "enabled" }),
 	createI18nPlugin({
 		experimental: {
@@ -70,18 +59,22 @@ const plugins = [
 	}),
 	function createSentryPlugin(config) {
 		return withSentryConfig(config, {
-			disableLogger: true,
 			org: env.NEXT_PUBLIC_SENTRY_ORG,
 			project: env.NEXT_PUBLIC_SENTRY_PROJECT,
-			reactComponentAnnotation: {
-				enabled: true,
-			},
 			silent: env.CI !== true,
 			/**
 			 * Uncomment to route browser requests to sentry through a next.js rewrite to circumvent
 			 * ad-blockers.
 			 */
 			// tunnelRoute: true,
+			webpack: {
+				reactComponentAnnotation: {
+					enabled: true,
+				},
+				treeshake: {
+					removeDebugLogging: true,
+				},
+			},
 			widenClientFileUpload: true,
 		});
 	},

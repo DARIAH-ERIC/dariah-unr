@@ -93,8 +93,7 @@ export const selectValueStyles = variants({
 export type SelectValueStyles = VariantProps<typeof selectValueStyles>;
 
 export interface SelectValueProps<T extends object>
-	extends AriaSelectValueProps<T>,
-		SelectValueStyles {}
+	extends AriaSelectValueProps<T>, SelectValueStyles {}
 
 export function SelectValue<T extends object>(props: SelectValueProps<T>) {
 	const { children, className, ...rest } = props;
@@ -122,7 +121,7 @@ export function SelectClearButton(props: SelectClearButtonProps) {
 		<AriaButton
 			className={composeRenderProps(className, (className) => {
 				return cn(
-					"inline-grid aspect-square cursor-default place-items-center rounded-md border border-neutral-950/10 bg-neutral-0 p-1.5 text-neutral-400 shadow-xs transition  dark:border-neutral-0/10 dark:bg-neutral-0/5 dark:text-neutral-600 dark:shadow-none ",
+					"inline-grid aspect-square cursor-default place-items-center rounded-md border border-neutral-950/10 bg-neutral-0 p-1.5 text-neutral-400 shadow-xs transition dark:border-neutral-0/10 dark:bg-neutral-0/5 dark:text-neutral-600 dark:shadow-none",
 					"hover:border-neutral-950/20 hover:text-neutral-500 dark:hover:border-neutral-0/20 dark:hover:text-neutral-500",
 					"outline-0 outline-neutral-950 outline-solid focus:outline-1 focus-visible:outline-2 dark:outline-neutral-0 forced-colors:outline-[Highlight]",
 					className,
@@ -177,8 +176,7 @@ export const selectListBoxStyles = variants({
 export type SelectListBoxStyles = VariantProps<typeof selectListBoxStyles>;
 
 export interface SelectListBoxProps<T extends object>
-	extends AriaSelectListBoxProps<T>,
-		SelectListBoxStyles {}
+	extends AriaSelectListBoxProps<T>, SelectListBoxStyles {}
 
 export function SelectListBox<T extends object>(props: SelectListBoxProps<T>) {
 	const { children, className, ...rest } = props;
@@ -208,8 +206,7 @@ export const selectListBoxItemStyles = variants({
 export type SelectListBoxItemStyles = VariantProps<typeof selectListBoxItemStyles>;
 
 export interface SelectListBoxItemProps<T extends object>
-	extends AriaSelectListBoxItemProps<T>,
-		SelectListBoxItemStyles {
+	extends AriaSelectListBoxItemProps<T>, SelectListBoxItemStyles {
 	/** Require text value because we add a checkmark icon. */
 	textValue: NonNullable<AriaSelectListBoxItemProps<T>["textValue"]>;
 }

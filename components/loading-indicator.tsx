@@ -6,7 +6,8 @@ import { cn } from "@/lib/styles";
 import { useLabels } from "@/lib/use-labels";
 
 interface LoadingIndicatorProps
-	extends AriaLabelingProps,
+	extends
+		AriaLabelingProps,
 		DOMProps,
 		Pick<ComponentPropsWithoutRef<"svg">, "aria-hidden" | "className"> {}
 

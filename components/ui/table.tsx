@@ -32,7 +32,7 @@ export { TableBody };
 
 export function Table(props: TableProps) {
 	return (
-		<ResizableTableContainer className="relative scroll-pt-[2.281rem] overflow-auto rounded-lg border border-neutral-200 dark:border-neutral-600 dark:border-neutral-800">
+		<ResizableTableContainer className="relative scroll-pt-[2.281rem] overflow-auto rounded-lg border border-neutral-200 dark:border-neutral-800">
 			<AriaTable {...props} className="border-separate border-spacing-0" />
 		</ResizableTableContainer>
 	);
@@ -89,7 +89,7 @@ export function TableHeader<T extends object>(props: TableHeaderProps<T>) {
 		<AriaTableHeader
 			{...props}
 			className={cn(
-				"sticky top-0 z-10 rounded-t-lg border-b bg-neutral-100/60 backdrop-blur-md supports-[-moz-appearance:none]:bg-neutral-100 dark:border-b-neutral-700 dark:bg-neutral-700/60 dark:supports-[-moz-appearance:none]:bg-neutral-700 forced-colors:bg-[Canvas]",
+				"sticky top-0 z-10 rounded-t-lg border-b bg-neutral-100/60 backdrop-blur-md dark:border-b-neutral-700 dark:bg-neutral-700/60 dark:supports-[-moz-appearance:none]:bg-neutral-700 forced-colors:bg-[Canvas] supports-[-moz-appearance:none]:bg-neutral-100",
 				props.className,
 			)}
 		>

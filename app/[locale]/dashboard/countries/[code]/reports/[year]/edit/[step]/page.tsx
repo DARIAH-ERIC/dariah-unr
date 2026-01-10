@@ -23,8 +23,6 @@ import { ServiceReportsForm } from "@/components/forms/service-reports-form";
 import { SoftwareForm } from "@/components/forms/software-form";
 import { Link } from "@/components/link";
 import { LoadingIndicator } from "@/components/loading-indicator";
-import { MainContent } from "@/components/main-content";
-import { PageTitle } from "@/components/page-title";
 import { getReportCampaignByYear } from "@/lib/data/campaign";
 import { getCountryByCode } from "@/lib/data/country";
 import { getReportByCountryCode, getReportStatusByCountryCode } from "@/lib/data/report";
@@ -84,11 +82,8 @@ export default async function DashboardCountryReportEditStepPage(
 	const steps = dashboardCountryReportSteps;
 
 	return (
-		<MainContent className="container grid content-start gap-8 py-8">
-			<PageTitle className="print:hidden">{t("title")}</PageTitle>
-			<PageTitle className="hidden print:block">
-				{t("print-title", { year: String(year) })}
-			</PageTitle>
+		<section className="grid content-start gap-8">
+			<h2 className="hidden print:block">{t("print-title", { year: String(year) })}</h2>
 			<DashboardCountryReportNavigation
 				className="print:hidden"
 				code={code}
@@ -96,12 +91,11 @@ export default async function DashboardCountryReportEditStepPage(
 				year={year}
 			/>
 			<DashboardCountryReportEditStepPageContent code={code} step={step} user={user} year={year} />
-		</MainContent>
+		</section>
 	);
 }
 
-interface DashboardCountryReportEditStepPageContentProps
-	extends DashboardCountryReportEditStepPageParams {
+interface DashboardCountryReportEditStepPageContentProps extends DashboardCountryReportEditStepPageParams {
 	user: User;
 }
 
@@ -620,7 +614,7 @@ function Navigation(props: NavigationProps): ReactNode {
 				<AppLink
 					className="mr-auto gap-x-2 font-medium"
 					href={createHref({
-						pathname: `/dashboard/reports/${String(year)}/countries/${code}/edit/${previous}`,
+						pathname: `/dashboard/countries/${code}/reports/${String(year)}/edit/${previous}`,
 					})}
 				>
 					<ChevronLeftIcon aria-hidden={true} className="size-4 shrink-0" />
@@ -631,7 +625,7 @@ function Navigation(props: NavigationProps): ReactNode {
 				<AppLink
 					className="ml-auto gap-x-2 font-medium"
 					href={createHref({
-						pathname: `/dashboard/reports/${String(year)}/countries/${code}/edit/${next}`,
+						pathname: `/dashboard/countries/${code}/reports/${String(year)}/edit/${next}`,
 					})}
 				>
 					{t("next")}
@@ -694,9 +688,9 @@ async function DashboardCountryReportNavigation(
 					return (
 						<li key={step}>
 							<AppNavLink
-								className="ml-auto gap-x-2 rounded-b-none border-transparent text-sm whitespace-nowrap aria-[current]:border-b-2 aria-[current]:border-current lg:pb-4"
+								className="ml-auto gap-x-2 rounded-b-none border-transparent text-sm whitespace-nowrap lg:pb-4 aria-[current]:border-b-2 aria-[current]:border-current"
 								href={createHref({
-									pathname: `/dashboard/reports/${String(year)}/countries/${code}/edit/${step}`,
+									pathname: `/dashboard/countries/${code}/reports/${String(year)}/edit/${step}`,
 								})}
 							>
 								{t(`links.${step}`)}

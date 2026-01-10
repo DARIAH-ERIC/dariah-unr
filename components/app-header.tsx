@@ -1,6 +1,5 @@
 import { MenuIcon } from "lucide-react";
-import { useTranslations } from "next-intl";
-import type { ReactNode } from "react";
+import { getTranslations } from "next-intl/server";
 
 import { AppMobileNavLink } from "@/components/app-mobile-nav-link";
 import { AppNavLink } from "@/components/app-nav-link";
@@ -12,9 +11,13 @@ import { Logo } from "@/components/logo";
 import { Drawer, DrawerTrigger } from "@/components/ui/blocks/drawer";
 import { IconButton } from "@/components/ui/icon-button";
 import { createHref } from "@/lib/navigation/create-href";
+import { getDashboardPath } from "@/lib/navigation/get-dashboard-path";
+import { getCurrentSession } from "@/lib/server/auth/get-current-session";
 
-export function AppHeader(): ReactNode {
-	const t = useTranslations("AppHeader");
+export async function AppHeader() {
+	const { user } = await getCurrentSession();
+	const t = await getTranslations("AppHeader");
+	const dashboardPath = await getDashboardPath(user);
 
 	const links = {
 		home: {
@@ -22,7 +25,7 @@ export function AppHeader(): ReactNode {
 			label: t("links.home"),
 		},
 		dashboard: {
-			href: createHref({ pathname: "/dashboard" }),
+			href: createHref({ pathname: dashboardPath }),
 			label: t("links.dashboard"),
 		},
 		documentation: {
@@ -42,7 +45,7 @@ export function AppHeader(): ReactNode {
 									<AppNavLink href={link.href}>
 										{id === "home" ? (
 											<div className="inline-flex items-center gap-2.5">
-												<Logo className="size-6 shrink-0 " />
+												<Logo className="size-6 shrink-0" />
 												<span className="sr-only sm:not-sr-only">{link.label}</span>
 											</div>
 										) : (

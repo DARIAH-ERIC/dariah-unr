@@ -124,7 +124,7 @@ function TableOfContentsLevel(props: Readonly<TableOfContentsLevelProps>) {
 					<li key={index} className={spacing}>
 						{heading.id !== undefined ? (
 							<a
-								className="relative flex rounded underline decoration-dotted transition hover:decoration-solid focus:outline-none focus-visible:ring"
+								className="relative flex rounded-sm underline decoration-dotted transition hover:decoration-solid focus:outline-none focus-visible:ring"
 								href={`#${heading.id}`}
 							>
 								{heading.value}

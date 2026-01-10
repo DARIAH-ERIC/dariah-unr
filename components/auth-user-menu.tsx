@@ -33,7 +33,10 @@ export function AuthUserMenu(props: AuthUserMenuProps) {
 				router.push("/dashboard/admin");
 				break;
 			}
-
+			case "user-dashboard": {
+				router.push("/dashboard");
+				break;
+			}
 			case "sign-out": {
 				await signOutAction();
 				break;
@@ -54,7 +57,9 @@ export function AuthUserMenu(props: AuthUserMenuProps) {
 				</Header>
 				{isAdminUser ? (
 					<DropdownMenuItem id="admin-dashboard">{adminDashboardLabel}</DropdownMenuItem>
-				) : null}
+				) : (
+					<DropdownMenuItem id="user-dashboard">Dashboard</DropdownMenuItem>
+				)}
 				<DropdownMenuItem id="sign-out">{signOutLabel}</DropdownMenuItem>
 			</DropdownMenu>
 		</DropdownMenuTrigger>

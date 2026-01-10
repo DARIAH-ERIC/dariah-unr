@@ -18,6 +18,9 @@ export function getInstitutionsByCountry(params: GetPartnerInstitutionsByCountry
 			},
 			endDate: null,
 		},
+		include: {
+			countries: true,
+		},
 		orderBy: {
 			name: "asc",
 		},

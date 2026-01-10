@@ -54,7 +54,7 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 	return (
 		<Form
 			action={formAction}
-			className="grid gap-y-6"
+			className="grid gap-y-8"
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
 			<input name="year" type="hidden" value={year} />
@@ -93,7 +93,7 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 				<h2 className="text-lg font-bold" id={operationalCostThresholdsSectionId}>
 					Operational cost thresholds
 				</h2>
-				<div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
+				<div className="grid grid-cols-[repeat(auto-fit,minmax(min(12rem,100%),1fr))] gap-4">
 					{countries.map((country) => {
 						return (
 							<NumberInputField
@@ -121,7 +121,7 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 
 				<div role="group">
 					<h3>Event size values</h3>
-					<div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
+					<div className="grid grid-cols-[repeat(auto-fit,minmax(min(12rem,100%),1fr))] gap-4">
 						{Object.values(EventSize).map((eventSize) => {
 							return (
 								<NumberInputField
@@ -140,7 +140,7 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 
 				<div role="group">
 					<h3>Outreach type values</h3>
-					<div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
+					<div className="grid grid-cols-[repeat(auto-fit,minmax(min(12rem,100%),1fr))] gap-4">
 						{Object.values(OutreachType).map((outreachType) => {
 							return (
 								<NumberInputField
@@ -159,28 +159,34 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 
 				<div role="group">
 					<h3>Role type values</h3>
-					<div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
-						{(["jrc_member", "national_coordinator", "wg_chair"] as Array<RoleType>).map(
-							(roleType) => {
-								return (
-									<NumberInputField
-										key={roleType}
-										defaultValue={previousRoleTypeValues?.[roleType].annualValue ?? 0}
-										formatOptions={{ style: "currency", currency: "EUR" }}
-										isRequired={true}
-										label={roleType}
-										minValue={0}
-										name={`roleTypeValues.${roleType}`}
-									/>
-								);
-							},
-						)}
+					<div className="grid grid-cols-[repeat(auto-fit,minmax(min(12rem,100%),1fr))] gap-4">
+						{(
+							[
+								"jrc_member",
+								"jrc_chair",
+								"national_coordinator",
+								"ncc_chair",
+								"wg_chair",
+							] as Array<RoleType>
+						).map((roleType) => {
+							return (
+								<NumberInputField
+									key={roleType}
+									defaultValue={previousRoleTypeValues?.[roleType].annualValue ?? 0}
+									formatOptions={{ style: "currency", currency: "EUR" }}
+									isRequired={true}
+									label={roleType}
+									minValue={0}
+									name={`roleTypeValues.${roleType}`}
+								/>
+							);
+						})}
 					</div>
 				</div>
 
 				<div role="group">
 					<h3>Service size values</h3>
-					<div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
+					<div className="grid grid-cols-[repeat(auto-fit,minmax(min(12rem,100%),1fr))] gap-4">
 						{Object.values(ServiceSize).map((serviceSizeType) => {
 							return (
 								<NumberInputField

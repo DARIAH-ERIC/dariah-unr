@@ -29,6 +29,7 @@ export interface CalculateOperationalCostParamsResult {
 			small: number;
 			medium: number;
 			large: number;
+			veryLarge: number;
 			dariah: number;
 		};
 		services: {
@@ -82,6 +83,7 @@ export async function calculateOperationalCost(
 		return contribution.role.id;
 	});
 
+	const veryLargeMeetingsCount = report.eventReport?.veryLargeMeetings ?? 0;
 	const largeMeetingsCount = report.eventReport?.largeMeetings ?? 0;
 	const mediumMeetingsCount = report.eventReport?.mediumMeetings ?? 0;
 	const smallMeetingsCount = report.eventReport?.smallMeetings ?? 0;
@@ -118,9 +120,14 @@ export async function calculateOperationalCost(
 	const ncRole = roleTypeValuesByType.get("national_coordinator")!;
 	const jrcRole = roleTypeValuesByType.get("jrc_member")!;
 	const wgRole = roleTypeValuesByType.get("wg_chair")!;
+	const jrcChairRole = roleTypeValuesByType.get("jrc_chair")!;
+	const nccRole = roleTypeValuesByType.get("ncc_chair")!;
 
 	const ncCost = (contributionsByRole.get(ncRole.id)?.length ?? 0) * ncRole.annualValue;
 	const jrcCost = (contributionsByRole.get(jrcRole.id)?.length ?? 0) * jrcRole.annualValue;
+	const jrcChairCost =
+		(contributionsByRole.get(jrcChairRole.id)?.length ?? 0) * jrcChairRole.annualValue;
+	const nccCost = (contributionsByRole.get(nccRole.id)?.length ?? 0) * nccRole.annualValue;
 	const wgCost = (contributionsByRole.get(wgRole.id)?.length ?? 0) * wgRole.annualValue;
 
 	const eventsSmallCost =
@@ -129,6 +136,8 @@ export async function calculateOperationalCost(
 		(eventSizeValuesByType.get("medium")?.annualValue ?? 0) * mediumMeetingsCount;
 	const eventsLargeCost =
 		(eventSizeValuesByType.get("large")?.annualValue ?? 0) * largeMeetingsCount;
+	const eventsVeryLargeCost =
+		(eventSizeValuesByType.get("very_large")?.annualValue ?? 0) * veryLargeMeetingsCount;
 	const dariahEventCost =
 		(eventSizeValuesByType.get("dariah_commissioned")?.annualValue ?? 0) * dariahEventsCount;
 
@@ -152,10 +161,13 @@ export async function calculateOperationalCost(
 	const operationalCost =
 		ncCost +
 		jrcCost +
+		jrcChairCost +
+		nccCost +
 		wgCost +
 		eventsSmallCost +
 		eventsMediumCost +
 		eventsLargeCost +
+		eventsVeryLargeCost +
 		dariahEventCost +
 		websiteCost +
 		socialMediaCost +
@@ -172,6 +184,7 @@ export async function calculateOperationalCost(
 				small: smallMeetingsCount,
 				medium: mediumMeetingsCount,
 				large: largeMeetingsCount,
+				veryLarge: veryLargeMeetingsCount,
 				dariah: dariahEventsCount,
 			},
 			services: {

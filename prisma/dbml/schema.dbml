@@ -57,6 +57,7 @@ Table event_reports {
   mediumMeetings Int
   reusableOutcomes String
   smallMeetings Int
+  veryLargeMeetings Int
   reportId String [unique, not null]
   report reports [not null]
   createdAt DateTime [default: `now()`, not null]
@@ -512,6 +513,7 @@ Enum RoleType {
   national_coordinator_deputy
   national_representative
   national_representative_deputy
+  jrc_chair
   jrc_member
   scientific_board_member
   smt_member
@@ -519,6 +521,7 @@ Enum RoleType {
   wg_member
   national_consortium_contact
   cooperating_partner_contact
+  ncc_chair
 }
 
 Enum ServiceAudience {
@@ -589,6 +592,7 @@ Enum EventSize {
   large
   medium
   small
+  very_large
 }
 
 Enum ServiceSize {

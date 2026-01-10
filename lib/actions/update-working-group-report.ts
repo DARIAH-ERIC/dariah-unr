@@ -1,26 +1,18 @@
 "use server";
 
 import { log } from "@acdh-oeaw/lib";
-import { CountryType } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
-import { updateCountry } from "@/lib/data/country";
+import { updateWorkingGroupReport } from "@/lib/data/working-group-report";
 import { getFormData } from "@/lib/get-form-data";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 const formSchema = z.object({
-	id: z.string(),
-	name: z.string(),
-	code: z.string(),
-	consortiumName: z.string().optional(),
-	description: z.string().optional(),
-	logo: z.string().optional(),
-	marketplaceId: z.coerce.number().int().positive().optional(),
-	type: z.enum(Object.values(CountryType) as [CountryType, ...Array<CountryType>]).optional(),
-	startDate: z.coerce.date().optional(),
-	endDate: z.coerce.date().optional(),
+	workingGroupReportId: z.string(),
+	facultativeQuestions: z.string(),
+	narrativeReport: z.string(),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -40,13 +32,13 @@ interface FormSuccess extends FormReturnValue {
 
 type FormState = FormErrors | FormSuccess;
 
-export async function updateCountryAction(
+export async function updateWorkingGroupReportAction(
 	previousFormState: FormState | undefined,
 	formData: FormData,
 ): Promise<FormState> {
-	const t = await getTranslations("actions.admin.updateCountry");
+	const t = await getTranslations("actions.updateWorkingGroupReport");
 
-	await assertAuthenticated(["admin"]);
+	await assertAuthenticated();
 
 	const input = getFormData(formData);
 	const result = formSchema.safeParse(input);
@@ -61,40 +53,21 @@ export async function updateCountryAction(
 		};
 	}
 
-	const {
-		id,
-		code,
-		consortiumName,
-		logo,
-		marketplaceId,
-		name,
-		description,
-		endDate,
-		startDate,
-		type,
-	} = result.data;
-
 	try {
-		await updateCountry({
-			id,
-			name,
-			code,
-			consortiumName,
-			logo,
-			marketplaceId,
-			type,
-			startDate,
-			endDate,
-			description,
+		const { workingGroupReportId, facultativeQuestions, narrativeReport } = result.data;
+
+		await updateWorkingGroupReport({
+			facultativeQuestions,
+			narrativeReport,
+			workingGroupReportId,
 		});
 
-		revalidatePath("/[locale]/dashboard/admin/countries", "page");
-		revalidatePath(`/[locale]/dashboard/admin/countries/${code}`, "page");
+		revalidatePath("/[locale]/dashboard/working-groups/[slug]/reports/[year]/edit", "page");
 
 		return {
 			status: "success" as const,
-			message: t("success"),
 			timestamp: Date.now(),
+			message: t("success"),
 		};
 	} catch (error) {
 		log.error(error);

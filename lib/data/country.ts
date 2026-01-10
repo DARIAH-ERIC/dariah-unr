@@ -122,11 +122,11 @@ export function getActiveMemberCountryIdsForYear(_params: GetActiveMemberCountry
 	});
 }
 
-interface GetCountyIdByCountyCodeParams {
+interface GetCountryIdByCountryCodeParams {
 	id: string;
 }
 
-export function getCountyCodeByCountyId(params: GetCountyIdByCountyCodeParams) {
+export function getCountryCodeByCountryId(params: GetCountryIdByCountryCodeParams) {
 	const { id } = params;
 
 	return db.country.findUnique({

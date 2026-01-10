@@ -4,7 +4,7 @@
 # @see https://sharp.pixelplumbing.com/install#linux-memory-allocator
 
 # build
-FROM node:22-alpine AS build
+FROM node:24-alpine AS build
 
 ENV PNPM_HOME="/app/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
@@ -18,6 +18,7 @@ USER node
 
 COPY --chown=node:node .npmrc package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
+ENV CI=true
 ENV SKIP_INSTALL_SIMPLE_GIT_HOOKS=1
 
 RUN pnpm fetch
@@ -41,7 +42,7 @@ ARG NEXT_PUBLIC_SENTRY_PROJECT
 # disable validation for runtime environment variables
 ENV ENV_VALIDATION=public
 
-RUN pnpm install --frozen-lockfile --offline
+RUN pnpm install --frozen-lockfile --prefer-offline
 
 ENV BUILD_MODE=standalone
 ENV NODE_ENV=production
@@ -49,54 +50,16 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 # mount secrets which need to be available at build time
 # RUN --mount=type=secret,id=MY_SECRET,uid=1000 MY_SECRET=$(cat /run/secrets/MY_SECRET) pnpm run build
-RUN --mount=type=secret,id=AUTH_SECRET,uid=1000 \
-		--mount=type=secret,id=EMAIL_CONTACT_ADDRESS,uid=1000 \
-		--mount=type=secret,id=EMAIL_SMTP_PORT,uid=1000 \
-		--mount=type=secret,id=EMAIL_SMTP_SERVER,uid=1000 \
-		--mount=type=secret,id=DATABASE_DIRECT_URL,uid=1000 \
-		--mount=type=secret,id=DATABASE_URL,uid=1000 \
-		--mount=type=secret,id=IMGPROXY_BASE_URL,uid=1000 \
-		--mount=type=secret,id=IMGPROXY_KEY,uid=1000 \
-		--mount=type=secret,id=IMGPROXY_SALT,uid=1000 \
-		--mount=type=secret,id=KEYSTATIC_GITHUB_CLIENT_ID,uid=1000 \
+RUN --mount=type=secret,id=KEYSTATIC_GITHUB_CLIENT_ID,uid=1000 \
 		--mount=type=secret,id=KEYSTATIC_GITHUB_CLIENT_SECRET,uid=1000 \
 		--mount=type=secret,id=KEYSTATIC_SECRET,uid=1000 \
-		--mount=type=secret,id=S3_ACCESS_KEY,uid=1000 \
-		--mount=type=secret,id=S3_SECRET_KEY,uid=1000 \
-		--mount=type=secret,id=S3_BUCKET,uid=1000 \
-		--mount=type=secret,id=S3_HOST,uid=1000 \
-		--mount=type=secret,id=S3_PORT,uid=1000 \
-		--mount=type=secret,id=S3_PROTOCOL,uid=1000 \
-		--mount=type=secret,id=SSHOC_MARKETPLACE_API_BASE_URL,uid=1000 \
-		--mount=type=secret,id=SSHOC_MARKETPLACE_BASE_URL,uid=1000 \
-		--mount=type=secret,id=SSHOC_MARKETPLACE_PASSWORD,uid=1000 \
-		--mount=type=secret,id=SSHOC_MARKETPLACE_USER_NAME,uid=1000 \
-			AUTH_SECRET=$(cat /run/secrets/AUTH_SECRET) \
-			EMAIL_CONTACT_ADDRESS=$(cat /run/secrets/EMAIL_CONTACT_ADDRESS) \
-			EMAIL_SMTP_PORT=$(cat /run/secrets/EMAIL_SMTP_PORT) \
-			EMAIL_SMTP_SERVER=$(cat /run/secrets/EMAIL_SMTP_SERVER) \
-			DATABASE_DIRECT_URL=$(cat /run/secrets/DATABASE_DIRECT_URL) \
-			DATABASE_URL=$(cat /run/secrets/DATABASE_URL) \
-			IMGPROXY_BASE_URL=$(cat /run/secrets/IMGPROXY_BASE_URL) \
-			IMGPROXY_KEY=$(cat /run/secrets/IMGPROXY_KEY) \
-			IMGPROXY_SALT=$(cat /run/secrets/IMGPROXY_SALT) \
 			KEYSTATIC_GITHUB_CLIENT_ID=$(cat /run/secrets/KEYSTATIC_GITHUB_CLIENT_ID) \
 			KEYSTATIC_GITHUB_CLIENT_SECRET=$(cat /run/secrets/KEYSTATIC_GITHUB_CLIENT_SECRET) \
 			KEYSTATIC_SECRET=$(cat /run/secrets/KEYSTATIC_SECRET) \
-			S3_ACCESS_KEY=$(cat /run/secrets/S3_ACCESS_KEY) \
-			S3_SECRET_KEY=$(cat /run/secrets/S3_SECRET_KEY) \
-			S3_BUCKET=$(cat /run/secrets/S3_BUCKET) \
-			S3_HOST=$(cat /run/secrets/S3_HOST) \
-			S3_PORT=$(cat /run/secrets/S3_PORT) \
-			S3_PROTOCOL=$(cat /run/secrets/S3_PROTOCOL) \
-			SSHOC_MARKETPLACE_API_BASE_URL=$(cat /run/secrets/SSHOC_MARKETPLACE_API_BASE_URL) \
-			SSHOC_MARKETPLACE_BASE_URL=$(cat /run/secrets/SSHOC_MARKETPLACE_BASE_URL) \
-			SSHOC_MARKETPLACE_PASSWORD=$(cat /run/secrets/SSHOC_MARKETPLACE_PASSWORD) \
-			SSHOC_MARKETPLACE_USER_NAME=$(cat /run/secrets/SSHOC_MARKETPLACE_USER_NAME) \
 		pnpm run build
 
 # serve
-FROM node:22-alpine AS serve
+FROM node:24-alpine AS serve
 
 ENV PNPM_HOME="/app/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
@@ -112,12 +75,12 @@ COPY --chown=node:node ./entrypoint.sh ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh
 
 # Prisma CLI is used in entrypoint script to apply migrations.
-RUN pnpm add -g prisma@6
+RUN pnpm add -g prisma@6 --allow-build=@prisma/engines --allow-build=prisma
 
 COPY --chown=node:node ./prisma/schema.prisma ./prisma/schema.prisma
 COPY --chown=node:node ./prisma/migrations ./prisma/migrations
 
-COPY --from=build --chown=node:node /app/next.config.js ./
+COPY --from=build --chown=node:node /app/next.config.ts ./
 COPY --from=build --chown=node:node /app/public ./public
 COPY --from=build --chown=node:node /app/content ./content
 COPY --from=build --chown=node:node /app/.next/standalone ./

@@ -3,11 +3,14 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 
+import { Link } from "@/components/link";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import { assertPermissions } from "@/lib/access-controls";
 import { getWorkingGroupById, getWorkingGroupIdFromSlug } from "@/lib/data/working-group";
+import { getWorkingGroupReportsByWorkingGroupId } from "@/lib/data/working-group-report";
 import type { IntlLocale } from "@/lib/i18n/locales";
+import { createHref } from "@/lib/navigation/create-href";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 interface DashboardWorkingGroupPageProps {
@@ -74,11 +77,30 @@ export default async function DashboardWorkingGroupPage(
 		notFound();
 	}
 
+	const reports = await getWorkingGroupReportsByWorkingGroupId({ workingGroupId: workingGroup.id });
+
 	return (
 		<MainContent className="container grid content-start gap-8 py-8">
 			<PageTitle>{t("title", { name: workingGroup.name })}</PageTitle>
 
-			<pre>{JSON.stringify(workingGroup, null, 2)}</pre>
+			<section className="grid gap-y-8">
+				<h2>Reports ({reports.length})</h2>
+				<ul role="list">
+					{reports.map((report) => {
+						return (
+							<li key={report.id}>
+								<Link
+									href={createHref({
+										pathname: `/dashboard/working-groups/${slug}/reports/${String(report.year)}`,
+									})}
+								>
+									Report for {report.year} (Status: {report.status})
+								</Link>
+							</li>
+						);
+					})}
+				</ul>
+			</section>
 		</MainContent>
 	);
 }

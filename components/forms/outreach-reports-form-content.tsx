@@ -41,8 +41,9 @@ import { updateOutreachReportsAction } from "@/lib/actions/update-outreach-repor
 import { createKey } from "@/lib/create-key";
 import type { ReportCommentsSchema } from "@/lib/schemas/report";
 
-interface OutreachReportWithKpis
-	extends Prisma.OutreachReportGetPayload<{ include: { kpis: true; outreach: true } }> {}
+interface OutreachReportWithKpis extends Prisma.OutreachReportGetPayload<{
+	include: { kpis: true; outreach: true };
+}> {}
 
 interface OutreachReportsFormContentProps {
 	comments: ReportCommentsSchema["outreach"];
