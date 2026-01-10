@@ -10,16 +10,13 @@
 	"scripts": {
 		"analyze": "BUNDLE_ANALYZER=\"enabled\" next build --experimental-next-config-strip-types --no-lint --webpack",
 		"build": "next build --experimental-next-config-strip-types --webpack",
-		"db:create-annual-values": "dotenv -c development -- tsx ./prisma/create-annual-values.ts",
-		"db:create-country-ids-from-sshomp": "dotenv -c development -- tsx ./prisma/create-country-ids-from-sshomp.ts",
-		"db:create-operational-cost-thresholds": "dotenv -c development -- tsx ./prisma/create-operational-cost-thresholds.ts",
-		"db:update-password": "dotenv -c development -- tsx ./prisma/update-password.ts",
-		"db:deploy": "dotenv -c development -- prisma migrate deploy",
-		"db:generate": "dotenv -c development -- prisma generate",
-		"db:migrate": "dotenv -c development -- prisma migrate dev",
+		"db:client:generate": "dotenv -c development -- prisma generate",
+		"db:migrations:apply": "dotenv -c development -- prisma migrate deploy",
+		"db:migrations:generate": "dotenv -c development -- prisma migrate dev",
+		"db:migrations:reset": "dotenv -c development -- prisma migrate reset --skip-seed",
 		"db:push": "dotenv -c development -- prisma db push --force-reset",
-		"db:reset": "dotenv -c development -- prisma migrate reset --skip-seed",
-		"db:ui": "dotenv -c development -- prisma studio",
+		"db:studio": "dotenv -c development -- prisma studio",
+		"db:update-password": "dotenv -c development -- tsx ./prisma/update-password.ts",
 		"dev": "next dev --experimental-next-config-strip-types --webpack",
 		"dev:db": "docker run -d -e POSTGRES_DB=dariah_unr -e POSTGRES_USER=dariah_unr -e POSTGRES_PASSWORD=dariah_unr --name dariah_unr -p 5432:5432 --rm postgres",
 		"format:check": "prettier . --cache --check",
@@ -31,7 +28,7 @@
 		"lint:styles:check": "stylelint \"./**/*.css\" --cache --ignore-path ./.gitignore",
 		"lint:styles:fix": "pnpm run lint:styles:check --fix",
 		"preinstall": "npx only-allow pnpm",
-		"prepare": "run-s setup types:prepare db:generate",
+		"prepare": "run-s setup types:prepare db:client:generate",
 		"setup": "is-in-ci || simple-git-hooks",
 		"start": "next start --experimental-next-config-strip-types",
 		"test:e2e": "dotenv -c test -- playwright test",
@@ -94,7 +91,6 @@
 		"zod": "^3.25.76"
 	},
 	"devDependencies": {
-		"@acdh-oeaw/commitlint-config": "^3.0.0",
 		"@acdh-oeaw/eslint-config": "^2.0.12",
 		"@acdh-oeaw/eslint-config-next": "^4.0.5",
 		"@acdh-oeaw/eslint-config-playwright": "^2.0.14",
@@ -103,7 +99,6 @@
 		"@acdh-oeaw/prettier-config": "^2.0.1",
 		"@acdh-oeaw/stylelint-config": "^2.3.2",
 		"@acdh-oeaw/tsconfig": "^1.5.1",
-		"@commitlint/cli": "^20.3.0",
 		"@faker-js/faker": "^10.2.0",
 		"@mdx-js/loader": "^3.1.1",
 		"@next/bundle-analyzer": "^16.1.1",
@@ -162,9 +157,6 @@
 			"not op_mini all"
 		]
 	},
-	"commitlint": {
-		"extends": "@acdh-oeaw/commitlint-config"
-	},
 	"lint-staged": {
 		"*.@(js|ts|tsx)": [
 			"eslint --fix",
@@ -183,7 +175,6 @@
 	},
 	"prettier": "@acdh-oeaw/prettier-config",
 	"simple-git-hooks": {
-		"commit-msg": "pnpm exec commitlint --edit",
 		"pre-commit": "pnpm exec lint-staged"
 	},
 	"stylelint": {

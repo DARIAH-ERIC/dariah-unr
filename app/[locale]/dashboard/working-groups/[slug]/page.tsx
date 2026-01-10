@@ -91,10 +91,10 @@ export default async function DashboardWorkingGroupPage(
 							<li key={report.id}>
 								<Link
 									href={createHref({
-										pathname: `/dashboard/working-groups/${slug}/reports/${String(report.year)}`,
+										pathname: `/dashboard/working-groups/${slug}/reports/${String(report.reportCampaign.year)}`,
 									})}
 								>
-									Report for {report.year} (Status: {report.status})
+									Report for {report.reportCampaign.year} (Status: {report.status})
 								</Link>
 							</li>
 						);

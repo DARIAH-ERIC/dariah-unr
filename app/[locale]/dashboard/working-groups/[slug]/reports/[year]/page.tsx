@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import { assertPermissions } from "@/lib/access-controls";
+import { getReportCampaignByYear } from "@/lib/data/campaign";
 import { getWorkingGroupById, getWorkingGroupIdFromSlug } from "@/lib/data/working-group";
 import { getWorkingGroupReport } from "@/lib/data/working-group-report";
 import type { IntlLocale } from "@/lib/i18n/locales";
@@ -45,9 +46,12 @@ export default async function DashboardWorkingGroupReportPage(
 		notFound();
 	}
 
+	const campaign = await getReportCampaignByYear({ year });
+	if (campaign == null) notFound();
+
 	const workingGroupReport = await getWorkingGroupReport({
 		workingGroupId: workingGroup.id,
-		year,
+		reportCampaignId: campaign.id,
 	});
 
 	if (workingGroupReport == null) {

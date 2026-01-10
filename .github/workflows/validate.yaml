@@ -24,6 +24,12 @@ jobs:
         node-version: [24.x]
         os: [ubuntu-24.04]
 
+    env:
+      ENV_VALIDATION: "public"
+      NEXT_PUBLIC_APP_BASE_URL: "http://localhost:3000"
+      NEXT_PUBLIC_MATOMO_BASE_URL: "${{ vars.NEXT_PUBLIC_MATOMO_BASE_URL }}"
+      NEXT_PUBLIC_REDMINE_ID: "${{ vars.SERVICE_ID }}"
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -40,9 +46,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # - name: Lint commit messages
-      #   uses: acdh-oeaw/commitlint-action@v2
-
       - name: Format
         run: pnpm run format:check
 
@@ -51,9 +54,6 @@ jobs:
 
       - name: Typecheck
         run: pnpm run types:check
-
-      # - name: Run unit tests
-      #   run: pnpm run test:unit
 
       - name: Get playwright version
         run: |
@@ -82,73 +82,11 @@ jobs:
 
       - name: Build app
         run: pnpm run build
-        env:
-          AUTH_SECRET: "${{ secrets.K8S_SECRET_AUTH_SECRET }}"
-          DATABASE_DIRECT_URL: "postgresql://dariah-unr:dariah-unr@localhost:5432/dariah-unr?schema=public"
-          DATABASE_TEST_USER_COUNTRY_CODE:
-            "${{ secrets.K8S_SECRET_DATABASE_TEST_USER_COUNTRY_CODE }}"
-          DATABASE_TEST_USER_EMAIL: "${{ secrets.K8S_SECRET_DATABASE_TEST_USER_EMAIL }}"
-          DATABASE_TEST_USER_NAME: "${{ secrets.K8S_SECRET_DATABASE_TEST_USER_NAME }}"
-          DATABASE_TEST_USER_PASSWORD: "${{ secrets.K8S_SECRET_DATABASE_TEST_USER_PASSWORD }}"
-          DATABASE_URL: "postgresql://dariah-unr:dariah-unr@localhost:5432/dariah-unr?schema=public"
-          EMAIL_CONTACT_ADDRESS: "${{ secrets.K8S_SECRET_TEST_EMAIL_CONTACT_ADDRESS }}"
-          EMAIL_PASSWORD: "${{ secrets.K8S_SECRET_TEST_EMAIL_PASSWORD }}"
-          EMAIL_SMTP_PORT: "${{ vars.K8S_SECRET_TEST_EMAIL_SMTP_PORT }}"
-          EMAIL_SMTP_SERVER: "${{ vars.K8S_SECRET_TEST_EMAIL_SMTP_SERVER }}"
-          EMAIL_USER_NAME: "${{ secrets.K8S_SECRET_TEST_EMAIL_USER_NAME }}"
-          ENV_VALIDATION: "public"
-          IMGPROXY_BASE_URL: "${{ vars.K8S_SECRET_IMGPROXY_BASE_URL }}"
-          IMGPROXY_KEY: "${{ secrets.K8S_SECRET_IMGPROXY_KEY }}"
-          IMGPROXY_SALT: "${{ secrets.K8S_SECRET_IMGPROXY_SALT }}"
-          NEXT_PUBLIC_APP_BASE_URL: "http://localhost:3000"
-          NEXT_PUBLIC_MATOMO_BASE_URL: "${{ vars.NEXT_PUBLIC_MATOMO_BASE_URL }}"
-          NEXT_PUBLIC_REDMINE_ID: "${{ vars.SERVICE_ID }}"
-          S3_ACCESS_KEY: "${{ secrets.K8S_SECRET_S3_ACCESS_KEY }}"
-          S3_SECRET_KEY: "${{ secrets.K8S_SECRET_S3_SECRET_KEY }}"
-          S3_BUCKET: "${{ vars.K8S_SECRET_S3_BUCKET }}"
-          S3_HOST: "${{ vars.K8S_SECRET_S3_HOST }}"
-          S3_PORT: "${{ vars.K8S_SECRET_S3_PORT }}"
-          S3_PROTOCOL: "${{ vars.K8S_SECRET_S3_PROTOCOL }}"
-          SSHOC_MARKETPLACE_API_BASE_URL: "${{ vars.K8S_SECRET_SSHOC_MARKETPLACE_API_BASE_URL }}"
-          SSHOC_MARKETPLACE_BASE_URL: "${{ vars.K8S_SECRET_SSHOC_MARKETPLACE_BASE_URL }}"
-          SSHOC_MARKETPLACE_PASSWORD: "${{ secrets.K8S_SECRET_SSHOC_MARKETPLACE_PASSWORD }}"
-          SSHOC_MARKETPLACE_USER_NAME: "${{ secrets.K8S_SECRET_SSHOC_MARKETPLACE_USER_NAME }}"
 
       - name: Run e2e tests
         run: pnpm run test:e2e
-        env:
-          AUTH_SECRET: "${{ secrets.K8S_SECRET_AUTH_SECRET }}"
-          DATABASE_DIRECT_URL: "postgresql://dariah-unr:dariah-unr@localhost:5432/dariah-unr?schema=public"
-          DATABASE_TEST_USER_COUNTRY_CODE:
-            "${{ secrets.K8S_SECRET_DATABASE_TEST_USER_COUNTRY_CODE }}"
-          DATABASE_TEST_USER_EMAIL: "${{ secrets.K8S_SECRET_DATABASE_TEST_USER_EMAIL }}"
-          DATABASE_TEST_USER_NAME: "${{ secrets.K8S_SECRET_DATABASE_TEST_USER_NAME }}"
-          DATABASE_TEST_USER_PASSWORD: "${{ secrets.K8S_SECRET_DATABASE_TEST_USER_PASSWORD }}"
-          DATABASE_URL: "postgresql://dariah-unr:dariah-unr@localhost:5432/dariah-unr?schema=public"
-          EMAIL_CONTACT_ADDRESS: "${{ secrets.K8S_SECRET_TEST_EMAIL_CONTACT_ADDRESS }}"
-          EMAIL_PASSWORD: "${{ secrets.K8S_SECRET_TEST_EMAIL_PASSWORD }}"
-          EMAIL_SMTP_PORT: "${{ vars.K8S_SECRET_TEST_EMAIL_SMTP_PORT }}"
-          EMAIL_SMTP_SERVER: "${{ vars.K8S_SECRET_TEST_EMAIL_SMTP_SERVER }}"
-          EMAIL_USER_NAME: "${{ secrets.K8S_SECRET_TEST_EMAIL_USER_NAME }}"
-          ENV_VALIDATION: "public"
-          IMGPROXY_BASE_URL: "${{ vars.K8S_SECRET_IMGPROXY_BASE_URL }}"
-          IMGPROXY_KEY: "${{ secrets.K8S_SECRET_IMGPROXY_KEY }}"
-          IMGPROXY_SALT: "${{ secrets.K8S_SECRET_IMGPROXY_SALT }}"
-          NEXT_PUBLIC_APP_BASE_URL: "http://localhost:3000"
-          NEXT_PUBLIC_MATOMO_BASE_URL: "${{ vars.NEXT_PUBLIC_MATOMO_BASE_URL }}"
-          NEXT_PUBLIC_REDMINE_ID: "${{ vars.SERVICE_ID }}"
-          S3_ACCESS_KEY: "${{ secrets.K8S_SECRET_S3_ACCESS_KEY }}"
-          S3_SECRET_KEY: "${{ secrets.K8S_SECRET_S3_SECRET_KEY }}"
-          S3_BUCKET: "${{ vars.K8S_SECRET_S3_BUCKET }}"
-          S3_HOST: "${{ vars.K8S_SECRET_S3_HOST }}"
-          S3_PORT: "${{ vars.K8S_SECRET_S3_PORT }}"
-          S3_PROTOCOL: "${{ vars.K8S_SECRET_S3_PROTOCOL }}"
-          SSHOC_MARKETPLACE_API_BASE_URL: "${{ vars.K8S_SECRET_SSHOC_MARKETPLACE_API_BASE_URL }}"
-          SSHOC_MARKETPLACE_BASE_URL: "${{ vars.K8S_SECRET_SSHOC_MARKETPLACE_BASE_URL }}"
-          SSHOC_MARKETPLACE_PASSWORD: "${{ secrets.K8S_SECRET_SSHOC_MARKETPLACE_PASSWORD }}"
-          SSHOC_MARKETPLACE_USER_NAME: "${{ secrets.K8S_SECRET_SSHOC_MARKETPLACE_USER_NAME }}"
 
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         if: always()
         with:
           name: playwright-report

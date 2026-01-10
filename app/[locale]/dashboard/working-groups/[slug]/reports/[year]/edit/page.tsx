@@ -6,6 +6,7 @@ import { WorkingGroupReportForm } from "@/components/forms/working-group-report-
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import { assertPermissions } from "@/lib/access-controls";
+import { getReportCampaignByYear } from "@/lib/data/campaign";
 import { getWorkingGroupById, getWorkingGroupIdFromSlug } from "@/lib/data/working-group";
 import { getWorkingGroupReport } from "@/lib/data/working-group-report";
 import type { IntlLocale } from "@/lib/i18n/locales";
@@ -33,6 +34,9 @@ export default async function DashboardWorkingGroupReportEditPage(
 
 	const { slug, year } = await params;
 
+	const campaign = await getReportCampaignByYear({ year });
+	if (campaign == null) notFound();
+
 	const result = await getWorkingGroupIdFromSlug({ slug });
 	if (result == null) {
 		notFound();
@@ -48,12 +52,21 @@ export default async function DashboardWorkingGroupReportEditPage(
 
 	const workingGroupReport = await getWorkingGroupReport({
 		workingGroupId: workingGroup.id,
-		year,
+		reportCampaignId: campaign.id,
 	});
 
 	if (workingGroupReport == null) {
 		notFound();
 	}
+
+	// const previousCampaign = await getReportCampaignByYear({ year: year - 1 });
+	// const previousReport = previousCampaign
+	// 	? await getReportByWorkingGroupSlug({ workingGroupSlug: , reportCampaignId: previousCampaign.id })
+	// 	: null;
+
+	// const isConfirmationAvailable = hasPermissions()
+
+	// const isReportConfirmed = workingGroupReport.status !== "draft";
 
 	return (
 		<MainContent className="container grid content-start gap-8 py-8">

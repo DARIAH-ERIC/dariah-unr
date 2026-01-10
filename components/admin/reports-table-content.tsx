@@ -21,6 +21,7 @@ interface AdminReportsTableContentProps {
 		Prisma.ReportGetPayload<{
 			include: {
 				country: { select: { id: true } };
+				reportCampaign: { select: { year: true } };
 			};
 		}>
 	>;
@@ -58,7 +59,7 @@ export function AdminReportsTableContent(props: AdminReportsTableContentProps): 
 				}
 
 				case "year": {
-					return a.year - z.year;
+					return a.reportCampaign.year - z.reportCampaign.year;
 				}
 
 				default: {
@@ -127,7 +128,7 @@ export function AdminReportsTableContent(props: AdminReportsTableContentProps): 
 						return (
 							<Row>
 								<Cell>{countriesById.get(row.country.id)?.name}</Cell>
-								<Cell>{row.year}</Cell>
+								<Cell>{row.reportCampaign.year}</Cell>
 								<Cell>{row.status}</Cell>
 								<Cell>
 									<div className="grid gap-y-2 overflow-x-auto select-text">

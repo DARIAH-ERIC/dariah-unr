@@ -70,7 +70,7 @@ export async function updatePublicationsAction(
 				await sendEmail({
 					from: env.EMAIL_ADDRESS,
 					subject: "[dariah-unr] comment submitted",
-					text: `A comment on the publication report screen for ${String(updatedReport.year)} has been submitted by ${updatedReport.country.name}.\n\n${comment}`,
+					text: `A comment on the publication report screen for ${String(updatedReport.reportCampaign.year)} has been submitted by ${updatedReport.country.name}.\n\n${comment}`,
 				});
 			} catch (error) {
 				log.error(error);

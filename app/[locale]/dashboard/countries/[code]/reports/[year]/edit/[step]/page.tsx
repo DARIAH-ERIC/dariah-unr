@@ -23,6 +23,7 @@ import { ServiceReportsForm } from "@/components/forms/service-reports-form";
 import { SoftwareForm } from "@/components/forms/software-form";
 import { Link } from "@/components/link";
 import { LoadingIndicator } from "@/components/loading-indicator";
+import { getReportCampaignByYear } from "@/lib/data/campaign";
 import { getCountryByCode } from "@/lib/data/country";
 import { getReportByCountryCode, getReportStatusByCountryCode } from "@/lib/data/report";
 import type { IntlLocale } from "@/lib/i18n/locales";
@@ -105,16 +106,22 @@ async function DashboardCountryReportEditStepPageContent(
 
 	const t = await getTranslations("DashboardCountryReportEditStepPageContent");
 
+	const campaign = await getReportCampaignByYear({ year });
+	if (campaign == null) notFound();
+
 	const country = await getCountryByCode({ code });
 	if (country == null) notFound();
 
-	const report = await getReportByCountryCode({ countryCode: code, year });
+	const report = await getReportByCountryCode({ countryCode: code, reportCampaignId: campaign.id });
 	if (report == null || (report.status === "draft" && step === "summary")) notFound();
 
 	// TODO: safeParse
 	const comments = report.comments != null ? reportCommentsSchema.parse(report.comments) : null;
 
-	const previousReport = await getReportByCountryCode({ countryCode: code, year: year - 1 });
+	const previousCampaign = await getReportCampaignByYear({ year: year - 1 });
+	const previousReport = previousCampaign
+		? await getReportByCountryCode({ countryCode: code, reportCampaignId: previousCampaign.id })
+		: null;
 
 	const isConfirmationAvailable = user.role === "admin" || user.role === "national_coordinator";
 
@@ -665,7 +672,12 @@ async function DashboardCountryReportNavigation(
 
 	const t = await getTranslations("DashboardCountryReportNavigation");
 
-	const reportStatus = await getReportStatusByCountryCode({ countryCode: code, year });
+	const campaign = await getReportCampaignByYear({ year });
+	if (campaign == null) notFound();
+	const reportStatus = await getReportStatusByCountryCode({
+		countryCode: code,
+		reportCampaignId: campaign.id,
+	});
 
 	const navSteps = reportStatus?.status === "final" ? steps.slice(1) : steps.slice(1, -1);
 
