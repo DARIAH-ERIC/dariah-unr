@@ -91,7 +91,6 @@
 		"zod": "^3.25.76"
 	},
 	"devDependencies": {
-		"@acdh-oeaw/commitlint-config": "^3.0.0",
 		"@acdh-oeaw/eslint-config": "^2.0.12",
 		"@acdh-oeaw/eslint-config-next": "^4.0.5",
 		"@acdh-oeaw/eslint-config-playwright": "^2.0.14",
@@ -100,7 +99,6 @@
 		"@acdh-oeaw/prettier-config": "^2.0.1",
 		"@acdh-oeaw/stylelint-config": "^2.3.2",
 		"@acdh-oeaw/tsconfig": "^1.5.1",
-		"@commitlint/cli": "^20.3.0",
 		"@faker-js/faker": "^10.2.0",
 		"@mdx-js/loader": "^3.1.1",
 		"@next/bundle-analyzer": "^16.1.1",
@@ -159,9 +157,6 @@
 			"not op_mini all"
 		]
 	},
-	"commitlint": {
-		"extends": "@acdh-oeaw/commitlint-config"
-	},
 	"lint-staged": {
 		"*.@(js|ts|tsx)": [
 			"eslint --fix",
@@ -180,7 +175,6 @@
 	},
 	"prettier": "@acdh-oeaw/prettier-config",
 	"simple-git-hooks": {
-		"commit-msg": "pnpm exec commitlint --edit",
 		"pre-commit": "pnpm exec lint-staged"
 	},
 	"stylelint": {
