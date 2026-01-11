@@ -1,13 +1,3 @@
-/*
-  Warnings:
-
-  - Made the column `report_campaign_id` on table `event_size_values` required. This step will fail if there are existing NULL values in that column.
-  - Made the column `report_campaign_id` on table `outreach_type_values` required. This step will fail if there are existing NULL values in that column.
-  - Made the column `report_campaign_id` on table `role_type_values` required. This step will fail if there are existing NULL values in that column.
-  - Made the column `report_campaign_id` on table `service_size_values` required. This step will fail if there are existing NULL values in that column.
-
-*/
-
 DELETE FROM "event_size_values" WHERE "report_campaign_id" IS NULL;
 DELETE FROM "outreach_type_values" WHERE "report_campaign_id" IS NULL;
 DELETE FROM "role_type_values" WHERE "report_campaign_id" IS NULL;

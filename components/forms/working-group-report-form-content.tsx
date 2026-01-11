@@ -9,14 +9,17 @@ import { Form } from "@/components/ui/form";
 import { updateWorkingGroupReportAction } from "@/lib/actions/update-working-group-report";
 
 interface WorkingGroupReportFormContentParams {
+	isConfirmationAvailable: boolean;
 	submitLabel: string;
+	previousWorkingGroupReport?: WorkingGroupReport | null;
 	workingGroupReport: WorkingGroupReport;
 }
 
 export function WorkingGroupReportFormContent(
 	params: WorkingGroupReportFormContentParams,
 ): ReactNode {
-	const { submitLabel, workingGroupReport } = params;
+	const { isConfirmationAvailable, previousWorkingGroupReport, submitLabel, workingGroupReport } =
+		params;
 
 	const [formState, formAction] = useActionState(updateWorkingGroupReportAction, undefined);
 

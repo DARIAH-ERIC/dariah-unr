@@ -383,10 +383,8 @@ enum RoleType {
 model Role {
   id String @id @default(uuid()) @db.Uuid
 
-  // FIXME: remove
-  annualValue Int      @map(name: "annual_value")
-  name        String
-  type        RoleType
+  name String
+  type RoleType
 
   bodies        Body[]
   contributions Contribution[]

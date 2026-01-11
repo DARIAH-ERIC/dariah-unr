@@ -24,6 +24,7 @@ import { ServiceReportsForm } from "@/components/forms/service-reports-form";
 import { SoftwareForm } from "@/components/forms/software-form";
 import { Link } from "@/components/link";
 import { LoadingIndicator } from "@/components/loading-indicator";
+import { assertPermissions } from "@/lib/access-controls";
 import { getReportCampaignByYear } from "@/lib/data/campaign";
 import { getCountryByCode } from "@/lib/data/country";
 import { getReportByCountryCode, getReportStatusByCountryCode } from "@/lib/data/report";
@@ -69,7 +70,21 @@ export async function generateMetadata(
 		notFound();
 	}
 
-	const { code, step, year } = result.output;
+	const { code, year } = result.output;
+
+	const campaign = await getReportCampaignByYear({ year });
+	if (campaign == null) {
+		notFound();
+	}
+
+	const country = await getCountryByCode({ code });
+	if (country == null) {
+		notFound();
+	}
+
+	const { id } = country;
+
+	await assertPermissions(user, { kind: "country", id, action: "read-write" });
 
 	const t = await getTranslations("DashboardCountryReportEditStepPage");
 

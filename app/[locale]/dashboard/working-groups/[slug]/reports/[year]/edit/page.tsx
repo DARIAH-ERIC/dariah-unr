@@ -64,7 +64,7 @@ export default async function DashboardWorkingGroupReportEditPage(
 			})
 		: null;
 
-	const isConfirmationAvailable = hasPermissions(user, {
+	const isConfirmationAvailable = await hasPermissions(user, {
 		kind: "working-group",
 		id,
 		action: "confirm",

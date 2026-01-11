@@ -191,7 +191,6 @@ Table research_policy_developments {
 
 Table roles {
   id String [pk]
-  annualValue Int [not null]
   name String [not null]
   type RoleType [not null]
   bodies bodies [not null]

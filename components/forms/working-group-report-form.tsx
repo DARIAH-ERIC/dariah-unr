@@ -5,11 +5,13 @@ import type { ReactNode } from "react";
 import { WorkingGroupReportFormContent } from "@/components/forms/working-group-report-form-content";
 
 interface WorkingGroupReportFormParams {
+	isConfirmationAvailable: boolean;
+	previousWorkingGroupReport?: WorkingGroupReport | null;
 	workingGroupReport: WorkingGroupReport;
 }
 
 export function WorkingGroupReportForm(params: WorkingGroupReportFormParams): ReactNode {
-	const { workingGroupReport } = params;
+	const { isConfirmationAvailable, previousWorkingGroupReport, workingGroupReport } = params;
 
 	const t = useTranslations("WorkingGroupReportForm");
 
@@ -17,6 +19,8 @@ export function WorkingGroupReportForm(params: WorkingGroupReportFormParams): Re
 		<div>
 			<h2>{t("title")}</h2>
 			<WorkingGroupReportFormContent
+				isConfirmationAvailable={isConfirmationAvailable}
+				previousWorkingGroupReport={previousWorkingGroupReport}
 				submitLabel={"submit"}
 				workingGroupReport={workingGroupReport}
 			/>
