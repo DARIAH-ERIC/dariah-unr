@@ -69,7 +69,6 @@ interface ContributionsTableContentProps {
 			};
 		}>
 	>;
-	hideFilter?: boolean;
 }
 
 export function ContributionsTableContent(props: ContributionsTableContentProps): ReactNode {
@@ -431,7 +430,7 @@ function ContributionEditForm(props: ContributionEditFormProps) {
 		onClose,
 	} = props;
 
-	const [selectedRoleId, setSelectedRowId] = useState(contribution?.roleId);
+	const [selectedRoleId, setSelectedRoleId] = useState(contribution?.roleId);
 	const selectedRole = useMemo(() => {
 		return selectedRoleId ? rolesById.get(selectedRoleId) : undefined;
 	}, [rolesById, selectedRoleId]);
@@ -468,7 +467,7 @@ function ContributionEditForm(props: ContributionEditFormProps) {
 				label="Role"
 				name="roleId"
 				onSelectionChange={(key) => {
-					setSelectedRowId(key as string);
+					setSelectedRoleId(key as string);
 				}}
 				selectedKey={selectedRoleId ?? null}
 			>

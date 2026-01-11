@@ -313,25 +313,22 @@ model Report {
   operationalCostDetail    Json?        @map(name: "operational_cost_detail")
   operationalCostThreshold Decimal?     @map(name: "operational_cost_threshold") @db.Decimal(12, 2)
   status                   ReportStatus @default(draft)
-  // FIXME: remove
-  year                     Int
 
-  countryId        String  @map(name: "country_id") @db.Uuid
-  // FIXME: required
-  reportCampaignId String? @map(name: "report_campaign_id") @db.Uuid
+  countryId        String @map(name: "country_id") @db.Uuid
+  reportCampaignId String @map(name: "report_campaign_id") @db.Uuid
 
   country                    Country                     @relation(fields: [countryId], references: [id], onDelete: Cascade)
   eventReport                EventReport?
   outreachReports            OutreachReport[]
   projectsFundingLeverages   ProjectsFundingLeverage[]
-  reportCampaign             ReportCampaign?             @relation(fields: [reportCampaignId], references: [id])
+  reportCampaign             ReportCampaign              @relation(fields: [reportCampaignId], references: [id])
   researchPolicyDevelopments ResearchPolicyDevelopment[]
   serviceReports             ServiceReport[]
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
-  // @@unique([reportCampaignId, countryId])
+  @@unique([reportCampaignId, countryId])
   @@index(fields: [reportCampaignId])
   @@map(name: "reports")
 }
@@ -577,21 +574,18 @@ model WorkingGroupReport {
   members              Int?
   narrativeReport      String       @map(name: "narrative_report")
   status               ReportStatus @default(draft)
-  // FIXME: remove
-  year                 Int
 
-  // FIXME: required
-  reportCampaignId String? @map(name: "report_campaign_id") @db.Uuid
-  workingGroupId   String  @map(name: "working_group_id") @db.Uuid
+  reportCampaignId String @map(name: "report_campaign_id") @db.Uuid
+  workingGroupId   String @map(name: "working_group_id") @db.Uuid
 
-  reportCampaign     ReportCampaign?     @relation(fields: [reportCampaignId], references: [id])
+  reportCampaign     ReportCampaign      @relation(fields: [reportCampaignId], references: [id])
   workingGroup       WorkingGroup        @relation(fields: [workingGroupId], references: [id])
   workingGroupEvents WorkingGroupEvent[]
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
-  // @@unique([reportCampaignId, workingGroupId])
+  @@unique([reportCampaignId, workingGroupId])
   @@index(fields: [reportCampaignId])
   @@map(name: "working_group_reports")
 }
@@ -662,15 +656,14 @@ model EventSizeValue {
   annualValue Int       @map(name: "annual_value")
   type        EventSize
 
-  // FIXME: required
-  reportCampaignId String? @map(name: "report_campaign_id") @db.Uuid
+  reportCampaignId String @map(name: "report_campaign_id") @db.Uuid
 
-  reportCampaign ReportCampaign? @relation(fields: [reportCampaignId], references: [id])
+  reportCampaign ReportCampaign @relation(fields: [reportCampaignId], references: [id])
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
-  // @@unique([reportCampaignId, type])
+  @@unique([reportCampaignId, type])
   @@map(name: "event_size_values")
 }
 
@@ -680,15 +673,14 @@ model OutreachTypeValue {
   annualValue Int          @map(name: "annual_value")
   type        OutreachType
 
-  // FIXME: required
-  reportCampaignId String? @map(name: "report_campaign_id") @db.Uuid
+  reportCampaignId String @map(name: "report_campaign_id") @db.Uuid
 
-  reportCampaign ReportCampaign? @relation(fields: [reportCampaignId], references: [id])
+  reportCampaign ReportCampaign @relation(fields: [reportCampaignId], references: [id])
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
-  // @@unique([reportCampaignId, type])
+  @@unique([reportCampaignId, type])
   @@map(name: "outreach_type_values")
 }
 
@@ -698,15 +690,14 @@ model RoleTypeValue {
   annualValue Int      @map(name: "annual_value")
   type        RoleType
 
-  // FIXME: required
-  reportCampaignId String? @map(name: "report_campaign_id") @db.Uuid
+  reportCampaignId String @map(name: "report_campaign_id") @db.Uuid
 
-  reportCampaign ReportCampaign? @relation(fields: [reportCampaignId], references: [id])
+  reportCampaign ReportCampaign @relation(fields: [reportCampaignId], references: [id])
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
-  // @@unique([reportCampaignId, type])
+  @@unique([reportCampaignId, type])
   @@map(name: "role_type_values")
 }
 
@@ -725,15 +716,14 @@ model ServiceSizeValue {
   annualValue Int         @map(name: "annual_value")
   type        ServiceSize
 
-  // FIXME: required
-  reportCampaignId String? @map(name: "report_campaign_id") @db.Uuid
+  reportCampaignId String @map(name: "report_campaign_id") @db.Uuid
 
-  reportCampaign ReportCampaign? @relation(fields: [reportCampaignId], references: [id])
+  reportCampaign ReportCampaign @relation(fields: [reportCampaignId], references: [id])
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
-  // @@unique([reportCampaignId, type])
+  @@unique([reportCampaignId, type])
   @@map(name: "service_size_values")
 }
 

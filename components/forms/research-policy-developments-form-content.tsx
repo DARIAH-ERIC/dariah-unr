@@ -20,8 +20,7 @@ interface AddedResearchPolicyDevelopment {
 
 interface ResearchPolicyDevelopmentsFormContentProps {
 	comments: ReportCommentsSchema["researchPolicyDevelopments"];
-	previousReportId: Report["id"] | undefined;
-	previousResearchPolicyDevelopments: Array<ResearchPolicyDevelopment> | null;
+	// previousResearchPolicyDevelopments: Array<ResearchPolicyDevelopment> | null;
 	reportId: Report["id"];
 	researchPolicyDevelopments: Array<ResearchPolicyDevelopment>;
 }
@@ -31,7 +30,6 @@ export function ResearchPolicyDevelopmentsFormContent(
 ): ReactNode {
 	const {
 		comments,
-		// previousReportId,
 		// previousResearchPolicyDevelopments,
 		reportId,
 		// researchPolicyDevelopments,

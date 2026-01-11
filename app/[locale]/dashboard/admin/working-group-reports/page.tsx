@@ -2,13 +2,9 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { type ReactNode, Suspense } from "react";
 
-import { AdminWorkingGroupsTableContent } from "@/components/admin/working-groups-table-content";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import { assertPermissions } from "@/lib/access-controls";
-import { getContributions } from "@/lib/data/contributions";
-import { getPersons } from "@/lib/data/person";
-import { getWorkingGroups } from "@/lib/data/working-group";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 interface DashboardAdminWorkingGroupReportsPageProps extends PageProps<"/[locale]/dashboard/admin/working-groups"> {}
@@ -55,7 +51,7 @@ function DashboardAdminWorkingGroupReportsContent() {
 	);
 }
 
-async function AdminWorkingGroupReportsForm() {
+function AdminWorkingGroupReportsForm() {
 	// const [contributions, persons, workingGroups, workingGroupReports] = await Promise.all([
 	// 	getContributions(),
 	// 	getPersons(),

@@ -4,7 +4,6 @@ import cn from "clsx/lite";
 import { ChevronDownIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { DraftModeToggle } from "@/components/draft-mode-toggle";
@@ -12,7 +11,6 @@ import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import { getDocumentationContent } from "@/lib/content/mdx";
 import { reader } from "@/lib/content/reader";
-import type { IntlLocale } from "@/lib/i18n/locales";
 
 interface DocumentationPageProps extends PageProps<"/[locale]/documentation/[id]"> {}
 
@@ -46,20 +44,17 @@ export default async function DocumentationPage(props: DocumentationPageProps): 
 
 	const { id } = await params;
 
-	const locale = await getLocale();
-
 	return (
 		<MainContent className="container py-8">
 			<DraftModeToggle />
 
-			<DocumentationPageContent id={id} locale={locale} />
+			<DocumentationPageContent id={id} />
 		</MainContent>
 	);
 }
 
 interface DocumentationPageContentProps {
 	id: string;
-	locale: IntlLocale;
 }
 
 async function DocumentationPageContent(props: DocumentationPageContentProps) {

@@ -17,5 +17,6 @@ export async function CodeBlock(props: CodeBlockProps) {
 		lang: language,
 	});
 
+	// eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml
 	return <div dangerouslySetInnerHTML={{ __html: html }} />;
 }

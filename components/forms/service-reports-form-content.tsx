@@ -2,7 +2,6 @@
 
 import { keyByToMap } from "@acdh-oeaw/lib";
 import {
-	type Country,
 	type Prisma,
 	type Report,
 	type Service,
@@ -36,9 +35,8 @@ interface ServiceReportWithKpis extends Prisma.ServiceReportGetPayload<{
 
 interface ServiceReportsFormContentProps {
 	comments: ReportCommentsSchema["serviceReports"];
-	countryId: Country["id"];
-	previousReportId: Report["id"] | undefined;
-	previousServiceReports: Array<ServiceReportWithKpis> | null;
+	// countryId: Country["id"];
+	// previousServiceReports: Array<ServiceReportWithKpis> | null;
 	reportId: Report["id"];
 	serviceReports: Array<ServiceReportWithKpis>;
 	services: Array<Service>;
@@ -49,8 +47,6 @@ interface ServiceReportsFormContentProps {
 export function ServiceReportsFormContent(props: ServiceReportsFormContentProps): ReactNode {
 	const {
 		comments,
-		// countryId,
-		// previousReportId,
 		// previousServiceReports,
 		reportId,
 		serviceReports,

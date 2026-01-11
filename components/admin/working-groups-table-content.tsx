@@ -309,14 +309,12 @@ export function AdminWorkingGroupsTableContent(
 			<CreateWorkingGroupDialog
 				key={createKey("create-working-group", action?.item?.id)}
 				action={action}
-				chairsById={chairsById}
 				onClose={onDialogClose}
 				persons={persons}
 			/>
 			<EditWorkingGroupDialog
 				key={createKey("edit-working-group", action?.item?.id)}
 				action={action}
-				chairsById={chairsById}
 				onClose={onDialogClose}
 				persons={persons}
 			/>
@@ -400,13 +398,12 @@ function DeleteWorkingGroupDialog(props: DeleteWorkingGroupDialogProps) {
 
 interface CreateWorkingGroupDialogProps {
 	action: Action | null;
-	chairsById: Map<Contribution["id"], Contribution>;
 	persons: Array<Person>;
 	onClose: () => void;
 }
 
 function CreateWorkingGroupDialog(props: CreateWorkingGroupDialogProps) {
-	const { action, chairsById, persons, onClose } = props;
+	const { action, persons, onClose } = props;
 
 	const formId = useId();
 
@@ -431,7 +428,6 @@ function CreateWorkingGroupDialog(props: CreateWorkingGroupDialogProps) {
 								<div>
 									<WorkingGroupEditForm
 										action={action.kind}
-										chairsById={chairsById}
 										formAction={formAction}
 										formId={formId}
 										formState={formState}
@@ -456,13 +452,12 @@ function CreateWorkingGroupDialog(props: CreateWorkingGroupDialogProps) {
 
 interface EditWorkingGroupDialogProps {
 	action: Action | null;
-	chairsById: Map<Contribution["id"], Contribution>;
 	persons: Array<Person>;
 	onClose: () => void;
 }
 
 function EditWorkingGroupDialog(props: EditWorkingGroupDialogProps) {
-	const { action, chairsById, persons, onClose } = props;
+	const { action, persons, onClose } = props;
 
 	const formId = useId();
 
@@ -487,7 +482,6 @@ function EditWorkingGroupDialog(props: EditWorkingGroupDialogProps) {
 								<div>
 									<WorkingGroupEditForm
 										action="edit"
-										chairsById={chairsById}
 										formAction={formAction}
 										formId={formId}
 										formState={formState}
@@ -512,7 +506,6 @@ function EditWorkingGroupDialog(props: EditWorkingGroupDialogProps) {
 
 interface WorkingGroupEditFormProps {
 	action: "create" | "edit";
-	chairsById: Map<Contribution["id"], Contribution>;
 	persons: Array<Person>;
 	formId: string;
 	formAction: (formData: FormData) => void;

@@ -13,7 +13,6 @@ import { getCurrentSession } from "@/lib/server/auth/get-current-session";
 interface ReportSummaryProps {
 	countryId: Country["id"];
 	reportId: Report["id"];
-	year: number;
 }
 
 export async function ReportSummary(props: ReportSummaryProps) {
