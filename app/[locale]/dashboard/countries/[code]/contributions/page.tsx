@@ -1,6 +1,6 @@
-import type { Metadata, ResolvingMetadata } from "next";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { ContributionsTableContent } from "@/components/contributions-table-content";
@@ -10,45 +10,29 @@ import { getCountryByCode } from "@/lib/data/country";
 import { getPersons } from "@/lib/data/person";
 import { getRoles } from "@/lib/data/role";
 import { getWorkingGroups } from "@/lib/data/working-group";
-import type { IntlLocale } from "@/lib/i18n/locales";
-import { dashboardCountryPageParams } from "@/lib/schemas/dashboard";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
-interface DashboardCountryContributionsPageProps {
-	params: Promise<{
-		code: string;
-		locale: IntlLocale;
-	}>;
-}
+interface DashboardCountryContributionsPageProps extends PageProps<"/[locale]/dashboard/countries/[code]/contributions"> {}
 
 export async function generateMetadata(
 	props: DashboardCountryContributionsPageProps,
-	_parent: ResolvingMetadata,
 ): Promise<Metadata> {
 	const { params } = props;
 
-	const { locale } = await params;
-
 	const { user } = await assertAuthenticated();
 
-	const result = dashboardCountryPageParams.safeParse(await params);
-
-	if (!result.success) {
-		notFound();
-	}
-	const { code } = result.data;
+	const { code } = await params;
 
 	const country = await getCountryByCode({ code });
-
 	if (country == null) {
 		notFound();
 	}
 
-	const { name } = country;
+	const { id, name } = country;
 
-	await assertPermissions(user, { kind: "country", id: country.id, action: "edit-metadata" });
+	await assertPermissions(user, { kind: "country", id, action: "edit-metadata" });
 
-	const _t = await getTranslations({ locale, namespace: "DashboardCountryContributionsPage" });
+	const _t = await getTranslations("DashboardCountryContributionsPage");
 
 	const metadata: Metadata = {
 		title: _t("meta.title", { name }),
@@ -62,29 +46,21 @@ export default async function DashboardCountryContributionsPage(
 ): Promise<ReactNode> {
 	const { params } = props;
 
-	const { locale } = await params;
-	setRequestLocale(locale);
-
 	const { user } = await assertAuthenticated();
 
-	const result = dashboardCountryPageParams.safeParse(await params);
-
-	if (!result.success) {
-		notFound();
-	}
-
-	const { code } = result.data;
+	const { code } = await params;
 
 	const country = await getCountryByCode({ code });
-
 	if (country == null) {
 		notFound();
 	}
 
-	await assertPermissions(user, { kind: "country", id: country.id, action: "edit-metadata" });
+	const { id } = country;
+
+	await assertPermissions(user, { kind: "country", id, action: "edit-metadata" });
 
 	const [contributions, persons, workingGroups, roles] = await Promise.all([
-		getContributionsByCountry({ countryId: country.id }),
+		getContributionsByCountry({ countryId: id }),
 		getPersons(),
 		getWorkingGroups(),
 		getRoles(),

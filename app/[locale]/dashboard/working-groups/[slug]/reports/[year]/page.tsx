@@ -1,56 +1,53 @@
 import { notFound } from "next/navigation";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
+import * as v from "valibot";
 
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import { assertPermissions } from "@/lib/access-controls";
 import { getReportCampaignByYear } from "@/lib/data/campaign";
-import { getWorkingGroupById, getWorkingGroupIdFromSlug } from "@/lib/data/working-group";
+import { getWorkingGroupBySlug } from "@/lib/data/working-group";
 import { getWorkingGroupReport } from "@/lib/data/working-group-report";
-import type { IntlLocale } from "@/lib/i18n/locales";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
-interface DashboardWorkingGroupReportPageProps {
-	params: Promise<{
-		locale: IntlLocale;
-		slug: string;
-		year: number;
-	}>;
-}
+const ParamsSchema = v.object({
+	slug: v.pipe(v.string(), v.nonEmpty()),
+	year: v.pipe(v.string(), v.toNumber(), v.integer(), v.minValue(1)),
+});
+
+interface DashboardWorkingGroupReportPageProps extends PageProps<"/[locale]/dashboard/working-groups/[slug]/reports/[year]"> {}
 
 export default async function DashboardWorkingGroupReportPage(
 	props: DashboardWorkingGroupReportPageProps,
 ): Promise<ReactNode> {
 	const { params } = props;
 
-	const { locale } = await params;
-	setRequestLocale(locale);
-
-	const t = await getTranslations("DashboardWorkingGroupReportPage");
-
 	const { user } = await assertAuthenticated();
 
-	const { slug, year } = await params;
-
-	const result = await getWorkingGroupIdFromSlug({ slug });
-	if (result == null) {
+	const result = v.safeParse(ParamsSchema, await params);
+	if (!result.success) {
 		notFound();
 	}
-	const { id } = result;
 
-	await assertPermissions(user, { kind: "working-group", id, action: "read" });
+	const { slug, year } = result.output;
 
-	const workingGroup = await getWorkingGroupById({ id });
+	const workingGroup = await getWorkingGroupBySlug({ slug });
 	if (workingGroup == null) {
 		notFound();
 	}
 
+	const { id, name } = workingGroup;
+
+	await assertPermissions(user, { kind: "working-group", id, action: "read-write" });
+
 	const campaign = await getReportCampaignByYear({ year });
-	if (campaign == null) notFound();
+	if (campaign == null) {
+		notFound();
+	}
 
 	const workingGroupReport = await getWorkingGroupReport({
-		workingGroupId: workingGroup.id,
+		workingGroupId: id,
 		reportCampaignId: campaign.id,
 	});
 
@@ -58,9 +55,11 @@ export default async function DashboardWorkingGroupReportPage(
 		notFound();
 	}
 
+	const t = await getTranslations("DashboardWorkingGroupReportPage");
+
 	return (
 		<MainContent className="container grid content-start gap-8 py-8">
-			<PageTitle>{t("title", { name: workingGroup.name, year })}</PageTitle>
+			<PageTitle>{t("title", { name, year })}</PageTitle>
 
 			<section className="grid gap-y-8">
 				<pre>{JSON.stringify({ workingGroupReport }, null, 2)}</pre>

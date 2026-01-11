@@ -1,29 +1,33 @@
-import type { Metadata, ResolvingMetadata } from "next";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import type { Metadata } from "next";
+import { getLocale, getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { MainContent } from "@/components/main-content";
 import { SignInForm } from "@/components/sign-in-form";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import type { IntlLocale } from "@/lib/i18n/locales";
 import { redirect } from "@/lib/navigation/navigation";
 import { authSignInPageSearchParams } from "@/lib/schemas/auth";
 import { getCurrentSession } from "@/lib/server/auth/get-current-session";
 
-interface AuthSignInPageProps {
-	params: Promise<{
-		locale: IntlLocale;
-	}>;
-	searchParams: Promise<Record<string, Array<string> | string>>;
-}
+interface AuthSignInPageProps extends PageProps<"/[locale]/auth/sign-in"> {}
 
-export async function generateMetadata(
-	props: AuthSignInPageProps,
-	_parent: ResolvingMetadata,
-): Promise<Metadata> {
-	const { params } = props;
+export async function generateMetadata(props: AuthSignInPageProps): Promise<Metadata> {
+	const { searchParams } = props;
 
-	const { locale } = await params;
+	const locale = await getLocale();
+
+	const { callbackUrl } = authSignInPageSearchParams.parse(await searchParams);
+
+	const { session } = await getCurrentSession();
+
+	if (session != null) {
+		if (callbackUrl?.startsWith("/dashboard")) {
+			redirect({ href: callbackUrl, locale });
+		}
+
+		redirect({ href: "/dashboard", locale });
+	}
+
 	const t = await getTranslations({ locale, namespace: "AuthSignInPage" });
 
 	const metadata: Metadata = {
@@ -34,20 +38,23 @@ export async function generateMetadata(
 }
 
 export default async function AuthSignInPage(props: AuthSignInPageProps): Promise<ReactNode> {
-	const { params, searchParams } = props;
+	const { searchParams } = props;
 
-	const { locale } = await params;
-	setRequestLocale(locale);
-
-	const t = await getTranslations("AuthSignInPage");
+	const locale = await getLocale();
 
 	const { callbackUrl } = authSignInPageSearchParams.parse(await searchParams);
 
 	const { session } = await getCurrentSession();
 
 	if (session != null) {
+		if (callbackUrl?.startsWith("/dashboard")) {
+			redirect({ href: callbackUrl, locale });
+		}
+
 		redirect({ href: "/dashboard", locale });
 	}
+
+	const t = await getTranslations("AuthSignInPage");
 
 	return (
 		<MainContent className="container grid place-content-center py-8">

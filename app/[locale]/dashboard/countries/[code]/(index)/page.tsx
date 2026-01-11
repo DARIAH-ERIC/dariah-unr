@@ -1,36 +1,34 @@
-import type { Metadata, ResolvingMetadata } from "next";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { assertPermissions } from "@/lib/access-controls";
 import { getCountryByCode } from "@/lib/data/country";
-import type { IntlLocale } from "@/lib/i18n/locales";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
-interface DashboardCountryPageProps {
-	params: Promise<{
-		code: string;
-		locale: IntlLocale;
-	}>;
-}
+interface DashboardCountryPageProps extends PageProps<"/[locale]/dashboard/countries/[code]"> {}
 
-export async function generateMetadata(
-	props: DashboardCountryPageProps,
-	_parent: ResolvingMetadata,
-): Promise<Metadata> {
+export async function generateMetadata(props: DashboardCountryPageProps): Promise<Metadata> {
 	const { params } = props;
 
-	const { code, locale } = await params;
-	const t = await getTranslations({ locale, namespace: "DashboardCountryPage" });
+	const { user } = await assertAuthenticated();
+
+	const { code } = await params;
 
 	const country = await getCountryByCode({ code });
 	if (country == null) {
 		notFound();
 	}
 
+	const { id, name } = country;
+
+	await assertPermissions(user, { kind: "country", id, action: "read" });
+
+	const t = await getTranslations("DashboardCountryPage");
+
 	const metadata: Metadata = {
-		title: t("meta.title", { name: country.name }),
+		title: t("meta.title", { name }),
 	};
 
 	return metadata;
@@ -41,18 +39,20 @@ export default async function DashboardCountryPage(
 ): Promise<ReactNode> {
 	const { params } = props;
 
-	const { code, locale } = await params;
-	setRequestLocale(locale);
+	const { user } = await assertAuthenticated();
 
-	const t = await getTranslations("DashboardCountryPage");
+	const { code } = await params;
 
 	const country = await getCountryByCode({ code });
 	if (country == null) {
 		notFound();
 	}
 
-	const { user } = await assertAuthenticated();
-	await assertPermissions(user, { id: country.id, kind: "country", action: "read" });
+	const { id } = country;
+
+	await assertPermissions(user, { id, kind: "country", action: "read" });
+
+	const t = await getTranslations("DashboardCountryPage");
 
 	return (
 		<section>

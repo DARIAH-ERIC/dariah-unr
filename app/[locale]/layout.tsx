@@ -1,7 +1,7 @@
 import { pick } from "@acdh-oeaw/lib";
-import type { Metadata, ResolvingMetadata } from "next";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
+import { getMessages, getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 import { LocalizedStringProvider as Translations } from "react-aria-components/i18n";
 import { jsonLdScriptProps } from "react-schemaorg";
@@ -16,16 +16,11 @@ import { env } from "@/config/env.config";
 import { AnalyticsScript } from "@/lib/analytics-script";
 import { ColorSchemeScript } from "@/lib/color-scheme-script";
 import * as fonts from "@/lib/fonts";
-import { type IntlLocale, isValidLocale, locales } from "@/lib/i18n/locales";
+import { isValidLocale, locales } from "@/lib/i18n/locales";
 import { getMetadata } from "@/lib/i18n/metadata";
 import { cn } from "@/lib/styles";
 
-interface LocaleLayoutProps {
-	children: ReactNode;
-	params: Promise<{
-		locale: IntlLocale;
-	}>;
-}
+interface LocaleLayoutProps extends LayoutProps<"/[locale]"> {}
 
 export function generateStaticParams(): Array<Awaited<LocaleLayoutProps["params"]>> {
 	return locales.map((locale) => {
@@ -35,11 +30,15 @@ export function generateStaticParams(): Array<Awaited<LocaleLayoutProps["params"
 
 export async function generateMetadata(
 	props: Omit<LocaleLayoutProps, "children">,
-	_parent: ResolvingMetadata,
 ): Promise<Metadata> {
 	const { params } = props;
 
 	const { locale } = await params;
+
+	if (!isValidLocale(locale)) {
+		notFound();
+	}
+
 	const meta = await getMetadata(locale);
 
 	const metadata: Metadata = {
@@ -77,8 +76,6 @@ export default async function LocaleLayout(props: LocaleLayoutProps): Promise<Re
 	if (!isValidLocale(locale)) {
 		notFound();
 	}
-
-	setRequestLocale(locale);
 
 	const t = await getTranslations("LocaleLayout");
 	const messages = await getMessages();

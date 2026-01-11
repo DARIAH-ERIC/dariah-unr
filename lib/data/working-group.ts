@@ -80,6 +80,20 @@ export function getWorkingGroupById(params: GetWorkingGroupByIdParams) {
 	});
 }
 
+interface GetWorkingGroupBySlugParams {
+	slug: WorkingGroup["slug"];
+}
+
+export function getWorkingGroupBySlug(params: GetWorkingGroupBySlugParams) {
+	const { slug } = params;
+
+	return db.workingGroup.findFirst({
+		where: {
+			slug,
+		},
+	});
+}
+
 interface GetWorkingGroupIdFromSlugParams {
 	slug: WorkingGroup["slug"];
 }

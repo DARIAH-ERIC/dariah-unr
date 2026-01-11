@@ -1,9 +1,10 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import type { Metadata, ResolvingMetadata } from "next";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { type ReactNode, Suspense } from "react";
+import * as v from "valibot";
 
 import { AppLink } from "@/components/app-link";
 import { AppNavLink } from "@/components/app-nav-link";
@@ -26,36 +27,51 @@ import { LoadingIndicator } from "@/components/loading-indicator";
 import { getReportCampaignByYear } from "@/lib/data/campaign";
 import { getCountryByCode } from "@/lib/data/country";
 import { getReportByCountryCode, getReportStatusByCountryCode } from "@/lib/data/report";
-import type { IntlLocale } from "@/lib/i18n/locales";
 import { createHref } from "@/lib/navigation/create-href";
-import {
-	type DashboardCountryReportEditStepPageParams,
-	dashboardCountryReportEditStepPageParams,
-	dashboardCountryReportSteps,
-} from "@/lib/schemas/dashboard";
 import { reportCommentsSchema } from "@/lib/schemas/report";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 import type { User } from "@/lib/server/auth/sessions";
 import { cn } from "@/lib/styles";
 import { createZoteroCollectionUrl } from "@/lib/zotero";
 
-interface DashboardCountryReportEditStepPageProps {
-	params: Promise<{
-		code: string;
-		locale: IntlLocale;
-		step: string;
-		year: string;
-	}>;
-}
+const steps = [
+	"welcome",
+	"institutions",
+	"contributions",
+	"events",
+	"outreach",
+	"services",
+	"software",
+	"publications",
+	"project-funding-leverage",
+	"confirm",
+	// "research-policy-developments",
+	"summary",
+] as const;
+
+const PathParamsSchema = v.object({
+	code: v.string(),
+	step: v.picklist(steps),
+	year: v.pipe(v.string(), v.toNumber(), v.integer(), v.minValue(1)),
+});
+
+interface DashboardCountryReportEditStepPageProps extends PageProps<"/[locale]/dashboard/countries/[code]/reports/[year]/edit/[step]"> {}
 
 export async function generateMetadata(
 	props: DashboardCountryReportEditStepPageProps,
-	_parent: ResolvingMetadata,
 ): Promise<Metadata> {
 	const { params } = props;
 
-	const { locale } = await params;
-	const t = await getTranslations({ locale, namespace: "DashboardCountryReportEditStepPage" });
+	const { user } = await assertAuthenticated();
+
+	const result = v.safeParse(PathParamsSchema, await params);
+	if (!result.success) {
+		notFound();
+	}
+
+	const { code, step, year } = result.output;
+
+	const t = await getTranslations("DashboardCountryReportEditStepPage");
 
 	const metadata: Metadata = {
 		title: t("meta.title"),
@@ -69,17 +85,16 @@ export default async function DashboardCountryReportEditStepPage(
 ): Promise<ReactNode> {
 	const { params } = props;
 
-	const { locale } = await params;
-	setRequestLocale(locale);
-
-	const t = await getTranslations("DashboardCountryReportEditStepPage");
-
 	const { user } = await assertAuthenticated();
 
-	const result = dashboardCountryReportEditStepPageParams.safeParse(await params);
-	if (!result.success) notFound();
-	const { code, step, year } = result.data;
-	const steps = dashboardCountryReportSteps;
+	const result = v.safeParse(PathParamsSchema, await params);
+	if (!result.success) {
+		notFound();
+	}
+
+	const { code, step, year } = result.output;
+
+	const t = await getTranslations("DashboardCountryReportEditStepPage");
 
 	return (
 		<section className="grid content-start gap-8">
@@ -95,8 +110,11 @@ export default async function DashboardCountryReportEditStepPage(
 	);
 }
 
-interface DashboardCountryReportEditStepPageContentProps extends DashboardCountryReportEditStepPageParams {
+interface DashboardCountryReportEditStepPageContentProps {
+	code: string;
+	step: (typeof steps)[number];
 	user: User;
+	year: number;
 }
 
 async function DashboardCountryReportEditStepPageContent(
@@ -104,16 +122,20 @@ async function DashboardCountryReportEditStepPageContent(
 ) {
 	const { code, step, user, year } = props;
 
-	const t = await getTranslations("DashboardCountryReportEditStepPageContent");
-
 	const campaign = await getReportCampaignByYear({ year });
-	if (campaign == null) notFound();
+	if (campaign == null) {
+		notFound();
+	}
 
 	const country = await getCountryByCode({ code });
-	if (country == null) notFound();
+	if (country == null) {
+		notFound();
+	}
 
 	const report = await getReportByCountryCode({ countryCode: code, reportCampaignId: campaign.id });
-	if (report == null || (report.status === "draft" && step === "summary")) notFound();
+	if (report == null || (report.status === "draft" && step === "summary")) {
+		notFound();
+	}
 
 	// TODO: safeParse
 	const comments = report.comments != null ? reportCommentsSchema.parse(report.comments) : null;
@@ -126,6 +148,8 @@ async function DashboardCountryReportEditStepPageContent(
 	const isConfirmationAvailable = user.role === "admin" || user.role === "national_coordinator";
 
 	const isReportConfirmed = report.status !== "draft";
+
+	const t = await getTranslations("DashboardCountryReportEditStepPageContent");
 
 	switch (step) {
 		case "confirm": {

@@ -11,15 +11,15 @@ import { getPersons } from "@/lib/data/person";
 import { getWorkingGroups } from "@/lib/data/working-group";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
-interface DashboardAdminWorkingGroupsPageProps extends PageProps<"/[locale]/dashboard/admin/working-groups"> {}
+interface DashboardAdminWorkingGroupReportsPageProps extends PageProps<"/[locale]/dashboard/admin/working-groups"> {}
 
 export async function generateMetadata(
-	_props: DashboardAdminWorkingGroupsPageProps,
+	_props: DashboardAdminWorkingGroupReportsPageProps,
 ): Promise<Metadata> {
 	const { user } = await assertAuthenticated();
 	await assertPermissions(user, { kind: "admin" });
 
-	const t = await getTranslations("DashboardAdminWorkingGroupsPage");
+	const t = await getTranslations("DashboardAdminWorkingGroupReportsPage");
 
 	const metadata: Metadata = {
 		title: t("meta.title"),
@@ -28,45 +28,48 @@ export async function generateMetadata(
 	return metadata;
 }
 
-export default async function DashboardAdminWorkingGroupsPage(
-	_props: DashboardAdminWorkingGroupsPageProps,
+export default async function DashboardAdminWorkingGroupReportsPage(
+	_props: DashboardAdminWorkingGroupReportsPageProps,
 ): Promise<ReactNode> {
 	const { user } = await assertAuthenticated();
 	await assertPermissions(user, { kind: "admin" });
 
-	const t = await getTranslations("DashboardAdminWorkingGroupsPage");
+	const t = await getTranslations("DashboardAdminWorkingGroupReportsPage");
 
 	return (
 		<MainContent className="container grid max-w-(--breakpoint-2xl)! content-start gap-y-8 py-8">
 			<PageTitle>{t("title")}</PageTitle>
 
-			<DashboardAdminWorkingGroupsContent />
+			<DashboardAdminWorkingGroupReportsContent />
 		</MainContent>
 	);
 }
 
-function DashboardAdminWorkingGroupsContent() {
+function DashboardAdminWorkingGroupReportsContent() {
 	return (
 		<section className="grid gap-y-8">
 			<Suspense>
-				<AdminWorkingGroupsForm />
+				<AdminWorkingGroupReportsForm />
 			</Suspense>
 		</section>
 	);
 }
 
-async function AdminWorkingGroupsForm() {
-	const [contributions, persons, workingGroups] = await Promise.all([
-		getContributions(),
-		getPersons(),
-		getWorkingGroups(),
-	]);
+async function AdminWorkingGroupReportsForm() {
+	// const [contributions, persons, workingGroups, workingGroupReports] = await Promise.all([
+	// 	getContributions(),
+	// 	getPersons(),
+	// 	getWorkingGroups(),
+	// 	getWorkingGroupReports(),
+	// ]);
 
-	return (
-		<AdminWorkingGroupsTableContent
-			chairs={contributions}
-			persons={persons}
-			workingGroups={workingGroups}
-		/>
-	);
+	// return (
+	// 	<AdminWorkingGroupReportsTableContent
+	// 		chairs={contributions}
+	// 		persons={persons}
+	// 		workingGroups={workingGroups}
+	// 	/>
+	// );
+
+	return null;
 }

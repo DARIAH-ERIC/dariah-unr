@@ -1,52 +1,37 @@
-import type { Metadata, ResolvingMetadata } from "next";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { LinkButton } from "@/components/ui/link-button";
 import { assertPermissions } from "@/lib/access-controls";
 import { getCountryByCode } from "@/lib/data/country";
 import { getReportYearsByCountryCode } from "@/lib/data/report";
-import type { IntlLocale } from "@/lib/i18n/locales";
 import { createHref } from "@/lib/navigation/create-href";
-import { dashboardCountryPageParams } from "@/lib/schemas/dashboard";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
-interface DashboardCountryReportsPageProps {
-	params: Promise<{
-		code: string;
-		locale: IntlLocale;
-	}>;
-}
+interface DashboardCountryReportsPageProps extends PageProps<"/[locale]/dashboard/countries/[code]/reports"> {}
 
-export async function generateMetadata(
-	props: DashboardCountryReportsPageProps,
-	_parent: ResolvingMetadata,
-): Promise<Metadata> {
+export async function generateMetadata(props: DashboardCountryReportsPageProps): Promise<Metadata> {
 	const { params } = props;
-
-	const { locale } = await params;
 
 	const { user } = await assertAuthenticated();
 
-	const result = dashboardCountryPageParams.safeParse(await params);
-
-	if (!result.success) notFound();
-
-	const { code } = result.data;
+	const { code } = await params;
 
 	const country = await getCountryByCode({ code });
+	if (country == null) {
+		notFound();
+	}
 
-	if (country == null) notFound();
+	const { id, name } = country;
 
-	const { name } = country;
+	await assertPermissions(user, { kind: "country", id, action: "read-write" });
 
-	await assertPermissions(user, { kind: "country", id: country.id, action: "read-write" });
-
-	const _t = await getTranslations({ locale, namespace: "DashboardCountryReportsPage" });
+	const t = await getTranslations("DashboardCountryReportsPage");
 
 	const metadata: Metadata = {
-		title: _t("meta.title", { name }),
+		title: t("meta.title", { name }),
 	};
 
 	return metadata;
@@ -57,26 +42,22 @@ export default async function DashboardCountryReportsPage(
 ): Promise<ReactNode> {
 	const { params } = props;
 
-	const { locale } = await params;
-	setRequestLocale(locale);
-
-	const t = await getTranslations({ locale, namespace: "DashboardCountryReportsPage" });
-
 	const { user } = await assertAuthenticated();
 
-	const result = dashboardCountryPageParams.safeParse(await params);
-
-	if (!result.success) notFound();
-
-	const { code } = result.data;
+	const { code } = await params;
 
 	const country = await getCountryByCode({ code });
+	if (country == null) {
+		notFound();
+	}
 
-	if (country == null) notFound();
+	const { id } = country;
 
-	await assertPermissions(user, { kind: "country", id: country.id, action: "read-write" });
+	await assertPermissions(user, { kind: "country", id, action: "read-write" });
 
-	const reports = await getReportYearsByCountryCode({ countryCode: country.code });
+	const reports = await getReportYearsByCountryCode({ countryCode: code });
+
+	const t = await getTranslations("DashboardCountryReportsPage");
 
 	return (
 		<section className="grid gap-8">
@@ -88,9 +69,10 @@ export default async function DashboardCountryReportsPage(
 					})
 					.map((report) => {
 						const { year } = report;
+
 						return (
 							<LinkButton
-								key={`y_${String(year)}`}
+								key={year}
 								href={createHref({
 									pathname: `/dashboard/countries/${country.code}/reports/${String(year)}/edit/welcome`,
 								})}

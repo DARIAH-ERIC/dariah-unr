@@ -1,6 +1,6 @@
 import { keyBy, keyByToMap } from "@acdh-oeaw/lib";
 import type { Metadata } from "next";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { AdminCampaignFormContent } from "@/components/admin/campaign-form-content";
@@ -16,20 +16,15 @@ import {
 } from "@/lib/data/campaign";
 import { getActiveMemberCountryIdsForYear } from "@/lib/data/country";
 import { getOperationalCostThresholdsForReportCampaign } from "@/lib/data/report";
-import type { IntlLocale } from "@/lib/i18n/locales";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
-interface DashboardAdminCampaignPageProps {
-	params: Promise<{
-		locale: IntlLocale;
-	}>;
-}
+interface DashboardAdminCampaignPageProps extends PageProps<"/[locale]/dashboard/admin/campaign"> {}
 
-export async function generateMetadata(props: DashboardAdminCampaignPageProps): Promise<Metadata> {
-	const { params } = props;
+export async function generateMetadata(_props: DashboardAdminCampaignPageProps): Promise<Metadata> {
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
-	const { locale } = await params;
-	const t = await getTranslations({ locale, namespace: "DashboardAdminCampaignPage" });
+	const t = await getTranslations("DashboardAdminCampaignPage");
 
 	const metadata: Metadata = {
 		title: t("meta.title"),
@@ -39,19 +34,14 @@ export async function generateMetadata(props: DashboardAdminCampaignPageProps): 
 }
 
 export default async function DashboardAdminCampaignPage(
-	props: DashboardAdminCampaignPageProps,
+	_props: DashboardAdminCampaignPageProps,
 ): Promise<ReactNode> {
-	const { params } = props;
-
-	const { locale } = await params;
-	setRequestLocale(locale);
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
 	const t = await getTranslations("DashboardAdminCampaignPage");
 
 	const year = new Date().getUTCFullYear() - 1;
-
-	const { user } = await assertAuthenticated();
-	await assertPermissions(user, { kind: "admin" });
 
 	const [_countries, previousCampaign] = await Promise.all([
 		getActiveMemberCountryIdsForYear({ year }),

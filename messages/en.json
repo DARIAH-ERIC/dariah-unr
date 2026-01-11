@@ -161,6 +161,12 @@
 		},
 		"title": "Working groups"
 	},
+	"DashboardAdminWorkingGroupReportsPage": {
+		"meta": {
+			"title": "Working group reports"
+		},
+		"title": "Working group reports"
+	},
 	"DashboardCountryLayout": {
 		"meta": {
 			"title": "National Dashboard - {name}"
@@ -271,12 +277,6 @@
 			"title": "Working group - {name}"
 		},
 		"title": "Working group - {name}"
-	},
-	"DashboardWorkingGroupsPage": {
-		"meta": {
-			"title": "Working groups"
-		},
-		"title": "Working groups"
 	},
 	"DashboardWorkingGroupReportPage": {
 		"meta": {

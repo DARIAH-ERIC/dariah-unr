@@ -1,28 +1,19 @@
-import type { Metadata, ResolvingMetadata } from "next";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { assertPermissions } from "@/lib/access-controls";
-import type { IntlLocale } from "@/lib/i18n/locales";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
-interface DashboardAdminCountriesPageProps {
-	params: Promise<{
-		locale: IntlLocale;
-	}>;
-	searchParams: Promise<{
-		code: string;
-	}>;
-}
+interface DashboardAdminCountriesPageProps extends PageProps<"/[locale]/dashboard/admin/countries"> {}
 
 export async function generateMetadata(
-	props: DashboardAdminCountriesPageProps,
-	_parent: ResolvingMetadata,
+	_props: DashboardAdminCountriesPageProps,
 ): Promise<Metadata> {
-	const { params } = props;
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
-	const { locale } = await params;
-	const t = await getTranslations({ locale, namespace: "DashboardAdminCountriesPage" });
+	const t = await getTranslations("DashboardAdminCountriesPage");
 
 	const metadata: Metadata = {
 		title: t("meta.title"),
@@ -32,14 +23,8 @@ export async function generateMetadata(
 }
 
 export default async function DashboardAdminCountriesPage(
-	props: DashboardAdminCountriesPageProps,
+	_props: DashboardAdminCountriesPageProps,
 ): Promise<ReactNode> {
-	const { params } = props;
-
-	const { locale } = await params;
-
-	setRequestLocale(locale);
-
 	const { user } = await assertAuthenticated();
 	await assertPermissions(user, { kind: "admin" });
 

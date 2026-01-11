@@ -2,9 +2,9 @@ import { isNonEmptyArray } from "@acdh-oeaw/lib";
 import type { TableOfContents } from "@acdh-oeaw/mdx-lib";
 import cn from "clsx/lite";
 import { ChevronDownIcon } from "lucide-react";
-import type { Metadata, ResolvingMetadata } from "next";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { setRequestLocale } from "next-intl/server";
+import { getLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { DraftModeToggle } from "@/components/draft-mode-toggle";
@@ -14,12 +14,7 @@ import { getDocumentationContent } from "@/lib/content/mdx";
 import { reader } from "@/lib/content/reader";
 import type { IntlLocale } from "@/lib/i18n/locales";
 
-interface DocumentationPageProps {
-	params: Promise<{
-		id: string;
-		locale: IntlLocale;
-	}>;
-}
+interface DocumentationPageProps extends PageProps<"/[locale]/documentation/[id]"> {}
 
 export async function generateStaticParams(_props: {
 	params: Pick<Awaited<DocumentationPageProps["params"]>, "locale">;
@@ -31,10 +26,7 @@ export async function generateStaticParams(_props: {
 	});
 }
 
-export async function generateMetadata(
-	props: DocumentationPageProps,
-	_parent: ResolvingMetadata,
-): Promise<Metadata> {
+export async function generateMetadata(props: DocumentationPageProps): Promise<Metadata> {
 	const { params } = props;
 
 	const { id } = await params;
@@ -52,8 +44,9 @@ export async function generateMetadata(
 export default async function DocumentationPage(props: DocumentationPageProps): Promise<ReactNode> {
 	const { params } = props;
 
-	const { id, locale } = await params;
-	setRequestLocale(locale);
+	const { id } = await params;
+
+	const locale = await getLocale();
 
 	return (
 		<MainContent className="container py-8">

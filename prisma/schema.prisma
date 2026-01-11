@@ -707,7 +707,7 @@ model RoleTypeValue {
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
   // @@unique([reportCampaignId, type])
-  @@map(name: "role_values")
+  @@map(name: "role_type_values")
 }
 
 enum ServiceSize {
