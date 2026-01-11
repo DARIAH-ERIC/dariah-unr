@@ -19,7 +19,7 @@
 		"toggle-navigation-menu": "Toggle navigation menu"
 	},
 	"AuthControls": {
-		"admin-dashboard": "Admin dashboard",
+		"dashboard": "Dashboard",
 		"sign-in": "Sign in",
 		"sign-out": "Sign out",
 		"toggle-user-menu": "Toggle user menu"

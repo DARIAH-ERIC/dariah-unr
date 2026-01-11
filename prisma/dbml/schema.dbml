@@ -138,7 +138,7 @@ Table persons {
   updatedAt DateTime [not null]
 }
 
-Table projects_funding_leverage {
+Table projects {
   id String [pk]
   amount Decimal
   funders String
@@ -161,21 +161,18 @@ Table reports {
   operationalCostDetail Json
   operationalCostThreshold Decimal
   status ReportStatus [not null, default: 'draft']
+  year Int [not null]
   countryId String [not null]
-  reportCampaignId String [not null]
+  reportCampaignId String
   country countries [not null]
   eventReport event_reports
   outreachReports outreach_reports [not null]
-  projectsFundingLeverages projects_funding_leverage [not null]
-  reportCampaign report_campaigns [not null]
+  projectsFundingLeverages projects [not null]
+  reportCampaign report_campaigns
   researchPolicyDevelopments research_policy_developments [not null]
   serviceReports service_reports [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-
-  indexes {
-    (countryId, reportCampaignId) [unique]
-  }
 }
 
 Table research_policy_developments {
@@ -191,6 +188,7 @@ Table research_policy_developments {
 
 Table roles {
   id String [pk]
+  annualValue Int [not null]
   name String [not null]
   type RoleType [not null]
   bodies bodies [not null]
@@ -281,17 +279,14 @@ Table working_group_reports {
   members Int
   narrativeReport String [not null]
   status ReportStatus [not null, default: 'draft']
-  reportCampaignId String [not null]
+  year Int [not null]
+  reportCampaignId String
   workingGroupId String [not null]
-  reportCampaign report_campaigns [not null]
+  reportCampaign report_campaigns
   workingGroup working_groups [not null]
   workingGroupEvents working_group_events [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-
-  indexes {
-    (workingGroupId, reportCampaignId) [unique]
-  }
 }
 
 Table working_group_events {
@@ -317,60 +312,44 @@ Table working_group_outreach {
   updatedAt DateTime [not null]
 }
 
-Table event_sizes {
+Table event_size_values {
   id String [pk]
   annualValue Int [not null]
   type EventSize [not null]
-  reportCampaignId String [not null]
-  reportCampaign report_campaigns [not null]
+  reportCampaignId String
+  reportCampaign report_campaigns
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-
-  indexes {
-    (reportCampaignId, type) [unique]
-  }
 }
 
 Table outreach_type_values {
   id String [pk]
   annualValue Int [not null]
   type OutreachType [not null]
-  reportCampaignId String [not null]
-  reportCampaign report_campaigns [not null]
+  reportCampaignId String
+  reportCampaign report_campaigns
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-
-  indexes {
-    (reportCampaignId, type) [unique]
-  }
 }
 
 Table role_values {
   id String [pk]
   annualValue Int [not null]
   type RoleType [not null]
-  reportCampaignId String [not null]
-  reportCampaign report_campaigns [not null]
+  reportCampaignId String
+  reportCampaign report_campaigns
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-
-  indexes {
-    (reportCampaignId, type) [unique]
-  }
 }
 
-Table service_sizes {
+Table service_size_values {
   id String [pk]
   annualValue Int [not null]
   type ServiceSize [not null]
-  reportCampaignId String [not null]
-  reportCampaign report_campaigns [not null]
+  reportCampaignId String
+  reportCampaign report_campaigns
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-
-  indexes {
-    (reportCampaignId, type) [unique]
-  }
 }
 
 Table report_campaigns {
@@ -380,10 +359,10 @@ Table report_campaigns {
   year Int [unique, not null]
   reports reports [not null]
   workingGroupReports working_group_reports [not null]
-  eventSizeValues event_sizes [not null]
+  eventSizeValues event_size_values [not null]
   outreachTypeValues outreach_type_values [not null]
   roleTypeValues role_values [not null]
-  serviceSizeValues service_sizes [not null]
+  serviceSizeValues service_size_values [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
@@ -635,7 +614,7 @@ Ref: outreach_reports.reportId > reports.id [delete: Cascade]
 
 Ref: outreach_kpis.outreachReportId > outreach_reports.id [delete: Cascade]
 
-Ref: projects_funding_leverage.reportId > reports.id [delete: Cascade]
+Ref: projects.reportId > reports.id [delete: Cascade]
 
 Ref: reports.countryId > countries.id [delete: Cascade]
 
@@ -657,13 +636,13 @@ Ref: working_group_events.reportId > working_group_reports.id
 
 Ref: working_group_outreach.workingGroupId > working_groups.id
 
-Ref: event_sizes.reportCampaignId > report_campaigns.id
+Ref: event_size_values.reportCampaignId > report_campaigns.id
 
 Ref: outreach_type_values.reportCampaignId > report_campaigns.id
 
 Ref: role_values.reportCampaignId > report_campaigns.id
 
-Ref: service_sizes.reportCampaignId > report_campaigns.id
+Ref: service_size_values.reportCampaignId > report_campaigns.id
 
 Ref: users.countryId > countries.id
 

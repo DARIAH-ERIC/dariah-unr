@@ -5,7 +5,7 @@ import { expect, test } from "@/e2e/lib/test";
 import { defaultLocale, locales } from "@/lib/i18n/locales";
 
 test.describe("app", () => {
-	if (env.NEXT_PUBLIC_BOTS !== "enabled") {
+	if (env.NEXT_PUBLIC_APP_BOTS !== "enabled") {
 		test("should serve a robots.txt which disallows search engine bots", async ({ request }) => {
 			const response = await request.get("/robots.txt");
 			const body = await response.body();

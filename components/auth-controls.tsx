@@ -15,7 +15,7 @@ export async function AuthControls() {
 
 	return (
 		<AuthUserMenu
-			adminDashboardLabel={t("admin-dashboard")}
+			dashboardLabel={t("dashboard")}
 			signOutLabel={t("sign-out")}
 			toggleUserMenuLabel={t("toggle-user-menu")}
 			user={user}

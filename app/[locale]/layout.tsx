@@ -62,7 +62,7 @@ export async function generateMetadata(
 			site: meta.social.twitter,
 		},
 		verification: {
-			google: env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+			google: env.NEXT_PUBLIC_APP_GOOGLE_SITE_VERIFICATION,
 		},
 	};
 
@@ -117,8 +117,8 @@ export default async function LocaleLayout(props: LocaleLayoutProps): Promise<Re
 
 				<Providers locale={locale} messages={pick(messages, ["Error"])}>
 					<AnalyticsScript
-						baseUrl={env.NEXT_PUBLIC_MATOMO_BASE_URL}
-						id={env.NEXT_PUBLIC_MATOMO_ID}
+						baseUrl={env.NEXT_PUBLIC_APP_MATOMO_BASE_URL}
+						id={env.NEXT_PUBLIC_APP_MATOMO_ID}
 					/>
 
 					<SkipLink targetId={id}>{t("skip-to-main-content")}</SkipLink>

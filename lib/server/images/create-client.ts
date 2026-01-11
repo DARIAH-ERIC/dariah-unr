@@ -13,7 +13,7 @@ import { generateSignedImageUrl } from "@/lib/server/images/generate-signed-imag
 export const createClient = cache(async function createClient() {
 	const client = createMinioClient();
 
-	const bucketName = env.S3_BUCKET;
+	const bucketName = env.S3_BUCKET_NAME;
 
 	const images = {
 		async all() {

@@ -1,4 +1,4 @@
-import { HttpError, request } from "@acdh-oeaw/lib";
+import { createUrl, createUrlSearchParams, HttpError, isErr, request } from "@acdh-oeaw/lib";
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -6,7 +6,7 @@ import type { ReactNode } from "react";
 
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
-import { createImprintUrl } from "@/config/imprint.config";
+import { env } from "@/config/env.config";
 import type { IntlLocale } from "@/lib/i18n/locales";
 
 interface ImprintPageProps {
@@ -61,16 +61,26 @@ async function ImprintPageContent(props: ImprintPageContentProps) {
 }
 
 async function getImprintHtml(locale: IntlLocale): Promise<string> {
-	try {
-		const url = createImprintUrl(locale);
-		const html = await request(url, { responseType: "text" });
+	const url = createUrl({
+		baseUrl: env.NEXT_PUBLIC_APP_IMPRINT_SERVICE_BASE_URL,
+		pathname: `/${String(env.NEXT_PUBLIC_APP_SERVICE_ID)}`,
+		searchParams: createUrlSearchParams({
+			locale,
+			redmine: env.NEXT_PUBLIC_APP_IMPRINT_CUSTOM_CONFIG,
+		}),
+	});
 
-		return html;
-	} catch (error) {
-		if (error instanceof HttpError && error.response.status === 404) {
+	const result = await request(url, { responseType: "text" });
+
+	if (isErr(result)) {
+		const error = result.error;
+
+		if (HttpError.is(error) && error.response.status === 404) {
 			notFound();
 		}
 
 		throw error;
 	}
+
+	return result.value.data;
 }

@@ -22,6 +22,8 @@ enum BodyType {
   ncc
   sb
   smt
+
+  @@map(name: "body_type")
 }
 
 model Body {
@@ -65,6 +67,8 @@ enum CountryType {
   cooperating_partnership
   member_country
   other
+
+  @@map(name: "country_type")
 }
 
 model Country {
@@ -122,6 +126,8 @@ enum InstitutionType {
   national_representative_institution
   other
   partner_institution
+
+  @@map(name: "institution_type")
 }
 
 model Institution {
@@ -149,6 +155,8 @@ enum InstitutionServiceRole {
   service_owner
   service_provider
   technical_contact
+
+  @@map(name: "institution_service_role")
 }
 
 model InstitutionToService {
@@ -168,6 +176,8 @@ enum OutreachType {
   national_social_media
   national_website
   social_media
+
+  @@map(name: "outreach_type")
 }
 
 model Outreach {
@@ -219,6 +229,8 @@ enum OutreachKpiType {
   unique_visitors
   views
   watch_time
+
+  @@map(name: "outreach_kpi_type")
 }
 
 model OutreachKpi {
@@ -260,6 +272,8 @@ enum ProjectScope {
   eu
   national
   regional
+
+  @@map(name: "project_scope")
 }
 
 model ProjectsFundingLeverage {
@@ -280,39 +294,44 @@ model ProjectsFundingLeverage {
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
-  @@map(name: "projects_funding_leverage")
+  @@map(name: "projects")
 }
 
 enum ReportStatus {
   draft
   final
+
+  @@map(name: "report_status")
 }
 
 model Report {
   id String @id @default(uuid()) @db.Uuid
 
   comments                 Json?
-  contributionsCount       Int?
-  operationalCost          Decimal?     @db.Decimal(12, 2)
-  operationalCostDetail    Json?
-  operationalCostThreshold Decimal?     @db.Decimal(12, 2)
+  contributionsCount       Int?         @map(name: "contributions_count")
+  operationalCost          Decimal?     @map(name: "operational_cost") @db.Decimal(12, 2)
+  operationalCostDetail    Json?        @map(name: "operational_cost_detail")
+  operationalCostThreshold Decimal?     @map(name: "operational_cost_threshold") @db.Decimal(12, 2)
   status                   ReportStatus @default(draft)
+  // FIXME: remove
+  year                     Int
 
-  countryId        String @map(name: "country_id") @db.Uuid
-  reportCampaignId String @map(name: "report_campaign_id") @db.Uuid
+  countryId        String  @map(name: "country_id") @db.Uuid
+  // FIXME: required
+  reportCampaignId String? @map(name: "report_campaign_id") @db.Uuid
 
   country                    Country                     @relation(fields: [countryId], references: [id], onDelete: Cascade)
   eventReport                EventReport?
   outreachReports            OutreachReport[]
   projectsFundingLeverages   ProjectsFundingLeverage[]
-  reportCampaign             ReportCampaign              @relation(fields: [reportCampaignId], references: [id])
+  reportCampaign             ReportCampaign?             @relation(fields: [reportCampaignId], references: [id])
   researchPolicyDevelopments ResearchPolicyDevelopment[]
   serviceReports             ServiceReport[]
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
-  @@unique([countryId, reportCampaignId])
+  // @@unique([reportCampaignId, countryId])
   @@index(fields: [reportCampaignId])
   @@map(name: "reports")
 }
@@ -323,6 +342,8 @@ enum ResearchPolicyLevel {
   institutional
   national
   regional
+
+  @@map(name: "research_policy_level")
 }
 
 model ResearchPolicyDevelopment {
@@ -358,13 +379,17 @@ enum RoleType {
   national_consortium_contact
   cooperating_partner_contact
   ncc_chair
+
+  @@map(name: "role_type")
 }
 
 model Role {
   id String @id @default(uuid()) @db.Uuid
 
-  name String
-  type RoleType
+  // FIXME: remove
+  annualValue Int      @map(name: "annual_value")
+  name        String
+  type        RoleType
 
   bodies        Body[]
   contributions Contribution[]
@@ -379,12 +404,16 @@ enum ServiceAudience {
   dariah_team
   global
   national_local
+
+  @@map(name: "service_audience")
 }
 
 enum ServiceMarketplaceStatus {
   no
   not_applicable
   yes
+
+  @@map(name: "service_marketplace_status")
 }
 
 enum ServiceStatus {
@@ -393,12 +422,16 @@ enum ServiceStatus {
   live
   needs_review
   to_be_discontinued
+
+  @@map(name: "service_status")
 }
 
 enum ServiceType {
   community
   core
   internal
+
+  @@map(name: "service_type")
 }
 
 model Service {
@@ -459,6 +492,8 @@ enum ServiceKpiType {
   unique_users
   visits
   websites_hosted
+
+  @@map(name: "service_kpi_type")
 }
 
 model ServiceKpi {
@@ -482,12 +517,16 @@ enum SoftwareMarketplaceStatus {
   added_as_item
   no
   not_applicable
+
+  @@map(name: "software_marketplace_status")
 }
 
 enum SoftwareStatus {
   maintained
   needs_review
   not_maintained
+
+  @@map(name: "software_status")
 }
 
 model Software {
@@ -538,18 +577,21 @@ model WorkingGroupReport {
   members              Int?
   narrativeReport      String       @map(name: "narrative_report")
   status               ReportStatus @default(draft)
+  // FIXME: remove
+  year                 Int
 
-  reportCampaignId String @map(name: "report_campaign_id") @db.Uuid
-  workingGroupId   String @map(name: "working_group_id") @db.Uuid
+  // FIXME: required
+  reportCampaignId String? @map(name: "report_campaign_id") @db.Uuid
+  workingGroupId   String  @map(name: "working_group_id") @db.Uuid
 
-  reportCampaign     ReportCampaign      @relation(fields: [reportCampaignId], references: [id])
+  reportCampaign     ReportCampaign?     @relation(fields: [reportCampaignId], references: [id])
   workingGroup       WorkingGroup        @relation(fields: [workingGroupId], references: [id])
   workingGroupEvents WorkingGroupEvent[]
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
-  @@unique([workingGroupId, reportCampaignId])
+  // @@unique([reportCampaignId, workingGroupId])
   @@index(fields: [reportCampaignId])
   @@map(name: "working_group_reports")
 }
@@ -557,6 +599,8 @@ model WorkingGroupReport {
 enum WorkingGroupEventRole {
   organiser
   presenter
+
+  @@map(name: "working_group_event_role")
 }
 
 model WorkingGroupEvent {
@@ -577,6 +621,8 @@ model WorkingGroupEvent {
 enum WorkingGroupOutreachType {
   website
   social_media
+
+  @@map(name: "working_group_outreach_type")
 }
 
 model WorkingGroupOutreach {
@@ -606,6 +652,8 @@ enum EventSize {
   medium
   small
   very_large
+
+  @@map(name: "event_size")
 }
 
 model EventSizeValue {
@@ -614,15 +662,16 @@ model EventSizeValue {
   annualValue Int       @map(name: "annual_value")
   type        EventSize
 
-  reportCampaignId String @map(name: "report_campaign_id") @db.Uuid
+  // FIXME: required
+  reportCampaignId String? @map(name: "report_campaign_id") @db.Uuid
 
-  reportCampaign ReportCampaign @relation(fields: [reportCampaignId], references: [id])
+  reportCampaign ReportCampaign? @relation(fields: [reportCampaignId], references: [id])
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
-  @@unique([reportCampaignId, type])
-  @@map(name: "event_sizes")
+  // @@unique([reportCampaignId, type])
+  @@map(name: "event_size_values")
 }
 
 model OutreachTypeValue {
@@ -631,14 +680,15 @@ model OutreachTypeValue {
   annualValue Int          @map(name: "annual_value")
   type        OutreachType
 
-  reportCampaignId String @map(name: "report_campaign_id") @db.Uuid
+  // FIXME: required
+  reportCampaignId String? @map(name: "report_campaign_id") @db.Uuid
 
-  reportCampaign ReportCampaign @relation(fields: [reportCampaignId], references: [id])
+  reportCampaign ReportCampaign? @relation(fields: [reportCampaignId], references: [id])
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
-  @@unique([reportCampaignId, type])
+  // @@unique([reportCampaignId, type])
   @@map(name: "outreach_type_values")
 }
 
@@ -648,14 +698,15 @@ model RoleTypeValue {
   annualValue Int      @map(name: "annual_value")
   type        RoleType
 
-  reportCampaignId String @map(name: "report_campaign_id") @db.Uuid
+  // FIXME: required
+  reportCampaignId String? @map(name: "report_campaign_id") @db.Uuid
 
-  reportCampaign ReportCampaign @relation(fields: [reportCampaignId], references: [id])
+  reportCampaign ReportCampaign? @relation(fields: [reportCampaignId], references: [id])
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
-  @@unique([reportCampaignId, type])
+  // @@unique([reportCampaignId, type])
   @@map(name: "role_values")
 }
 
@@ -664,6 +715,8 @@ enum ServiceSize {
   large
   medium
   small
+
+  @@map(name: "service_size")
 }
 
 model ServiceSizeValue {
@@ -672,26 +725,29 @@ model ServiceSizeValue {
   annualValue Int         @map(name: "annual_value")
   type        ServiceSize
 
-  reportCampaignId String @map(name: "report_campaign_id") @db.Uuid
+  // FIXME: required
+  reportCampaignId String? @map(name: "report_campaign_id") @db.Uuid
 
-  reportCampaign ReportCampaign @relation(fields: [reportCampaignId], references: [id])
+  reportCampaign ReportCampaign? @relation(fields: [reportCampaignId], references: [id])
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
-  @@unique([reportCampaignId, type])
-  @@map(name: "service_sizes")
+  // @@unique([reportCampaignId, type])
+  @@map(name: "service_size_values")
 }
 
 enum ReportCampaignStatus {
   in_progress
   done
+
+  @@map(name: "report_campaign_status")
 }
 
 model ReportCampaign {
   id String @id @default(uuid()) @db.Uuid
 
-  serviceSizeThresholds Json // could become a separate thing
+  serviceSizeThresholds Json                 @map(name: "service_size_thresholds") // could become a separate thing
   status                ReportCampaignStatus @default(in_progress)
   year                  Int                  @unique
 
@@ -716,6 +772,8 @@ enum UserRole {
   admin
   contributor
   national_coordinator
+
+  @@map(name: "user_role")
 }
 
 model User {

@@ -11,13 +11,9 @@ import { Logo } from "@/components/logo";
 import { Drawer, DrawerTrigger } from "@/components/ui/blocks/drawer";
 import { IconButton } from "@/components/ui/icon-button";
 import { createHref } from "@/lib/navigation/create-href";
-import { getDashboardPath } from "@/lib/navigation/get-dashboard-path";
-import { getCurrentSession } from "@/lib/server/auth/get-current-session";
 
 export async function AppHeader() {
-	const { user } = await getCurrentSession();
 	const t = await getTranslations("AppHeader");
-	const dashboardPath = await getDashboardPath(user);
 
 	const links = {
 		home: {
@@ -25,7 +21,7 @@ export async function AppHeader() {
 			label: t("links.home"),
 		},
 		dashboard: {
-			href: createHref({ pathname: dashboardPath }),
+			href: createHref({ pathname: "/dashboard" }),
 			label: t("links.dashboard"),
 		},
 		documentation: {
