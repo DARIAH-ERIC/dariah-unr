@@ -11,17 +11,16 @@ interface ProjectsFundingLeveragesFormProps {
 }
 
 export async function ProjectsFundingLeveragesForm(props: ProjectsFundingLeveragesFormProps) {
-	const { comments, previousReportId, reportId } = props;
+	const { comments, previousReportId: _previousReportId, reportId } = props;
 
 	const projectsFundingLeverages = await getProjectsFundingLeverages({ reportId });
-	const previousProjectsFundingLeverages =
-		previousReportId != null ? await getProjectsFundingLeverages({ reportId }) : null;
+	// const previousProjectsFundingLeverages =
+	// 	previousReportId != null ? await getProjectsFundingLeverages({ reportId }) : null;
 
 	return (
 		<ProjectsFundingLeveragesFormContent
 			comments={comments?.projectFundingLeverages}
-			previousProjectsFundingLeverages={previousProjectsFundingLeverages}
-			previousReportId={previousReportId}
+			// previousProjectsFundingLeverages={previousProjectsFundingLeverages}
 			projectsFundingLeverages={projectsFundingLeverages}
 			reportId={reportId}
 		/>

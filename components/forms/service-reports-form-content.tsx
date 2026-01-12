@@ -35,7 +35,6 @@ interface ServiceReportWithKpis extends Prisma.ServiceReportGetPayload<{
 
 interface ServiceReportsFormContentProps {
 	comments: ReportCommentsSchema["serviceReports"];
-	// countryId: Country["id"];
 	// previousServiceReports: Array<ServiceReportWithKpis> | null;
 	reportId: Report["id"];
 	serviceReports: Array<ServiceReportWithKpis>;

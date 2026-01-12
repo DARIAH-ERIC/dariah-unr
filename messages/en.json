@@ -343,6 +343,8 @@
 		"title": "Terms of use"
 	},
 	"WorkingGroupReportForm": {
+		"confirm": "Confirm",
+		"confirmation-info": "This report has already been submitted.",
 		"submit": "Save",
 		"title": "Edit working group report"
 	},
@@ -643,6 +645,12 @@
 				"default": "Failed to update working group report."
 			},
 			"success": "Successfully updated working group report."
+		},
+		"updateWorkingGroupReportStatus": {
+			"errors": {
+				"default": "Failed to update working group report status."
+			},
+			"success": "Successfully updated working group report status."
 		}
 	},
 	"ui": {

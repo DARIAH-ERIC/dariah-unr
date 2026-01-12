@@ -1,7 +1,6 @@
 import type { Country, Report } from "@prisma/client";
 import { getTranslations } from "next-intl/server";
 
-import { Confetti } from "@/components/confetti";
 import { CalculationResult } from "@/components/forms/calculation-result";
 import { Summary } from "@/components/forms/summary";
 import { ReportDownloadLink } from "@/components/report-download-link";
@@ -41,8 +40,6 @@ export async function ReportSummary(props: ReportSummaryProps) {
 				successMessage={t("summary-success-message")}
 				userEmail={user?.email}
 			/>
-
-			<Confetti isEnabled={isAboveThreshold} />
 
 			<div>
 				<ReportDownloadLink reportSummary={reportSummary} />

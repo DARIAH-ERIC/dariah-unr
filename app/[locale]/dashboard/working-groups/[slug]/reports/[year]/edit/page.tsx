@@ -80,6 +80,7 @@ export default async function DashboardWorkingGroupReportEditPage(
 				<WorkingGroupReportForm
 					isConfirmationAvailable={isConfirmationAvailable}
 					previousWorkingGroupReport={previousWorkingGroupReport}
+					workingGroup={workingGroup}
 					workingGroupReport={workingGroupReport}
 				/>
 			</section>

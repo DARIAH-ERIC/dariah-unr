@@ -50,6 +50,8 @@ const steps = [
 	"summary",
 ] as const;
 
+type Step = (typeof steps)[number];
+
 const PathParamsSchema = v.object({
 	code: v.string(),
 	step: v.picklist(steps),
@@ -114,12 +116,7 @@ export default async function DashboardCountryReportEditStepPage(
 	return (
 		<section className="grid content-start gap-8">
 			<h2 className="hidden print:block">{t("print-title", { year: String(year) })}</h2>
-			<DashboardCountryReportNavigation
-				className="print:hidden"
-				code={code}
-				steps={steps}
-				year={year}
-			/>
+			<DashboardCountryReportNavigation className="print:hidden" code={code} year={year} />
 			<DashboardCountryReportEditStepPageContent code={code} step={step} user={user} year={year} />
 		</section>
 	);
@@ -127,7 +124,7 @@ export default async function DashboardCountryReportEditStepPage(
 
 interface DashboardCountryReportEditStepPageContentProps {
 	code: string;
-	step: (typeof steps)[number];
+	step: Step;
 	user: User;
 	year: number;
 }
@@ -599,7 +596,7 @@ async function DashboardCountryReportEditStepPageContent(
 					</FormDescription>
 
 					<FormPlaceholder>
-						<ReportSummary countryId={country.id} reportId={report.id} year={year} />
+						<ReportSummary countryId={country.id} reportId={report.id} />
 					</FormPlaceholder>
 
 					<Navigation className="print:hidden" code={code} previous="confirm" year={year} />
@@ -635,8 +632,8 @@ async function DashboardCountryReportEditStepPageContent(
 interface NavigationProps {
 	className?: string;
 	code: string;
-	next?: DashboardCountryReportEditStepPageParams["step"];
-	previous?: DashboardCountryReportEditStepPageParams["step"];
+	next?: Step;
+	previous?: Step;
 	year: number;
 }
 
@@ -699,7 +696,6 @@ function FormPlaceholder(props: FormPlaceholderProps): ReactNode {
 
 interface DashboardCountryReportNavigationProps {
 	code: string;
-	steps: typeof dashboardCountryReportSteps;
 	year: number;
 	className?: string;
 }
@@ -707,7 +703,7 @@ interface DashboardCountryReportNavigationProps {
 async function DashboardCountryReportNavigation(
 	props: DashboardCountryReportNavigationProps,
 ): Promise<ReactNode> {
-	const { className, code, steps, year } = props;
+	const { className, code, year } = props;
 
 	const t = await getTranslations("DashboardCountryReportNavigation");
 

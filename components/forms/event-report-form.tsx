@@ -22,7 +22,6 @@ export async function EventReportForm(props: EventReportFormProps) {
 			comments={comments?.eventReports}
 			eventReport={eventReport}
 			previousEventReport={previousEventReport}
-			previousReportId={previousReportId}
 			reportId={reportId}
 		/>
 	);
