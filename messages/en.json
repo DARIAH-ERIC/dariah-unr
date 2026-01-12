@@ -297,7 +297,7 @@
 	"IndexPage": {},
 	"IndexPageHeroSection": {
 		"badge": "DARIAH Reporting",
-		"lead-in": "Welcome to DARIAH Reporting! This includes information relevant to national consortia as well as DARIAH-EU working groups. This portal is designed to collect valuable data necessary for the evaluation and measurement of DARIAH-EU, its national consortia, and its working groups, as well as collect and display basic data on our national consortia and working groups for the new website. In order to proceed, there are two dashboards, available after login: The National Coordinator Dashboard (for national coordinators) and the Working Group Dashboard (for Working Group Chairs). Please login below to access the dashboard.",
+		"lead-in": "Welcome to DARIAH Reporting! This portal is designed to collect valuable data necessary for the evaluation and measurement of DARIAH-EU, its national consortia, and its working groups. This information will be used as well to display basic data on our national consortia and working groups for the new website. These dashboards, one each for National Coordinators & for Working Group Chairs, are available after login:",
 		"read-documentation": "Read documentation",
 		"sign-in": "Sign in",
 		"title": "We want to see performance indicators!"
