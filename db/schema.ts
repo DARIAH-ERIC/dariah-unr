@@ -12,6 +12,7 @@ export const eventSizeType = p.pgEnum("event_size_type", [
 	"large",
 	"medium",
 	"small",
+	"very_large",
 ]);
 export const institutionServiceRole = p.pgEnum("institution_service_role", [
 	"content_provider",
@@ -61,6 +62,7 @@ export const roleType = p.pgEnum("role_type", [
 	"national_coordinator_deputy",
 	"national_representative",
 	"jrc_member",
+	"jrc_chair",
 	"scientific_board_member",
 	"smt_member",
 	"wg_chair",
@@ -68,6 +70,7 @@ export const roleType = p.pgEnum("role_type", [
 	"national_representative_deputy",
 	"national_consortium_contact",
 	"cooperating_partner_contact",
+	"ncc_chair",
 ]);
 export const serviceAudience = p.pgEnum("service_audience", [
 	"dariah_team",

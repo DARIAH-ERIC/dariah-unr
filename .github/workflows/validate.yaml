@@ -27,10 +27,10 @@ jobs:
 
     env:
       DATABASE_HOST: "localhost"
-      DATABASE_NAME: "dariah-knowledge-base"
-      DATABASE_PASSWORD: "dariah-knowledge-base"
+      DATABASE_NAME: "dariah_unr"
+      DATABASE_PASSWORD: "dariah_unr"
       DATABASE_PORT: "5432"
-      DATABASE_USER: "dariah-knowledge-base"
+      DATABASE_USER: "dariah_unr"
       EMAIL_ADDRESS: "acdh@example.com"
       EMAIL_SMTP_PORT: "1025"
       EMAIL_SMTP_SERVER: "localhost"

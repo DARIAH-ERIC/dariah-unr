@@ -1,6 +1,6 @@
-# dariah unr
+# dariah reporting
 
-dariah unified national reporting, deployed at <https://dariah-unr.acdh-ch-dev.oeaw.ac.at>.
+dariah reporting, deployed at <https://reporting.dariah.eu>.
 
 ## development
 
