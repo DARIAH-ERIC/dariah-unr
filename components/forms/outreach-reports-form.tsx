@@ -13,13 +13,13 @@ interface OutreachReportsFormProps {
 }
 
 export async function OutreachReportsForm(props: OutreachReportsFormProps) {
-	const { comments, countryId, previousReportId, reportId } = props;
+	const { comments, countryId, previousReportId: _previousReportId, reportId } = props;
 
 	const outreachs = await getOutreachByCountry({ countryId });
 
 	const outreachReports = await getOutreachReports({ reportId });
-	const previousOutreachReports =
-		previousReportId != null ? await getOutreachReports({ reportId }) : null;
+	// const previousOutreachReports =
+	// 	previousReportId != null ? await getOutreachReports({ reportId }) : null;
 
 	return (
 		<OutreachReportsFormContent
@@ -27,8 +27,7 @@ export async function OutreachReportsForm(props: OutreachReportsFormProps) {
 			countryId={countryId}
 			outreachReports={outreachReports}
 			outreachs={outreachs}
-			previousOutreachReports={previousOutreachReports}
-			previousReportId={previousReportId}
+			// previousOutreachReports={previousOutreachReports}
 			reportId={reportId}
 		/>
 	);

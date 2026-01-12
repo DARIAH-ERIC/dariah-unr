@@ -8,7 +8,6 @@ export function getRoles() {
 			name: "asc",
 		},
 		select: {
-			annualValue: true,
 			id: true,
 			name: true,
 			type: true,

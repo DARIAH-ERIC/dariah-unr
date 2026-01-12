@@ -1,24 +1,15 @@
-import type { Metadata, ResolvingMetadata } from "next";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import type { Metadata } from "next";
+import { getLocale, getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { MainContent } from "@/components/main-content";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import type { IntlLocale } from "@/lib/i18n/locales";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-interface AuthUnauthorizedPageProps {
-	params: Promise<{
-		locale: IntlLocale;
-	}>;
-}
+interface AuthUnauthorizedPageProps extends PageProps<"/[locale]/auth/unauthorized"> {}
 
-export async function generateMetadata(
-	props: AuthUnauthorizedPageProps,
-	_parent: ResolvingMetadata,
-): Promise<Metadata> {
-	const { params } = props;
+export async function generateMetadata(_props: AuthUnauthorizedPageProps): Promise<Metadata> {
+	const locale = await getLocale();
 
-	const { locale } = await params;
 	const t = await getTranslations({ locale, namespace: "AuthUnauthorizedPage" });
 
 	const metadata: Metadata = {
@@ -29,13 +20,8 @@ export async function generateMetadata(
 }
 
 export default async function AuthUnauthorizedPage(
-	props: AuthUnauthorizedPageProps,
+	_props: AuthUnauthorizedPageProps,
 ): Promise<ReactNode> {
-	const { params } = props;
-
-	const { locale } = await params;
-	setRequestLocale(locale);
-
 	const t = await getTranslations("AuthUnauthorizedPage");
 
 	return (
@@ -44,7 +30,9 @@ export default async function AuthUnauthorizedPage(
 				<CardHeader>
 					<CardTitle>{t("title")}</CardTitle>
 				</CardHeader>
-				<p>{t("message")}</p>
+				<CardDescription>
+					<p>{t("message")}</p>
+				</CardDescription>
 			</Card>
 		</MainContent>
 	);

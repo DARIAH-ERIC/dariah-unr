@@ -14,26 +14,20 @@ import { useRouter } from "@/lib/navigation/navigation";
 import type { User } from "@/lib/server/auth/sessions";
 
 interface AuthUserMenuProps {
-	adminDashboardLabel: string;
+	dashboardLabel: string;
 	signOutLabel: string;
 	toggleUserMenuLabel: string;
 	user: User;
 }
 
 export function AuthUserMenu(props: AuthUserMenuProps) {
-	const { adminDashboardLabel, signOutLabel, toggleUserMenuLabel, user } = props;
+	const { dashboardLabel, signOutLabel, toggleUserMenuLabel, user } = props;
 
 	const router = useRouter();
 
-	const isAdminUser = user.role === "admin";
-
 	async function onAction(key: Key) {
 		switch (key) {
-			case "admin-dashboard": {
-				router.push("/dashboard/admin");
-				break;
-			}
-			case "user-dashboard": {
+			case "dashboard": {
 				router.push("/dashboard");
 				break;
 			}
@@ -55,11 +49,7 @@ export function AuthUserMenu(props: AuthUserMenuProps) {
 				<Header className="mb-1.5 border-b border-neutral-200 px-3 py-1.5 text-xs text-neutral-600 dark:border-neutral-800 dark:text-neutral-400">
 					Signed in as {user.name}
 				</Header>
-				{isAdminUser ? (
-					<DropdownMenuItem id="admin-dashboard">{adminDashboardLabel}</DropdownMenuItem>
-				) : (
-					<DropdownMenuItem id="user-dashboard">Dashboard</DropdownMenuItem>
-				)}
+				<DropdownMenuItem id="dashboard">{dashboardLabel}</DropdownMenuItem>
 				<DropdownMenuItem id="sign-out">{signOutLabel}</DropdownMenuItem>
 			</DropdownMenu>
 		</DropdownMenuTrigger>

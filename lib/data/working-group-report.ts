@@ -6,22 +6,26 @@ interface CreateReportForWorkingGroupIdParams {
 	facultativeQuestions: WorkingGroupReport["facultativeQuestions"];
 	narrativeReport: WorkingGroupReport["narrativeReport"];
 	workingGroupId: WorkingGroup["id"];
-	year: WorkingGroupReport["year"];
+	reportCampaignId: string;
 }
 
 export function createReportForWorkingGroupId(params: CreateReportForWorkingGroupIdParams) {
-	const { facultativeQuestions, narrativeReport, workingGroupId, year } = params;
+	const { facultativeQuestions, narrativeReport, workingGroupId, reportCampaignId } = params;
 
 	return db.workingGroupReport.create({
 		data: {
 			facultativeQuestions,
 			narrativeReport,
+			reportCampaign: {
+				connect: {
+					id: reportCampaignId,
+				},
+			},
 			workingGroup: {
 				connect: {
 					id: workingGroupId,
 				},
 			},
-			year,
 		},
 	});
 }
@@ -37,23 +41,69 @@ export function getWorkingGroupReportsByWorkingGroupId(
 
 	return db.workingGroupReport.findMany({
 		where: {
-			workingGroupId,
+			workingGroup: {
+				id: workingGroupId,
+			},
+		},
+		select: {
+			id: true,
+			status: true,
+			reportCampaign: {
+				select: {
+					year: true,
+				},
+			},
+		},
+		orderBy: {
+			reportCampaign: {
+				year: "desc",
+			},
+		},
+	});
+}
+
+interface GetWorkingGroupReportsByWorkingGroupSlugParams {
+	workingGroupSlug: string;
+}
+
+export function getWorkingGroupReportsByWorkingGroupSlug(
+	params: GetWorkingGroupReportsByWorkingGroupSlugParams,
+) {
+	const { workingGroupSlug } = params;
+
+	return db.workingGroupReport.findMany({
+		where: {
+			workingGroup: {
+				slug: workingGroupSlug,
+			},
+		},
+		select: {
+			reportCampaign: {
+				select: {
+					year: true,
+				},
+			},
+		},
+		orderBy: {
+			reportCampaign: {
+				year: "desc",
+			},
 		},
 	});
 }
 
 interface GetWorkingGroupReportParams {
 	workingGroupId: string;
-	year: number;
+	reportCampaignId: string;
 }
 
 export function getWorkingGroupReport(params: GetWorkingGroupReportParams) {
-	const { workingGroupId, year } = params;
+	const { workingGroupId, reportCampaignId } = params;
 
 	return db.workingGroupReport.findFirst({
 		where: {
 			workingGroupId,
-			year,
+			reportCampaignId,
 		},
 	});
 }
@@ -74,6 +124,35 @@ export function updateWorkingGroupReport(params: UpdateWorkingGroupReportParams)
 		data: {
 			facultativeQuestions,
 			narrativeReport,
+		},
+	});
+}
+
+interface UpdateWorkingGroupReportStatusParams {
+	id: WorkingGroupReport["id"];
+}
+
+export function updateWorkingGroupReportStatus(params: UpdateWorkingGroupReportStatusParams) {
+	const { id } = params;
+
+	return db.workingGroupReport.update({
+		where: {
+			id,
+		},
+		data: {
+			status: "final",
+		},
+		select: {
+			workingGroup: {
+				select: {
+					name: true,
+				},
+			},
+			reportCampaign: {
+				select: {
+					year: true,
+				},
+			},
 		},
 	});
 }

@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
+import { assertPermissions } from "@/lib/access-controls";
 import { createFullSoftware as createSoftware } from "@/lib/data/software";
 import { getFormData } from "@/lib/get-form-data";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
@@ -52,7 +53,8 @@ export async function createSoftwareAction(
 ): Promise<FormState> {
 	const t = await getTranslations("actions.admin.createSoftware");
 
-	await assertAuthenticated(["admin"]);
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
 	const input = getFormData(formData);
 	const result = formSchema.safeParse(input);

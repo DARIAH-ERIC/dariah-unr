@@ -1,28 +1,21 @@
-import type { Metadata, ResolvingMetadata } from "next";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { Link } from "@/components/link";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
-import type { IntlLocale } from "@/lib/i18n/locales";
+import { assertPermissions } from "@/lib/access-controls";
 import { createHref } from "@/lib/navigation/create-href";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
-interface DashboardAdminPageProps {
-	params: Promise<{
-		locale: IntlLocale;
-	}>;
-}
+interface DashboardAdminPageProps extends PageProps<"/[locale]/dashboard/admin"> {}
 
-export async function generateMetadata(
-	props: DashboardAdminPageProps,
-	_parent: ResolvingMetadata,
-): Promise<Metadata> {
-	const { params } = props;
+export async function generateMetadata(_props: DashboardAdminPageProps): Promise<Metadata> {
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
-	const { locale } = await params;
-	const t = await getTranslations({ locale, namespace: "DashboardAdminPage" });
+	const t = await getTranslations("DashboardAdminPage");
 
 	const metadata: Metadata = {
 		title: t("meta.title"),
@@ -32,16 +25,12 @@ export async function generateMetadata(
 }
 
 export default async function DashboardAdminPage(
-	props: DashboardAdminPageProps,
+	_props: DashboardAdminPageProps,
 ): Promise<ReactNode> {
-	const { params } = props;
-
-	const { locale } = await params;
-	setRequestLocale(locale);
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
 	const t = await getTranslations("DashboardAdminPage");
-
-	await assertAuthenticated(["admin"]);
 
 	return (
 		<MainContent className="container grid content-start gap-y-8 py-8">
@@ -104,9 +93,9 @@ function DashboardAdminPageContent() {
 				<li>
 					<Link
 						className="grid place-content-center rounded-md border border-neutral-200 px-8 py-4 font-medium text-neutral-700 transition hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
-						href={createHref({ pathname: "/dashboard/admin/projects-fundings" })}
+						href={createHref({ pathname: "/dashboard/admin/projects" })}
 					>
-						Go to projects fundings
+						Go to projects
 					</Link>
 				</li>
 				<li>

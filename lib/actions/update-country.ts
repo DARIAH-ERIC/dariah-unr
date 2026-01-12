@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
+import { assertPermissions } from "@/lib/access-controls";
 import { updateCountry } from "@/lib/data/country";
 import { getFormData } from "@/lib/get-form-data";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
@@ -46,7 +47,7 @@ export async function updateCountryAction(
 ): Promise<FormState> {
 	const t = await getTranslations("actions.updateCountry");
 
-	await assertAuthenticated(["national_coordinator", "admin"]);
+	const { user } = await assertAuthenticated();
 
 	const input = getFormData(formData);
 	const result = formSchema.safeParse(input);
@@ -73,6 +74,8 @@ export async function updateCountryAction(
 		startDate,
 		type,
 	} = result.data;
+
+	await assertPermissions(user, { kind: "country", id, action: "edit-metadata" });
 
 	try {
 		await updateCountry({

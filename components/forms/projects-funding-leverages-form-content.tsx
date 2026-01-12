@@ -48,8 +48,7 @@ type ProjectsFundingLeverageSerialized = Omit<ProjectsFundingLeverage, "amount">
 
 interface ProjectsFundingLeveragesFormContentProps {
 	comments: ReportCommentsSchema["projectFundingLeverages"];
-	previousProjectsFundingLeverages: Array<ProjectsFundingLeverageSerialized> | null;
-	previousReportId: Report["id"] | undefined;
+	// previousProjectsFundingLeverages: Array<ProjectsFundingLeverageSerialized> | null;
 	projectsFundingLeverages: Array<ProjectsFundingLeverageSerialized>;
 	reportId: Report["id"];
 }
@@ -60,7 +59,6 @@ export function ProjectsFundingLeveragesFormContent(
 	const {
 		comments,
 		// previousProjectsFundingLeverages,
-		// previousReportId,
 		projectsFundingLeverages,
 		reportId,
 	} = props;

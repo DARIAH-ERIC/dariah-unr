@@ -7,6 +7,7 @@ import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
 import { env } from "@/config/env.config";
+import { assertPermissions } from "@/lib/access-controls";
 import { calculateOperationalCost } from "@/lib/calculate-operational-cost";
 import {
 	getReportComments,
@@ -48,7 +49,7 @@ export async function updateReportStatusAction(
 ): Promise<FormState> {
 	const t = await getTranslations("actions.updateReport");
 
-	await assertAuthenticated(["admin", "national_coordinator"]);
+	const { user } = await assertAuthenticated();
 
 	const input = getFormData(formData);
 	const result = formSchema.safeParse(input);
@@ -64,6 +65,8 @@ export async function updateReportStatusAction(
 	}
 
 	const { comment, countryId, reportId } = result.data;
+
+	await assertPermissions(user, { kind: "country", id: countryId, action: "confirm" });
 
 	try {
 		const report = await getReportComments({ id: reportId });
@@ -88,7 +91,7 @@ export async function updateReportStatusAction(
 				await sendEmail({
 					from: env.EMAIL_ADDRESS,
 					subject: "[dariah-unr] comment submitted",
-					text: `A comment on the report confirmation screen for ${String(updatedReport.year)} has been submitted by ${updatedReport.country.name}.\n\n${comment}`,
+					text: `A comment on the report confirmation screen for ${String(updatedReport.reportCampaign.year)} has been submitted by ${updatedReport.country.name}.\n\n${comment}`,
 				});
 			} catch (error) {
 				log.error(error);
@@ -99,7 +102,7 @@ export async function updateReportStatusAction(
 			await sendEmail({
 				from: env.EMAIL_ADDRESS,
 				subject: "[dariah-unr] report submitted",
-				text: `A report for ${String(result.year)} has been submitted by ${result.country.name}.`,
+				text: `A report for ${String(result.reportCampaign.year)} has been submitted by ${result.country.name}.`,
 			});
 		} catch (error) {
 			log.error(error);

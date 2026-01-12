@@ -11,17 +11,16 @@ interface ResearchPolicyDevelopmentsFormProps {
 }
 
 export async function ResearchPolicyDevelopmentsForm(props: ResearchPolicyDevelopmentsFormProps) {
-	const { comments, previousReportId, reportId } = props;
+	const { comments, previousReportId: _previousReportId, reportId } = props;
 
 	const researchPolicyDevelopments = await getResearchPolicyDevelopments({ reportId });
-	const previousResearchPolicyDevelopments =
-		previousReportId != null ? await getResearchPolicyDevelopments({ reportId }) : null;
+	// const previousResearchPolicyDevelopments =
+	// 	previousReportId != null ? await getResearchPolicyDevelopments({ reportId }) : null;
 
 	return (
 		<ResearchPolicyDevelopmentsFormContent
 			comments={comments?.researchPolicyDevelopments}
-			previousReportId={previousReportId}
-			previousResearchPolicyDevelopments={previousResearchPolicyDevelopments}
+			// previousResearchPolicyDevelopments={previousResearchPolicyDevelopments}
 			reportId={reportId}
 			researchPolicyDevelopments={researchPolicyDevelopments}
 		/>

@@ -1,28 +1,18 @@
-import { HttpError, request } from "@acdh-oeaw/lib";
-import type { Metadata, ResolvingMetadata } from "next";
+import { createUrl, createUrlSearchParams, HttpError, isErr, request } from "@acdh-oeaw/lib";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
-import { createImprintUrl } from "@/config/imprint.config";
+import { env } from "@/config/env.config";
 import type { IntlLocale } from "@/lib/i18n/locales";
 
-interface ImprintPageProps {
-	params: Promise<{
-		locale: IntlLocale;
-	}>;
-}
+interface ImprintPageProps extends PageProps<"/[locale]/imprint"> {}
 
-export async function generateMetadata(
-	props: ImprintPageProps,
-	_parent: ResolvingMetadata,
-): Promise<Metadata> {
-	const { params } = props;
-
-	const { locale } = await params;
-	const t = await getTranslations({ locale, namespace: "ImprintPage" });
+export async function generateMetadata(_props: ImprintPageProps): Promise<Metadata> {
+	const t = await getTranslations("ImprintPage");
 
 	const metadata: Metadata = {
 		title: t("meta.title"),
@@ -31,11 +21,8 @@ export async function generateMetadata(
 	return metadata;
 }
 
-export default async function ImprintPage(props: ImprintPageProps): Promise<ReactNode> {
-	const { params } = props;
-
-	const { locale } = await params;
-	setRequestLocale(locale);
+export default async function ImprintPage(_props: ImprintPageProps): Promise<ReactNode> {
+	const locale = await getLocale();
 
 	const t = await getTranslations("ImprintPage");
 
@@ -57,20 +44,31 @@ async function ImprintPageContent(props: ImprintPageContentProps) {
 
 	const html = await getImprintHtml(locale);
 
+	// eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml
 	return <div dangerouslySetInnerHTML={{ __html: html }} className="prose prose-sm" />;
 }
 
 async function getImprintHtml(locale: IntlLocale): Promise<string> {
-	try {
-		const url = createImprintUrl(locale);
-		const html = await request(url, { responseType: "text" });
+	const url = createUrl({
+		baseUrl: env.NEXT_PUBLIC_APP_IMPRINT_SERVICE_BASE_URL,
+		pathname: `/${String(env.NEXT_PUBLIC_APP_SERVICE_ID)}`,
+		searchParams: createUrlSearchParams({
+			locale,
+			redmine: env.NEXT_PUBLIC_APP_IMPRINT_CUSTOM_CONFIG,
+		}),
+	});
 
-		return html;
-	} catch (error) {
-		if (error instanceof HttpError && error.response.status === 404) {
+	const result = await request(url, { responseType: "text" });
+
+	if (isErr(result)) {
+		const error = result.error;
+
+		if (HttpError.is(error) && error.response.status === 404) {
 			notFound();
 		}
 
 		throw error;
 	}
+
+	return result.value.data;
 }

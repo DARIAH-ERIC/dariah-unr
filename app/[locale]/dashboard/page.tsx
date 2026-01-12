@@ -1,29 +1,20 @@
-import type { Metadata, ResolvingMetadata } from "next";
-import { notFound } from "next/navigation";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
+import { Link } from "@/components/link";
 import { MainContent } from "@/components/main-content";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageTitle } from "@/components/page-title";
 import { getCountryById } from "@/lib/data/country";
-import type { IntlLocale } from "@/lib/i18n/locales";
-import { redirect } from "@/lib/navigation/navigation";
+import { getWorkingGroupsByPersonId } from "@/lib/data/working-group";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
-interface DashboardPageProps {
-	params: Promise<{
-		locale: IntlLocale;
-	}>;
-}
+interface DashboardPageProps extends PageProps<"/[locale]/dashboard"> {}
 
-export async function generateMetadata(
-	props: DashboardPageProps,
-	_parent: ResolvingMetadata,
-): Promise<Metadata> {
-	const { params } = props;
+export async function generateMetadata(_props: DashboardPageProps): Promise<Metadata> {
+	await assertAuthenticated();
 
-	const { locale } = await params;
-	const t = await getTranslations({ locale, namespace: "DashboardPage" });
+	const t = await getTranslations("DashboardPage");
 
 	const metadata: Metadata = {
 		title: t("meta.title"),
@@ -32,38 +23,53 @@ export async function generateMetadata(
 	return metadata;
 }
 
-export default async function DashboardPage(props: DashboardPageProps): Promise<ReactNode> {
-	const { params } = props;
-
-	const { locale } = await params;
-	setRequestLocale(locale);
+export default async function DashboardPage(_props: DashboardPageProps): Promise<ReactNode> {
+	const { user } = await assertAuthenticated();
 
 	const t = await getTranslations("DashboardPage");
 
-	const { user } = await assertAuthenticated();
+	const isAdmin = user.role === "admin";
+	const country = user.countryId ? await getCountryById({ id: user.countryId }) : null;
+	const hasCountry = country != null;
+	const contributions =
+		user.personId != null ? await getWorkingGroupsByPersonId({ personId: user.personId }) : [];
+	const hasWorkingGroups = contributions.length > 0;
 
-	const { countryId } = user;
+	return (
+		<MainContent className="container grid content-start gap-8 py-8">
+			<PageTitle>{t("title")}</PageTitle>
 
-	if (countryId == null) {
-		return (
-			<MainContent className="container grid place-content-center py-8">
-				<Card>
-					<CardHeader>
-						<CardTitle>{t("title")}</CardTitle>
-					</CardHeader>
-					<p>{t("no-country-message")}</p>
-				</Card>
-			</MainContent>
-		);
-	}
+			{isAdmin ? (
+				<section>
+					<Link href="/dashboard/admin">Admin dashboard</Link>
+				</section>
+			) : null}
 
-	const country = await getCountryById({ id: countryId });
+			{hasCountry ? (
+				<section>
+					<Link href={`/dashboard/countries/${country.code}`}>
+						National consortium "{country.name}"
+					</Link>
+				</section>
+			) : null}
 
-	if (country == null) {
-		notFound();
-	}
+			{hasWorkingGroups ? (
+				<section>
+					{contributions.map((contribution) => {
+						const { id, workingGroup } = contribution;
 
-	const { code } = country;
+						if (workingGroup == null) {
+							return null;
+						}
 
-	return redirect({ href: `dashboard/countries/${code}`, locale });
+						return (
+							<Link key={id} href={`/dashboard/working-groups/${workingGroup.slug}`}>
+								Working group "{workingGroup.name}"
+							</Link>
+						);
+					})}
+				</section>
+			) : null}
+		</MainContent>
+	);
 }

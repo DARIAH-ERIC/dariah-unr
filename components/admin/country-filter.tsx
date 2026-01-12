@@ -9,7 +9,6 @@ import { TableFilterSelect } from "@/components/ui/table";
 import { usePathname, useRouter } from "@/lib/navigation/navigation";
 
 interface CountryFilterProps {
-	defaultCountryCode?: string;
 	countries: Array<Country>;
 }
 

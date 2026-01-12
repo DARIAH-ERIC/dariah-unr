@@ -1,29 +1,22 @@
-import type { Metadata, ResolvingMetadata } from "next";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { type ReactNode, Suspense } from "react";
 
 import { AdminReportsTableContent } from "@/components/admin/reports-table-content";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
+import { assertPermissions } from "@/lib/access-controls";
 import { getCountries } from "@/lib/data/country";
 import { getReports } from "@/lib/data/report";
-import type { IntlLocale } from "@/lib/i18n/locales";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
-interface DashboardAdminReportsPageProps {
-	params: Promise<{
-		locale: IntlLocale;
-	}>;
-}
+interface DashboardAdminReportsPageProps extends PageProps<"/[locale]/dashboard/admin/reports"> {}
 
-export async function generateMetadata(
-	props: DashboardAdminReportsPageProps,
-	_parent: ResolvingMetadata,
-): Promise<Metadata> {
-	const { params } = props;
+export async function generateMetadata(_props: DashboardAdminReportsPageProps): Promise<Metadata> {
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
-	const { locale } = await params;
-	const t = await getTranslations({ locale, namespace: "DashboardAdminReportsPage" });
+	const t = await getTranslations("DashboardAdminReportsPage");
 
 	const metadata: Metadata = {
 		title: t("meta.title"),
@@ -33,16 +26,12 @@ export async function generateMetadata(
 }
 
 export default async function DashboardAdminReportsPage(
-	props: DashboardAdminReportsPageProps,
+	_props: DashboardAdminReportsPageProps,
 ): Promise<ReactNode> {
-	const { params } = props;
-
-	const { locale } = await params;
-	setRequestLocale(locale);
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
 	const t = await getTranslations("DashboardAdminReportsPage");
-
-	await assertAuthenticated(["admin"]);
 
 	return (
 		<MainContent className="container grid max-w-(--breakpoint-2xl)! content-start gap-y-8 py-8">

@@ -6,10 +6,12 @@ import { expect, test } from "@/e2e/lib/test";
 test.describe("analytics service", () => {
 	// eslint-disable-next-line playwright/no-skipped-test
 	test.skip(() => {
-		return env.NEXT_PUBLIC_MATOMO_BASE_URL == null || env.NEXT_PUBLIC_MATOMO_ID == null;
+		return env.NEXT_PUBLIC_APP_MATOMO_BASE_URL == null || env.NEXT_PUBLIC_APP_MATOMO_ID == null;
 	}, "Analytics service disabled.");
 
-	const baseUrl = String(createUrl({ baseUrl: env.NEXT_PUBLIC_MATOMO_BASE_URL!, pathname: "/**" }));
+	const baseUrl = String(
+		createUrl({ baseUrl: env.NEXT_PUBLIC_APP_MATOMO_BASE_URL!, pathname: "/**" }),
+	);
 
 	test("should track page views", async ({ page }) => {
 		const initialResponsePromise = page.waitForResponse(baseUrl);

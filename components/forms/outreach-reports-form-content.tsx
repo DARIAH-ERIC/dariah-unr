@@ -50,8 +50,7 @@ interface OutreachReportsFormContentProps {
 	countryId: Country["id"];
 	outreachReports: Array<OutreachReportWithKpis>;
 	outreachs: Array<Outreach>;
-	previousOutreachReports: Array<OutreachReportWithKpis> | null;
-	previousReportId: Report["id"] | undefined;
+	// previousOutreachReports: Array<OutreachReportWithKpis> | null;
 	reportId: Report["id"];
 }
 
@@ -62,7 +61,6 @@ export function OutreachReportsFormContent(props: OutreachReportsFormContentProp
 		outreachReports,
 		outreachs,
 		// previousOutreachReports,
-		// previousReportId,
 		reportId,
 	} = props;
 

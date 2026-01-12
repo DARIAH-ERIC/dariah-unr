@@ -1,73 +1,58 @@
-import type { Metadata, ResolvingMetadata } from "next";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
-import { MainContent } from "@/components/main-content";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { getCountryById } from "@/lib/data/country";
-import type { IntlLocale } from "@/lib/i18n/locales";
+import { assertPermissions } from "@/lib/access-controls";
+import { getCountryByCode } from "@/lib/data/country";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
-interface DashboardPageProps {
-	params: Promise<{
-		locale: IntlLocale;
-	}>;
-}
+interface DashboardCountryPageProps extends PageProps<"/[locale]/dashboard/countries/[code]"> {}
 
-export async function generateMetadata(
-	props: DashboardPageProps,
-	_parent: ResolvingMetadata,
-): Promise<Metadata> {
+export async function generateMetadata(props: DashboardCountryPageProps): Promise<Metadata> {
 	const { params } = props;
 
-	const { locale } = await params;
-	const t = await getTranslations({ locale, namespace: "DashboardPage" });
+	const { user } = await assertAuthenticated();
+
+	const { code } = await params;
+
+	const country = await getCountryByCode({ code });
+	if (country == null) {
+		notFound();
+	}
+
+	const { id, name } = country;
+
+	await assertPermissions(user, { kind: "country", id, action: "read" });
+
+	const t = await getTranslations("DashboardCountryPage");
 
 	const metadata: Metadata = {
-		title: t("meta.title"),
+		title: t("meta.title", { name }),
 	};
 
 	return metadata;
 }
 
-export default async function DashboardPage(props: DashboardPageProps): Promise<ReactNode> {
+export default async function DashboardCountryPage(
+	props: DashboardCountryPageProps,
+): Promise<ReactNode> {
 	const { params } = props;
-
-	const { locale } = await params;
-	setRequestLocale(locale);
-
-	const t = await getTranslations("DashboardPage");
 
 	const { user } = await assertAuthenticated();
 
-	const { countryId } = user;
+	const { code } = await params;
 
-	if (countryId == null) {
-		return (
-			<MainContent className="container grid place-content-center py-8">
-				<Card>
-					<CardHeader>
-						<CardTitle>{t("title")}</CardTitle>
-					</CardHeader>
-
-					<figure className="w-1/2">
-						{
-							// eslint-disable-next-line @next/next/no-img-element
-							<img alt="" src="/assets/images/gordon-shumway.png" />
-						}
-					</figure>
-					<p>{t("no-country-message")}</p>
-				</Card>
-			</MainContent>
-		);
-	}
-
-	const country = await getCountryById({ id: countryId });
-
+	const country = await getCountryByCode({ code });
 	if (country == null) {
 		notFound();
 	}
+
+	const { id } = country;
+
+	await assertPermissions(user, { id, kind: "country", action: "read" });
+
+	const t = await getTranslations("DashboardCountryPage");
 
 	return (
 		<section>

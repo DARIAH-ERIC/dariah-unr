@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import type { z, ZodTypeAny } from "zod";
 
+import { assertPermissions } from "@/lib/access-controls";
 import { ingestDataFromSshomp } from "@/lib/db/ingest-data-from-sshomp";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
@@ -29,7 +30,8 @@ export async function ingestDataFromSshompAction(
 ): Promise<FormState> {
 	const t = await getTranslations("actions.ingestDataFromSshomp");
 
-	await assertAuthenticated(["admin"]);
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
 	try {
 		const stats = await ingestDataFromSshomp();

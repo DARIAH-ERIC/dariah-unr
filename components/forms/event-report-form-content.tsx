@@ -19,18 +19,11 @@ interface EventReportFormContentProps {
 	comments: ReportCommentsSchema["eventReports"];
 	eventReport: EventReport | null;
 	previousEventReport: EventReport | null;
-	previousReportId: Report["id"] | undefined;
 	reportId: Report["id"];
 }
 
 export function EventReportFormContent(props: EventReportFormContentProps): ReactNode {
-	const {
-		comments,
-		eventReport,
-		previousEventReport,
-		// previousReportId,
-		reportId,
-	} = props;
+	const { comments, eventReport, previousEventReport, reportId } = props;
 
 	const [formState, formAction] = useActionState(updateEventReportAction, undefined);
 

@@ -1,30 +1,23 @@
-import type { Metadata, ResolvingMetadata } from "next";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { type ReactNode, Suspense } from "react";
 
 import { AdminUsersTableContent } from "@/components/admin/users-table-content";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
+import { assertPermissions } from "@/lib/access-controls";
 import { getCountries } from "@/lib/data/country";
 import { getPersons } from "@/lib/data/person";
 import { getUsers } from "@/lib/data/user";
-import type { IntlLocale } from "@/lib/i18n/locales";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
-interface DashboardAdminUsersPageProps {
-	params: Promise<{
-		locale: IntlLocale;
-	}>;
-}
+interface DashboardAdminUsersPageProps extends PageProps<"/[locale]/dashboard/admin/users"> {}
 
-export async function generateMetadata(
-	props: DashboardAdminUsersPageProps,
-	_parent: ResolvingMetadata,
-): Promise<Metadata> {
-	const { params } = props;
+export async function generateMetadata(_props: DashboardAdminUsersPageProps): Promise<Metadata> {
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
-	const { locale } = await params;
-	const t = await getTranslations({ locale, namespace: "DashboardAdminUsersPage" });
+	const t = await getTranslations("DashboardAdminUsersPage");
 
 	const metadata: Metadata = {
 		title: t("meta.title"),
@@ -34,16 +27,12 @@ export async function generateMetadata(
 }
 
 export default async function DashboardAdminUsersPage(
-	props: DashboardAdminUsersPageProps,
+	_props: DashboardAdminUsersPageProps,
 ): Promise<ReactNode> {
-	const { params } = props;
-
-	const { locale } = await params;
-	setRequestLocale(locale);
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
 	const t = await getTranslations("DashboardAdminUsersPage");
-
-	await assertAuthenticated(["admin"]);
 
 	return (
 		<MainContent className="container grid max-w-(--breakpoint-2xl)! content-start gap-y-8 py-8">

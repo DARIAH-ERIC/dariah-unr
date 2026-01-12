@@ -1,27 +1,23 @@
 import type { Metadata, ResolvingMetadata } from "next";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { AdminSshompIngestFormContent } from "@/components/admin/sshomp-ingest-form-content";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
-import type { IntlLocale } from "@/lib/i18n/locales";
+import { assertPermissions } from "@/lib/access-controls";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
-interface DashboardAdminSshompIngestPageProps {
-	params: Promise<{
-		locale: IntlLocale;
-	}>;
-}
+interface DashboardAdminSshompIngestPageProps extends PageProps<"/[locale]/dashboard/admin/sshomp"> {}
 
 export async function generateMetadata(
-	props: DashboardAdminSshompIngestPageProps,
+	_props: DashboardAdminSshompIngestPageProps,
 	_parent: ResolvingMetadata,
 ): Promise<Metadata> {
-	const { params } = props;
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
-	const { locale } = await params;
-	const t = await getTranslations({ locale, namespace: "DashboardAdminSshompIngestPage" });
+	const t = await getTranslations("DashboardAdminSshompIngestPage");
 
 	const metadata: Metadata = {
 		title: t("meta.title"),
@@ -31,16 +27,12 @@ export async function generateMetadata(
 }
 
 export default async function DashboardAdminSshompIngestPage(
-	props: DashboardAdminSshompIngestPageProps,
+	_props: DashboardAdminSshompIngestPageProps,
 ): Promise<ReactNode> {
-	const { params } = props;
-
-	const { locale } = await params;
-	setRequestLocale(locale);
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
 	const t = await getTranslations("DashboardAdminSshompIngestPage");
-
-	await assertAuthenticated(["admin"]);
 
 	return (
 		<MainContent className="container grid max-w-(--breakpoint-2xl)! content-start gap-y-8 py-8">

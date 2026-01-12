@@ -63,7 +63,6 @@ interface InstitutionsTableContentProps {
 			};
 		}>
 	>;
-	hideFilter?: boolean;
 }
 
 export function InstitutionsTableContent(props: InstitutionsTableContentProps): ReactNode {

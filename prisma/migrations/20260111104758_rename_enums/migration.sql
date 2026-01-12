@@ -1,0 +1,25 @@
+ALTER TABLE "projects_funding_leverage" RENAME TO "projects";
+
+ALTER TYPE "BodyType" RENAME TO "body_type";
+ALTER TYPE "CountryType" RENAME TO "country_type";
+ALTER TYPE "EventSize" RENAME TO "event_size";
+ALTER TYPE "InstitutionType" RENAME TO "institution_type";
+ALTER TYPE "InstitutionServiceRole" RENAME TO "institution_service_role";
+ALTER TYPE "OutreachType" RENAME TO "outreach_type";
+ALTER TYPE "OutreachKpiType" RENAME TO "outreach_kpi_type";
+ALTER TYPE "ProjectScope" RENAME TO "project_scope";
+ALTER TYPE "ReportCampaignStatus" RENAME TO "report_campaign_status";
+ALTER TYPE "ReportStatus" RENAME TO "report_status";
+ALTER TYPE "ResearchPolicyLevel" RENAME TO "research_policy_level";
+ALTER TYPE "RoleType" RENAME TO "role_type";
+ALTER TYPE "ServiceAudience" RENAME TO "service_audience";
+ALTER TYPE "ServiceMarketplaceStatus" RENAME TO "service_marketplace_status";
+ALTER TYPE "ServiceSize" RENAME TO "service_size";
+ALTER TYPE "ServiceStatus" RENAME TO "service_status";
+ALTER TYPE "ServiceType" RENAME TO "service_type";
+ALTER TYPE "ServiceKpiType" RENAME TO "service_kpi_type";
+ALTER TYPE "SoftwareMarketplaceStatus" RENAME TO "software_marketplace_status";
+ALTER TYPE "SoftwareStatus" RENAME TO "software_status";
+ALTER TYPE "WorkingGroupEventRole" RENAME TO "working_group_event_role";
+ALTER TYPE "WorkingGroupOutreachType" RENAME TO "working_group_outreach_type";
+ALTER TYPE "UserRole" RENAME TO "user_role";

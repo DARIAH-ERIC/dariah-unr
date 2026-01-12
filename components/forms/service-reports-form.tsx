@@ -15,20 +15,18 @@ interface ServiceReportsFormProps {
 }
 
 export async function ServiceReportsForm(props: ServiceReportsFormProps) {
-	const { comments, countryId, previousReportId, reportId, year } = props;
+	const { comments, countryId, previousReportId: _previousReportId, reportId, year } = props;
 
 	const services = await getServicesByCountry({ countryId });
 
 	const serviceReports = await getServiceReports({ reportId });
-	const previousServiceReports =
-		previousReportId != null ? await getServiceReports({ reportId }) : null;
+	// const previousServiceReports =
+	// 	previousReportId != null ? await getServiceReports({ reportId }) : null;
 
 	return (
 		<ServiceReportsFormContent
 			comments={comments?.serviceReports}
-			countryId={countryId}
-			previousReportId={previousReportId}
-			previousServiceReports={previousServiceReports}
+			// previousServiceReports={previousServiceReports}
 			reportId={reportId}
 			serviceReports={serviceReports}
 			services={services}

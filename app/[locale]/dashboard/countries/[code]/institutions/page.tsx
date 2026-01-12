@@ -1,48 +1,38 @@
-import type { Metadata, ResolvingMetadata } from "next";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { InstitutionsTableContent } from "@/components/institutions-table-content";
+import { assertPermissions } from "@/lib/access-controls";
 import { getCountryByCode } from "@/lib/data/country";
 import { getInstitutionsByCountry } from "@/lib/data/institution";
-import type { IntlLocale } from "@/lib/i18n/locales";
-import { dashboardCountryPageParams } from "@/lib/schemas/dashboard";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
-interface DashboardCountryInstitutionsPageProps {
-	params: Promise<{
-		code: string;
-		locale: IntlLocale;
-	}>;
-}
+interface DashboardCountryInstitutionsPageProps extends PageProps<"/[locale]/dashboard/countries/[code]/institutions"> {}
 
 export async function generateMetadata(
 	props: DashboardCountryInstitutionsPageProps,
-	_parent: ResolvingMetadata,
 ): Promise<Metadata> {
 	const { params } = props;
 
-	const { locale } = await params;
+	const { user } = await assertAuthenticated();
 
-	await assertAuthenticated(["admin", "national_coordinator"]);
-
-	const result = dashboardCountryPageParams.safeParse(await params);
-
-	if (!result.success) notFound();
-
-	const { code } = result.data;
+	const { code } = await params;
 
 	const country = await getCountryByCode({ code });
+	if (country == null) {
+		notFound();
+	}
 
-	if (country == null) notFound();
+	const { id, name } = country;
 
-	const { name } = country;
+	await assertPermissions(user, { kind: "country", id, action: "edit-metadata" });
 
-	const _t = await getTranslations({ locale, namespace: "DashboardCountryInstitutionsPage" });
+	const t = await getTranslations("DashboardCountryInstitutionsPage");
 
 	const metadata: Metadata = {
-		title: _t("meta.title", { name }),
+		title: t("meta.title", { name }),
 	};
 
 	return metadata;
@@ -53,22 +43,20 @@ export default async function DashboardCountryInstitutionsPage(
 ): Promise<ReactNode> {
 	const { params } = props;
 
-	const { locale } = await params;
-	setRequestLocale(locale);
+	const { user } = await assertAuthenticated();
 
-	await assertAuthenticated(["admin", "national_coordinator"]);
-
-	const result = dashboardCountryPageParams.safeParse(await params);
-
-	if (!result.success) notFound();
-
-	const { code } = result.data;
+	const { code } = await params;
 
 	const country = await getCountryByCode({ code });
+	if (country == null) {
+		notFound();
+	}
 
-	if (country == null) notFound();
+	const { id } = country;
 
-	const institutions = await getInstitutionsByCountry({ countryId: country.id });
+	await assertPermissions(user, { kind: "country", id, action: "edit-metadata" });
+
+	const institutions = await getInstitutionsByCountry({ countryId: id });
 
 	return (
 		<section className="grid w-full gap-4">

@@ -1,30 +1,25 @@
-import type { Metadata, ResolvingMetadata } from "next";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { type ReactNode, Suspense } from "react";
 
 import { AdminWorkingGroupsTableContent } from "@/components/admin/working-groups-table-content";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
+import { assertPermissions } from "@/lib/access-controls";
 import { getContributions } from "@/lib/data/contributions";
 import { getPersons } from "@/lib/data/person";
 import { getWorkingGroups } from "@/lib/data/working-group";
-import type { IntlLocale } from "@/lib/i18n/locales";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
-interface DashboardAdminWorkingGroupsPageProps {
-	params: Promise<{
-		locale: IntlLocale;
-	}>;
-}
+interface DashboardAdminWorkingGroupsPageProps extends PageProps<"/[locale]/dashboard/admin/working-groups"> {}
 
 export async function generateMetadata(
-	props: DashboardAdminWorkingGroupsPageProps,
-	_parent: ResolvingMetadata,
+	_props: DashboardAdminWorkingGroupsPageProps,
 ): Promise<Metadata> {
-	const { params } = props;
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
-	const { locale } = await params;
-	const t = await getTranslations({ locale, namespace: "DashboardAdminWorkingGroupsPage" });
+	const t = await getTranslations("DashboardAdminWorkingGroupsPage");
 
 	const metadata: Metadata = {
 		title: t("meta.title"),
@@ -34,16 +29,12 @@ export async function generateMetadata(
 }
 
 export default async function DashboardAdminWorkingGroupsPage(
-	props: DashboardAdminWorkingGroupsPageProps,
+	_props: DashboardAdminWorkingGroupsPageProps,
 ): Promise<ReactNode> {
-	const { params } = props;
-
-	const { locale } = await params;
-	setRequestLocale(locale);
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
 	const t = await getTranslations("DashboardAdminWorkingGroupsPage");
-
-	await assertAuthenticated(["admin"]);
 
 	return (
 		<MainContent className="container grid max-w-(--breakpoint-2xl)! content-start gap-y-8 py-8">

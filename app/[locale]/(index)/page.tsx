@@ -1,29 +1,18 @@
-import type { Metadata, ResolvingMetadata } from "next";
-import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
+import type { Metadata } from "next";
+import { getLocale, getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { Logo } from "@/components/logo";
 import { MainContent } from "@/components/main-content";
 import { LinkButton } from "@/components/ui/link-button";
-import type { IntlLocale } from "@/lib/i18n/locales";
 import { createHref } from "@/lib/navigation/create-href";
 import { redirect } from "@/lib/navigation/navigation";
 import { getCurrentSession } from "@/lib/server/auth/get-current-session";
 
-interface IndexPageProps {
-	params: Promise<{
-		locale: IntlLocale;
-	}>;
-}
+interface IndexPageProps extends PageProps<"/[locale]"> {}
 
-export async function generateMetadata(
-	props: IndexPageProps,
-	_parent: ResolvingMetadata,
-): Promise<Metadata> {
-	const { params } = props;
-
-	const { locale } = await params;
-	const _t = await getTranslations({ locale, namespace: "IndexPage" });
+export async function generateMetadata(_props: IndexPageProps): Promise<Metadata> {
+	const _t = await getTranslations("IndexPage");
 
 	const metadata: Metadata = {
 		/**
@@ -37,12 +26,7 @@ export async function generateMetadata(
 	return metadata;
 }
 
-export default async function IndexPage(props: IndexPageProps): Promise<ReactNode> {
-	const { params } = props;
-
-	const { locale } = await params;
-	setRequestLocale(locale);
-
+export default function IndexPage(_props: IndexPageProps): ReactNode {
 	return (
 		<MainContent className="container py-8">
 			<IndexPageHeroSection />

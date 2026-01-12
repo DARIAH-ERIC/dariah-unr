@@ -1,47 +1,35 @@
-import type { Metadata, ResolvingMetadata } from "next";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { EditCountryWrapper } from "@/components/forms/country-form";
+import { assertPermissions } from "@/lib/access-controls";
 import { getCountryByCode } from "@/lib/data/country";
-import type { IntlLocale } from "@/lib/i18n/locales";
-import { dashboardCountryPageParams } from "@/lib/schemas/dashboard";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
-interface DashboardCountryNCPageProps {
-	params: Promise<{
-		code: string;
-		locale: IntlLocale;
-	}>;
-}
+interface DashboardCountryNCPageProps extends PageProps<"/[locale]/dashboard/countries/[code]/national-consortium"> {}
 
-export async function generateMetadata(
-	props: DashboardCountryNCPageProps,
-	_parent: ResolvingMetadata,
-): Promise<Metadata> {
+export async function generateMetadata(props: DashboardCountryNCPageProps): Promise<Metadata> {
 	const { params } = props;
 
-	const { locale } = await params;
+	const { user } = await assertAuthenticated();
 
-	await assertAuthenticated(["admin", "national_coordinator"]);
-
-	const result = dashboardCountryPageParams.safeParse(await params);
-
-	if (!result.success) notFound();
-
-	const { code } = result.data;
+	const { code } = await params;
 
 	const country = await getCountryByCode({ code });
+	if (country == null) {
+		notFound();
+	}
 
-	if (country == null) notFound();
+	const { id, name } = country;
 
-	const { name } = country;
+	await assertPermissions(user, { kind: "country", id, action: "edit-metadata" });
 
-	const _t = await getTranslations({ locale, namespace: "DashboardCountryNCPage" });
+	const t = await getTranslations("DashboardCountryNCPage");
 
 	const metadata: Metadata = {
-		title: _t("meta.title", { name }),
+		title: t("meta.title", { name }),
 	};
 
 	return metadata;
@@ -52,20 +40,18 @@ export default async function DashboardCountryNCPage(
 ): Promise<ReactNode> {
 	const { params } = props;
 
-	const { locale } = await params;
-	setRequestLocale(locale);
+	const { user } = await assertAuthenticated();
 
-	await assertAuthenticated(["admin", "national_coordinator"]);
-
-	const result = dashboardCountryPageParams.safeParse(await params);
-
-	if (!result.success) notFound();
-
-	const { code } = result.data;
+	const { code } = await params;
 
 	const country = await getCountryByCode({ code });
+	if (country == null) {
+		notFound();
+	}
 
-	if (country == null) notFound();
+	const { id } = country;
+
+	await assertPermissions(user, { kind: "country", id, action: "edit-metadata" });
 
 	return <EditCountryWrapper country={country} />;
 }

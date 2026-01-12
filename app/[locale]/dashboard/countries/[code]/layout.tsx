@@ -1,46 +1,27 @@
-import type { Metadata, ResolvingMetadata } from "next";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { AppNavLink } from "@/components/app-nav-link";
 import { PageTitle } from "@/components/page-title";
 import { assertPermissions } from "@/lib/access-controls";
 import { getCountryByCode } from "@/lib/data/country";
-import type { IntlLocale } from "@/lib/i18n/locales";
 import { createHref } from "@/lib/navigation/create-href";
 import {
 	dashboardCountryPageNCSections,
-	dashboardCountryPageParams,
 	dashboardCountryPageSections,
 } from "@/lib/schemas/dashboard";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
-interface DashboardCountryLayoutProps {
-	children: ReactNode;
-	params: Promise<{
-		code: string;
-		locale: IntlLocale;
-		section: string;
-	}>;
-}
+interface DashboardCountryLayoutProps extends LayoutProps<"/[locale]/dashboard/countries/[code]"> {}
 
-export async function generateMetadata(
-	props: DashboardCountryLayoutProps,
-	_parent: ResolvingMetadata,
-): Promise<Metadata> {
+export async function generateMetadata(props: DashboardCountryLayoutProps): Promise<Metadata> {
 	const { params } = props;
-
-	const { locale } = await params;
-	const t = await getTranslations({ locale, namespace: "DashboardCountryLayout" });
 
 	const { user } = await assertAuthenticated();
 
-	const result = dashboardCountryPageParams.safeParse(await params);
-
-	if (!result.success) notFound();
-
-	const { code } = result.data;
+	const { code } = await params;
 
 	const country = await getCountryByCode({ code });
 	if (country == null) {
@@ -50,6 +31,8 @@ export async function generateMetadata(
 	const { id } = country;
 
 	await assertPermissions(user, { kind: "country", id, action: "read" });
+
+	const t = await getTranslations("DashboardCountryLayout");
 
 	const metadata: Metadata = {
 		title: t("meta.title", { name: country.name }),
@@ -63,18 +46,9 @@ export default async function DashboardCountryLayout(
 ): Promise<ReactNode> {
 	const { children, params } = props;
 
-	const { locale } = await params;
-	setRequestLocale(locale);
-
-	const t = await getTranslations({ locale, namespace: "DashboardCountryLayout" });
-
 	const { user } = await assertAuthenticated();
 
-	const result = dashboardCountryPageParams.safeParse(await params);
-
-	if (!result.success) notFound();
-
-	const { code } = result.data;
+	const { code } = await params;
 
 	const country = await getCountryByCode({ code });
 	if (country == null) {
@@ -84,6 +58,8 @@ export default async function DashboardCountryLayout(
 
 	await assertPermissions(user, { kind: "country", id, action: "read" });
 
+	const t = await getTranslations("DashboardCountryLayout");
+
 	return (
 		<main className="container grid content-start gap-8 py-8">
 			<PageTitle>{t("title", { name })}</PageTitle>
@@ -92,7 +68,6 @@ export default async function DashboardCountryLayout(
 					{["admin", "national_coordinator"].includes(user.role) ? (
 						<DashboardCountryNCNavigation code={code} />
 					) : (
-						//todo: new component with only overview, reports
 						<DashboardCountryNavigation code={code} />
 					)}
 				</aside>

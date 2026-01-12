@@ -1,27 +1,16 @@
-import type { Metadata, ResolvingMetadata } from "next";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { Link } from "@/components/link";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
-import type { IntlLocale } from "@/lib/i18n/locales";
 import { createHref } from "@/lib/navigation/create-href";
 
-interface TermsOfUsePageProps {
-	params: Promise<{
-		locale: IntlLocale;
-	}>;
-}
+interface TermsOfUsePageProps extends PageProps<"/[locale]/terms-of-use"> {}
 
-export async function generateMetadata(
-	props: TermsOfUsePageProps,
-	_parent: ResolvingMetadata,
-): Promise<Metadata> {
-	const { params } = props;
-
-	const { locale } = await params;
-	const t = await getTranslations({ locale, namespace: "TermsOfUsePage" });
+export async function generateMetadata(_props: TermsOfUsePageProps): Promise<Metadata> {
+	const t = await getTranslations("TermsOfUsePage");
 
 	const metadata: Metadata = {
 		title: t("meta.title"),
@@ -30,12 +19,7 @@ export async function generateMetadata(
 	return metadata;
 }
 
-export default async function TermsOfUsePage(props: TermsOfUsePageProps): Promise<ReactNode> {
-	const { params } = props;
-
-	const { locale } = await params;
-	setRequestLocale(locale);
-
+export default async function TermsOfUsePage(_props: TermsOfUsePageProps): Promise<ReactNode> {
 	const t = await getTranslations("TermsOfUsePage");
 
 	return (

@@ -1,14 +1,6 @@
 "use client";
 
-import type {
-	Country,
-	Institution,
-	Person,
-	Prisma,
-	Role,
-	ServiceSize,
-	WorkingGroup,
-} from "@prisma/client";
+import type { Country, Institution, Person, Prisma, Role, WorkingGroup } from "@prisma/client";
 import { Fragment, type ReactNode, useState } from "react";
 
 import { AdminContributionsTableContent } from "@/components/admin/contributions-table-content";
@@ -64,7 +56,6 @@ interface AdminCountryDashboardContentProps {
 	institutions: Array<Institution>;
 	persons: Array<Person>;
 	roles: Array<Pick<Role, "id" | "name" | "type">>;
-	serviceSizes: Array<Omit<ServiceSize, "createdAt" | "updatedAt">>;
 	workingGroups: Array<WorkingGroup>;
 }
 

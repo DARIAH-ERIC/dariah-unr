@@ -19,7 +19,7 @@
 		"toggle-navigation-menu": "Toggle navigation menu"
 	},
 	"AuthControls": {
-		"admin-dashboard": "Admin dashboard",
+		"dashboard": "Dashboard",
 		"sign-in": "Sign in",
 		"sign-out": "Sign out",
 		"toggle-user-menu": "Toggle user menu"
@@ -161,10 +161,24 @@
 		},
 		"title": "Working groups"
 	},
+	"DashboardAdminWorkingGroupReportsPage": {
+		"meta": {
+			"title": "Working group reports"
+		},
+		"title": "Working group reports"
+	},
 	"DashboardCountryLayout": {
 		"meta": {
 			"title": "National Dashboard - {name}"
 		},
+		"title": "National Dashboard - {name}"
+	},
+	"DashboardCountryPage": {
+		"lead-in": "Welcome to the DARIAH National Coordinator Dashboard!",
+		"meta": {
+			"title": "National Dashboard - {name}"
+		},
+		"no-country-message": "You are not affiliated with a country",
 		"title": "National Dashboard - {name}"
 	},
 	"DashboardCountryNCPage": {
@@ -250,11 +264,9 @@
 	},
 	"DashboardPage": {
 		"meta": {
-			"title": "National Dasboard"
+			"title": "Dashboard"
 		},
-		"lead-in": "Welcome to the DARIAH National Coordinator Dashboard!",
-		"title": "National Dasboard",
-		"no-country-message": "You are not affiliated with a country"
+		"title": "Dashboard"
 	},
 	"DashboardPageContent": {
 		"create-page-for-year": "Create report for {year}",
@@ -265,12 +277,6 @@
 			"title": "Working group - {name}"
 		},
 		"title": "Working group - {name}"
-	},
-	"DashboardWorkingGroupsPage": {
-		"meta": {
-			"title": "Working groups"
-		},
-		"title": "Working groups"
 	},
 	"DashboardWorkingGroupReportPage": {
 		"meta": {
@@ -337,6 +343,8 @@
 		"title": "Terms of use"
 	},
 	"WorkingGroupReportForm": {
+		"confirm": "Confirm",
+		"confirmation-info": "This report has already been submitted.",
 		"submit": "Save",
 		"title": "Edit working group report"
 	},
@@ -637,6 +645,12 @@
 				"default": "Failed to update working group report."
 			},
 			"success": "Successfully updated working group report."
+		},
+		"updateWorkingGroupReportStatus": {
+			"errors": {
+				"default": "Failed to update working group report status."
+			},
+			"success": "Successfully updated working group report status."
 		}
 	},
 	"ui": {

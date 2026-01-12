@@ -1,33 +1,30 @@
 import { keyBy, keyByToMap } from "@acdh-oeaw/lib";
 import type { Metadata } from "next";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { AdminCampaignFormContent } from "@/components/admin/campaign-form-content";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
+import { assertPermissions } from "@/lib/access-controls";
 import {
 	getEventSizeValues,
 	getOutreachTypeValues,
+	getReportCampaignByYear,
 	getRoleTypeValues,
 	getServiceSizeValues,
-} from "@/lib/data/annual-values";
+} from "@/lib/data/campaign";
 import { getActiveMemberCountryIdsForYear } from "@/lib/data/country";
-import { getOperationalCostThresholdsForYear } from "@/lib/data/report";
-import type { IntlLocale } from "@/lib/i18n/locales";
+import { getOperationalCostThresholdsForReportCampaign } from "@/lib/data/report";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
-interface DashboardAdminCampaignPageProps {
-	params: Promise<{
-		locale: IntlLocale;
-	}>;
-}
+interface DashboardAdminCampaignPageProps extends PageProps<"/[locale]/dashboard/admin/campaign"> {}
 
-export async function generateMetadata(props: DashboardAdminCampaignPageProps): Promise<Metadata> {
-	const { params } = props;
+export async function generateMetadata(_props: DashboardAdminCampaignPageProps): Promise<Metadata> {
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
-	const { locale } = await params;
-	const t = await getTranslations({ locale, namespace: "DashboardAdminCampaignPage" });
+	const t = await getTranslations("DashboardAdminCampaignPage");
 
 	const metadata: Metadata = {
 		title: t("meta.title"),
@@ -37,22 +34,23 @@ export async function generateMetadata(props: DashboardAdminCampaignPageProps): 
 }
 
 export default async function DashboardAdminCampaignPage(
-	props: DashboardAdminCampaignPageProps,
+	_props: DashboardAdminCampaignPageProps,
 ): Promise<ReactNode> {
-	const { params } = props;
-
-	const { locale } = await params;
-	setRequestLocale(locale);
+	const { user } = await assertAuthenticated();
+	await assertPermissions(user, { kind: "admin" });
 
 	const t = await getTranslations("DashboardAdminCampaignPage");
 
 	const year = new Date().getUTCFullYear() - 1;
 
-	await assertAuthenticated(["admin"]);
+	const [_countries, previousCampaign] = await Promise.all([
+		getActiveMemberCountryIdsForYear({ year }),
+		getReportCampaignByYear({ year: year - 1 }),
+	]);
 
-	const _countries = await getActiveMemberCountryIdsForYear({ year });
+	async function getPreviousCampaignData(id: string | undefined) {
+		if (id == null) return null;
 
-	async function getPreviousCampaignData() {
 		const [
 			previousOperationalCostThresholds,
 			previousEventSizeValues,
@@ -60,11 +58,11 @@ export default async function DashboardAdminCampaignPage(
 			previousRoleTypeValues,
 			previousServiceSizeValues,
 		] = await Promise.all([
-			getOperationalCostThresholdsForYear({ year: year - 1 }),
-			getEventSizeValues({ year: year - 1 }),
-			getOutreachTypeValues({ year: year - 1 }),
-			getRoleTypeValues({ year: year - 1 }),
-			getServiceSizeValues({ year: year - 1 }),
+			getOperationalCostThresholdsForReportCampaign({ reportCampaignId: id }),
+			getEventSizeValues({ reportCampaignId: id }),
+			getOutreachTypeValues({ reportCampaignId: id }),
+			getRoleTypeValues({ reportCampaignId: id }),
+			getServiceSizeValues({ reportCampaignId: id }),
 		]);
 
 		const previousOperationalCostThresholdsByCountryId = keyByToMap(
@@ -83,12 +81,12 @@ export default async function DashboardAdminCampaignPage(
 		};
 	}
 
-	const previous = await getPreviousCampaignData();
+	const previous = await getPreviousCampaignData(previousCampaign?.id);
 
 	const countries = [];
 
 	for (const country of _countries) {
-		const operationalCostThreshold = previous.operationalCostThresholdsByCountryId.get(
+		const operationalCostThreshold = previous?.operationalCostThresholdsByCountryId.get(
 			country.id,
 		)?.operationalCostThreshold;
 
@@ -100,19 +98,6 @@ export default async function DashboardAdminCampaignPage(
 		});
 	}
 
-	const previousEventSizeValues = keyBy(previous.eventSizeValues, (value) => {
-		return value.type;
-	});
-	const previousOutreachTypeValues = keyBy(previous.outreachTypeValues, (value) => {
-		return value.type;
-	});
-	const previousRoleTypeValues = keyBy(previous.roleTypeValues, (value) => {
-		return value.type;
-	});
-	const previousServiceSizeValues = keyBy(previous.serviceSizeValues, (value) => {
-		return value.type;
-	});
-
 	return (
 		<MainContent className="container grid max-w-(--breakpoint-2xl)! content-start gap-y-8 py-8">
 			<PageTitle>{t("title")}</PageTitle>
@@ -120,10 +105,34 @@ export default async function DashboardAdminCampaignPage(
 			<section className="grid gap-y-8">
 				<AdminCampaignFormContent
 					countries={countries}
-					previousEventSizeValues={previousEventSizeValues}
-					previousOutreachTypeValues={previousOutreachTypeValues}
-					previousRoleTypeValues={previousRoleTypeValues}
-					previousServiceSizeValues={previousServiceSizeValues}
+					previousEventSizeValues={
+						previous != null
+							? keyBy(previous.eventSizeValues, (value) => {
+									return value.type;
+								})
+							: null
+					}
+					previousOutreachTypeValues={
+						previous != null
+							? keyBy(previous.outreachTypeValues, (value) => {
+									return value.type;
+								})
+							: null
+					}
+					previousRoleTypeValues={
+						previous != null
+							? keyBy(previous.roleTypeValues, (value) => {
+									return value.type;
+								})
+							: null
+					}
+					previousServiceSizeValues={
+						previous != null
+							? keyBy(previous.serviceSizeValues, (value) => {
+									return value.type;
+								})
+							: null
+					}
 					year={year}
 				/>
 			</section>
