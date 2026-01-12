@@ -7,9 +7,19 @@ import { redirect } from "@/lib/navigation/navigation";
 import { hasPersonWorkingGroupRole } from "@/lib/queries/permissions";
 
 type PermissionRequest =
-	| { kind: "admin" }
-	| { kind: "country"; id: string; action: "read" | "read-write" | "confirm" }
-	| { kind: "working-group"; id: string; action: "read" | "read-write" | "confirm" };
+	| {
+			kind: "admin";
+	  }
+	| {
+			kind: "country";
+			id: string;
+			action: "read" | "read-write" | "confirm" | "edit-metadata";
+	  }
+	| {
+			kind: "working-group";
+			id: string;
+			action: "read" | "read-write" | "confirm" | "edit-metadata";
+	  };
 
 export const hasPermissions = cache(async function hasPermissions(
 	user: User,
@@ -34,7 +44,8 @@ export const hasPermissions = cache(async function hasPermissions(
 		}
 
 		switch (request.action) {
-			case "confirm": {
+			case "confirm":
+			case "edit-metadata": {
 				return includes(["national_coordinator"], user.role);
 			}
 
@@ -52,7 +63,8 @@ export const hasPermissions = cache(async function hasPermissions(
 		}
 
 		switch (request.action) {
-			case "confirm": {
+			case "confirm":
+			case "edit-metadata": {
 				const count = await hasPersonWorkingGroupRole({
 					personId: user.personId,
 					workingGroupId: request.id,
