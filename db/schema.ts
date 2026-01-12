@@ -7,7 +7,7 @@ export const countryType = p.pgEnum("country_type", [
 	"member_country",
 	"other",
 ]);
-export const eventSizeType = p.pgEnum("event_size_type", [
+export const eventSize = p.pgEnum("event_size", [
 	"dariah_commissioned",
 	"large",
 	"medium",
@@ -47,6 +47,7 @@ export const outreachType = p.pgEnum("outreach_type", [
 	"national_social_media",
 ]);
 export const projectScope = p.pgEnum("project_scope", ["eu", "national", "regional"]);
+export const reportCampaignStatus = p.pgEnum("report_campaign_status", ["in_progress", "done"]);
 export const reportStatus = p.pgEnum("report_status", ["draft", "final"]);
 export const researchPolicyLevel = p.pgEnum("research_policy_level", [
 	"eu",
@@ -62,7 +63,6 @@ export const roleType = p.pgEnum("role_type", [
 	"national_coordinator_deputy",
 	"national_representative",
 	"jrc_member",
-	"jrc_chair",
 	"scientific_board_member",
 	"smt_member",
 	"wg_chair",
@@ -70,6 +70,7 @@ export const roleType = p.pgEnum("role_type", [
 	"national_representative_deputy",
 	"national_consortium_contact",
 	"cooperating_partner_contact",
+	"jrc_chair",
 	"ncc_chair",
 ]);
 export const serviceAudience = p.pgEnum("service_audience", [
@@ -95,7 +96,7 @@ export const serviceMarketplaceStatus = p.pgEnum("service_marketplace_status", [
 	"not_applicable",
 	"yes",
 ]);
-export const serviceSizeType = p.pgEnum("service_size_type", ["core", "large", "medium", "small"]);
+export const serviceSize = p.pgEnum("service_size", ["core", "large", "medium", "small"]);
 export const serviceStatus = p.pgEnum("service_status", [
 	"discontinued",
 	"in_preparation",
@@ -126,7 +127,7 @@ export const workingGroupOutreachType = p.pgEnum("working_group_outreach_type", 
 ]);
 
 export const bodyToRole = p.pgTable(
-	"body_to_role",
+	"_BodyToRole",
 	{
 		a: p
 			.uuid("A")
@@ -156,7 +157,7 @@ export const bodyToRole = p.pgTable(
 );
 
 export const countryToInstitution = p.pgTable(
-	"country_to_institution",
+	"_CountryToInstitution",
 	{
 		a: p
 			.uuid("A")
@@ -186,7 +187,7 @@ export const countryToInstitution = p.pgTable(
 );
 
 export const countryToService = p.pgTable(
-	"country_to_service",
+	"_CountryToService",
 	{
 		a: p
 			.uuid("A")
@@ -216,7 +217,7 @@ export const countryToService = p.pgTable(
 );
 
 export const countryToSoftware = p.pgTable(
-	"country_to_software",
+	"_CountryToSoftware",
 	{
 		a: p
 			.uuid("A")
@@ -246,7 +247,7 @@ export const countryToSoftware = p.pgTable(
 );
 
 export const institutionToPerson = p.pgTable(
-	"institution_to_person",
+	"_InstitutionToPerson",
 	{
 		a: p
 			.uuid("A")
@@ -295,7 +296,10 @@ export const contributions = p.pgTable("contributions", {
 		() => {
 			return countries.id;
 		},
-		{ onDelete: "set null", onUpdate: "cascade" },
+		{
+			onDelete: "set null",
+			onUpdate: "cascade",
+		},
 	),
 	personId: p
 		.uuid("person_id")
@@ -319,7 +323,10 @@ export const contributions = p.pgTable("contributions", {
 		() => {
 			return workingGroups.id;
 		},
-		{ onDelete: "set null", onUpdate: "cascade" },
+		{
+			onDelete: "set null",
+			onUpdate: "cascade",
+		},
 	),
 	createdAt: p
 		.timestamp("created_at", { precision: 3 })
@@ -339,13 +346,13 @@ export const countries = p.pgTable(
 		name: p.text("name").notNull(),
 		startDate: p.timestamp("start_date", { precision: 3 }),
 		type: countryType("type").notNull(),
-		description: p.text(),
-		consortiumName: p.text("consortium_name"),
 		createdAt: p
 			.timestamp("created_at", { precision: 3 })
 			.default(sql`current_timestamp`)
 			.notNull(),
 		updatedAt: p.timestamp("updated_at", { precision: 3 }).notNull(),
+		description: p.text("description"),
+		consortiumName: p.text("consortium_name"),
 	},
 	(table) => {
 		return [p.index("countries_code_idx").using("btree", table.code.asc().nullsLast())];
@@ -375,6 +382,7 @@ export const eventReports = p.pgTable(
 			.default(sql`current_timestamp`)
 			.notNull(),
 		updatedAt: p.timestamp("updated_at", { precision: 3 }).notNull(),
+		veryLargeMeetings: p.integer("very_large_meetings"),
 	},
 	(table) => {
 		return [
@@ -383,16 +391,35 @@ export const eventReports = p.pgTable(
 	},
 );
 
-export const eventSizes = p.pgTable("event_sizes", {
-	id: p.uuid("id").primaryKey().defaultRandom(),
-	annualValue: p.integer("annual_value").notNull(),
-	type: eventSizeType("type").notNull(),
-	createdAt: p
-		.timestamp("created_at", { precision: 3 })
-		.default(sql`current_timestamp`)
-		.notNull(),
-	updatedAt: p.timestamp("updated_at", { precision: 3 }).notNull(),
-});
+export const eventSizeValues = p.pgTable(
+	"event_size_values",
+	{
+		id: p.uuid("id").primaryKey().defaultRandom(),
+		annualValue: p.integer("annual_value").notNull(),
+		type: eventSize("type").notNull(),
+		createdAt: p
+			.timestamp("created_at", { precision: 3 })
+			.default(sql`NOW()`)
+			.notNull(),
+		updatedAt: p.timestamp("updated_at", { precision: 3 }).notNull(),
+		reportCampaignId: p
+			.uuid("report_campaign_id")
+			.notNull()
+			.references(
+				() => {
+					return reportCampaigns.id;
+				},
+				{ onDelete: "restrict", onUpdate: "cascade" },
+			),
+	},
+	(table) => {
+		return [
+			p
+				.uniqueIndex("event_size_values_report_campaign_id_type_key")
+				.using("btree", table.reportCampaignId.asc().nullsLast(), table.type.asc().nullsLast()),
+		];
+	},
+);
 
 export const institutionService = p.pgTable(
 	"institution_service",
@@ -457,7 +484,10 @@ export const outreach = p.pgTable("outreach", {
 		() => {
 			return countries.id;
 		},
-		{ onDelete: "cascade", onUpdate: "cascade" },
+		{
+			onDelete: "cascade",
+			onUpdate: "cascade",
+		},
 	),
 	createdAt: p
 		.timestamp("created_at", { precision: 3 })
@@ -513,16 +543,35 @@ export const outreachReports = p.pgTable("outreach_reports", {
 	updatedAt: p.timestamp("updated_at", { precision: 3 }).notNull(),
 });
 
-export const outreachTypeValues = p.pgTable("outreach_type_values", {
-	id: p.uuid("id").primaryKey().defaultRandom(),
-	annualValue: p.integer("annual_value").notNull(),
-	type: outreachType("type").notNull(),
-	createdAt: p
-		.timestamp("created_at", { precision: 3 })
-		.default(sql`current_timestamp`)
-		.notNull(),
-	updatedAt: p.timestamp("updated_at", { precision: 3 }).notNull(),
-});
+export const outreachTypeValues = p.pgTable(
+	"outreach_type_values",
+	{
+		id: p.uuid("id").primaryKey().defaultRandom(),
+		annualValue: p.integer("annual_value").notNull(),
+		type: outreachType("type").notNull(),
+		createdAt: p
+			.timestamp("created_at", { precision: 3 })
+			.default(sql`NOW()`)
+			.notNull(),
+		updatedAt: p.timestamp("updated_at", { precision: 3 }).notNull(),
+		reportCampaignId: p
+			.uuid("report_campaign_id")
+			.notNull()
+			.references(
+				() => {
+					return reportCampaigns.id;
+				},
+				{ onDelete: "restrict", onUpdate: "cascade" },
+			),
+	},
+	(table) => {
+		return [
+			p
+				.uniqueIndex("outreach_type_values_report_campaign_id_type_key")
+				.using("btree", table.reportCampaignId.asc().nullsLast(), table.type.asc().nullsLast()),
+		];
+	},
+);
 
 export const persons = p.pgTable("persons", {
 	id: p.uuid("id").primaryKey().defaultRandom(),
@@ -561,6 +610,27 @@ export const projects = p.pgTable("projects", {
 	updatedAt: p.timestamp("updated_at", { precision: 3 }).notNull(),
 });
 
+export const reportCampaigns = p.pgTable(
+	"report_campaigns",
+	{
+		id: p.uuid("id").primaryKey().defaultRandom(),
+		serviceSizeThresholds: p.jsonb("service_size_thresholds").notNull(),
+		status: reportCampaignStatus("status").default("in_progress").notNull(),
+		year: p.integer("year").notNull(),
+		createdAt: p
+			.timestamp("created_at", { precision: 3 })
+			.default(sql`NOW()`)
+			.notNull(),
+		updatedAt: p.timestamp("updated_at", { precision: 3 }).notNull(),
+	},
+	(table) => {
+		return [
+			p.index("report_campaigns_year_idx").using("btree", table.year.asc().nullsLast()),
+			p.uniqueIndex("report_campaigns_year_key").using("btree", table.year.asc().nullsLast()),
+		];
+	},
+);
+
 export const reports = p.pgTable(
 	"reports",
 	{
@@ -570,8 +640,7 @@ export const reports = p.pgTable(
 		operationalCost: p.numeric("operational_cost", { precision: 12, scale: 2 }),
 		operationalCostDetail: p.jsonb("operational_cost_detail"),
 		operationalCostThreshold: p.numeric("operational_cost_threshold", { precision: 12, scale: 2 }),
-		status: reportStatus("status").default("draft").notNull(),
-		year: p.integer("year").notNull(),
+		status: reportStatus().default("draft").notNull(),
 		countryId: p
 			.uuid("country_id")
 			.notNull()
@@ -586,13 +655,28 @@ export const reports = p.pgTable(
 			.default(sql`current_timestamp`)
 			.notNull(),
 		updatedAt: p.timestamp("updated_at", { precision: 3 }).notNull(),
+		reportCampaignId: p
+			.uuid("report_campaign_id")
+			.notNull()
+			.references(
+				() => {
+					return reportCampaigns.id;
+				},
+				{ onDelete: "restrict", onUpdate: "cascade" },
+			),
 	},
 	(table) => {
 		return [
 			p
-				.uniqueIndex("reports_country_id_year_key")
-				.using("btree", table.countryId.asc().nullsLast(), table.year.asc().nullsLast()),
-			p.index("reports_year_idx").using("btree", table.year.asc().nullsLast()),
+				.uniqueIndex("reports_report_campaign_id_country_id_key")
+				.using(
+					"btree",
+					table.reportCampaignId.asc().nullsLast(),
+					table.countryId.asc().nullsLast(),
+				),
+			p
+				.index("reports_report_campaign_id_idx")
+				.using("btree", table.reportCampaignId.asc().nullsLast()),
 		];
 	},
 );
@@ -618,9 +702,38 @@ export const researchPolicyDevelopments = p.pgTable("research_policy_development
 	updatedAt: p.timestamp("updated_at", { precision: 3 }).notNull(),
 });
 
+export const roleTypeValues = p.pgTable(
+	"role_type_values",
+	{
+		id: p.uuid("id").primaryKey().defaultRandom(),
+		annualValue: p.integer("annual_value").notNull(),
+		type: roleType("type").notNull(),
+		reportCampaignId: p
+			.uuid("report_campaign_id")
+			.notNull()
+			.references(
+				() => {
+					return reportCampaigns.id;
+				},
+				{ onDelete: "restrict", onUpdate: "cascade" },
+			),
+		createdAt: p
+			.timestamp("created_at", { precision: 3 })
+			.default(sql`NOW()`)
+			.notNull(),
+		updatedAt: p.timestamp("updated_at", { precision: 3 }).notNull(),
+	},
+	(table) => {
+		return [
+			p
+				.uniqueIndex("role_type_values_report_campaign_id_type_key")
+				.using("btree", table.reportCampaignId.asc().nullsLast(), table.type.asc().nullsLast()),
+		];
+	},
+);
+
 export const roles = p.pgTable("roles", {
 	id: p.uuid("id").primaryKey().defaultRandom(),
-	annualValue: p.integer("annual_value").notNull(),
 	name: p.text("name").notNull(),
 	type: roleType("type").notNull(),
 	createdAt: p
@@ -677,16 +790,35 @@ export const serviceReports = p.pgTable("service_reports", {
 	updatedAt: p.timestamp("updated_at", { precision: 3 }).notNull(),
 });
 
-export const serviceSizes = p.pgTable("service_sizes", {
-	id: p.uuid("id").primaryKey().defaultRandom(),
-	annualValue: p.integer("annual_value").notNull(),
-	type: serviceSizeType("type").notNull(),
-	createdAt: p
-		.timestamp("created_at", { precision: 3 })
-		.default(sql`current_timestamp`)
-		.notNull(),
-	updatedAt: p.timestamp("updated_at", { precision: 3 }).notNull(),
-});
+export const serviceSizeValues = p.pgTable(
+	"service_size_values",
+	{
+		id: p.uuid("id").primaryKey().defaultRandom(),
+		annualValue: p.integer("annual_value").notNull(),
+		type: serviceSize("type").notNull(),
+		createdAt: p
+			.timestamp("created_at", { precision: 3 })
+			.default(sql`NOW()`)
+			.notNull(),
+		updatedAt: p.timestamp("updated_at", { precision: 3 }).notNull(),
+		reportCampaignId: p
+			.uuid("report_campaign_id")
+			.notNull()
+			.references(
+				() => {
+					return reportCampaigns.id;
+				},
+				{ onDelete: "restrict", onUpdate: "cascade" },
+			),
+	},
+	(table) => {
+		return [
+			p
+				.uniqueIndex("service_size_values_report_campaign_id_type_key")
+				.using("btree", table.reportCampaignId.asc().nullsLast(), table.type.asc().nullsLast()),
+		];
+	},
+);
 
 export const services = p.pgTable("services", {
 	id: p.uuid("id").primaryKey().defaultRandom(),
@@ -705,15 +837,6 @@ export const services = p.pgTable("services", {
 	type: serviceType("type"),
 	url: p.text("url").array(),
 	valueProposition: p.text("value_proposition"),
-	sizeId: p
-		.uuid("size_id")
-		.notNull()
-		.references(
-			() => {
-				return serviceSizes.id;
-			},
-			{ onDelete: "restrict", onUpdate: "cascade" },
-		),
 	createdAt: p
 		.timestamp("created_at", { precision: 3 })
 		.default(sql`current_timestamp`)
@@ -760,7 +883,7 @@ export const users = p.pgTable(
 		email: p.text("email").notNull(),
 		name: p.text("name").notNull(),
 		password: p.text("password").notNull(),
-		role: userRole("role").default("contributor").notNull(),
+		role: userRole().default("contributor").notNull(),
 		countryId: p.uuid("country_id").references(
 			() => {
 				return countries.id;
@@ -827,8 +950,7 @@ export const workingGroupReports = p.pgTable(
 		facultativeQuestions: p.text("facultative_questions").notNull(),
 		members: p.integer("members"),
 		narrativeReport: p.text("narrative_report").notNull(),
-		status: reportStatus("status").default("draft").notNull(),
-		year: p.integer("year").notNull(),
+		status: reportStatus().default("draft").notNull(),
 		workingGroupId: p
 			.uuid("working_group_id")
 			.notNull()
@@ -843,13 +965,28 @@ export const workingGroupReports = p.pgTable(
 			.default(sql`current_timestamp`)
 			.notNull(),
 		updatedAt: p.timestamp("updated_at", { precision: 3 }).notNull(),
+		reportCampaignId: p
+			.uuid("report_campaign_id")
+			.notNull()
+			.references(
+				() => {
+					return reportCampaigns.id;
+				},
+				{ onDelete: "restrict", onUpdate: "cascade" },
+			),
 	},
 	(table) => {
 		return [
 			p
-				.uniqueIndex("working_group_reports_working_group_id_year_key")
-				.using("btree", table.workingGroupId.asc().nullsLast(), table.year.asc().nullsLast()),
-			p.index("working_group_reports_year_idx").using("btree", table.year.asc().nullsLast()),
+				.index("working_group_reports_report_campaign_id_idx")
+				.using("btree", table.reportCampaignId.asc().nullsLast()),
+			p
+				.uniqueIndex("working_group_reports_report_campaign_id_working_group_id_key")
+				.using(
+					"btree",
+					table.reportCampaignId.asc().nullsLast(),
+					table.workingGroupId.asc().nullsLast(),
+				),
 		];
 	},
 );

@@ -1,7 +1,7 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 
-import { env } from "../config/env.config";
-import { relations } from "./relations";
+import { env } from "@/config/env.config";
+import { relations } from "@/db/relations";
 
 type Client = Awaited<ReturnType<typeof createClient>>;
 
