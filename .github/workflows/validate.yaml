@@ -27,7 +27,11 @@ jobs:
     env:
       ENV_VALIDATION: "public"
       NEXT_PUBLIC_APP_BASE_URL: "http://localhost:3000"
+      NEXT_PUBLIC_APP_BOTS: "disabled"
       NEXT_PUBLIC_APP_MATOMO_BASE_URL: "${{ vars.NEXT_PUBLIC_APP_MATOMO_BASE_URL }}"
+      NEXT_PUBLIC_APP_IMPRINT_CUSTOM_CONFIG: "disabled"
+      NEXT_PUBLIC_APP_IMPRINT_SERVICE_BASE_URL:
+        "${{ vars.NEXT_PUBLIC_APP_IMPRINT_SERVICE_BASE_URL }}"
       NEXT_PUBLIC_APP_SERVICE_ID: "${{ vars.SERVICE_ID }}"
 
     steps:
