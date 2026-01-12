@@ -160,21 +160,27 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 				<div role="group">
 					<h3>Role type values</h3>
 					<div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
-						{(["jrc_member", "national_coordinator", "wg_chair"] as Array<RoleType>).map(
-							(roleType) => {
-								return (
-									<NumberInputField
-										key={roleType}
-										defaultValue={previousRoleTypeValues?.[roleType].annualValue ?? 0}
-										formatOptions={{ style: "currency", currency: "EUR" }}
-										isRequired={true}
-										label={roleType}
-										minValue={0}
-										name={`roleTypeValues.${roleType}`}
-									/>
-								);
-							},
-						)}
+						{(
+							[
+								"jrc_member",
+								"jrc_chair",
+								"national_coordinator",
+								"ncc_chair",
+								"wg_chair",
+							] as Array<RoleType>
+						).map((roleType) => {
+							return (
+								<NumberInputField
+									key={roleType}
+									defaultValue={previousRoleTypeValues?.[roleType].annualValue ?? 0}
+									formatOptions={{ style: "currency", currency: "EUR" }}
+									isRequired={true}
+									label={roleType}
+									minValue={0}
+									name={`roleTypeValues.${roleType}`}
+								/>
+							);
+						})}
 					</div>
 				</div>
 
