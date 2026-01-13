@@ -7,7 +7,7 @@
 "use client";
 
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import { createContext, use } from "react";
+import { createContext, type Ref,use } from "react";
 import {
 	Button,
 	Cell,
@@ -40,7 +40,7 @@ interface TableProps extends Omit<TablePrimitiveProps, "className"> {
 	bleed?: boolean;
 	grid?: boolean;
 	striped?: boolean;
-	ref?: React.Ref<HTMLTableElement>;
+	ref?: Ref<HTMLTableElement>;
 }
 
 const TableContext = createContext<TableProps>({
@@ -163,7 +163,7 @@ function TableColumn({ isResizable = false, className, ...props }: TableColumnPr
 }
 
 interface TableHeaderProps<T extends object> extends HeaderProps<T> {
-	ref?: React.Ref<HTMLTableSectionElement>;
+	ref?: Ref<HTMLTableSectionElement>;
 }
 
 function TableHeader<T extends object>({
@@ -175,6 +175,7 @@ function TableHeader<T extends object>({
 }: TableHeaderProps<T>) {
 	const { bleed } = useTableContext();
 	const { selectionBehavior, selectionMode, allowsDragging } = useTableOptions();
+
 	return (
 		<TableHeaderPrimitive
 			ref={ref}
@@ -208,7 +209,7 @@ function TableHeader<T extends object>({
 }
 
 interface TableRowProps<T extends object> extends RowProps<T> {
-	ref?: React.Ref<HTMLTableRowElement>;
+	ref?: Ref<HTMLTableRowElement>;
 }
 
 function TableRow<T extends object>({
@@ -299,7 +300,7 @@ function TableRow<T extends object>({
 }
 
 interface TableCellProps extends CellProps {
-	ref?: React.Ref<HTMLTableCellElement>;
+	ref?: Ref<HTMLTableCellElement>;
 }
 
 function TableCell({ className, ref, ...props }: TableCellProps) {

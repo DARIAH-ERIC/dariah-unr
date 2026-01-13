@@ -3,6 +3,7 @@
 
 "use client";
 
+import type { ComponentProps, ComponentPropsWithoutRef } from "react";
 import {
 	FieldError as FieldErrorPrimitive,
 	type FieldErrorProps,
@@ -50,7 +51,7 @@ export function Description({ className, ...props }: TextProps) {
 	return <Text {...props} className={descriptionStyles({ className })} slot="description" />;
 }
 
-export function Fieldset({ className, ...props }: React.ComponentProps<"fieldset">) {
+export function Fieldset({ className, ...props }: ComponentProps<"fieldset">) {
 	return (
 		<fieldset
 			className={twMerge("*:data-[slot=text]:mt-1 [&>*+[data-slot=control]]:mt-6", className)}
@@ -59,7 +60,7 @@ export function Fieldset({ className, ...props }: React.ComponentProps<"fieldset
 	);
 }
 
-export function FieldGroup({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
+export function FieldGroup({ className, ...props }: ComponentPropsWithoutRef<"div">) {
 	return <div className={twMerge("space-y-6", className)} data-slot="control" {...props} />;
 }
 
@@ -67,7 +68,7 @@ export function FieldError({ className, ...props }: FieldErrorProps) {
 	return <FieldErrorPrimitive {...props} className={cx(fieldErrorStyles(), className)} />;
 }
 
-export function Legend({ className, ...props }: React.ComponentProps<"legend">) {
+export function Legend({ className, ...props }: ComponentProps<"legend">) {
 	return (
 		<legend
 			data-slot="legend"

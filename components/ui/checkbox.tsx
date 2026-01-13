@@ -1,10 +1,11 @@
-/* eslint-disable @eslint-react/prefer-read-only-props */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+ 
+ 
 /* eslint-disable better-tailwindcss/no-unknown-classes */
 
 "use client";
 
 import { CheckIcon, MinusIcon } from "@heroicons/react/20/solid";
+import type { ComponentProps, ReactNode } from "react";
 import {
 	Checkbox as CheckboxPrimitive,
 	CheckboxGroup as CheckboxGroupPrimitive,
@@ -17,7 +18,7 @@ import { twMerge } from "tailwind-merge";
 import { cx } from "@/components/ui/cx";
 import { Label } from "@/components/ui/field";
 
-export function CheckboxGroup({ className, ...props }: CheckboxGroupProps) {
+export function CheckboxGroup({ className, ...props }: Readonly<CheckboxGroupProps>): ReactNode {
 	return (
 		<CheckboxGroupPrimitive
 			{...props}
@@ -30,7 +31,7 @@ export function CheckboxGroup({ className, ...props }: CheckboxGroupProps) {
 	);
 }
 
-export function Checkbox({ className, children, ...props }: CheckboxProps) {
+export function Checkbox({ className, children, ...props }: Readonly<CheckboxProps>): ReactNode {
 	return (
 		<CheckboxPrimitive
 			className={cx(
@@ -92,6 +93,6 @@ export function Checkbox({ className, children, ...props }: CheckboxProps) {
 	);
 }
 
-export function CheckboxLabel(props: React.ComponentProps<typeof Label>) {
+export function CheckboxLabel(props: Readonly<ComponentProps<typeof Label>>): ReactNode {
 	return <Label elementType="span" {...props} />;
 }
