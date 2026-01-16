@@ -14,8 +14,6 @@ import {
 	createRoleTypeValue,
 	createServiceSizeValue,
 } from "@/lib/data/campaign";
-import { getActiveMemberCountryIdsForYear } from "@/lib/data/country";
-import { createReportForCountryId } from "@/lib/data/report";
 import { getFormData } from "@/lib/get-form-data";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
@@ -109,7 +107,6 @@ export async function updateCampaignAction(
 	const {
 		facultativeQuestions,
 		narrativeReport,
-		operationalCostThresholds,
 		year,
 		eventSizeValues,
 		outreachTypeValues,
@@ -157,16 +154,6 @@ export async function updateCampaignAction(
 				annualValue,
 				reportCampaignId: reportCampaign.id,
 				type: type as ServiceSize,
-			});
-		}
-
-		const countries = await getActiveMemberCountryIdsForYear({ year });
-
-		for (const country of countries) {
-			await createReportForCountryId({
-				countryId: country.id,
-				operationalCostThreshold: operationalCostThresholds[country.id] ?? 0.0,
-				reportCampaignId: reportCampaign.id,
 			});
 		}
 

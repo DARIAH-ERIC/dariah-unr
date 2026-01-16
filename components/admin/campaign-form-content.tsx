@@ -6,10 +6,12 @@ import { type ReactNode, useActionState, useId } from "react";
 import { SubmitButton } from "@/components/submit-button";
 import { NumberInputField } from "@/components/ui/blocks/number-input-field";
 import { TextAreaField } from "@/components/ui/blocks/text-area-field";
+import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
 import { createCampaignAction } from "@/lib/actions/admin/create-campaign";
+import { updateCampaignAction } from "@/lib/actions/admin/update-campaign";
 import { createKey } from "@/lib/create-key";
 
 interface AdminCampaignFormContentProps {
@@ -44,6 +46,7 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 	} = props;
 
 	const [formState, formAction] = useActionState(createCampaignAction, undefined);
+	const [saveFormState, saveFormAction] = useActionState(updateCampaignAction, undefined);
 
 	const submitLabel = `Create campaign for ${String(year)}`;
 
@@ -203,6 +206,23 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 					</div>
 				</div>
 			</section>
+
+			{/* @ts-expect-error React 19 allows server actions on `formAction`. */}
+			<Button formAction={saveFormAction} type="button">
+				{submitLabel}
+			</Button>
+
+			<FormSuccessMessage key={createKey("form-success", saveFormState?.timestamp)}>
+				{saveFormState?.status === "success" && saveFormState.message.length > 0
+					? saveFormState.message
+					: null}
+			</FormSuccessMessage>
+
+			<FormErrorMessage key={createKey("form-error", saveFormState?.timestamp)}>
+				{saveFormState?.status === "error" && saveFormState.formErrors.length > 0
+					? saveFormState.formErrors
+					: null}
+			</FormErrorMessage>
 
 			<SubmitButton>{submitLabel}</SubmitButton>
 
