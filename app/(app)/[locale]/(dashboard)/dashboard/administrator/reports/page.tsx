@@ -25,7 +25,6 @@ export async function generateMetadata(
 	_props: Readonly<DashboardAdminReportsPageProps>,
 ): Promise<Metadata> {
 	const { user } = await assertAuthenticated();
-
 	await assertPermissions(user, { kind: "admin" });
 
 	const t = await getTranslations("DashboardAdminReportsPage");
@@ -48,7 +47,6 @@ export default async function DashboardAdminReportsPage(
 	const { searchParams } = props;
 
 	const { user } = await assertAuthenticated();
-
 	await assertPermissions(user, { kind: "admin" });
 
 	const t = await getTranslations("DashboardAdminReportsPage");

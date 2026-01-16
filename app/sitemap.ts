@@ -22,6 +22,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
 	for await (const path of glob("./**/page.tsx", {
 		cwd: join(process.cwd(), "app", "(app)", "[locale]"),
+		exclude(fileName) {
+			return fileName.includes("(auth)") || fileName.includes("(dashboard)");
+		},
 	})) {
 		const route = path.slice(0, -"/page.tsx".length);
 

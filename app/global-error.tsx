@@ -1,6 +1,7 @@
 "use client";
 
 import { log } from "@acdh-oeaw/lib";
+import * as Sentry from "@sentry/nextjs";
 import { type ReactNode, useEffect } from "react";
 
 import { DocumentBody } from "@/app/_components/document-body";
@@ -20,11 +21,10 @@ export { viewport } from "@/app/_lib/viewport.config";
 
 interface GlobalErrorPageProps {
 	error: Error & { digest?: string };
-	reset: () => void;
 }
 
 export default function GlobalErrorPage(props: Readonly<GlobalErrorPageProps>): ReactNode {
-	const { error, reset } = props;
+	const { error } = props;
 
 	const locale = defaultLocale;
 
@@ -37,7 +37,7 @@ export default function GlobalErrorPage(props: Readonly<GlobalErrorPageProps>): 
 	};
 
 	useEffect(() => {
-		// TODO: Log the error to an error reporting service.
+		Sentry.captureException(error);
 		log.error(error);
 	}, [error]);
 
@@ -48,14 +48,9 @@ export default function GlobalErrorPage(props: Readonly<GlobalErrorPageProps>): 
 				<Providers locale={locale}>
 					<Main>
 						<h1>{t.title}</h1>
-						<button
-							onClick={() => {
-								reset();
-							}}
-							type="button"
-						>
-							{t.reset}
-						</button>
+						<form>
+							<button type="submit">{t.reset}</button>
+						</form>
 					</Main>
 				</Providers>
 			</DocumentBody>
