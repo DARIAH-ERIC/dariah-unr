@@ -3,7 +3,7 @@
 import { log } from "@acdh-oeaw/lib";
 import { EventSize, OutreachType, type RoleType, ServiceSize } from "@prisma/client";
 import { revalidatePath } from "next/cache";
-import { getLocale, getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
 import { assertPermissions } from "@/lib/access-controls";
@@ -14,12 +14,7 @@ import {
 	createRoleTypeValue,
 	createServiceSizeValue,
 } from "@/lib/data/campaign";
-import { getActiveMemberCountryIdsForYear } from "@/lib/data/country";
-import { createReportForCountryId } from "@/lib/data/report";
-import { getActiveWorkingGroupIdsForYear } from "@/lib/data/working-group";
-import { ingestDataFromSshomp } from "@/lib/db/ingest-data-from-sshomp";
 import { getFormData } from "@/lib/get-form-data";
-import { redirect } from "@/lib/navigation/navigation";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 const formSchema = z.object({
@@ -87,12 +82,11 @@ interface FormSuccess extends FormReturnValue {
 
 type FormState = FormErrors | FormSuccess;
 
-export async function createCampaignAction(
+export async function updateCampaignAction(
 	previousFormState: FormState | undefined,
 	formData: FormData,
 ): Promise<FormState> {
-	const locale = await getLocale();
-	const t = await getTranslations("actions.admin.createCampaign");
+	const t = await getTranslations("actions.admin.updateCampaign");
 
 	const { user } = await assertAuthenticated();
 	await assertPermissions(user, { kind: "admin" });
@@ -113,7 +107,6 @@ export async function createCampaignAction(
 	const {
 		facultativeQuestions,
 		narrativeReport,
-		operationalCostThresholds,
 		year,
 		eventSizeValues,
 		outreachTypeValues,
@@ -164,45 +157,13 @@ export async function createCampaignAction(
 			});
 		}
 
-		const countries = await getActiveMemberCountryIdsForYear({ year });
-
-		for (const country of countries) {
-			await createReportForCountryId({
-				countryId: country.id,
-				operationalCostThreshold: operationalCostThresholds[country.id] ?? 0.0,
-				reportCampaignId: reportCampaign.id,
-			});
-		}
-
-		const workingGroups = await getActiveWorkingGroupIdsForYear({ year });
-
-		for (const workingGroup of workingGroups) {
-			await db?.workingGroupReport.create({
-				data: {
-					facultativeQuestions,
-					narrativeReport,
-					workingGroupId: workingGroup.id,
-					reportCampaignId: reportCampaign.id,
-				},
-			});
-		}
-
-		/**
-		 * Trigger sshoc marketplace ingest to ensure services and software are up to date.
-		 * But don't fail report generation when ingest fails (e.g. because sshoc api is down).
-		 * Note that this will probably not work when deployed in a serverless environment.
-		 */
-		void ingestDataFromSshomp();
-
 		revalidatePath("/[locale]/dashboard/admin/campaign", "page");
 
-		redirect({ href: "/dashboard/admin", locale });
-
-		// return {
-		// 	status: "success" as const,
-		// 	message: t("success"),
-		// 	timestamp: Date.now(),
-		// };
+		return {
+			status: "success" as const,
+			message: t("success"),
+			timestamp: Date.now(),
+		};
 	} catch (error) {
 		log.error(error);
 

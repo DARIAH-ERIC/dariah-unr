@@ -3,13 +3,14 @@
 import { EventSize, OutreachType, type RoleType, ServiceSize } from "@prisma/client";
 import { type ReactNode, useActionState, useId } from "react";
 
-import { SubmitButton } from "@/components/submit-button";
 import { NumberInputField } from "@/components/ui/blocks/number-input-field";
 import { TextAreaField } from "@/components/ui/blocks/text-area-field";
+import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
 import { createCampaignAction } from "@/lib/actions/admin/create-campaign";
+import { updateCampaignAction } from "@/lib/actions/admin/update-campaign";
 import { createKey } from "@/lib/create-key";
 
 interface AdminCampaignFormContentProps {
@@ -43,7 +44,11 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 		year,
 	} = props;
 
-	const [formState, formAction] = useActionState(createCampaignAction, undefined);
+	const [formState, formAction, isPending] = useActionState(createCampaignAction, undefined);
+	const [saveFormState, saveFormAction, isSavePending] = useActionState(
+		updateCampaignAction,
+		undefined,
+	);
 
 	const submitLabel = `Create campaign for ${String(year)}`;
 
@@ -204,7 +209,30 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 				</div>
 			</section>
 
-			<SubmitButton>{submitLabel}</SubmitButton>
+			<Button
+				/* @ts-expect-error React 19 allows server actions on `formAction`. */
+				formAction={saveFormAction}
+				isPending={isSavePending}
+				type="submit"
+			>
+				{"Save campaign data"}
+			</Button>
+
+			<FormSuccessMessage key={createKey("save-form-success", saveFormState?.timestamp)}>
+				{saveFormState?.status === "success" && saveFormState.message.length > 0
+					? saveFormState.message
+					: null}
+			</FormSuccessMessage>
+
+			<FormErrorMessage key={createKey("save-form-error", saveFormState?.timestamp)}>
+				{saveFormState?.status === "error" && saveFormState.formErrors.length > 0
+					? saveFormState.formErrors
+					: null}
+			</FormErrorMessage>
+
+			<Button isPending={isPending} type="submit">
+				{submitLabel}
+			</Button>
 
 			<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
 				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}

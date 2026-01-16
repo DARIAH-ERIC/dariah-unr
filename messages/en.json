@@ -350,6 +350,12 @@
 				},
 				"success": "Successfully initiated reporting campaign."
 			},
+			"updateCampaign": {
+				"errors": {
+					"default": "Could not save reporting campaign data."
+				},
+				"success": "Successfully saved reporting campaign data."
+			},
 			"createContribution": {
 				"errors": {
 					"default": "Could not create contribution."
