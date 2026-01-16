@@ -735,9 +735,11 @@ enum ReportCampaignStatus {
 model ReportCampaign {
   id String @id @default(uuid()) @db.Uuid
 
-  serviceSizeThresholds Json                 @map(name: "service_size_thresholds") // could become a separate thing
-  status                ReportCampaignStatus @default(in_progress)
-  year                  Int                  @unique
+  facultativeQuestionsTemplate String?              @map(name: "facultative_questions_template")
+  narrativeReportTemplate      String?              @map(name: "narrative_report_template")
+  serviceSizeThresholds        Json                 @map(name: "service_size_thresholds") // could become a separate thing
+  status                       ReportCampaignStatus @default(in_progress)
+  year                         Int                  @unique
 
   reports             Report[]
   workingGroupReports WorkingGroupReport[]

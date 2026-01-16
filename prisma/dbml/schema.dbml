@@ -375,6 +375,8 @@ Table service_size_values {
 
 Table report_campaigns {
   id String [pk]
+  facultativeQuestionsTemplate String
+  narrativeReportTemplate String
   serviceSizeThresholds Json [not null]
   status ReportCampaignStatus [not null, default: 'in_progress']
   year Int [unique, not null]
