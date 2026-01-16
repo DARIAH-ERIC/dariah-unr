@@ -278,17 +278,11 @@
 		},
 		"title": "Working group - {name}"
 	},
-	"DashboardWorkingGroupReportPage": {
-		"meta": {
-			"title": "Working group report - {name} ({year, number})"
-		},
-		"title": "Working group report - {name} ({year, number})"
-	},
 	"DashboardWorkingGroupReportEditPage": {
 		"meta": {
-			"title": "Edit working group report - {name} ({year, number})"
+			"title": "Edit working group report - {name} ({year})"
 		},
-		"title": "Edit working group report - {name} ({year, number})"
+		"title": "Edit working group report - {name} ({year})"
 	},
 	"Error": {
 		"something-went-wrong": "Something went wrong!",
@@ -344,7 +338,7 @@
 	},
 	"WorkingGroupReportForm": {
 		"confirm": "Confirm",
-		"confirmation-info": "This report has already been submitted.",
+		"confirmation-info": "This report has been submitted.",
 		"submit": "Save",
 		"title": "Edit working group report"
 	},

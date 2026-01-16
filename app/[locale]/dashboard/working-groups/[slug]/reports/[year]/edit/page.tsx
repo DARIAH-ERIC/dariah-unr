@@ -74,7 +74,7 @@ export default async function DashboardWorkingGroupReportEditPage(
 
 	return (
 		<MainContent className="container grid content-start gap-8 py-8">
-			<PageTitle>{t("title", { name, year })}</PageTitle>
+			<PageTitle>{t("title", { name, year: String(year) })}</PageTitle>
 
 			<section className="grid gap-y-8">
 				<WorkingGroupReportForm

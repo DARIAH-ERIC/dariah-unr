@@ -55,7 +55,7 @@ export default async function DashboardCountryPage(
 	const t = await getTranslations("DashboardCountryPage");
 
 	return (
-		<section>
+		<section className="max-w-(--breakpoint-lg)">
 			<div className="prose">
 				<p>{t("lead-in")}</p>
 			</div>

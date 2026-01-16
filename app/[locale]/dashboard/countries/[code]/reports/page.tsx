@@ -60,7 +60,7 @@ export default async function DashboardCountryReportsPage(
 	const t = await getTranslations("DashboardCountryReportsPage");
 
 	return (
-		<section className="grid gap-8">
+		<section className="grid gap-8 max-w-(--breakpoint-md)">
 			<p className="prose">{t("lead-in")}</p>
 			<div className="flex flex-col gap-y-4 md:w-1/2">
 				{reports

@@ -21,8 +21,10 @@ export function hasPersonWorkingGroupRole(params: HasPersonWorkingGroupRoleParam
 					in: role,
 				},
 			},
-			startDate: { lte: date },
-			OR: [{ endDate: null }, { endDate: { gte: date } }],
+			AND: [
+				{ OR: [{ startDate: null }, { startDate: { lte: date } }] },
+				{ OR: [{ endDate: null }, { endDate: { gte: date } }] },
+			],
 		},
 	});
 }

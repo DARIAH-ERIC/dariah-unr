@@ -63,7 +63,7 @@ export default async function DashboardCountryLayout(
 	return (
 		<main className="container grid content-start gap-8 py-8">
 			<PageTitle>{t("title", { name })}</PageTitle>
-			<div className="flex max-w-(--breakpoint-lg) flex-row gap-8">
+			<div className="flex gap-8">
 				<aside>
 					{["admin", "national_coordinator"].includes(user.role) ? (
 						<DashboardCountryNCNavigation code={code} />

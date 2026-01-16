@@ -22,17 +22,14 @@ export function WorkingGroupReportForm(params: WorkingGroupReportFormParams): Re
 	const t = useTranslations("WorkingGroupReportForm");
 
 	return (
-		<div>
-			<h2>{t("title")}</h2>
-			<WorkingGroupReportFormContent
-				confirmationInfo={t("confirmation-info")}
-				confirmationLabel={t("confirm")}
-				isConfirmationAvailable={isConfirmationAvailable}
-				// previousWorkingGroupReport={previousWorkingGroupReport}
-				submitLabel={t("submit")}
-				workingGroup={workingGroup}
-				workingGroupReport={workingGroupReport}
-			/>
-		</div>
+		<WorkingGroupReportFormContent
+			confirmationInfo={t("confirmation-info")}
+			confirmationLabel={t("confirm")}
+			isConfirmationAvailable={isConfirmationAvailable}
+			// previousWorkingGroupReport={previousWorkingGroupReport}
+			submitLabel={t("submit")}
+			workingGroup={workingGroup}
+			workingGroupReport={workingGroupReport}
+		/>
 	);
 }

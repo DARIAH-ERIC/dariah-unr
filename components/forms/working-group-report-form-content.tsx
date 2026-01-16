@@ -4,8 +4,6 @@ import type { WorkingGroup, WorkingGroupReport } from "@prisma/client";
 import { InfoIcon } from "lucide-react";
 import { type ReactNode, useActionState } from "react";
 
-import { FormDescription } from "@/components/form-description";
-import { FormTitle } from "@/components/form-title";
 import { SubmitButton } from "@/components/submit-button";
 import { TextAreaField } from "@/components/ui/blocks/text-area-field";
 import { Form } from "@/components/ui/form";
@@ -43,7 +41,7 @@ export function WorkingGroupReportFormContent(
 	const isReportConfirmed = workingGroupReport.status !== "draft";
 
 	return (
-		<div>
+		<div className="grid gap-6 content-start">
 			<Form
 				action={formAction}
 				className="grid gap-y-6"
@@ -51,9 +49,6 @@ export function WorkingGroupReportFormContent(
 			>
 				<input name="workingGroupReportId" type="hidden" value={workingGroupReport.id} />
 				<input name="workingGroupId" type="hidden" value={workingGroup.id} />
-
-				<FormTitle>Working group</FormTitle>
-				<FormDescription>Report</FormDescription>
 
 				<section className="grid gap-y-6">
 					<TextAreaField
@@ -92,6 +87,8 @@ export function WorkingGroupReportFormContent(
 				<ConfirmationForm
 					confirmationLabel={confirmationLabel}
 					isConfirmationAvailable={isConfirmationAvailable}
+					workingGroup={workingGroup}
+					workingGroupReport={workingGroupReport}
 				/>
 			) : null}
 
@@ -108,10 +105,12 @@ export function WorkingGroupReportFormContent(
 interface ConfirmationFormProps {
 	confirmationLabel: string;
 	isConfirmationAvailable: boolean;
+	workingGroup: WorkingGroup;
+	workingGroupReport: WorkingGroupReport;
 }
 
 function ConfirmationForm(props: ConfirmationFormProps) {
-	const { confirmationLabel, isConfirmationAvailable } = props;
+	const { confirmationLabel, isConfirmationAvailable, workingGroup, workingGroupReport } = props;
 
 	const [formState, formAction] = useActionState(updateWorkingGroupReportStatusAction, undefined);
 
@@ -121,6 +120,9 @@ function ConfirmationForm(props: ConfirmationFormProps) {
 			className="grid gap-y-6"
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
+			<input name="workingGroupReportId" type="hidden" value={workingGroupReport.id} />
+			<input name="workingGroupId" type="hidden" value={workingGroup.id} />
+
 			{isConfirmationAvailable ? (
 				<SubmitButton isDisabled={!isConfirmationAvailable}>{confirmationLabel}</SubmitButton>
 			) : null}

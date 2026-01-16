@@ -3,9 +3,9 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
-import { Link } from "@/components/link";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
+import { LinkButton } from "@/components/ui/link-button";
 import { assertPermissions } from "@/lib/access-controls";
 import { getWorkingGroupBySlug } from "@/lib/data/working-group";
 import { getWorkingGroupReportsByWorkingGroupId } from "@/lib/data/working-group-report";
@@ -65,25 +65,29 @@ export default async function DashboardWorkingGroupPage(
 		<MainContent className="container grid content-start gap-8 py-8">
 			<PageTitle>{t("title", { name: workingGroup.name })}</PageTitle>
 
-			<section className="grid gap-y-8">
-				<h2>Reports ({reports.length})</h2>
+			{reports.length > 0 ? (
+				<section className="grid gap-y-8">
+					<h2 className="text-sm">Reports ({reports.length})</h2>
 
-				<ul role="list">
-					{reports.map((report) => {
-						return (
-							<li key={report.id}>
-								<Link
-									href={createHref({
-										pathname: `/dashboard/working-groups/${slug}/reports/${String(report.reportCampaign.year)}`,
-									})}
-								>
-									Report for {report.reportCampaign.year} (Status: {report.status})
-								</Link>
-							</li>
-						);
-					})}
-				</ul>
-			</section>
+					<ul role="list">
+						{reports.map((report) => {
+							return (
+								<li key={report.id}>
+									<LinkButton
+										href={createHref({
+											pathname: `/dashboard/working-groups/${slug}/reports/${String(report.reportCampaign.year)}/edit`,
+										})}
+									>
+										Report for {report.reportCampaign.year} (Status: {report.status})
+									</LinkButton>
+								</li>
+							);
+						})}
+					</ul>
+				</section>
+			) : (
+				<p>Nothing to report.</p>
+			)}
 		</MainContent>
 	);
 }

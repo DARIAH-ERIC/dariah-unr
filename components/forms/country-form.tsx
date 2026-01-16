@@ -29,7 +29,7 @@ export function EditCountryWrapper(props: EditCountryWrapperProps) {
 	const [formState, formAction] = useActionState(updateCountryAction, undefined);
 
 	return (
-		<div className="flex flex-col gap-y-4">
+		<div className="flex flex-col max-w-(--breakpoint-md) gap-y-4">
 			<CountryEditForm
 				country={country}
 				formAction={formAction}

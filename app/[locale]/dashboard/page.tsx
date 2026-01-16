@@ -3,7 +3,6 @@ import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { Link } from "@/components/link";
-import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import { getCountryById } from "@/lib/data/country";
 import { getWorkingGroupsByPersonId } from "@/lib/data/working-group";
@@ -36,19 +35,27 @@ export default async function DashboardPage(_props: DashboardPageProps): Promise
 	const hasWorkingGroups = contributions.length > 0;
 
 	return (
-		<MainContent className="container grid content-start gap-8 py-8">
+		<main className="container grid content-start gap-8 py-8">
 			<PageTitle>{t("title")}</PageTitle>
 
 			{isAdmin ? (
 				<section>
-					<Link href="/dashboard/admin">Admin dashboard</Link>
+					<Link
+						className="relative inline-flex items-center gap-x-1.5 transition rounded-md px-3 py-1.5 text-neutral-700 hover:text-neutral-950 focus-visible:text-neutral-950 dark:text-neutral-200 dark:hover:text-neutral-0 dark:focus-visible:text-neutral-0 dark:current:text-neutral-0 current:font-medium current:text-neutral-950"
+						href="/dashboard/admin"
+					>
+						Go to admin dashboard
+					</Link>
 				</section>
 			) : null}
 
 			{hasCountry ? (
 				<section>
-					<Link href={`/dashboard/countries/${country.code}`}>
-						National consortium "{country.name}"
+					<Link
+						className="relative inline-flex items-center gap-x-1.5 transition rounded-md px-3 py-1.5 text-neutral-700 hover:text-neutral-950 focus-visible:text-neutral-950 dark:text-neutral-200 dark:hover:text-neutral-0 dark:focus-visible:text-neutral-0 dark:current:text-neutral-0 current:font-medium current:text-neutral-950"
+						href={`/dashboard/countries/${country.code}`}
+					>
+						Go to dashboard for "{country.name}" (National consortium)
 					</Link>
 				</section>
 			) : null}
@@ -64,12 +71,12 @@ export default async function DashboardPage(_props: DashboardPageProps): Promise
 
 						return (
 							<Link key={id} href={`/dashboard/working-groups/${workingGroup.slug}`}>
-								Working group "{workingGroup.name}"
+								Go to dashboard for "{workingGroup.name}" (Working group)
 							</Link>
 						);
 					})}
 				</section>
 			) : null}
-		</MainContent>
+		</main>
 	);
 }
