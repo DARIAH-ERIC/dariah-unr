@@ -61,7 +61,7 @@ export default async function DashboardCountryReportsPage(
 
 	return (
 		<section className="grid gap-8 max-w-(--breakpoint-md)">
-			<p className="prose">{t("lead-in")}</p>
+			<p className="prose prose-sm">{t("lead-in")}</p>
 			<div className="flex flex-col gap-y-4 md:w-1/2">
 				{reports
 					.sort((a, b) => {
