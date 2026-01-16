@@ -3,16 +3,30 @@ import type { EventSize, OutreachType, RoleType, ServiceSize } from "@prisma/cli
 import { db } from "@/lib/db";
 
 interface CreateReportCampaignParams {
+	facultativeQuestionsTemplate?: string;
+	narrativeReportTemplate?: string;
 	serviceSizeThresholds: Record<string, number>;
 	year: number;
 }
 
 export function createReportCampaign(params: CreateReportCampaignParams) {
-	const { serviceSizeThresholds, year } = params;
+	const { facultativeQuestionsTemplate, narrativeReportTemplate, serviceSizeThresholds, year } =
+		params;
 
-	return db.reportCampaign.create({
-		data: {
+	return db.reportCampaign.upsert({
+		create: {
+			facultativeQuestionsTemplate,
+			narrativeReportTemplate,
 			serviceSizeThresholds,
+			year,
+		},
+		update: {
+			facultativeQuestionsTemplate,
+			narrativeReportTemplate,
+			serviceSizeThresholds,
+			year,
+		},
+		where: {
 			year,
 		},
 	});
@@ -89,11 +103,22 @@ interface CreateEventSizeValuesParams {
 export function createEventSizeValue(params: CreateEventSizeValuesParams) {
 	const { annualValue, reportCampaignId, type } = params;
 
-	return db.eventSizeValue.create({
-		data: {
+	return db.eventSizeValue.upsert({
+		create: {
 			annualValue,
 			reportCampaignId,
 			type,
+		},
+		update: {
+			annualValue,
+			reportCampaignId,
+			type,
+		},
+		where: {
+			reportCampaignId_type: {
+				reportCampaignId,
+				type,
+			},
 		},
 	});
 }
@@ -119,11 +144,22 @@ interface CreateOutreachTypeValuesParams {
 export function createOutreachTypeValue(params: CreateOutreachTypeValuesParams) {
 	const { annualValue, reportCampaignId, type } = params;
 
-	return db.outreachTypeValue.create({
-		data: {
+	return db.outreachTypeValue.upsert({
+		create: {
 			annualValue,
 			reportCampaignId,
 			type,
+		},
+		update: {
+			annualValue,
+			reportCampaignId,
+			type,
+		},
+		where: {
+			reportCampaignId_type: {
+				reportCampaignId,
+				type,
+			},
 		},
 	});
 }
@@ -149,11 +185,22 @@ interface CreateRoleTypeValuesParams {
 export function createRoleTypeValue(params: CreateRoleTypeValuesParams) {
 	const { annualValue, reportCampaignId, type } = params;
 
-	return db.roleTypeValue.create({
-		data: {
+	return db.roleTypeValue.upsert({
+		create: {
 			annualValue,
 			reportCampaignId,
 			type,
+		},
+		update: {
+			annualValue,
+			reportCampaignId,
+			type,
+		},
+		where: {
+			reportCampaignId_type: {
+				reportCampaignId,
+				type,
+			},
 		},
 	});
 }
@@ -179,11 +226,22 @@ interface CreateServiceSizeValuesParams {
 export function createServiceSizeValue(params: CreateServiceSizeValuesParams) {
 	const { annualValue, reportCampaignId, type } = params;
 
-	return db.serviceSizeValue.create({
-		data: {
+	return db.serviceSizeValue.upsert({
+		create: {
 			annualValue,
 			reportCampaignId,
 			type,
+		},
+		update: {
+			annualValue,
+			reportCampaignId,
+			type,
+		},
+		where: {
+			reportCampaignId_type: {
+				reportCampaignId,
+				type,
+			},
 		},
 	});
 }
