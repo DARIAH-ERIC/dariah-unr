@@ -43,20 +43,21 @@ export default async function DashboardAdminCampaignPage(
 
 	const year = new Date().getUTCFullYear() - 1;
 
-	const [_countries, previousCampaign] = await Promise.all([
+	const [_countries, currentCampaign, previousCampaign] = await Promise.all([
 		getActiveMemberCountryIdsForYear({ year }),
+		getReportCampaignByYear({ year }),
 		getReportCampaignByYear({ year: year - 1 }),
 	]);
 
-	async function getPreviousCampaignData(id: string | undefined) {
+	async function getCampaignData(id: string | undefined) {
 		if (id == null) return null;
 
 		const [
-			previousOperationalCostThresholds,
-			previousEventSizeValues,
-			previousOutreachTypeValues,
-			previousRoleTypeValues,
-			previousServiceSizeValues,
+			operationalCostThresholds,
+			eventSizeValues,
+			outreachTypeValues,
+			roleTypeValues,
+			serviceSizeValues,
 		] = await Promise.all([
 			getOperationalCostThresholdsForReportCampaign({ reportCampaignId: id }),
 			getEventSizeValues({ reportCampaignId: id }),
@@ -65,34 +66,31 @@ export default async function DashboardAdminCampaignPage(
 			getServiceSizeValues({ reportCampaignId: id }),
 		]);
 
-		const previousOperationalCostThresholdsByCountryId = keyByToMap(
-			previousOperationalCostThresholds,
-			(d) => {
-				return d.countryId;
-			},
-		);
+		const operationalCostThresholdsByCountryId = keyByToMap(operationalCostThresholds, (d) => {
+			return d.countryId;
+		});
 
 		return {
-			operationalCostThresholdsByCountryId: previousOperationalCostThresholdsByCountryId,
-			eventSizeValues: previousEventSizeValues,
-			outreachTypeValues: previousOutreachTypeValues,
-			roleTypeValues: previousRoleTypeValues,
-			serviceSizeValues: previousServiceSizeValues,
+			operationalCostThresholdsByCountryId,
+			eventSizeValues,
+			outreachTypeValues,
+			roleTypeValues,
+			serviceSizeValues,
 		};
 	}
 
-	const previous = await getPreviousCampaignData(previousCampaign?.id);
+	const campaignData = await getCampaignData(currentCampaign?.id ?? previousCampaign?.id);
 
 	const countries = [];
 
 	for (const country of _countries) {
-		const operationalCostThreshold = previous?.operationalCostThresholdsByCountryId.get(
+		const operationalCostThreshold = campaignData?.operationalCostThresholdsByCountryId.get(
 			country.id,
 		)?.operationalCostThreshold;
 
 		countries.push({
 			...country,
-			previousOperationalCostThreshold: operationalCostThreshold
+			operationalCostThreshold: operationalCostThreshold
 				? operationalCostThreshold.toNumber()
 				: 0.0,
 		});
@@ -105,30 +103,33 @@ export default async function DashboardAdminCampaignPage(
 			<section className="grid gap-y-8">
 				<AdminCampaignFormContent
 					countries={countries}
-					previousEventSizeValues={
-						previous != null
-							? keyBy(previous.eventSizeValues, (value) => {
+					eventSizeValues={
+						campaignData != null
+							? keyBy(campaignData.eventSizeValues, (value) => {
 									return value.type;
 								})
 							: null
 					}
-					previousOutreachTypeValues={
-						previous != null
-							? keyBy(previous.outreachTypeValues, (value) => {
+					facultativeQuestions={currentCampaign?.facultativeQuestionsTemplate ?? null}
+					isActiveCampaign={currentCampaign != null}
+					narrativeReport={currentCampaign?.narrativeReportTemplate ?? null}
+					outreachTypeValues={
+						campaignData != null
+							? keyBy(campaignData.outreachTypeValues, (value) => {
 									return value.type;
 								})
 							: null
 					}
-					previousRoleTypeValues={
-						previous != null
-							? keyBy(previous.roleTypeValues, (value) => {
+					roleTypeValues={
+						campaignData != null
+							? keyBy(campaignData.roleTypeValues, (value) => {
 									return value.type;
 								})
 							: null
 					}
-					previousServiceSizeValues={
-						previous != null
-							? keyBy(previous.serviceSizeValues, (value) => {
+					serviceSizeValues={
+						campaignData != null
+							? keyBy(campaignData.serviceSizeValues, (value) => {
 									return value.type;
 								})
 							: null

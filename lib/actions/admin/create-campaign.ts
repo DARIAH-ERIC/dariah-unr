@@ -196,8 +196,6 @@ export async function createCampaignAction(
 
 		revalidatePath("/[locale]/dashboard/admin/campaign", "page");
 
-		redirect({ href: "/dashboard/admin", locale });
-
 		// return {
 		// 	status: "success" as const,
 		// 	message: t("success"),
@@ -213,4 +211,6 @@ export async function createCampaignAction(
 			timestamp: Date.now(),
 		};
 	}
+
+	redirect({ href: "/dashboard/admin", locale });
 }

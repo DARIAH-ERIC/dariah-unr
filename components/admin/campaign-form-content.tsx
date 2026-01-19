@@ -14,33 +14,37 @@ import { updateCampaignAction } from "@/lib/actions/admin/update-campaign";
 import { createKey } from "@/lib/create-key";
 
 interface AdminCampaignFormContentProps {
-	countries: Array<{ id: string; name: string; previousOperationalCostThreshold: number }>;
-	previousEventSizeValues: Record<
-		EventSize,
-		{ id: string; type: EventSize; annualValue: number }
-	> | null;
-	previousOutreachTypeValues: Record<
+	countries: Array<{
+		id: string;
+		name: string;
+		operationalCostThreshold: number;
+	}>;
+	eventSizeValues: Record<EventSize, { id: string; type: EventSize; annualValue: number }> | null;
+	outreachTypeValues: Record<
 		OutreachType,
 		{ id: string; type: OutreachType; annualValue: number }
 	> | null;
-	previousRoleTypeValues: Record<
-		RoleType,
-		{ id: string; type: RoleType; annualValue: number }
-	> | null;
-	previousServiceSizeValues: Record<
+	roleTypeValues: Record<RoleType, { id: string; type: RoleType; annualValue: number }> | null;
+	serviceSizeValues: Record<
 		ServiceSize,
 		{ id: string; type: ServiceSize; annualValue: number }
 	> | null;
+	facultativeQuestions: string | null;
+	narrativeReport: string | null;
 	year: number;
+	isActiveCampaign: boolean;
 }
 
 export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): ReactNode {
 	const {
+		isActiveCampaign,
 		countries,
-		previousEventSizeValues,
-		previousOutreachTypeValues,
-		previousRoleTypeValues,
-		previousServiceSizeValues,
+		facultativeQuestions,
+		narrativeReport,
+		eventSizeValues,
+		outreachTypeValues,
+		roleTypeValues,
+		serviceSizeValues,
 		year,
 	} = props;
 
@@ -74,6 +78,7 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 				</h2>
 
 				<TextAreaField
+					defaultValue={narrativeReport ?? undefined}
 					description="Questions for working group reporting"
 					isRequired={true}
 					label="Narrative questions"
@@ -82,6 +87,7 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 				/>
 
 				<TextAreaField
+					defaultValue={facultativeQuestions ?? undefined}
 					description="Questions for working group reporting"
 					isRequired={true}
 					label="Facultative questions"
@@ -103,7 +109,7 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 						return (
 							<NumberInputField
 								key={country.id}
-								defaultValue={country.previousOperationalCostThreshold}
+								defaultValue={country.operationalCostThreshold}
 								formatOptions={{ style: "currency", currency: "EUR" }}
 								isRequired={true}
 								label={country.name}
@@ -131,7 +137,7 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 							return (
 								<NumberInputField
 									key={eventSize}
-									defaultValue={previousEventSizeValues?.[eventSize].annualValue ?? 0}
+									defaultValue={eventSizeValues?.[eventSize].annualValue ?? 0}
 									formatOptions={{ style: "currency", currency: "EUR" }}
 									isRequired={true}
 									label={eventSize}
@@ -150,7 +156,7 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 							return (
 								<NumberInputField
 									key={outreachType}
-									defaultValue={previousOutreachTypeValues?.[outreachType].annualValue ?? 0}
+									defaultValue={outreachTypeValues?.[outreachType].annualValue ?? 0}
 									formatOptions={{ style: "currency", currency: "EUR" }}
 									isRequired={true}
 									label={outreachType}
@@ -177,7 +183,7 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 							return (
 								<NumberInputField
 									key={roleType}
-									defaultValue={previousRoleTypeValues?.[roleType].annualValue ?? 0}
+									defaultValue={roleTypeValues?.[roleType].annualValue ?? 0}
 									formatOptions={{ style: "currency", currency: "EUR" }}
 									isRequired={true}
 									label={roleType}
@@ -196,7 +202,7 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 							return (
 								<NumberInputField
 									key={serviceSizeType}
-									defaultValue={previousServiceSizeValues?.[serviceSizeType].annualValue ?? 0}
+									defaultValue={serviceSizeValues?.[serviceSizeType].annualValue ?? 0}
 									formatOptions={{ style: "currency", currency: "EUR" }}
 									isRequired={true}
 									label={serviceSizeType}
@@ -230,7 +236,7 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 					: null}
 			</FormErrorMessage>
 
-			<Button isPending={isPending} type="submit">
+			<Button isDisabled={isActiveCampaign} isPending={isPending} type="submit">
 				{submitLabel}
 			</Button>
 
