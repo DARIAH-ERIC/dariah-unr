@@ -79,20 +79,30 @@ export default async function DashboardAdminCampaignPage(
 		};
 	}
 
-	const campaignData = await getCampaignData(currentCampaign?.id ?? previousCampaign?.id);
+	const _campaignData = await getCampaignData(currentCampaign?.id);
+	const previousCampaignData = await getCampaignData(previousCampaign?.id);
+	const campaignData = _campaignData ?? previousCampaignData;
 
 	const countries = [];
 
 	for (const country of _countries) {
-		const operationalCostThreshold = campaignData?.operationalCostThresholdsByCountryId.get(
+		// operational costs are only saved when creating reports, i.e. the campaign is initiated
+		const operationalCostThreshold = _campaignData?.operationalCostThresholdsByCountryId.get(
 			country.id,
 		)?.operationalCostThreshold;
+
+		const previousOperationalCostThreshold =
+			previousCampaignData?.operationalCostThresholdsByCountryId.get(
+				country.id,
+			)?.operationalCostThreshold;
 
 		countries.push({
 			...country,
 			operationalCostThreshold: operationalCostThreshold
 				? operationalCostThreshold.toNumber()
-				: 0.0,
+				: previousOperationalCostThreshold
+					? previousOperationalCostThreshold.toNumber()
+					: 0.0,
 		});
 	}
 
@@ -111,7 +121,8 @@ export default async function DashboardAdminCampaignPage(
 							: null
 					}
 					facultativeQuestions={currentCampaign?.facultativeQuestionsTemplate ?? null}
-					isActiveCampaign={currentCampaign != null}
+					// FIXME: saved but not initiated should be a separate campaign status
+					isActiveCampaign={currentCampaign != null && currentCampaign.reports.length > 0}
 					narrativeReport={currentCampaign?.narrativeReportTemplate ?? null}
 					outreachTypeValues={
 						campaignData != null

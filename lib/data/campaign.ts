@@ -53,6 +53,13 @@ export function getReportCampaignByYear(params: GetReportCampaignByYearParams) {
 
 	return db.reportCampaign.findFirst({
 		where: { year },
+		include: {
+			reports: {
+				select: {
+					id: true,
+				},
+			},
+		},
 	});
 }
 
