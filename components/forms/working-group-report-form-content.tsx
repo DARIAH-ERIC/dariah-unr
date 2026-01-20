@@ -1,17 +1,31 @@
 "use client";
 
-import type { WorkingGroup, WorkingGroupReport } from "@prisma/client";
+import {
+	type Prisma,
+	type WorkingGroup,
+	type WorkingGroupEvent,
+	WorkingGroupEventRole,
+	type WorkingGroupReport,
+} from "@prisma/client";
+import { randomUUID } from "crypto";
 import { InfoIcon } from "lucide-react";
-import { type ReactNode, useActionState } from "react";
+import { type ReactNode, useActionState, useState } from "react";
 
 import { SubmitButton } from "@/components/submit-button";
+import { DateInputField } from "@/components/ui/blocks/date-input-field";
+import { NumberInputField } from "@/components/ui/blocks/number-input-field";
+import { SelectField, SelectItem } from "@/components/ui/blocks/select-field";
 import { TextAreaField } from "@/components/ui/blocks/text-area-field";
+import { TextInputField } from "@/components/ui/blocks/text-input-field";
+import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
 import { updateWorkingGroupReportAction } from "@/lib/actions/update-working-group-report";
 import { updateWorkingGroupReportStatusAction } from "@/lib/actions/update-working-group-report-status";
 import { createKey } from "@/lib/create-key";
+import { workingGroupReportCommentsSchema } from "@/lib/schemas/report";
+import { toDateValue } from "@/lib/to-date-value";
 
 interface WorkingGroupReportFormContentParams {
 	confirmationInfo: string;
@@ -20,7 +34,9 @@ interface WorkingGroupReportFormContentParams {
 	// previousWorkingGroupReport?: WorkingGroupReport | null;
 	submitLabel: string;
 	workingGroup: WorkingGroup;
-	workingGroupReport: WorkingGroupReport;
+	workingGroupReport: Prisma.WorkingGroupReportGetPayload<{
+		include: { workingGroupEvents: true };
+	}>;
 }
 
 export function WorkingGroupReportFormContent(
@@ -40,6 +56,15 @@ export function WorkingGroupReportFormContent(
 
 	const isReportConfirmed = workingGroupReport.status !== "draft";
 
+	const comments =
+		workingGroupReport.comments != null
+			? workingGroupReportCommentsSchema.parse(workingGroupReport.comments).comments
+			: null;
+
+	const [events, setEvents] = useState<Array<Partial<WorkingGroupEvent & { _id?: string }>>>(
+		workingGroupReport.workingGroupEvents,
+	);
+
 	return (
 		<div className="grid gap-6 content-start">
 			<Form
@@ -51,6 +76,81 @@ export function WorkingGroupReportFormContent(
 				<input name="workingGroupId" type="hidden" value={workingGroup.id} />
 
 				<section className="grid gap-y-6">
+					<NumberInputField
+						defaultValue={workingGroupReport.members ?? 0}
+						isRequired={true}
+						label="Members"
+						name="members"
+					/>
+
+					<div>
+						<h2 className="font-bold text-lg">Events</h2>
+
+						{events.map((event, index) => {
+							return (
+								<div key={event.id ?? event._id} className="flex flex-col gap-y-4">
+									{event.id ? (
+										<input
+											name={`workingGroupEvents.${String(index)}.id`}
+											type="hidden"
+											value={event.id}
+										/>
+									) : null}
+
+									<TextInputField
+										defaultValue={event.title}
+										isRequired={true}
+										label="Title"
+										name={`workingGroupEvents.${String(index)}.title`}
+									/>
+
+									<DateInputField
+										defaultValue={event.date ? toDateValue(event.date.toISOString()) : undefined}
+										granularity="day"
+										isRequired={true}
+										label="Date"
+										name={`workingGroupEvents.${String(index)}.date`}
+									/>
+
+									<SelectField
+										defaultValue={event.role}
+										isRequired={true}
+										label="Role"
+										name={`workingGroupEvents.${String(index)}.role`}
+									>
+										{Object.values(WorkingGroupEventRole).map((id) => {
+											return (
+												<SelectItem key={id} id={id} textValue={id}>
+													{id}
+												</SelectItem>
+											);
+										})}
+									</SelectField>
+
+									<TextInputField
+										defaultValue={event.url}
+										isRequired={true}
+										label="URL"
+										name={`workingGroupEvents.${String(index)}.url`}
+										type="url"
+									/>
+								</div>
+							);
+						})}
+
+						<div>
+							<Button
+								onPress={() => {
+									setEvents((events) => {
+										return [...events, { _id: randomUUID() }];
+									});
+								}}
+							>
+								Add
+							</Button>
+						</div>
+					</div>
+
 					<TextAreaField
 						defaultValue={workingGroupReport.narrativeReport}
 						isRequired={true}
@@ -66,6 +166,8 @@ export function WorkingGroupReportFormContent(
 						name="facultativeQuestions"
 						rows={12}
 					/>
+
+					<TextAreaField defaultValue={comments ?? ""} label="Comments" name="comments" />
 
 					<SubmitButton>{submitLabel}</SubmitButton>
 				</section>

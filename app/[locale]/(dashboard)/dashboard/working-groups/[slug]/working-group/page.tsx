@@ -9,9 +9,11 @@ import { assertPermissions } from "@/lib/access-controls";
 import { getWorkingGroupBySlug } from "@/lib/data/working-group";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
-interface DashboardWorkingGroupPageProps extends PageProps<"/[locale]/dashboard/working-groups/[slug]"> {}
+interface DashboardWorkingGroupWorkingGroupPageProps extends PageProps<"/[locale]/dashboard/working-groups/[slug]/working-group"> {}
 
-export async function generateMetadata(props: DashboardWorkingGroupPageProps): Promise<Metadata> {
+export async function generateMetadata(
+	props: DashboardWorkingGroupWorkingGroupPageProps,
+): Promise<Metadata> {
 	const { params } = props;
 
 	const { user } = await assertAuthenticated();
@@ -27,7 +29,7 @@ export async function generateMetadata(props: DashboardWorkingGroupPageProps): P
 
 	await assertPermissions(user, { kind: "working-group", id, action: "read" });
 
-	const t = await getTranslations("DashboardWorkingGroupPage");
+	const t = await getTranslations("DashboardWorkingGroupWorkingGroupPage");
 
 	const metadata: Metadata = {
 		title: t("meta.title", { name: workingGroup.name }),
@@ -36,8 +38,8 @@ export async function generateMetadata(props: DashboardWorkingGroupPageProps): P
 	return metadata;
 }
 
-export default async function DashboardWorkingGroupPage(
-	props: DashboardWorkingGroupPageProps,
+export default async function DashboardWorkingGroupWorkingGroupPage(
+	props: DashboardWorkingGroupWorkingGroupPageProps,
 ): Promise<ReactNode> {
 	const { params } = props;
 
@@ -54,11 +56,11 @@ export default async function DashboardWorkingGroupPage(
 
 	await assertPermissions(user, { kind: "working-group", id, action: "read" });
 
-	const _t = await getTranslations("DashboardWorkingGroupPage");
+	const _t = await getTranslations("DashboardWorkingGroupWorkingGroupPage");
 
 	return (
 		<MainContent className="max-w-(--brakpoint-lg) grid content-start gap-8">
-			<PageTitle>Overview</PageTitle>
+			<PageTitle>Working group</PageTitle>
 		</MainContent>
 	);
 }

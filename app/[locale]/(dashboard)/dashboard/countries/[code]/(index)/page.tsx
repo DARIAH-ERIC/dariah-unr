@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
+import { PageTitle } from "@/components/page-title";
 import { assertPermissions } from "@/lib/access-controls";
 import { getCountryByCode } from "@/lib/data/country";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
@@ -55,7 +56,8 @@ export default async function DashboardCountryPage(
 	const _t = await getTranslations("DashboardCountryPage");
 
 	return (
-		<section className="max-w-(--breakpoint-md)">
+		<main className="max-w-(--breakpoint-md) grid gap-8 content-start">
+			<PageTitle>Welcome</PageTitle>
 			<div className="prose prose-sm">
 				<p>
 					Welcome to the DARIAH National Dashboard. This is where you, as National Coordinator or NC
@@ -95,6 +97,6 @@ export default async function DashboardCountryPage(
 				<p>If you have any questions, please see DARIAH-EU staff.</p>
 				{/* <p>{t("lead-in")}</p> */}
 			</div>
-		</section>
+		</main>
 	);
 }

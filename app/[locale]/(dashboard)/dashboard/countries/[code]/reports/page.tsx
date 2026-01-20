@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
+import { PageTitle } from "@/components/page-title";
 import { LinkButton } from "@/components/ui/link-button";
 import { assertPermissions } from "@/lib/access-controls";
 import { getCountryByCode } from "@/lib/data/country";
@@ -60,7 +61,8 @@ export default async function DashboardCountryReportsPage(
 	const t = await getTranslations("DashboardCountryReportsPage");
 
 	return (
-		<section className="grid gap-8 max-w-(--breakpoint-md)">
+		<main className="grid gap-8 max-w-(--breakpoint-md)">
+			<PageTitle>Reports</PageTitle>
 			<p className="prose prose-sm">{t("lead-in")}</p>
 			<div className="flex flex-col gap-y-4 md:w-1/2">
 				{reports
@@ -82,6 +84,6 @@ export default async function DashboardCountryReportsPage(
 						);
 					})}
 			</div>
-		</section>
+		</main>
 	);
 }

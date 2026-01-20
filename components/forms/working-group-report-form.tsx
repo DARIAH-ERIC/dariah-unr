@@ -1,4 +1,4 @@
-import type { WorkingGroup, WorkingGroupReport } from "@prisma/client";
+import type { Prisma, WorkingGroup, WorkingGroupReport } from "@prisma/client";
 import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 
@@ -8,7 +8,9 @@ interface WorkingGroupReportFormParams {
 	isConfirmationAvailable: boolean;
 	previousWorkingGroupReport?: WorkingGroupReport | null;
 	workingGroup: WorkingGroup;
-	workingGroupReport: WorkingGroupReport;
+	workingGroupReport: Prisma.WorkingGroupReportGetPayload<{
+		include: { workingGroupEvents: true };
+	}>;
 }
 
 export function WorkingGroupReportForm(params: WorkingGroupReportFormParams): ReactNode {

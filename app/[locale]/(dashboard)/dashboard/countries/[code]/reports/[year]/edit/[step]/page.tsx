@@ -24,6 +24,7 @@ import { ServiceReportsForm } from "@/components/forms/service-reports-form";
 import { SoftwareForm } from "@/components/forms/software-form";
 import { Link } from "@/components/link";
 import { LoadingIndicator } from "@/components/loading-indicator";
+import { PageTitle } from "@/components/page-title";
 import { assertPermissions } from "@/lib/access-controls";
 import { getReportCampaignByYear } from "@/lib/data/campaign";
 import { getCountryByCode } from "@/lib/data/country";
@@ -115,7 +116,8 @@ export default async function DashboardCountryReportEditStepPage(
 
 	return (
 		<section className="grid content-start gap-8">
-			<h2 className="hidden print:block">{t("print-title", { year: String(year) })}</h2>
+			<PageTitle className="print:hidden">Report {year}</PageTitle>
+			<h1 className="hidden print:block">{t("print-title", { year: String(year) })}</h1>
 			<DashboardCountryReportNavigation className="print:hidden" code={code} year={year} />
 			<DashboardCountryReportEditStepPageContent code={code} step={step} user={user} year={year} />
 		</section>

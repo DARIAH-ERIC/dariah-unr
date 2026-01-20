@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { ContributionsTableContent } from "@/components/contributions-table-content";
+import { PageTitle } from "@/components/page-title";
 import { assertPermissions } from "@/lib/access-controls";
 import { getContributionsByCountry } from "@/lib/data/contributions";
 import { getCountryByCode } from "@/lib/data/country";
@@ -67,14 +68,17 @@ export default async function DashboardCountryContributionsPage(
 	]);
 
 	return (
-		<section className="grid w-full gap-4">
-			<ContributionsTableContent
-				contributions={contributions}
-				countries={[country]}
-				persons={persons}
-				roles={roles}
-				workingGroups={workingGroups}
-			/>
-		</section>
+		<main className="grid gap-8 content-start">
+			<PageTitle>Contributions</PageTitle>
+			<div className="grid w-full gap-4">
+				<ContributionsTableContent
+					contributions={contributions}
+					countries={[country]}
+					persons={persons}
+					roles={roles}
+					workingGroups={workingGroups}
+				/>
+			</div>
+		</main>
 	);
 }

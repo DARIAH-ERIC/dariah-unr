@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { InstitutionsTableContent } from "@/components/institutions-table-content";
+import { PageTitle } from "@/components/page-title";
 import { assertPermissions } from "@/lib/access-controls";
 import { getCountryByCode } from "@/lib/data/country";
 import { getInstitutionsByCountry } from "@/lib/data/institution";
@@ -59,8 +60,11 @@ export default async function DashboardCountryInstitutionsPage(
 	const institutions = await getInstitutionsByCountry({ countryId: id });
 
 	return (
-		<section className="grid w-full gap-4">
-			<InstitutionsTableContent countries={[country]} institutions={institutions} />
-		</section>
+		<main className="grid gap-8 content-start">
+			<PageTitle>Institutions</PageTitle>
+			<div className="grid w-full gap-4">
+				<InstitutionsTableContent countries={[country]} institutions={institutions} />
+			</div>
+		</main>
 	);
 }

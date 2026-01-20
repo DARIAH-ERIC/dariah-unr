@@ -38,7 +38,7 @@ export default async function DashboardWorkingGroupReportEditPage(
 		notFound();
 	}
 
-	const { id, name } = workingGroup;
+	const { id } = workingGroup;
 
 	await assertPermissions(user, { kind: "working-group", id, action: "read-write" });
 
@@ -70,11 +70,11 @@ export default async function DashboardWorkingGroupReportEditPage(
 		action: "confirm",
 	});
 
-	const t = await getTranslations("DashboardWorkingGroupReportEditPage");
+	const _t = await getTranslations("DashboardWorkingGroupReportEditPage");
 
 	return (
-		<MainContent className="container grid content-start gap-8 py-8">
-			<PageTitle>{t("title", { name, year: String(year) })}</PageTitle>
+		<MainContent className="max-w-(--brakpoint-lg) grid content-start gap-8">
+			<PageTitle>Report {year}</PageTitle>
 
 			<section className="grid gap-y-8">
 				<WorkingGroupReportForm

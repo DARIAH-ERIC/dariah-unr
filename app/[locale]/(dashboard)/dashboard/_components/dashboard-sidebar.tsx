@@ -5,7 +5,6 @@ import {
 	BriefcaseIcon,
 	BuildingOfficeIcon,
 	ChatBubbleLeftRightIcon,
-	Cog6ToothIcon,
 	DocumentTextIcon,
 	EnvelopeIcon,
 	HomeIcon,
@@ -41,6 +40,7 @@ import {
 	SidebarLabel,
 	SidebarRail,
 } from "@/components/intentui/sidebar";
+import { signOutAction } from "@/lib/actions/auth";
 import { getCountryById } from "@/lib/data/country";
 import { getWorkingGroupsByPersonId } from "@/lib/data/working-group";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
@@ -53,6 +53,7 @@ export async function DashboardSidebar(
 	const isAdmin = user.role === "admin";
 	const country = user.countryId != null ? await getCountryById({ id: user.countryId }) : null;
 	const hasCountry = country != null;
+	const isNationalCoordinator = user.role === "national_coordinator" || user.role === "admin";
 	const contributions =
 		user.personId != null ? await getWorkingGroupsByPersonId({ personId: user.personId }) : [];
 	const hasWorkingGroups = contributions.length > 0;
@@ -60,15 +61,15 @@ export async function DashboardSidebar(
 	const defaultExpandedKeys = [];
 
 	if (isAdmin) {
-		defaultExpandedKeys.push(1);
+		defaultExpandedKeys.push("admin");
 	}
 
 	if (hasCountry) {
-		defaultExpandedKeys.push(2);
+		defaultExpandedKeys.push("nc");
 	}
 
 	if (hasWorkingGroups) {
-		defaultExpandedKeys.push(3);
+		defaultExpandedKeys.push("wg-0");
 	}
 
 	return (
@@ -91,7 +92,7 @@ export async function DashboardSidebar(
 					defaultExpandedKeys={defaultExpandedKeys}
 				>
 					{isAdmin ? (
-						<SidebarDisclosure id={1}>
+						<SidebarDisclosure id="admin">
 							<SidebarDisclosureTrigger>
 								<EllipsisHorizontalIcon />
 								<SidebarLabel>Administrator</SidebarLabel>
@@ -170,17 +171,47 @@ export async function DashboardSidebar(
 					) : null}
 
 					{hasCountry ? (
-						<SidebarDisclosure id={2}>
+						<SidebarDisclosure id="nc">
 							<SidebarDisclosureTrigger>
 								<EllipsisHorizontalIcon />
-								<SidebarLabel>National consortium</SidebarLabel>
+								<SidebarLabel>{country.name}</SidebarLabel>
 							</SidebarDisclosureTrigger>
 
 							<SidebarDisclosurePanel>
-								<SidebarItem href={`/dashboard/countries/${country.code}`} tooltip={country.name}>
+								<SidebarItem href={`/dashboard/countries/${country.code}`} tooltip="Overview">
 									<QuestionMarkCircleIcon />
-									<SidebarLabel>{country.name}</SidebarLabel>
+									<SidebarLabel>Overview</SidebarLabel>
 								</SidebarItem>
+
+								{isNationalCoordinator ? (
+									<SidebarItem
+										href={`/dashboard/countries/${country.code}/national-consortium`}
+										tooltip="National consortium"
+									>
+										<QuestionMarkCircleIcon />
+										<SidebarLabel>National consortium</SidebarLabel>
+									</SidebarItem>
+								) : null}
+
+								{isNationalCoordinator ? (
+									<SidebarItem
+										href={`/dashboard/countries/${country.code}/contributions`}
+										tooltip="Contributions"
+									>
+										<QuestionMarkCircleIcon />
+										<SidebarLabel>Contributions</SidebarLabel>
+									</SidebarItem>
+								) : null}
+
+								{isNationalCoordinator ? (
+									<SidebarItem
+										href={`/dashboard/countries/${country.code}/institutions`}
+										tooltip="Institutions"
+									>
+										<QuestionMarkCircleIcon />
+										<SidebarLabel>Institutions</SidebarLabel>
+									</SidebarItem>
+								) : null}
 
 								<SidebarItem
 									href={`/dashboard/countries/${country.code}/reports`}
@@ -194,27 +225,43 @@ export async function DashboardSidebar(
 					) : null}
 
 					{hasWorkingGroups
-						? contributions.map((contribution) => {
-								const { id, workingGroup } = contribution;
+						? contributions.map((contribution, index) => {
+								const { id, role, workingGroup } = contribution;
+
+								if (workingGroup == null) {
+									return null;
+								}
+
+								const isChair = role.type === "wg_chair";
 
 								return (
-									<SidebarDisclosure key={id} id={3}>
+									<SidebarDisclosure key={id} id={`wg-${String(index)}`}>
 										<SidebarDisclosureTrigger>
 											<EllipsisHorizontalIcon />
-											<SidebarLabel>{workingGroup?.name}</SidebarLabel>
+											<SidebarLabel>{workingGroup.name}</SidebarLabel>
 										</SidebarDisclosureTrigger>
 
 										<SidebarDisclosurePanel>
 											<SidebarItem
-												href="/dashboard/working-groups/bibliographic-data"
-												tooltip="Metadata"
+												href={`/dashboard/working-groups/${workingGroup.slug}`}
+												tooltip="Overview"
 											>
-												<QuestionMarkCircleIcon />
-												<SidebarLabel>Metadata</SidebarLabel>
+												<TicketIcon />
+												<SidebarLabel>Overview</SidebarLabel>
 											</SidebarItem>
 
+											{isChair ? (
+												<SidebarItem
+													href={`/dashboard/working-groups/${workingGroup.slug}/working-group`}
+													tooltip="Working group"
+												>
+													<QuestionMarkCircleIcon />
+													<SidebarLabel>Working group</SidebarLabel>
+												</SidebarItem>
+											) : null}
+
 											<SidebarItem
-												href="/dashboard/working-groups/bibliographic-data/reports"
+												href={`/dashboard/working-groups/${workingGroup.slug}/reports`}
 												tooltip="Reports"
 											>
 												<TicketIcon />
@@ -225,48 +272,6 @@ export async function DashboardSidebar(
 								);
 							})
 						: null}
-
-					{/* <SidebarDisclosure id={4}>
-						<SidebarDisclosureTrigger>
-							<EllipsisHorizontalIcon />
-							<SidebarLabel>Website</SidebarLabel>
-						</SidebarDisclosureTrigger>
-
-						<SidebarDisclosurePanel>
-							<SidebarItem href="/dashboard/website" tooltip="Overview">
-								<QuestionMarkCircleIcon />
-								<SidebarLabel>Overview</SidebarLabel>
-							</SidebarItem>
-
-							<SidebarItem href="/dashboard/website/metadata" tooltip="Metadata">
-								<QuestionMarkCircleIcon />
-								<SidebarLabel>Metadata</SidebarLabel>
-							</SidebarItem>
-
-							<SidebarItem href="/dashboard/website/pages" tooltip="Pages">
-								<QuestionMarkCircleIcon />
-								<SidebarLabel>Pages</SidebarLabel>
-							</SidebarItem>
-
-							<SidebarItem href="/dashboard/website/events" tooltip="Events">
-								<QuestionMarkCircleIcon />
-								<SidebarLabel>Events</SidebarLabel>
-							</SidebarItem>
-
-							<SidebarItem href="/dashboard/website/news" tooltip="News">
-								<QuestionMarkCircleIcon />
-								<SidebarLabel>News</SidebarLabel>
-							</SidebarItem>
-
-							<SidebarItem
-								href="/dashboard/website/impact-case-studies"
-								tooltip="Impact case studies"
-							>
-								<QuestionMarkCircleIcon />
-								<SidebarLabel>Impact case studies</SidebarLabel>
-							</SidebarItem>
-						</SidebarDisclosurePanel>
-					</SidebarDisclosure> */}
 				</SidebarDisclosureGroup>
 			</SidebarContent>
 
@@ -299,26 +304,22 @@ export async function DashboardSidebar(
 							</MenuHeader>
 						</MenuSection>
 
-						<MenuItem href="#dashboard">
+						<MenuItem href="/dashboard">
 							<HomeIcon />
 							<MenuLabel>Dashboard</MenuLabel>
 						</MenuItem>
 
-						<MenuItem href="#account">
-							<Cog6ToothIcon />
-							<MenuLabel>Account</MenuLabel>
-						</MenuItem>
-
 						<MenuSeparator />
 
-						<MenuItem href="#documentation">
+						<MenuItem href="/documentation/guidelines">
 							<DocumentTextIcon />
 							<MenuLabel>Documentation</MenuLabel>
 						</MenuItem>
 
 						<MenuSeparator />
 
-						<MenuItem href="#sign-out">
+						{/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
+						<MenuItem onAction={signOutAction}>
 							<ArrowLeftStartOnRectangleIcon />
 							<MenuLabel>Sign out</MenuLabel>
 						</MenuItem>

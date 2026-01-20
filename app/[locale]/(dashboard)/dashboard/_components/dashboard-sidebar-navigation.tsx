@@ -1,6 +1,5 @@
 import {
 	ArrowLeftStartOnRectangleIcon,
-	Cog6ToothIcon,
 	DocumentTextIcon,
 	Squares2X2Icon,
 } from "@heroicons/react/24/outline";
@@ -19,6 +18,7 @@ import {
 	MenuTrigger,
 } from "@/components/intentui/menu";
 import { SidebarNav, SidebarTrigger } from "@/components/intentui/sidebar";
+import { signOutAction } from "@/lib/actions/auth";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 export function DashboardSidebarNavigation(): ReactNode {
@@ -41,11 +41,7 @@ async function UserMenu(): Promise<ReactNode> {
 	return (
 		<Menu>
 			<MenuTrigger aria-label="Open Menu" className="ml-auto md:hidden">
-				<Avatar
-					initials={user.name}
-					isSquare={true}
-					src="https://avatars.githubusercontent.com/u/20753323"
-				/>
+				<Avatar initials={user.name} isSquare={true} src={null} />
 			</MenuTrigger>
 
 			<MenuContent className="min-w-64" popover={{ placement: "bottom end" }}>
@@ -56,26 +52,22 @@ async function UserMenu(): Promise<ReactNode> {
 					</MenuHeader>
 				</MenuSection>
 
-				<MenuItem href="#dashboard">
+				<MenuItem href="/dashboard">
 					<Squares2X2Icon />
 					<MenuLabel>Dashboard</MenuLabel>
 				</MenuItem>
 
-				<MenuItem href="#account">
-					<Cog6ToothIcon />
-					<MenuLabel>Account</MenuLabel>
-				</MenuItem>
-
 				<MenuSeparator />
 
-				<MenuItem href="#documentation">
+				<MenuItem href="/documentation/guidelines">
 					<DocumentTextIcon />
 					<MenuLabel>Documentation</MenuLabel>
 				</MenuItem>
 
 				<MenuSeparator />
 
-				<MenuItem href="#sign-out">
+				{/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
+				<MenuItem onAction={signOutAction}>
 					<ArrowLeftStartOnRectangleIcon />
 					<MenuLabel>Sign out</MenuLabel>
 				</MenuItem>

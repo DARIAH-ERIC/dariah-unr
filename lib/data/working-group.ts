@@ -43,6 +43,11 @@ export function getWorkingGroupsByPersonId(params: GetWorkingGroupsByPersonIdPar
 					name: true,
 				},
 			},
+			role: {
+				select: {
+					type: true,
+				},
+			},
 		},
 	});
 }

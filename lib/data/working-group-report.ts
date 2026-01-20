@@ -1,4 +1,4 @@
-import type { WorkingGroup, WorkingGroupReport } from "@prisma/client";
+import type { WorkingGroup, WorkingGroupEventRole, WorkingGroupReport } from "@prisma/client";
 
 import { db } from "@/lib/db";
 
@@ -105,6 +105,9 @@ export function getWorkingGroupReport(params: GetWorkingGroupReportParams) {
 			workingGroupId,
 			reportCampaignId,
 		},
+		include: {
+			workingGroupEvents: true,
+		},
 	});
 }
 
@@ -112,10 +115,26 @@ interface UpdateWorkingGroupReportParams {
 	facultativeQuestions: string;
 	narrativeReport: string;
 	workingGroupReportId: string;
+	comments: string | undefined;
+	members: number;
+	workingGroupEvents: Array<{
+		id?: string;
+		title: string;
+		url: string;
+		date: Date;
+		role: WorkingGroupEventRole;
+	}>;
 }
 
 export function updateWorkingGroupReport(params: UpdateWorkingGroupReportParams) {
-	const { facultativeQuestions, narrativeReport, workingGroupReportId } = params;
+	const {
+		comments,
+		facultativeQuestions,
+		members,
+		workingGroupEvents,
+		narrativeReport,
+		workingGroupReportId,
+	} = params;
 
 	return db.workingGroupReport.update({
 		where: {
@@ -124,6 +143,17 @@ export function updateWorkingGroupReport(params: UpdateWorkingGroupReportParams)
 		data: {
 			facultativeQuestions,
 			narrativeReport,
+			members,
+			comments,
+			workingGroupEvents: {
+				upsert: workingGroupEvents.map((event) => {
+					return {
+						create: event,
+						update: event,
+						where: { id: event.id },
+					};
+				}),
+			},
 		},
 	});
 }

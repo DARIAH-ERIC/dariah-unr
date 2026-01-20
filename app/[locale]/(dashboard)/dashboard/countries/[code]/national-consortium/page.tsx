@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { EditCountryWrapper } from "@/components/forms/country-form";
+import { PageTitle } from "@/components/page-title";
 import { assertPermissions } from "@/lib/access-controls";
 import { getCountryByCode } from "@/lib/data/country";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
@@ -53,5 +54,10 @@ export default async function DashboardCountryNCPage(
 
 	await assertPermissions(user, { kind: "country", id, action: "edit-metadata" });
 
-	return <EditCountryWrapper country={country} />;
+	return (
+		<main className="max-w-(--breakpoint-md) grid gap-8">
+			<PageTitle>National consortium</PageTitle>
+			<EditCountryWrapper country={country} />
+		</main>
+	);
 }

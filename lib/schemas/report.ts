@@ -16,6 +16,12 @@ export const reportCommentsSchema = z.object({
 
 export type ReportCommentsSchema = z.infer<typeof reportCommentsSchema>;
 
+export const workingGroupReportCommentsSchema = z.object({
+	comments: z.string().optional(),
+});
+
+export type WorkingGroupReportCommentsSchema = z.infer<typeof workingGroupReportCommentsSchema>;
+
 export const eventReportSchema = z.object({
 	dariahCommissionedEvent: nonEmptyString(z.string().optional()),
 	largeMeetings: nonEmptyString(z.coerce.number().int().nonnegative().optional()),

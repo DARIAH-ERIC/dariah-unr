@@ -278,6 +278,18 @@
 		},
 		"title": "Working group - {name}"
 	},
+	"DashboardWorkingGroupReportsPage": {
+		"meta": {
+			"title": "Working group - {name} - Reports"
+		},
+		"title": "Working group - {name} - Reports"
+	},
+	"DashboardWorkingGroupWorkingGroupPage": {
+		"meta": {
+			"title": "Working group - {name}"
+		},
+		"title": "Working group - {name}"
+	},
 	"DashboardWorkingGroupReportEditPage": {
 		"meta": {
 			"title": "Edit working group report - {name} ({year})"
