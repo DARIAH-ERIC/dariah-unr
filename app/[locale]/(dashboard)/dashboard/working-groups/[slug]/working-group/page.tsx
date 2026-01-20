@@ -27,7 +27,7 @@ export async function generateMetadata(
 
 	const { id } = workingGroup;
 
-	await assertPermissions(user, { kind: "working-group", id, action: "read" });
+	await assertPermissions(user, { kind: "working-group", id, action: "edit-metadata" });
 
 	const t = await getTranslations("DashboardWorkingGroupWorkingGroupPage");
 
@@ -54,7 +54,7 @@ export default async function DashboardWorkingGroupWorkingGroupPage(
 
 	const { id } = workingGroup;
 
-	await assertPermissions(user, { kind: "working-group", id, action: "read" });
+	await assertPermissions(user, { kind: "working-group", id, action: "edit-metadata" });
 
 	const _t = await getTranslations("DashboardWorkingGroupWorkingGroupPage");
 
