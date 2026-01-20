@@ -543,3 +543,24 @@
 		background: var(--color-border);
 	}
 }
+
+@utility touch-target {
+	@variant pointer-coarse {
+		--touch-area: 44px;
+
+		position: relative;
+
+		&::before {
+			content: "";
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			display: block;
+			width: 100%;
+			min-width: var(--touch-area);
+			height: 100%;
+			min-height: var(--touch-area);
+			transform: translate(-50%, -50%);
+		}
+	}
+}
