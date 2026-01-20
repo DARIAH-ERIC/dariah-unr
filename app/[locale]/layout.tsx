@@ -7,9 +7,6 @@ import { LocalizedStringProvider as Translations } from "react-aria-components/i
 import { jsonLdScriptProps } from "react-schemaorg";
 
 import { Providers } from "@/app/[locale]/providers";
-import { AppFooter } from "@/components/app-footer";
-import { AppHeader } from "@/components/app-header";
-import { AppLayout } from "@/components/app-layout";
 import { id } from "@/components/main-content";
 import { SkipLink } from "@/components/skip-link";
 import { env } from "@/config/env.config";
@@ -120,11 +117,7 @@ export default async function LocaleLayout(props: LocaleLayoutProps): Promise<Re
 
 					<SkipLink targetId={id}>{t("skip-to-main-content")}</SkipLink>
 
-					<AppLayout>
-						<AppHeader />
-						{children}
-						<AppFooter />
-					</AppLayout>
+					{children}
 				</Providers>
 			</body>
 		</html>

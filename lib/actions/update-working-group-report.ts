@@ -1,6 +1,7 @@
 "use server";
 
 import { log } from "@acdh-oeaw/lib";
+import { WorkingGroupEventRole } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
@@ -13,6 +14,22 @@ const formSchema = z.object({
 	workingGroupReportId: z.string(),
 	facultativeQuestions: z.string(),
 	narrativeReport: z.string(),
+	members: z.number(),
+	comments: z.string().optional(),
+	workingGroupEvents: z.array(
+		z.object({
+			id: z.string().optional(),
+			title: z.string(),
+			url: z.string(),
+			date: z.coerce.date(),
+			role: z.enum(
+				Object.values(WorkingGroupEventRole) as [
+					WorkingGroupEventRole,
+					...Array<WorkingGroupEventRole>,
+				],
+			),
+		}),
+	),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -54,11 +71,21 @@ export async function updateWorkingGroupReportAction(
 	}
 
 	try {
-		const { workingGroupReportId, facultativeQuestions, narrativeReport } = result.data;
-
-		await updateWorkingGroupReport({
+		const {
+			comments,
 			facultativeQuestions,
 			narrativeReport,
+			members,
+			workingGroupEvents,
+			workingGroupReportId,
+		} = result.data;
+
+		await updateWorkingGroupReport({
+			comments,
+			facultativeQuestions,
+			narrativeReport,
+			members,
+			workingGroupEvents,
 			workingGroupReportId,
 		});
 
