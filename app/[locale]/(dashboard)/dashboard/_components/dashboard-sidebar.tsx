@@ -268,6 +268,16 @@ export async function DashboardSidebar(
 												</SidebarItem>
 											) : null}
 
+											{isChair ? (
+												<SidebarItem
+													href={`/dashboard/working-groups/${workingGroup.slug}/outreach`}
+													tooltip="Outreach"
+												>
+													<QuestionMarkCircleIcon />
+													<SidebarLabel>Outreach</SidebarLabel>
+												</SidebarItem>
+											) : null}
+
 											<SidebarItem
 												href={`/dashboard/working-groups/${workingGroup.slug}/reports`}
 												tooltip="Reports"

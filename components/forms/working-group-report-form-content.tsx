@@ -101,7 +101,7 @@ export function WorkingGroupReportFormContent(
 
 						{events.map((event, index) => {
 							return (
-								<div key={event.id ?? event._id} className="flex gap-4 items-end">
+								<div key={event.id ?? event._id} className="flex gap-4">
 									{event.id ? (
 										<input
 											name={`workingGroupEvents.${String(index)}.id`}
@@ -148,18 +148,20 @@ export function WorkingGroupReportFormContent(
 										type="url"
 									/>
 
-									<IconButton
-										aria-label="Remove"
-										onPress={() => {
-											setEvents((events) => {
-												return events.filter((event, i) => {
-													return i !== index;
+									{event.id ? null : (
+										<IconButton
+											aria-label="Remove"
+											onPress={() => {
+												setEvents((events) => {
+													return events.filter((event, i) => {
+														return i !== index;
+													});
 												});
-											});
-										}}
-									>
-										<Trash2Icon aria-hidden={true} className="size-5 shrink-0" />
-									</IconButton>
+											}}
+										>
+											<Trash2Icon aria-hidden={true} className="size-5 shrink-0" />
+										</IconButton>
+									)}
 								</div>
 							);
 						})}

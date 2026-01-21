@@ -278,6 +278,12 @@
 		},
 		"title": "Working group - {name}"
 	},
+	"DashboardWorkingGroupOutreachPage": {
+		"meta": {
+			"title": "Working group - {name} - Outreach"
+		},
+		"title": "Working group - {name} - Outreach"
+	},
 	"DashboardWorkingGroupReportsPage": {
 		"meta": {
 			"title": "Working group - {name} - Reports"
@@ -664,6 +670,12 @@
 				"default": "Failed to update working group report status."
 			},
 			"success": "Successfully updated working group report status."
+		},
+		"updateWorkingGroupOutreach": {
+			"errors": {
+				"default": "Failed to update working group outreach."
+			},
+			"success": "Successfully updated working group outreach."
 		}
 	},
 	"ui": {

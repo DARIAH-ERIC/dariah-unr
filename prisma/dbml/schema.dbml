@@ -309,7 +309,7 @@ Table working_group_outreach {
   endDate DateTime
   name String [not null]
   startDate DateTime
-  type OutreachType [not null]
+  type WorkingGroupOutreachType [not null]
   url String [not null]
   workingGroupId String [not null]
   workingGroup working_groups [not null]

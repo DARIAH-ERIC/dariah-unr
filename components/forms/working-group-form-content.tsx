@@ -2,6 +2,7 @@
 
 import { keyByToMap } from "@acdh-oeaw/lib";
 import type { Person, Prisma } from "@prisma/client";
+import { Trash2Icon } from "lucide-react";
 import { type ReactNode, startTransition, useActionState, useMemo, useState } from "react";
 
 import { SubmitButton } from "@/components/submit-button";
@@ -12,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
+import { IconButton } from "@/components/ui/icon-button";
 import { updateWorkingGroupAction } from "@/lib/actions/update-working-group";
 import { createKey } from "@/lib/create-key";
 import { toDateValue } from "@/lib/to-date-value";
@@ -26,8 +28,6 @@ interface WorkingGroupFormParamsContent {
 
 export function WorkingGroupFormContent(params: WorkingGroupFormParamsContent): ReactNode {
 	const { persons, roles, workingGroup } = params;
-
-	// TODO: outreach
 
 	const [formState, formAction] = useActionState(updateWorkingGroupAction, undefined);
 
@@ -110,7 +110,7 @@ export function WorkingGroupFormContent(params: WorkingGroupFormParamsContent): 
 
 				{chairs.map((chair, index) => {
 					return (
-						<div key={chair.id ?? chair._id} className="flex gap-4 items-end">
+						<div key={chair.id ?? chair._id} className="flex gap-4">
 							{chair.id ? (
 								<input name={`chairs.${String(index)}.id`} type="hidden" value={chair.id} />
 							) : null}
@@ -152,6 +152,20 @@ export function WorkingGroupFormContent(params: WorkingGroupFormParamsContent): 
 								label="End date"
 								name={`chairs.${String(index)}.endDate`}
 							/>
+							{chair.id ? null : (
+								<IconButton
+									aria-label="Remove"
+									onPress={() => {
+										setChairs((chairs) => {
+											return chairs.filter((event, i) => {
+												return i !== index;
+											});
+										});
+									}}
+								>
+									<Trash2Icon aria-hidden={true} className="size-5 shrink-0" />
+								</IconButton>
+							)}
 						</div>
 					);
 				})}
@@ -168,70 +182,6 @@ export function WorkingGroupFormContent(params: WorkingGroupFormParamsContent): 
 					</Button>
 				</div>
 			</div>
-
-			{/* <div className="flex flex-col gap-4">
-				<h2 className="text-lg font-semibold">Members</h2>
-
-				{members.map((member, index) => {
-					return (
-						<div key={member.id ?? member._id} className="flex gap-4 items-end">
-							{member.id ? (
-								<input name={`members.${String(index)}.id`} type="hidden" value={member.id} />
-							) : null}
-
-							<input
-								name={`members.${String(index)}.roleId`}
-								type="hidden"
-								value={rolesByType.get("wg_member")?.id}
-							/>
-
-							<SelectField
-								className="w-64"
-								defaultValue={member.personId ?? undefined}
-								isRequired={true}
-								label="Name"
-								name={`members.${String(index)}.personId`}
-							>
-								{persons.map((person) => {
-									return (
-										<SelectItem key={person.name} id={person.id} textValue={person.name}>
-											{person.name}
-										</SelectItem>
-									);
-								})}
-							</SelectField>
-
-							<DateInputField
-								className="w-32 shrink-0"
-								defaultValue={member.startDate ? toDateValue(member.startDate) : undefined}
-								granularity="day"
-								label="Start date"
-								name={`members.${String(index)}.startDate`}
-							/>
-
-							<DateInputField
-								className="w-32 shrink-0"
-								defaultValue={member.endDate ? toDateValue(member.endDate) : undefined}
-								granularity="day"
-								label="End date"
-								name={`members.${String(index)}.endDate`}
-							/>
-						</div>
-					);
-				})}
-
-				<div>
-					<Button
-						onPress={() => {
-							setMembers((members) => {
-								return [...members, { _id: crypto.randomUUID() }];
-							});
-						}}
-					>
-						Add member
-					</Button>
-				</div>
-			</div> */}
 
 			<div>
 				<SubmitButton>Save</SubmitButton>

@@ -620,10 +620,10 @@ enum WorkingGroupOutreachType {
 model WorkingGroupOutreach {
   id String @id @default(uuid()) @db.Uuid
 
-  endDate   DateTime?    @map(name: "end_date")
+  endDate   DateTime?                @map(name: "end_date")
   name      String
-  startDate DateTime?    @map(name: "start_date")
-  type      OutreachType
+  startDate DateTime?                @map(name: "start_date")
+  type      WorkingGroupOutreachType
   url       String
 
   workingGroupId String @map(name: "working_group_id") @db.Uuid

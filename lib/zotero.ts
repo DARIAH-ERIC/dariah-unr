@@ -160,7 +160,7 @@ interface GetWorkingGroupPublicationsParams {
 }
 
 export async function getWorkingGroupPublications(params: GetWorkingGroupPublicationsParams) {
-	const { name, year } = params;
+	const { name, slug, year } = params;
 
 	const _name = name.toLowerCase();
 
@@ -172,7 +172,9 @@ export async function getWorkingGroupPublications(params: GetWorkingGroupPublica
 	const collection = Array.from(collectionsByName.values()).find((collection) => {
 		const collectionName = collection.data.name.toLowerCase();
 
-		return collectionName.startsWith("wg") && collectionName.includes(_name);
+		return (
+			collectionName === slug || (collectionName.startsWith("wg") && collectionName.includes(_name))
+		);
 	});
 
 	const items = collection != null ? await getCollectionItems(collection.key) : [];
