@@ -34,7 +34,7 @@ export default async function DashboardAdminReportsPage(
 	const t = await getTranslations("DashboardAdminReportsPage");
 
 	return (
-		<MainContent className="container grid max-w-(--breakpoint-2xl)! content-start gap-y-8 py-8">
+		<MainContent className="grid max-w-(--breakpoint-2xl)! content-start gap-y-8">
 			<PageTitle>{t("title")}</PageTitle>
 
 			<DashboardAdminReportsPageContent />

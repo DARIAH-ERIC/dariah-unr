@@ -64,7 +64,7 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 				className="flex flex-col gap-y-4"
 				role="group"
 			>
-				<h2 className="text-lg font-bold" id={workingGroupReportingSectionId}>
+				<h2 className="text-lg font-semibold" id={workingGroupReportingSectionId}>
 					Working groups
 				</h2>
 
@@ -90,7 +90,7 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 				className="flex flex-col gap-y-4"
 				role="group"
 			>
-				<h2 className="text-lg font-bold" id={operationalCostThresholdsSectionId}>
+				<h2 className="text-lg font-semibold" id={operationalCostThresholdsSectionId}>
 					Operational cost thresholds
 				</h2>
 				<div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
@@ -115,7 +115,7 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 				className="flex flex-col gap-y-4"
 				role="group"
 			>
-				<h2 className="text-lg font-bold" id={annualValuesSectionId}>
+				<h2 className="text-lg font-semibold" id={annualValuesSectionId}>
 					Annual values
 				</h2>
 

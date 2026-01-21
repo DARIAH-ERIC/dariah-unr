@@ -73,7 +73,7 @@ export default async function DashboardWorkingGroupReportEditPage(
 	const _t = await getTranslations("DashboardWorkingGroupReportEditPage");
 
 	return (
-		<MainContent className="max-w-(--brakpoint-lg) grid content-start gap-8">
+		<MainContent className="max-w-(--breakpoint-lg) grid content-start gap-8">
 			<PageTitle>Report {year}</PageTitle>
 
 			<section className="grid gap-y-8">

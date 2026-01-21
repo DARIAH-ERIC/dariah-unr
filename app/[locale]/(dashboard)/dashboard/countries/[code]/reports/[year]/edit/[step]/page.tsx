@@ -115,7 +115,7 @@ export default async function DashboardCountryReportEditStepPage(
 	const t = await getTranslations("DashboardCountryReportEditStepPage");
 
 	return (
-		<section className="grid content-start gap-8">
+		<section className="grid content-start gap-8 max-w-(--breakpoint-xl)!">
 			<PageTitle className="print:hidden">Report {year}</PageTitle>
 			<h1 className="hidden print:block">{t("print-title", { year: String(year) })}</h1>
 			<DashboardCountryReportNavigation className="print:hidden" code={code} year={year} />

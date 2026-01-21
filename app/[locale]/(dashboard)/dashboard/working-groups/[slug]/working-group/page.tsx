@@ -64,7 +64,7 @@ export default async function DashboardWorkingGroupWorkingGroupPage(
 	const [persons, roles] = await Promise.all([getPersons(), getRoles()]);
 
 	return (
-		<MainContent className="max-w-(--brakpoint-lg) grid content-start gap-8">
+		<MainContent className="max-w-(--breakpoint-lg) grid content-start gap-8">
 			<PageTitle>Working group</PageTitle>
 			<WorkingGroupForm persons={persons} roles={roles} workingGroup={workingGroup} />
 		</MainContent>

@@ -61,10 +61,10 @@ export default async function DashboardCountryReportsPage(
 	const t = await getTranslations("DashboardCountryReportsPage");
 
 	return (
-		<main className="grid gap-8 max-w-(--breakpoint-md)">
+		<main className="grid gap-8 content-start">
 			<PageTitle>Reports</PageTitle>
-			<p className="prose prose-sm">{t("lead-in")}</p>
-			<div className="flex flex-col gap-y-4 md:w-1/2">
+			<p className="prose max-w-(--breakpoint-md)!">{t("lead-in")}</p>
+			<div className="flex flex-col gap-y-4">
 				{reports
 					.sort((a, b) => {
 						return a.year - b.year;
@@ -75,6 +75,7 @@ export default async function DashboardCountryReportsPage(
 						return (
 							<LinkButton
 								key={year}
+								className="max-w-64"
 								href={createHref({
 									pathname: `/dashboard/countries/${country.code}/reports/${String(year)}/edit/welcome`,
 								})}

@@ -60,7 +60,7 @@ export default async function DashboardCountryInstitutionsPage(
 	const institutions = await getInstitutionsByCountry({ countryId: id });
 
 	return (
-		<main className="grid gap-8 content-start">
+		<main className="grid gap-8 content-start max-w-(--breakpoint-2xl)!">
 			<PageTitle>Institutions</PageTitle>
 			<div className="grid w-full gap-4">
 				<InstitutionsTableContent countries={[country]} institutions={institutions} />

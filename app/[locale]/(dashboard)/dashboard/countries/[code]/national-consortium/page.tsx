@@ -55,7 +55,7 @@ export default async function DashboardCountryNCPage(
 	await assertPermissions(user, { kind: "country", id, action: "edit-metadata" });
 
 	return (
-		<main className="max-w-(--breakpoint-md) grid gap-8">
+		<main className="max-w-(--breakpoint-md!) grid gap-8 content-start">
 			<PageTitle>National consortium</PageTitle>
 			<EditCountryWrapper country={country} />
 		</main>

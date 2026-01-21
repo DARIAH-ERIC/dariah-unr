@@ -1,6 +1,6 @@
 "use client";
 
-import { isNonEmptyString } from "@acdh-oeaw/lib";
+// import { isNonEmptyString } from "@acdh-oeaw/lib";
 import type { EventReport, Report } from "@prisma/client";
 import { type ReactNode, useActionState } from "react";
 
@@ -41,12 +41,12 @@ export function EventReportFormContent(props: EventReportFormContentProps): Reac
 
 			<TextInputField
 				defaultValue={eventReport?.dariahCommissionedEvent ?? undefined}
-				description={
-					previousEventReport != null &&
-					isNonEmptyString(previousEventReport.dariahCommissionedEvent)
-						? `Previous year: ${previousEventReport.dariahCommissionedEvent}.`
-						: undefined
-				}
+				// description={
+				// 	previousEventReport != null &&
+				// 	isNonEmptyString(previousEventReport.dariahCommissionedEvent)
+				// 		? `Previous year: ${previousEventReport.dariahCommissionedEvent}.`
+				// 		: undefined
+				// }
 				isReadOnly={true}
 				label="Title of DARIAH commissioned event"
 				name="eventReport.dariahCommissionedEvent"
@@ -67,7 +67,7 @@ export function EventReportFormContent(props: EventReportFormContentProps): Reac
 				defaultValue={eventReport?.mediumMeetings ?? undefined}
 				description={
 					previousEventReport != null
-						? `Previous year: ${String(previousEventReport.mediumMeetings)}.`
+						? `Previous year: ${String(previousEventReport.mediumMeetings?? 0)}.`
 						: undefined
 				}
 				label="Medium meetings"
@@ -78,7 +78,7 @@ export function EventReportFormContent(props: EventReportFormContentProps): Reac
 				defaultValue={eventReport?.largeMeetings ?? undefined}
 				description={
 					previousEventReport != null
-						? `Previous year: ${String(previousEventReport.largeMeetings)}.`
+						? `Previous year: ${String(previousEventReport.largeMeetings?? 0)}.`
 						: undefined
 				}
 				label="Large meetings"
@@ -89,7 +89,7 @@ export function EventReportFormContent(props: EventReportFormContentProps): Reac
 				defaultValue={eventReport?.veryLargeMeetings ?? undefined}
 				description={
 					previousEventReport != null
-						? `Previous year: ${String(previousEventReport.veryLargeMeetings)}.`
+						? `Previous year: ${String(previousEventReport.veryLargeMeetings ?? 0)}.`
 						: undefined
 				}
 				label="Very large meetings"

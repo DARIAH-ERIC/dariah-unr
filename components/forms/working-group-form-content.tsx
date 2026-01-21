@@ -48,6 +48,17 @@ export function WorkingGroupFormContent(params: WorkingGroupFormParamsContent): 
 		>
 	>(workingGroup.chairs);
 
+	// const [members, setMembers] = useState<
+	// 	Array<
+	// 		Partial<{
+	// 			id?: string;
+	// 			endDate: Date | null;
+	// 			startDate: Date | null;
+	// 			personId: string;
+	// 		}> & { _id?: string }
+	// 	>
+	// >(workingGroup.members);
+
 	return (
 		<Form
 			action={formAction}
@@ -95,7 +106,7 @@ export function WorkingGroupFormContent(params: WorkingGroupFormParamsContent): 
 			/>
 
 			<div className="flex flex-col gap-4">
-				<h2 className="text-lg font-bold">Chairs</h2>
+				<h2 className="text-lg font-semibold">Chairs</h2>
 
 				{chairs.map((chair, index) => {
 					return (
@@ -157,6 +168,70 @@ export function WorkingGroupFormContent(params: WorkingGroupFormParamsContent): 
 					</Button>
 				</div>
 			</div>
+
+			{/* <div className="flex flex-col gap-4">
+				<h2 className="text-lg font-semibold">Members</h2>
+
+				{members.map((member, index) => {
+					return (
+						<div key={member.id ?? member._id} className="flex gap-4 items-end">
+							{member.id ? (
+								<input name={`members.${String(index)}.id`} type="hidden" value={member.id} />
+							) : null}
+
+							<input
+								name={`members.${String(index)}.roleId`}
+								type="hidden"
+								value={rolesByType.get("wg_member")?.id}
+							/>
+
+							<SelectField
+								className="w-64"
+								defaultValue={member.personId ?? undefined}
+								isRequired={true}
+								label="Name"
+								name={`members.${String(index)}.personId`}
+							>
+								{persons.map((person) => {
+									return (
+										<SelectItem key={person.name} id={person.id} textValue={person.name}>
+											{person.name}
+										</SelectItem>
+									);
+								})}
+							</SelectField>
+
+							<DateInputField
+								className="w-32 shrink-0"
+								defaultValue={member.startDate ? toDateValue(member.startDate) : undefined}
+								granularity="day"
+								label="Start date"
+								name={`members.${String(index)}.startDate`}
+							/>
+
+							<DateInputField
+								className="w-32 shrink-0"
+								defaultValue={member.endDate ? toDateValue(member.endDate) : undefined}
+								granularity="day"
+								label="End date"
+								name={`members.${String(index)}.endDate`}
+							/>
+						</div>
+					);
+				})}
+
+				<div>
+					<Button
+						onPress={() => {
+							setMembers((members) => {
+								return [...members, { _id: crypto.randomUUID() }];
+							});
+						}}
+					>
+						Add member
+					</Button>
+				</div>
+			</div> */}
 
 			<div>
 				<SubmitButton>Save</SubmitButton>

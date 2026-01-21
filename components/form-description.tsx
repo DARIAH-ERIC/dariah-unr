@@ -11,7 +11,7 @@ export function FormDescription(props: FormDescriptionProps): ReactNode {
 	const { children, className } = props;
 
 	return (
-		<div className={cn("prose prose-sm max-w-(--breakpoint-md) text-pretty", className)}>
+		<div className={cn("prose max-w-(--breakpoint-md)! text-pretty", className)}>
 			{children}
 		</div>
 	);

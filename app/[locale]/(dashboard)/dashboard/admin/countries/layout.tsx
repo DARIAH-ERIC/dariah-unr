@@ -23,7 +23,7 @@ export default async function DashboardAdminCountriesLayout(
 	const t = await getTranslations("DashboardAdminCountriesPage");
 
 	return (
-		<MainContent className="container grid max-w-(--breakpoint-2xl)! content-start gap-y-8 py-8">
+		<MainContent className="grid max-w-(--breakpoint-2xl)! content-start gap-y-8">
 			<PageTitle>{t("title")}</PageTitle>
 
 			<div className="flex justify-start">

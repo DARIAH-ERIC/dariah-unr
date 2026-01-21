@@ -91,7 +91,7 @@ export function WorkingGroupReportFormContent(
 					/>
 
 					<div className="flex flex-col gap-4">
-						<h2 className="font-bold text-lg">Events</h2>
+						<h2 className="font-semibold text-lg">Events</h2>
 
 						{events.map((event, index) => {
 							return (

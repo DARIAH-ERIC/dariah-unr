@@ -56,9 +56,9 @@ export default async function DashboardCountryPage(
 	const _t = await getTranslations("DashboardCountryPage");
 
 	return (
-		<main className="max-w-(--breakpoint-md) grid gap-8 content-start">
+		<main className="grid gap-8 content-start">
 			<PageTitle>Welcome</PageTitle>
-			<div className="prose prose-sm">
+			<div className="prose max-w-(--breakpoint-md)!">
 				<p>
 					Welcome to the DARIAH National Dashboard. This is where you, as National Coordinator or NC
 					staff, will submit your Unified National Report during the reporting period, as well as
