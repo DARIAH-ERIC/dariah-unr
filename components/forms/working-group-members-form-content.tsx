@@ -1,35 +1,31 @@
 "use client";
 
 import { keyByToMap } from "@acdh-oeaw/lib";
-import type { Person, Prisma } from "@prisma/client";
+import type { Contribution, Person, Prisma, WorkingGroup } from "@prisma/client";
 import { Trash2Icon } from "lucide-react";
 import { type ReactNode, startTransition, useActionState, useMemo, useState } from "react";
 
 import { SubmitButton } from "@/components/submit-button";
 import { DateInputField } from "@/components/ui/blocks/date-input-field";
 import { SelectField, SelectItem } from "@/components/ui/blocks/select-field";
-import { TextInputField } from "@/components/ui/blocks/text-input-field";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
 import { IconButton } from "@/components/ui/icon-button";
-import { updateWorkingGroupAction } from "@/lib/actions/update-working-group";
+import { updateWorkingGroupMembersAction } from "@/lib/actions/update-working-group-members";
 import { createKey } from "@/lib/create-key";
 import { toDateValue } from "@/lib/to-date-value";
 
-interface WorkingGroupFormParamsContent {
+interface WorkingGroupMembersFormContent {
+	contributions: Array<Contribution>;
 	persons: Array<Person>;
 	roles: Array<Prisma.RoleGetPayload<{ select: { id: true; name: true; type: true } }>>;
-	workingGroup: Prisma.WorkingGroupGetPayload<{
-		include: { chairs: true };
-	}>;
+	workingGroup: WorkingGroup;
 }
 
-export function WorkingGroupFormContent(params: WorkingGroupFormParamsContent): ReactNode {
-	const { persons, roles, workingGroup } = params;
-
-	const [formState, formAction] = useActionState(updateWorkingGroupAction, undefined);
+export function WorkingGroupMembersFormContent(params: WorkingGroupMembersFormContent): ReactNode {
+	const { contributions: _contributions, persons, roles, workingGroup } = params;
 
 	const rolesByType = useMemo(() => {
 		return keyByToMap(roles, (role) => {
@@ -37,16 +33,19 @@ export function WorkingGroupFormContent(params: WorkingGroupFormParamsContent): 
 		});
 	}, [roles]);
 
-	const [chairs, setChairs] = useState<
+	const [formState, formAction] = useActionState(updateWorkingGroupMembersAction, undefined);
+
+	const [contributions, setContributions] = useState<
 		Array<
 			Partial<{
-				id?: string;
-				endDate: Date | null;
-				startDate: Date | null;
+				id: string;
 				personId: string;
+				roleId: string;
+				startDate: Date | null;
+				endDate: Date | null;
 			}> & { _id?: string }
 		>
-	>(workingGroup.chairs);
+	>(_contributions);
 
 	return (
 		<Form
@@ -56,70 +55,37 @@ export function WorkingGroupFormContent(params: WorkingGroupFormParamsContent): 
 				event.preventDefault();
 				const formData = new FormData(event.currentTarget);
 				startTransition(async () => {
-					await updateWorkingGroupAction(formState, formData);
+					await updateWorkingGroupMembersAction(formState, formData);
 				});
 			}}
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
-			<input name="id" type="hidden" value={workingGroup.id} />
-
-			<TextInputField
-				defaultValue={workingGroup.contactEmail ?? undefined}
-				label="Contact email"
-				name="contactEmail"
-				type="email"
-			/>
-
-			<TextInputField
-				defaultValue={workingGroup.mailingList ?? undefined}
-				label="Mailing list"
-				name="mailingList"
-			/>
-
-			<TextInputField
-				defaultValue={workingGroup.memberTracking ?? undefined}
-				label="Member tracking"
-				name="memberTracking"
-			/>
-
-			<DateInputField
-				defaultValue={workingGroup.startDate ? toDateValue(workingGroup.startDate) : undefined}
-				label="Start date"
-				name="startDate"
-			/>
-
-			<DateInputField
-				defaultValue={workingGroup.endDate ? toDateValue(workingGroup.endDate) : undefined}
-				label="End date"
-				name="endDate"
-			/>
+			<input name="workingGroupId" type="hidden" value={workingGroup.id} />
 
 			<div className="flex flex-col gap-4">
-				<h2 className="text-lg font-semibold">Chairs</h2>
-
-				{chairs.map((chair, index) => {
+				{contributions.map((item, index) => {
 					return (
-						<div key={chair.id ?? chair._id} className="flex gap-4">
-							{chair.id ? (
-								<input name={`chairs.${String(index)}.id`} type="hidden" value={chair.id} />
+						<div key={item.id ?? item._id} className="flex gap-4">
+							{item.id ? (
+								<input name={`members.${String(index)}.id`} type="hidden" value={item.id} />
 							) : null}
 
 							<input
-								name={`chairs.${String(index)}.roleId`}
+								name={`members.${String(index)}.roleId`}
 								type="hidden"
-								value={rolesByType.get("wg_chair")?.id}
+								value={rolesByType.get("wg_member")?.id}
 							/>
 
 							<SelectField
 								className="w-64"
-								defaultValue={chair.personId ?? undefined}
+								defaultValue={item.personId ?? undefined}
 								isRequired={true}
-								label="Name"
-								name={`chairs.${String(index)}.personId`}
+								label="Role"
+								name={`members.${String(index)}.personId`}
 							>
 								{persons.map((person) => {
 									return (
-										<SelectItem key={person.name} id={person.id} textValue={person.name}>
+										<SelectItem key={person.id} id={person.id} textValue={person.name}>
 											{person.name}
 										</SelectItem>
 									);
@@ -128,26 +94,26 @@ export function WorkingGroupFormContent(params: WorkingGroupFormParamsContent): 
 
 							<DateInputField
 								className="w-32 shrink-0"
-								defaultValue={chair.startDate ? toDateValue(chair.startDate) : undefined}
+								defaultValue={item.startDate ? toDateValue(item.startDate) : undefined}
 								granularity="day"
 								label="Start date"
-								name={`chairs.${String(index)}.startDate`}
+								name={`members.${String(index)}.startDate`}
 							/>
 
 							<DateInputField
 								className="w-32 shrink-0"
-								defaultValue={chair.endDate ? toDateValue(chair.endDate) : undefined}
+								defaultValue={item.endDate ? toDateValue(item.endDate) : undefined}
 								granularity="day"
 								label="End date"
-								name={`chairs.${String(index)}.endDate`}
+								name={`members.${String(index)}.endDate`}
 							/>
 
-							{chair.id ? null : (
+							{item.id ? null : (
 								<IconButton
 									aria-label="Remove"
 									onPress={() => {
-										setChairs((chairs) => {
-											return chairs.filter((event, i) => {
+										setContributions((items) => {
+											return items.filter((item, i) => {
 												return i !== index;
 											});
 										});
@@ -163,12 +129,12 @@ export function WorkingGroupFormContent(params: WorkingGroupFormParamsContent): 
 				<div>
 					<Button
 						onPress={() => {
-							setChairs((chairs) => {
-								return [...chairs, { _id: crypto.randomUUID() }];
+							setContributions((members) => {
+								return [...members, { _id: crypto.randomUUID() }];
 							});
 						}}
 					>
-						Add chair
+						Add member
 					</Button>
 				</div>
 			</div>

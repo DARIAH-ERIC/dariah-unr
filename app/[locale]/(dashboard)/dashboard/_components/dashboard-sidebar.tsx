@@ -268,15 +268,21 @@ export async function DashboardSidebar(
 												</SidebarItem>
 											) : null}
 
-											{isChair ? (
-												<SidebarItem
-													href={`/dashboard/working-groups/${workingGroup.slug}/outreach`}
-													tooltip="Outreach"
-												>
-													<QuestionMarkCircleIcon />
-													<SidebarLabel>Outreach</SidebarLabel>
-												</SidebarItem>
-											) : null}
+											<SidebarItem
+												href={`/dashboard/working-groups/${workingGroup.slug}/outreach`}
+												tooltip="Outreach"
+											>
+												<QuestionMarkCircleIcon />
+												<SidebarLabel>Outreach</SidebarLabel>
+											</SidebarItem>
+
+											<SidebarItem
+												href={`/dashboard/working-groups/${workingGroup.slug}/members`}
+												tooltip="Members"
+											>
+												<QuestionMarkCircleIcon />
+												<SidebarLabel>Members</SidebarLabel>
+											</SidebarItem>
 
 											<SidebarItem
 												href={`/dashboard/working-groups/${workingGroup.slug}/reports`}
