@@ -28,28 +28,34 @@ import { workingGroupReportCommentsSchema } from "@/lib/schemas/report";
 import { toDateValue } from "@/lib/to-date-value";
 
 interface WorkingGroupReportFormContentParams {
+	bibliography: string;
 	confirmationInfo: string;
 	confirmationLabel: string;
 	isConfirmationAvailable: boolean;
 	// previousWorkingGroupReport?: WorkingGroupReport | null;
 	submitLabel: string;
+	total: number;
 	workingGroup: WorkingGroup;
 	workingGroupReport: Prisma.WorkingGroupReportGetPayload<{
 		include: { workingGroupEvents: true };
 	}>;
+	year: number;
 }
 
 export function WorkingGroupReportFormContent(
 	params: WorkingGroupReportFormContentParams,
 ): ReactNode {
 	const {
+		bibliography,
 		confirmationLabel,
 		confirmationInfo,
 		isConfirmationAvailable,
 		// previousWorkingGroupReport,
 		submitLabel,
+		total,
 		workingGroup,
 		workingGroupReport,
+		year,
 	} = params;
 
 	const [formState, formAction] = useActionState(updateWorkingGroupReportAction, undefined);
@@ -186,6 +192,22 @@ export function WorkingGroupReportFormContent(
 						name="facultativeQuestions"
 						rows={12}
 					/>
+
+					<div>
+						<h2 className="text-lg font-semibold">Publications</h2>
+
+						{total > 0 ? (
+							<div
+								// eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml
+								dangerouslySetInnerHTML={{ __html: bibliography }}
+								className="max-w-(--breakpoint-md) text-sm/relaxed text-neutral-700 dark:text-neutral-300 [&_.csl-bib-body]:flex [&_.csl-bib-body]:flex-col [&_.csl-bib-body]:gap-y-2 [&_.csl-entry]:pl-4 [&_.csl-entry]:-indent-4"
+							/>
+						) : (
+							<div className="grid place-items-center py-6 text-sm/relaxed text-neutral-700 dark:text-neutral-300">
+								No entries found for {year} in your zotero collection.
+							</div>
+						)}
+					</div>
 
 					<TextAreaField defaultValue={comments ?? ""} label="Comments" name="comments" />
 

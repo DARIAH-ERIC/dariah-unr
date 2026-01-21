@@ -82,6 +82,7 @@ export default async function DashboardWorkingGroupReportEditPage(
 					previousWorkingGroupReport={previousWorkingGroupReport}
 					workingGroup={workingGroup}
 					workingGroupReport={workingGroupReport}
+					year={year}
 				/>
 			</section>
 		</MainContent>

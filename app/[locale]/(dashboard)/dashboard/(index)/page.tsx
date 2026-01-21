@@ -28,13 +28,13 @@ export default async function DashboardPage(_props: DashboardPageProps): Promise
 		<main className="grid content-start gap-8">
 			<PageTitle>Welcome</PageTitle>
 
-				<div className="prose max-w-(--breakpoint-md)!">
-					<p>
-						Welcome to DARIAH Reporting! This portal is designed to collect valuable data necessary
-						for the evaluation and measurement of DARIAH-EU, its national consortia, and its working
-						groups. This information will be used as well to display basic data on our national
-						consortia and working groups for the new website.
-					</p>
+			<div className="prose max-w-(--breakpoint-md)!">
+				<p>
+					Welcome to DARIAH Reporting! This portal is designed to collect valuable data necessary
+					for the evaluation and measurement of DARIAH-EU, its national consortia, and its working
+					groups. This information will be used as well to display basic data on our national
+					consortia and working groups for the new website.
+				</p>
 			</div>
 		</main>
 	);

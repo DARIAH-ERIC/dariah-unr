@@ -152,3 +152,52 @@ export async function getPublications(params: GetPublicationsParams) {
 
 	return { bibliography, items: publications };
 }
+
+interface GetWorkingGroupPublicationsParams {
+	name: string;
+	slug: string;
+	year: number;
+}
+
+export async function getWorkingGroupPublications(params: GetWorkingGroupPublicationsParams) {
+	const { name, year } = params;
+
+	const _name = name.toLowerCase();
+
+	// FIXME:
+	// For working groups the collections have names that may or may not partially match the name as
+	// it exists in the database.
+
+	const collectionsByName = await getCollectionsByCountryCode();
+	const collection = Array.from(collectionsByName.values()).find((collection) => {
+		const collectionName = collection.data.name.toLowerCase();
+
+		return collectionName.startsWith("wg") && collectionName.includes(_name);
+	});
+
+	const items = collection != null ? await getCollectionItems(collection.key) : [];
+
+	const publications = items.filter((item) => {
+		/**
+		 * Filter publications by publication year client-side, because the zotero api does
+		 * not allow that.
+		 */
+		try {
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			if (Number(item.issued?.["date-parts"]?.[0]?.[0]) === year) return true;
+			return false;
+		} catch {
+			return false;
+		}
+	});
+
+	/**
+	 * We format citations outselves instead of requesting formatted html from the
+	 * zotero api via `?include=bib,data`, because the zotero api is dead slow
+	 * and this makes it even slower, i.e. it increases the chance of timeout errors
+	 * substantially.
+	 */
+	const bibliography = createBibliography(publications);
+
+	return { bibliography, items: publications };
+}

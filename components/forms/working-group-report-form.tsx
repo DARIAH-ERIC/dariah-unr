@@ -1,8 +1,9 @@
 import type { Prisma, WorkingGroup, WorkingGroupReport } from "@prisma/client";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { WorkingGroupReportFormContent } from "@/components/forms/working-group-report-form-content";
+import { getWorkingGroupPublications } from "@/lib/zotero";
 
 interface WorkingGroupReportFormParams {
 	isConfirmationAvailable: boolean;
@@ -11,27 +12,40 @@ interface WorkingGroupReportFormParams {
 	workingGroupReport: Prisma.WorkingGroupReportGetPayload<{
 		include: { workingGroupEvents: true };
 	}>;
+	year: number;
 }
 
-export function WorkingGroupReportForm(params: WorkingGroupReportFormParams): ReactNode {
+export async function WorkingGroupReportForm(
+	params: WorkingGroupReportFormParams,
+): Promise<ReactNode> {
 	const {
 		isConfirmationAvailable,
 		previousWorkingGroupReport: _previousWorkingGroupReport,
 		workingGroup,
 		workingGroupReport,
+		year,
 	} = params;
 
-	const t = useTranslations("WorkingGroupReportForm");
+	const t = await getTranslations("WorkingGroupReportForm");
+
+	const { bibliography, items } = await getWorkingGroupPublications({
+		name: workingGroup.name,
+		slug: workingGroup.slug,
+		year,
+	});
 
 	return (
 		<WorkingGroupReportFormContent
+			bibliography={bibliography}
 			confirmationInfo={t("confirmation-info")}
 			confirmationLabel={t("confirm")}
 			isConfirmationAvailable={isConfirmationAvailable}
 			// previousWorkingGroupReport={previousWorkingGroupReport}
 			submitLabel={t("submit")}
+			total={items.length}
 			workingGroup={workingGroup}
 			workingGroupReport={workingGroupReport}
+			year={year}
 		/>
 	);
 }
