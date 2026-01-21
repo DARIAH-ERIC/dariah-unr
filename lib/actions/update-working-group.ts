@@ -1,37 +1,30 @@
 "use server";
 
 import { log } from "@acdh-oeaw/lib";
-import { WorkingGroupEventRole } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
-import { updateWorkingGroupReport } from "@/lib/data/working-group-report";
+import { updateWorkingGroup } from "@/lib/data/working-group";
 import { getFormData } from "@/lib/get-form-data";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 const formSchema = z.object({
-	workingGroupReportId: z.string(),
-	facultativeQuestions: z.string(),
-	narrativeReport: z.string(),
-	members: z.coerce.number(),
-	comments: z.string().optional(),
-	workingGroupEvents: z
-		.array(
-			z.object({
-				id: z.string().optional(),
-				title: z.string(),
-				url: z.string(),
-				date: z.coerce.date(),
-				role: z.enum(
-					Object.values(WorkingGroupEventRole) as [
-						WorkingGroupEventRole,
-						...Array<WorkingGroupEventRole>,
-					],
-				),
-			}),
-		)
-		.optional(),
+	id: z.string(),
+	contactEmail: z.string().optional(),
+	mailingList: z.string().optional(),
+	memberTracking: z.string().optional(),
+	startDate: z.coerce.date().optional(),
+	endDate: z.coerce.date().optional(),
+	chairs: z.array(
+		z.object({
+			id: z.string().optional(),
+			personId: z.string(),
+			roleId: z.string(),
+			startDate: z.coerce.date().optional(),
+			endDate: z.coerce.date().optional(),
+		}),
+	),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -51,11 +44,11 @@ interface FormSuccess extends FormReturnValue {
 
 type FormState = FormErrors | FormSuccess;
 
-export async function updateWorkingGroupReportAction(
+export async function updateWorkingGroupAction(
 	previousFormState: FormState | undefined,
 	formData: FormData,
 ): Promise<FormState> {
-	const t = await getTranslations("actions.updateWorkingGroupReport");
+	const t = await getTranslations("actions.updateWorkingGroup");
 
 	await assertAuthenticated();
 
@@ -73,25 +66,20 @@ export async function updateWorkingGroupReportAction(
 	}
 
 	try {
-		const {
-			comments,
-			facultativeQuestions,
-			narrativeReport,
-			members,
-			workingGroupEvents = [],
-			workingGroupReportId,
-		} = result.data;
+		const { id, contactEmail, mailingList, memberTracking, startDate, endDate, chairs } =
+			result.data;
 
-		await updateWorkingGroupReport({
-			comments,
-			facultativeQuestions,
-			narrativeReport,
-			members,
-			workingGroupEvents,
-			workingGroupReportId,
+		await updateWorkingGroup({
+			id,
+			contactEmail,
+			mailingList,
+			memberTracking,
+			startDate,
+			endDate,
+			chairs,
 		});
 
-		revalidatePath("/[locale]/dashboard/working-groups/[slug]/reports/[year]/edit", "page");
+		revalidatePath("/[locale]/dashboard/working-groups/[slug]/working-group", "page");
 
 		return {
 			status: "success" as const,

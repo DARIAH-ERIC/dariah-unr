@@ -96,6 +96,9 @@ export function getWorkingGroupBySlug(params: GetWorkingGroupBySlugParams) {
 		where: {
 			slug,
 		},
+		include: {
+			chairs: true,
+		},
 	});
 }
 

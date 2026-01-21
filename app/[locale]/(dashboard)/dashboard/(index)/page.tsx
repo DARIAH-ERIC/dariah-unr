@@ -70,7 +70,11 @@ export default async function DashboardPage(_props: DashboardPageProps): Promise
 						}
 
 						return (
-							<Link key={id} href={`/dashboard/working-groups/${workingGroup.slug}`}>
+							<Link
+								key={id}
+								className="relative inline-flex items-center gap-x-1.5 transition rounded-md px-3 py-1.5 text-neutral-700 hover:text-neutral-950 focus-visible:text-neutral-950 dark:text-neutral-200 dark:hover:text-neutral-0 dark:focus-visible:text-neutral-0 dark:current:text-neutral-0 current:font-medium current:text-neutral-950"
+								href={`/dashboard/working-groups/${workingGroup.slug}`}
+							>
 								Go to dashboard for "{workingGroup.name}" (Working group)
 							</Link>
 						);

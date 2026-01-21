@@ -38,10 +38,18 @@ export function DashboardSidebarNavigation(): ReactNode {
 async function UserMenu(): Promise<ReactNode> {
 	const { user } = await assertAuthenticated();
 
+	function getInitials(name: string): string {
+		const segments = name.split(" ");
+		if (segments.length < 2) {
+			return name.at(0)!;
+		}
+		return `${name.at(0)!}${name.at(-1)!}`;
+	}
+
 	return (
 		<Menu>
 			<MenuTrigger aria-label="Open Menu" className="ml-auto md:hidden">
-				<Avatar initials={user.name} isSquare={true} src={null} />
+				<Avatar initials={getInitials(user.name)} isSquare={true} src={null} />
 			</MenuTrigger>
 
 			<MenuContent className="min-w-64" popover={{ placement: "bottom end" }}>
