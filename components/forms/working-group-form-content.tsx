@@ -48,17 +48,6 @@ export function WorkingGroupFormContent(params: WorkingGroupFormParamsContent): 
 		>
 	>(workingGroup.chairs);
 
-	// const [members, setMembers] = useState<
-	// 	Array<
-	// 		Partial<{
-	// 			id?: string;
-	// 			endDate: Date | null;
-	// 			startDate: Date | null;
-	// 			personId: string;
-	// 		}> & { _id?: string }
-	// 	>
-	// >(workingGroup.members);
-
 	return (
 		<Form
 			action={formAction}

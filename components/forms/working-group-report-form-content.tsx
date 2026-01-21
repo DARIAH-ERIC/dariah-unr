@@ -153,7 +153,7 @@ export function WorkingGroupReportFormContent(
 											aria-label="Remove"
 											onPress={() => {
 												setEvents((events) => {
-													return events.filter((event, i) => {
+													return events.filter((item, i) => {
 														return i !== index;
 													});
 												});

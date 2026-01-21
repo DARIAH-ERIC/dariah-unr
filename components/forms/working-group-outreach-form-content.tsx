@@ -121,7 +121,7 @@ export function WorkingGroupOutreachFormContent(
 									aria-label="Remove"
 									onPress={() => {
 										setOutreach((items) => {
-											return items.filter((event, i) => {
+											return items.filter((item, i) => {
 												return i !== index;
 											});
 										});

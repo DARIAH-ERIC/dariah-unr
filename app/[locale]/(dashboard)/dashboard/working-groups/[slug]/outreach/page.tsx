@@ -29,7 +29,7 @@ export async function generateMetadata(
 
 	const { id } = workingGroup;
 
-	await assertPermissions(user, { kind: "working-group", id, action: "edit-metadata" });
+	await assertPermissions(user, { kind: "working-group", id, action: "read-write" });
 
 	const t = await getTranslations("DashboardWorkingGroupOutreachPage");
 
@@ -56,7 +56,7 @@ export default async function DashboardWorkingGroupOutreachPage(
 
 	const { id } = workingGroup;
 
-	await assertPermissions(user, { kind: "working-group", id, action: "edit-metadata" });
+	await assertPermissions(user, { kind: "working-group", id, action: "read-write" });
 
 	const _t = await getTranslations("DashboardWorkingGroupOutreachPage");
 
@@ -64,7 +64,7 @@ export default async function DashboardWorkingGroupOutreachPage(
 
 	return (
 		<MainContent className="max-w-(--breakpoint-lg) grid content-start gap-8">
-			<PageTitle>Working group</PageTitle>
+			<PageTitle>Outreach</PageTitle>
 			<WorkingGroupOutreachForm outreach={outreach} workingGroup={workingGroup} />
 		</MainContent>
 	);

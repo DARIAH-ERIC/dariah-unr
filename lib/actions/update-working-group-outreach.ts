@@ -15,6 +15,7 @@ const formSchema = z.object({
 	outreach: z
 		.array(
 			z.object({
+				id: z.string().optional(),
 				endDate: z.coerce.date().optional(),
 				name: z.string(),
 				startDate: z.coerce.date().optional(),
