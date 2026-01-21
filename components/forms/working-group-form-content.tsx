@@ -99,7 +99,7 @@ export function WorkingGroupFormContent(params: WorkingGroupFormParamsContent): 
 
 				{chairs.map((chair, index) => {
 					return (
-						<div key={chair.id ?? chair._id} className="flex gap-4">
+						<div key={chair.id ?? chair._id} className="flex gap-4 items-end">
 							{chair.id ? (
 								<input name={`chairs.${String(index)}.id`} type="hidden" value={chair.id} />
 							) : null}

@@ -95,7 +95,7 @@ export function WorkingGroupReportFormContent(
 
 						{events.map((event, index) => {
 							return (
-								<div key={event.id ?? event._id} className="flex flex-col gap-y-4">
+								<div key={event.id ?? event._id} className="flex gap-4 items-end">
 									{event.id ? (
 										<input
 											name={`workingGroupEvents.${String(index)}.id`}
@@ -144,7 +144,6 @@ export function WorkingGroupReportFormContent(
 
 									<IconButton
 										aria-label="Remove"
-										className="self-end"
 										onPress={() => {
 											setEvents((events) => {
 												return events.filter((event, i) => {

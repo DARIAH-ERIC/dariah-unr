@@ -147,13 +147,19 @@ export function updateWorkingGroupReport(params: UpdateWorkingGroupReportParams)
 			members,
 			comments: { comments },
 			workingGroupEvents: {
-				upsert: workingGroupEvents.map((event) => {
-					return {
-						create: event,
-						update: event,
-						where: { id: event.id },
-					};
+				create: workingGroupEvents.filter((event) => {
+					return !event.id;
 				}),
+				update: workingGroupEvents
+					.filter((event) => {
+						return event.id;
+					})
+					.map((event) => {
+						return {
+							where: { id: event.id },
+							data: event,
+						};
+					}),
 				deleteMany: {
 					id: {
 						notIn: workingGroupEvents
