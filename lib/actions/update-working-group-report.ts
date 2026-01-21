@@ -14,22 +14,24 @@ const formSchema = z.object({
 	workingGroupReportId: z.string(),
 	facultativeQuestions: z.string(),
 	narrativeReport: z.string(),
-	members: z.number(),
+	members: z.coerce.number(),
 	comments: z.string().optional(),
-	workingGroupEvents: z.array(
-		z.object({
-			id: z.string().optional(),
-			title: z.string(),
-			url: z.string(),
-			date: z.coerce.date(),
-			role: z.enum(
-				Object.values(WorkingGroupEventRole) as [
-					WorkingGroupEventRole,
-					...Array<WorkingGroupEventRole>,
-				],
-			),
-		}),
-	),
+	workingGroupEvents: z
+		.array(
+			z.object({
+				id: z.string().optional(),
+				title: z.string(),
+				url: z.string(),
+				date: z.coerce.date(),
+				role: z.enum(
+					Object.values(WorkingGroupEventRole) as [
+						WorkingGroupEventRole,
+						...Array<WorkingGroupEventRole>,
+					],
+				),
+			}),
+		)
+		.optional(),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -76,7 +78,7 @@ export async function updateWorkingGroupReportAction(
 			facultativeQuestions,
 			narrativeReport,
 			members,
-			workingGroupEvents,
+			workingGroupEvents = [],
 			workingGroupReportId,
 		} = result.data;
 

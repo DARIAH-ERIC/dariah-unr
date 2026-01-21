@@ -145,7 +145,7 @@ export function updateWorkingGroupReport(params: UpdateWorkingGroupReportParams)
 			facultativeQuestions,
 			narrativeReport,
 			members,
-			comments,
+			comments: { comments },
 			workingGroupEvents: {
 				upsert: workingGroupEvents.map((event) => {
 					return {
