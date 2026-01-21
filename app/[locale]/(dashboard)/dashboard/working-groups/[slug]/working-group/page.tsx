@@ -3,9 +3,12 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
+import { WorkingGroupForm } from "@/components/forms/working-group-form";
 import { MainContent } from "@/components/main-content";
 import { PageTitle } from "@/components/page-title";
 import { assertPermissions } from "@/lib/access-controls";
+import { getPersons } from "@/lib/data/person";
+import { getRoles } from "@/lib/data/role";
 import { getWorkingGroupBySlug } from "@/lib/data/working-group";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
@@ -58,9 +61,12 @@ export default async function DashboardWorkingGroupWorkingGroupPage(
 
 	const _t = await getTranslations("DashboardWorkingGroupWorkingGroupPage");
 
+	const [persons, roles] = await Promise.all([getPersons(), getRoles()]);
+
 	return (
 		<MainContent className="max-w-(--brakpoint-lg) grid content-start gap-8">
 			<PageTitle>Working group</PageTitle>
+			<WorkingGroupForm persons={persons} roles={roles} workingGroup={workingGroup} />
 		</MainContent>
 	);
 }

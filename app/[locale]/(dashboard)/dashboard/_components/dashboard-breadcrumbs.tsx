@@ -12,7 +12,6 @@ export function DashboardBreadcrumbs(): ReactNode {
 		<Breadcrumbs className="hidden md:flex">
 			<BreadcrumbsItem href="/dashboard">Dashboard</BreadcrumbsItem>
 			{segments.map((segment, index) => {
-				console.log(segment);
 				const label = segment === "(index)" ? "Overview" : segment;
 
 				return <BreadcrumbsItem key={index}>{label}</BreadcrumbsItem>;

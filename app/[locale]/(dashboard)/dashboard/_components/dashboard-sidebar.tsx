@@ -72,12 +72,20 @@ export async function DashboardSidebar(
 		defaultExpandedKeys.push("wg-0");
 	}
 
+	function getInitials(name: string): string {
+		const segments = name.split(" ");
+		if (segments.length < 2) {
+			return name.at(0)!;
+		}
+		return `${name.at(0)!}${name.at(-1)!}`;
+	}
+
 	return (
 		<Sidebar {...props}>
 			<SidebarHeader>
 				<Link className="flex items-center gap-x-2" href="/dashboard">
 					<Avatar
-						className="outline-hidden dark:invert"
+						className="outline-hidden"
 						isSquare={true}
 						size="sm"
 						src="/assets/images/logo.svg"
@@ -281,7 +289,7 @@ export async function DashboardSidebar(
 						<div className="flex items-center gap-x-2">
 							<Avatar
 								className="size-8 *:size-8 group-data-[state=collapsed]:size-6 group-data-[state=collapsed]:*:size-6"
-								initials={user.name}
+								initials={getInitials(user.name)}
 								isSquare={true}
 								src={null}
 							/>

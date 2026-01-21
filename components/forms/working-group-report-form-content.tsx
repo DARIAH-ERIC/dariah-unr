@@ -7,9 +7,8 @@ import {
 	WorkingGroupEventRole,
 	type WorkingGroupReport,
 } from "@prisma/client";
-import { randomUUID } from "crypto";
-import { InfoIcon } from "lucide-react";
-import { type ReactNode, useActionState, useState } from "react";
+import { InfoIcon, Trash2Icon } from "lucide-react";
+import { type ReactNode, startTransition, useActionState, useState } from "react";
 
 import { SubmitButton } from "@/components/submit-button";
 import { DateInputField } from "@/components/ui/blocks/date-input-field";
@@ -21,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
+import { IconButton } from "@/components/ui/icon-button";
 import { updateWorkingGroupReportAction } from "@/lib/actions/update-working-group-report";
 import { updateWorkingGroupReportStatusAction } from "@/lib/actions/update-working-group-report-status";
 import { createKey } from "@/lib/create-key";
@@ -70,6 +70,13 @@ export function WorkingGroupReportFormContent(
 			<Form
 				action={formAction}
 				className="grid gap-y-6"
+				onSubmit={(event) => {
+					event.preventDefault();
+					const formData = new FormData(event.currentTarget);
+					startTransition(async () => {
+						await updateWorkingGroupReportAction(formState, formData);
+					});
+				}}
 				validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 			>
 				<input name="workingGroupReportId" type="hidden" value={workingGroupReport.id} />
@@ -83,7 +90,7 @@ export function WorkingGroupReportFormContent(
 						name="members"
 					/>
 
-					<div>
+					<div className="flex flex-col gap-4">
 						<h2 className="font-bold text-lg">Events</h2>
 
 						{events.map((event, index) => {
@@ -105,7 +112,7 @@ export function WorkingGroupReportFormContent(
 									/>
 
 									<DateInputField
-										defaultValue={event.date ? toDateValue(event.date.toISOString()) : undefined}
+										defaultValue={event.date ? toDateValue(event.date) : undefined}
 										granularity="day"
 										isRequired={true}
 										label="Date"
@@ -134,6 +141,20 @@ export function WorkingGroupReportFormContent(
 										name={`workingGroupEvents.${String(index)}.url`}
 										type="url"
 									/>
+
+									<IconButton
+										aria-label="Remove"
+										className="self-end"
+										onPress={() => {
+											setEvents((events) => {
+												return events.filter((event, i) => {
+													return i !== index;
+												});
+											});
+										}}
+									>
+										<Trash2Icon aria-hidden={true} className="size-5 shrink-0" />
+									</IconButton>
 								</div>
 							);
 						})}
@@ -142,11 +163,11 @@ export function WorkingGroupReportFormContent(
 							<Button
 								onPress={() => {
 									setEvents((events) => {
-										return [...events, { _id: randomUUID() }];
+										return [...events, { _id: crypto.randomUUID() }];
 									});
 								}}
 							>
-								Add
+								Add event
 							</Button>
 						</div>
 					</div>

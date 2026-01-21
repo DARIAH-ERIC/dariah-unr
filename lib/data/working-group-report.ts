@@ -1,3 +1,4 @@
+import { isNonEmptyString } from "@acdh-oeaw/lib";
 import type { WorkingGroup, WorkingGroupEventRole, WorkingGroupReport } from "@prisma/client";
 
 import { db } from "@/lib/db";
@@ -153,6 +154,15 @@ export function updateWorkingGroupReport(params: UpdateWorkingGroupReportParams)
 						where: { id: event.id },
 					};
 				}),
+				deleteMany: {
+					id: {
+						notIn: workingGroupEvents
+							.map((event) => {
+								return event.id;
+							})
+							.filter(isNonEmptyString),
+					},
+				},
 			},
 		},
 	});

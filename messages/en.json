@@ -348,6 +348,7 @@
 		},
 		"title": "Terms of use"
 	},
+	"WorkingGroupForm": {},
 	"WorkingGroupReportForm": {
 		"confirm": "Confirm",
 		"confirmation-info": "This report has been submitted.",
@@ -645,6 +646,12 @@
 				"default": "Failed to update users."
 			},
 			"success": "Successfully updated users."
+		},
+		"updateWorkingGroup": {
+			"errors": {
+				"default": "Could not update working group."
+			},
+			"success": "Successfully updated working group."
 		},
 		"updateWorkingGroupReport": {
 			"errors": {
