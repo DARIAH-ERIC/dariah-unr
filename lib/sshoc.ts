@@ -55,7 +55,7 @@ interface SshocResponse {
 		}>;
 		status: "approved";
 		owner: string;
-		accessibleAt: Array<string>;
+		accessibleAt?: Array<string>;
 		thumbnailId?: string;
 	}>;
 	categories: {
@@ -191,7 +191,7 @@ export async function getActorResources({
 			id: entry.persistentId,
 			label: entry.label,
 			type,
-			accessibleAt: entry.accessibleAt,
+			accessibleAt: entry.accessibleAt ?? [],
 		};
 	});
 }
