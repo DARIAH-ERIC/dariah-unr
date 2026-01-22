@@ -263,6 +263,7 @@ Table working_groups {
   contactEmail String
   endDate DateTime
   mailingList String
+  marketplaceId Int
   memberTracking String
   name String [not null]
   slug String [not null]

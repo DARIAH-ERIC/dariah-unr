@@ -33,6 +33,12 @@ interface WorkingGroupReportFormContentParams {
 	confirmationLabel: string;
 	isConfirmationAvailable: boolean;
 	// previousWorkingGroupReport?: WorkingGroupReport | null;
+	resources: Array<{
+		id: string;
+		label: string;
+		type: "Core service" | "Software" | "Service";
+		accessibleAt: Array<string>;
+	}>;
 	submitLabel: string;
 	total: number;
 	workingGroup: WorkingGroup;
@@ -51,6 +57,7 @@ export function WorkingGroupReportFormContent(
 		confirmationInfo,
 		isConfirmationAvailable,
 		// previousWorkingGroupReport,
+		resources,
 		submitLabel,
 		total,
 		workingGroup,
@@ -195,7 +202,46 @@ export function WorkingGroupReportFormContent(
 						rows={12}
 					/>
 
-					<div>
+					<hr />
+
+					<div className="flex flex-col gap-y-2">
+						<h2 className="text-lg font-semibold">Resources</h2>
+
+						{resources.length > 0 ? (
+							<div className="max-w-(--breakpoint-md) text-sm/relaxed text-neutral-700 dark:text-neutral-300 [&_.csl-bib-body]:flex [&_.csl-bib-body]:flex-col [&_.csl-bib-body]:gap-y-2 [&_.csl-entry]:pl-4 [&_.csl-entry]:-indent-4">
+								<ul className="flex flex-col gap-y-1.5" role="list">
+									{resources.map((resource) => {
+										return (
+											<li key={resource.id}>
+												<div>
+													<strong>{resource.label}</strong>({resource.type})
+												</div>
+												{resource.accessibleAt.length > 0 ? (
+													<div className="flex flex-wrap gap-x-4 gap-y-0.5 text-neutral-600 text-sm dark:text-neutral-400">
+														{resource.accessibleAt.map((url) => {
+															return (
+																<a key={url} href={url}>
+																	{url}
+																</a>
+															);
+														})}
+													</div>
+												) : null}
+											</li>
+										);
+									})}
+								</ul>
+							</div>
+						) : (
+							<div className="grid place-items-center py-6 text-sm/relaxed text-neutral-700 dark:text-neutral-300">
+								No resources found in sshoc marketplace.
+							</div>
+						)}
+					</div>
+
+					<hr />
+
+					<div className="flex flex-col gap-y-2">
 						<h2 className="text-lg font-semibold">Publications</h2>
 
 						{total > 0 ? (
@@ -210,6 +256,8 @@ export function WorkingGroupReportFormContent(
 							</div>
 						)}
 					</div>
+
+					<hr />
 
 					<TextAreaField defaultValue={comments ?? ""} label="Comments" name="comments" />
 

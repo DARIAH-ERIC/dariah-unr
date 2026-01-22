@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { WorkingGroupReportFormContent } from "@/components/forms/working-group-report-form-content";
+import { getActorResources } from "@/lib/sshoc";
 import { getWorkingGroupPublications } from "@/lib/zotero";
 
 interface WorkingGroupReportFormParams {
@@ -28,11 +29,14 @@ export async function WorkingGroupReportForm(
 
 	const t = await getTranslations("WorkingGroupReportForm");
 
-	const { bibliography, items } = await getWorkingGroupPublications({
-		name: workingGroup.name,
-		slug: workingGroup.slug,
-		year,
-	});
+	const [resources, { bibliography, items }] = await Promise.all([
+		getActorResources({ marketplaceActorId: workingGroup.marketplaceId }),
+		getWorkingGroupPublications({
+			name: workingGroup.name,
+			slug: workingGroup.slug,
+			year,
+		}),
+	]);
 
 	return (
 		<WorkingGroupReportFormContent
@@ -41,6 +45,7 @@ export async function WorkingGroupReportForm(
 			confirmationLabel={t("confirm")}
 			isConfirmationAvailable={isConfirmationAvailable}
 			// previousWorkingGroupReport={previousWorkingGroupReport}
+			resources={resources}
 			submitLabel={t("submit")}
 			total={items.length}
 			workingGroup={workingGroup}
