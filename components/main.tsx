@@ -1,7 +1,7 @@
 import cn from "clsx/lite";
 import type { ComponentProps, ReactNode } from "react";
 
-interface MainProps extends Omit<ComponentProps<"main">, "tabIndex"> {
+export interface MainProps extends Omit<ComponentProps<"main">, "tabIndex"> {
 	children: ReactNode;
 }
 

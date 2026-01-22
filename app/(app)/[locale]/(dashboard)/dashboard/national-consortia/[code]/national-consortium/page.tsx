@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { type ReactNode, Suspense } from "react";
@@ -8,11 +8,13 @@ import type * as schema from "@/db/schema";
 import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
 import { assertPermissions } from "@/lib/auth/assert-permissions";
 import { getCountryByCode } from "@/lib/queries/countries";
+import { createMetadata } from "@/lib/server/metadata";
 
 interface DashboardCountryNationalConsortiumPageProps extends PageProps<"/[locale]/dashboard/national-consortia/[code]/national-consortium"> {}
 
 export async function generateMetadata(
 	props: Readonly<DashboardCountryNationalConsortiumPageProps>,
+	resolvingMetadata: ResolvingMetadata,
 ): Promise<Metadata> {
 	const { params } = props;
 
@@ -32,12 +34,9 @@ export async function generateMetadata(
 
 	const title = t("meta.title");
 
-	const metadata: Metadata = {
+	const metadata: Metadata = await createMetadata(resolvingMetadata, {
 		title,
-		openGraph: {
-			title,
-		},
-	};
+	});
 
 	return metadata;
 }

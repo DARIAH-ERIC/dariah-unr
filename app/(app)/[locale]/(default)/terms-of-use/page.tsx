@@ -1,26 +1,29 @@
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
 import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { Main } from "@/app/(app)/[locale]/(default)/_components/main";
+import { createMetadata } from "@/lib/server/metadata";
 
-export async function generateMetadata(): Promise<Metadata> {
+interface TermsOfUsePageProps extends PageProps<"/[locale]/terms-of-use"> {}
+
+export async function generateMetadata(
+	_props: TermsOfUsePageProps,
+	resolvingMetadata: ResolvingMetadata,
+): Promise<Metadata> {
 	const t = await getTranslations("TermsOfUsePage");
 
 	const title = t("meta.title");
 
-	const metadata: Metadata = {
+	const metadata: Metadata = await createMetadata(resolvingMetadata, {
 		title,
-		openGraph: {
-			title,
-		},
-	};
+	});
 
 	return metadata;
 }
 
-export default function TermsOfUsePage(): ReactNode {
+export default function TermsOfUsePage(_props: Readonly<TermsOfUsePageProps>): ReactNode {
 	const t = useTranslations("TermsOfUsePage");
 
 	return (

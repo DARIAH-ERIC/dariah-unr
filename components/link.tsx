@@ -24,7 +24,7 @@ import { LocaleLink, type LocaleLinkProps } from "@/lib/navigation/navigation";
  * @see {@link https://github.com/adobe/react-spectrum/blob/main/packages/%40react-aria/link/src/useLink.ts}
  */
 
-interface LinkProps
+export interface LinkProps
 	extends
 		Pick<
 			LocaleLinkProps,
@@ -38,12 +38,12 @@ export function Link(props: Readonly<LinkProps>): ReactNode {
 	/** Ensure `className` is passed to `mergProps` only once to avoid duplication. */
 	const { className: _, ref: forwardedRef, ...interactionProps } = props;
 
-	const linkRef = useRef<HTMLAnchorElement | HTMLSpanElement>(null);
+	const ref = useRef<HTMLAnchorElement | HTMLSpanElement>(null);
 	const mergedRef = useObjectRef(
 		useMemo(() => {
 			// eslint-disable-next-line react-hooks/refs
-			return mergeRefs(forwardedRef, linkRef);
-		}, [forwardedRef, linkRef]),
+			return mergeRefs(forwardedRef, ref);
+		}, [forwardedRef, ref]),
 	);
 
 	const isDisabled = interactionProps.isDisabled === true;

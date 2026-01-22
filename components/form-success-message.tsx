@@ -1,9 +1,9 @@
 import cn from "clsx/lite";
 import type { ReactNode } from "react";
 
-import type { ActionState } from "@/lib/server/actions";
+import { type ActionState, isActionStateSuccess } from "@/lib/server/actions";
 
-interface FormSuccessMessageProps {
+export interface FormSuccessMessageProps {
 	children?: ReactNode | ((state: ActionState) => ReactNode);
 	className?: string;
 	state: ActionState;
@@ -12,6 +12,8 @@ interface FormSuccessMessageProps {
 export function FormSuccessMessage(props: Readonly<FormSuccessMessageProps>): ReactNode {
 	const { children, className, state, ...rest } = props;
 
+	const isSuccessState = isActionStateSuccess(state);
+
 	// TODO: useRenderProps
 
 	return (
@@ -19,10 +21,12 @@ export function FormSuccessMessage(props: Readonly<FormSuccessMessageProps>): Re
 			{...rest}
 			aria-atomic={true}
 			aria-live="polite"
-			className={cn(className, state.status !== "success" ? "sr-only" : null)}
+			className={cn(className, !isSuccessState ? "sr-only" : null)}
+			role="status"
 		>
-			<div key={state.timestamp}>
-				{state.status === "success"
+			{/* eslint-disable-next-line @eslint-react/no-unnecessary-key */}
+			<div key={state.id}>
+				{isSuccessState
 					? children != null
 						? typeof children === "function"
 							? children(state)

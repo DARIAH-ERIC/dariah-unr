@@ -1,9 +1,9 @@
 import cn from "clsx/lite";
 import type { ReactNode } from "react";
 
-import type { ActionState } from "@/lib/server/actions";
+import { type ActionState, isActionStateError } from "@/lib/server/actions";
 
-interface FormErrorMessageProps {
+export interface FormErrorMessageProps {
 	children?: ReactNode | ((state: ActionState) => ReactNode);
 	className?: string;
 	state: ActionState;
@@ -12,6 +12,8 @@ interface FormErrorMessageProps {
 export function FormErrorMessage(props: Readonly<FormErrorMessageProps>): ReactNode {
 	const { children, className, state, ...rest } = props;
 
+	const isErrorState = isActionStateError(state);
+
 	// TODO: useRenderProps
 
 	return (
@@ -19,10 +21,12 @@ export function FormErrorMessage(props: Readonly<FormErrorMessageProps>): ReactN
 			{...rest}
 			aria-atomic={true}
 			aria-live="assertive"
-			className={cn(className, state.status !== "error" ? "sr-only" : null)}
+			className={cn(className, !isErrorState ? "sr-only" : null)}
+			role="alert"
 		>
-			<div key={state.timestamp}>
-				{state.status === "error"
+			{/* eslint-disable-next-line @eslint-react/no-unnecessary-key */}
+			<div key={state.id}>
+				{isErrorState
 					? children != null
 						? typeof children === "function"
 							? children(state)

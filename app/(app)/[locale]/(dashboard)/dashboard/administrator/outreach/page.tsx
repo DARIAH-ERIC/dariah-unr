@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { type ReactNode, Suspense } from "react";
 import * as v from "valibot";
@@ -7,6 +7,7 @@ import { Main } from "@/app/(app)/[locale]/(default)/_components/main";
 import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
 import { assertPermissions } from "@/lib/auth/assert-permissions";
 import { getOutreach } from "@/lib/queries/outreach";
+import { createMetadata } from "@/lib/server/metadata";
 
 const SearchParamsSchema = v.object({
 	limit: v.optional(
@@ -23,6 +24,7 @@ interface DashboardAdminOutreachPageProps extends PageProps<"/[locale]/dashboard
 
 export async function generateMetadata(
 	_props: Readonly<DashboardAdminOutreachPageProps>,
+	resolvingMetadata: ResolvingMetadata,
 ): Promise<Metadata> {
 	const { user } = await assertAuthenticated();
 	await assertPermissions(user, { kind: "admin" });
@@ -31,12 +33,9 @@ export async function generateMetadata(
 
 	const title = t("meta.title");
 
-	const metadata: Metadata = {
+	const metadata: Metadata = await createMetadata(resolvingMetadata, {
 		title,
-		openGraph: {
-			title,
-		},
-	};
+	});
 
 	return metadata;
 }

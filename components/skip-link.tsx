@@ -1,7 +1,7 @@
 import cn from "clsx/lite";
 import type { ComponentProps, ReactNode } from "react";
 
-interface SkipLinkProps extends ComponentProps<"a"> {
+export interface SkipLinkProps extends ComponentProps<"a"> {
 	children: ReactNode;
 	href: `#${string}`;
 }

@@ -1,6 +1,6 @@
 import type { ComponentProps, ReactNode } from "react";
 
-interface SearchFormProps extends ComponentProps<"form"> {
+export interface SearchFormProps extends ComponentProps<"form"> {
 	children: ReactNode;
 	/** @default "search" */
 	role?: "form" | "search";

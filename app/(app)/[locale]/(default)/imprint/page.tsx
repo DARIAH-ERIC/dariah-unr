@@ -1,27 +1,30 @@
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
 import { useLocale, useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { Main } from "@/app/(app)/[locale]/(default)/_components/main";
 import { AcdhImprint } from "@/app/(app)/[locale]/(default)/imprint/_components/acdh-imprint";
+import { createMetadata } from "@/lib/server/metadata";
 
-export async function generateMetadata(): Promise<Metadata> {
+interface ImprintPageProps extends PageProps<"/[locale]/imprint"> {}
+
+export async function generateMetadata(
+	_props: ImprintPageProps,
+	resolvingMetadata: ResolvingMetadata,
+): Promise<Metadata> {
 	const t = await getTranslations("ImprintPage");
 
 	const title = t("meta.title");
 
-	const metadata: Metadata = {
+	const metadata: Metadata = await createMetadata(resolvingMetadata, {
 		title,
-		openGraph: {
-			title,
-		},
-	};
+	});
 
 	return metadata;
 }
 
-export default function ImprintPage(): ReactNode {
+export default function ImprintPage(_props: Readonly<ImprintPageProps>): ReactNode {
 	const locale = useLocale();
 	const t = useTranslations("ImprintPage");
 

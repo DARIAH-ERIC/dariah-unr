@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { Button as AriaButton, type ButtonProps as AriaButtonProps } from "react-aria-components";
 import { useFormStatus } from "react-dom";
 
-interface SubmitButtonProps extends Omit<AriaButtonProps, "isPending"> {
+export interface SubmitButtonProps extends Omit<AriaButtonProps, "isPending"> {
 	children: ReactNode;
 }
 

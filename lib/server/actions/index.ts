@@ -1,7 +1,7 @@
 import { v7 as uuidv7 } from "uuid";
 import type * as v from "valibot";
 
-type ValidationErrors = Record<string, string | Array<string>>;
+export type ValidationErrors = Record<string, string | Array<string>>;
 
 interface ActionStateBase {
 	status: "initial" | "success" | "error";
@@ -105,18 +105,3 @@ export function isActionStateError<
 export type GetValidationErrors<TValidationSchema extends v.GenericSchema> = NonNullable<
 	v.FlatErrors<TValidationSchema>["nested"]
 >;
-
-type ServerAction<
-	TData = unknown,
-	TValidationErrors extends ValidationErrors = ValidationErrors,
-> = (
-	state: ActionState<TData, TValidationErrors>,
-	formData: FormData,
-) => Promise<ActionState<TData, TValidationErrors>>;
-
-export function createServerAction<
-	TData = unknown,
-	TValidationErrors extends ValidationErrors = ValidationErrors,
->(fn: ServerAction<TData, TValidationErrors>): ServerAction<TData, TValidationErrors> {
-	return fn;
-}

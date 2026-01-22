@@ -6,11 +6,11 @@ import { type ReactNode, useActionState } from "react";
 
 import { Form } from "@/components/form";
 import { FormErrorMessage } from "@/components/form-error-message";
+import { FormStatus } from "@/components/form-status";
 import { FormSuccessMessage } from "@/components/form-success-message";
 import { SubmitButton } from "@/components/submit-button";
-import { signInAction } from "@/lib/auth/actions/sign-in-action";
-import { createInitialActionState } from "@/lib/server/actions";
-import { createKey } from "@/lib/utils/create-key";
+import { signInAction } from "@/lib/auth/actions/sign-in.action";
+import { createActionStateInitial } from "@/lib/server/actions";
 
 interface SignInFormProps {
 	to?: string;
@@ -21,14 +21,12 @@ export function SignInForm(props: Readonly<SignInFormProps>): ReactNode {
 
 	const t = useTranslations("SignInForm");
 
-	const [formState, formAction] = useActionState(signInAction, createInitialActionState({}));
+	const [state, action] = useActionState(signInAction, createActionStateInitial());
 
 	return (
-		<Form
-			action={formAction}
-			className="grid min-w-80 gap-4"
-			validationErrors={formState.status === "error" ? formState.errors : undefined}
-		>
+		<Form action={action} className="grid min-w-80 gap-4" state={state}>
+			<FormStatus state={state} />
+
 			<TextInputField isRequired={true} label={t("email")} name="email" type="email" />
 
 			<TextInputField isRequired={true} label={t("password")} name="password" type="password" />
@@ -37,15 +35,9 @@ export function SignInForm(props: Readonly<SignInFormProps>): ReactNode {
 
 			<SubmitButton>{t("sign-in")}</SubmitButton>
 
-			<FormSuccessMessage key={createKey("form-success", formState?.timestamp)}>
-				{formState?.status === "success" && formState.message.length > 0 ? formState.message : null}
-			</FormSuccessMessage>
+			<FormSuccessMessage state={state} />
 
-			<FormErrorMessage key={createKey("form-error", formState?.timestamp)}>
-				{formState?.status === "error" && formState.formErrors.length > 0
-					? formState.formErrors
-					: null}
-			</FormErrorMessage>
+			<FormErrorMessage state={state} />
 		</Form>
 	);
 }

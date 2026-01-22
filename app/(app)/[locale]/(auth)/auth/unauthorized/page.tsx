@@ -1,24 +1,23 @@
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { Main } from "@/app/(app)/[locale]/(default)/_components/main";
+import { createMetadata } from "@/lib/server/metadata";
 
 interface AuthUnauthorizedPageProps extends PageProps<"/[locale]/auth/unauthorized"> {}
 
 export async function generateMetadata(
 	_props: Readonly<AuthUnauthorizedPageProps>,
+	resolvingMetadata: ResolvingMetadata,
 ): Promise<Metadata> {
 	const t = await getTranslations("AuthUnauthorizedPage");
 
 	const title = t("meta.title");
 
-	const metadata: Metadata = {
+	const metadata: Metadata = await createMetadata(resolvingMetadata, {
 		title,
-		openGraph: {
-			title,
-		},
-	};
+	});
 
 	return metadata;
 }

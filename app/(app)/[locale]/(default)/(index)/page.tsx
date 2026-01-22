@@ -1,22 +1,28 @@
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
 import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 
 import { Main } from "@/app/(app)/[locale]/(default)/_components/main";
+import { createMetadata } from "@/lib/server/metadata";
 
-export function generateMetadata(): Metadata {
-	const metadata: Metadata = {
+interface IndexPageProps extends PageProps<"/[locale]"> {}
+
+export async function generateMetadata(
+	_props: IndexPageProps,
+	resolvingMetadata: ResolvingMetadata,
+): Promise<Metadata> {
+	const metadata: Metadata = await createMetadata(resolvingMetadata, {
 		/**
 		 * Fall back to `title.default` from `layout.tsx`.
 		 *
 		 * @see {@link https://nextjs.org/docs/app/api-reference/functions/generate-metadata#title}
 		 */
-	};
+	});
 
 	return metadata;
 }
 
-export default function IndexPage(): ReactNode {
+export default function IndexPage(_props: Readonly<IndexPageProps>): ReactNode {
 	const t = useTranslations("IndexPage");
 
 	return (

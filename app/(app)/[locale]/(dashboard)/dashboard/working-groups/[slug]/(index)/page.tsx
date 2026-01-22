@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
@@ -7,11 +7,13 @@ import { Main } from "@/app/(app)/[locale]/(default)/_components/main";
 import { assertAuthenticated } from "@/lib/auth/assert-authenticated";
 import { assertPermissions } from "@/lib/auth/assert-permissions";
 import { getWorkingGroupBySlug } from "@/lib/queries/working-groups";
+import { createMetadata } from "@/lib/server/metadata";
 
 interface DashboardWorkingGroupPageProps extends PageProps<"/[locale]/dashboard/working-groups/[slug]"> {}
 
 export async function generateMetadata(
 	props: Readonly<DashboardWorkingGroupPageProps>,
+	resolvingMetadata: ResolvingMetadata,
 ): Promise<Metadata> {
 	const { params } = props;
 
@@ -31,12 +33,9 @@ export async function generateMetadata(
 
 	const title = t("meta.title");
 
-	const metadata: Metadata = {
+	const metadata: Metadata = await createMetadata(resolvingMetadata, {
 		title,
-		openGraph: {
-			title,
-		},
-	};
+	});
 
 	return metadata;
 }

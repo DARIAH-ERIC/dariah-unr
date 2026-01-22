@@ -5,9 +5,9 @@ import { Fragment, type ReactNode } from "react";
 
 import { FormErrorMessage } from "@/components/form-error-message";
 import { FormSuccessMessage } from "@/components/form-success-message";
-import type { ActionState } from "@/lib/server/actions";
+import { type ActionState, isActionStateError, isActionStateSuccess } from "@/lib/server/actions";
 
-interface FormStatusProps {
+export interface FormStatusProps {
 	state: ActionState;
 }
 
@@ -18,7 +18,7 @@ export function FormStatus(props: Readonly<FormStatusProps>): ReactNode {
 		<Fragment>
 			<FormErrorMessage state={state}>
 				{(state) => {
-					if (state.status !== "error") {
+					if (!isActionStateError(state)) {
 						return null;
 					}
 
@@ -32,7 +32,7 @@ export function FormStatus(props: Readonly<FormStatusProps>): ReactNode {
 			</FormErrorMessage>
 			<FormSuccessMessage state={state}>
 				{(state) => {
-					if (state.status !== "success") {
+					if (!isActionStateSuccess(state)) {
 						return null;
 					}
 

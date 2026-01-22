@@ -18,6 +18,24 @@ export class ForbiddenError extends Error {
 	}
 }
 
+export class HoneyPotError extends Error {
+	static readonly type = "HoneyPotError";
+
+	static is(error: unknown): error is HoneyPotError {
+		if (error instanceof HoneyPotError) {
+			return true;
+		}
+
+		return error instanceof Error && error.name === HoneyPotError.type;
+	}
+
+	constructor(message = "Not found", cause?: Error) {
+		super(message, { cause });
+
+		this.name = HoneyPotError.type;
+	}
+}
+
 export class NotFoundError extends Error {
 	static readonly type = "NotFoundError";
 
@@ -54,6 +72,24 @@ export class RateLimitError extends Error {
 	}
 }
 
+export class SmtpError extends Error {
+	static readonly type = "SmtpError";
+
+	static is(error: unknown): error is SmtpError {
+		if (error instanceof SmtpError) {
+			return true;
+		}
+
+		return error instanceof Error && error.name === SmtpError.type;
+	}
+
+	constructor(message = "SMTP error", cause?: Error) {
+		super(message, { cause });
+
+		this.name = SmtpError.type;
+	}
+}
+
 export class UnauthorizedError extends Error {
 	static readonly type = "UnauthorizedError";
 
@@ -69,5 +105,23 @@ export class UnauthorizedError extends Error {
 		super(message, { cause });
 
 		this.name = UnauthorizedError.type;
+	}
+}
+
+export class ValidationError extends Error {
+	static readonly type = "ValidationError";
+
+	static is(error: unknown): error is ValidationError {
+		if (error instanceof ValidationError) {
+			return true;
+		}
+
+		return error instanceof Error && error.name === ValidationError.type;
+	}
+
+	constructor(message = "Invalid data", cause?: Error) {
+		super(message, { cause });
+
+		this.name = ValidationError.type;
 	}
 }
