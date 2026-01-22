@@ -33,11 +33,11 @@ export async function ingestDataFromSshomp() {
 		const result = await request(url, { responseType: "json" });
 
 		if (isErr(result)) {
-			throw result.error
+			throw result.error;
 		}
 
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const data = result.value.data as any
+		const data = result.value.data as any;
 
 		log.info(`Processing ${String(data.count)} entries.`);
 

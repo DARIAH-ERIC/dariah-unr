@@ -548,6 +548,7 @@ model WorkingGroup {
   contactEmail   String?   @map(name: "contact_email")
   endDate        DateTime? @map(name: "end_date")
   mailingList    String?   @map(name: "mailing_list")
+  marketplaceId  Int?      @map(name: "marketplace_id")
   memberTracking String?   @map(name: "member_tracking")
   name           String
   slug           String
