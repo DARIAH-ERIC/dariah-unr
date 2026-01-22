@@ -302,14 +302,14 @@ export async function DashboardSidebar(
 			<SidebarFooter className="flex flex-row justify-between gap-4 group-data-[state=collapsed]:flex-col">
 				<Menu>
 					<MenuTrigger aria-label="Profile" className="flex w-full items-center justify-between">
-						<div className="flex items-center gap-x-2">
+						<div className="flex items-center gap-x-2 min-w-0">
 							<Avatar
 								className="size-8 *:size-8 group-data-[state=collapsed]:size-6 group-data-[state=collapsed]:*:size-6"
 								initials={getInitials(user.name)}
 								isSquare={true}
 								src={null}
 							/>
-							<div className="text-sm in-data-[collapsible=dock]:hidden">
+							<div className="text-sm min-w-0 in-data-[collapsible=dock]:hidden">
 								<SidebarLabel>{user.name}</SidebarLabel>
 								<span className="-mt-0.5 block truncate text-muted-fg">{user.email}</span>
 							</div>
