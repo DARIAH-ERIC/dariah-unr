@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
-import { createUrl, createUrlSearchParams, log, request } from "@acdh-oeaw/lib";
+import { createUrl, createUrlSearchParams, isErr, log, request } from "@acdh-oeaw/lib";
 import { ServiceType } from "@prisma/client";
 
 import { env } from "@/config/env.config";
@@ -29,8 +29,16 @@ export async function ingestDataFromSshomp() {
 		});
 
 		log.info(`Fetching page ${String(page)}.`);
+
+		const result = await request(url, { responseType: "json" });
+
+		if (isErr(result)) {
+			throw result.error
+		}
+
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const data = (await request(url, { responseType: "json" })) as any;
+		const data = result.value.data as any
+
 		log.info(`Processing ${String(data.count)} entries.`);
 
 		entries.push(...data.items);
