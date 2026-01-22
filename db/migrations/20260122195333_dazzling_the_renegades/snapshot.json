@@ -1,0 +1,5181 @@
+{
+  "dialect": "postgres",
+  "id": "ad1b26ec-f3fc-47ab-aa87-2124fbe38d24",
+  "prevIds": [
+    "00000000-0000-0000-0000-000000000000"
+  ],
+  "version": "8",
+  "ddl": [
+    {
+      "name": "dariah_unr",
+      "entityType": "schemas"
+    },
+    {
+      "name": "pgbouncer",
+      "entityType": "schemas"
+    },
+    {
+      "values": [
+        "bod",
+        "dco",
+        "ga",
+        "jrc",
+        "ncc",
+        "sb",
+        "smt"
+      ],
+      "name": "body_type",
+      "entityType": "enums",
+      "schema": "dariah_unr"
+    },
+    {
+      "values": [
+        "cooperating_partnership",
+        "member_country",
+        "other"
+      ],
+      "name": "country_type",
+      "entityType": "enums",
+      "schema": "dariah_unr"
+    },
+    {
+      "values": [
+        "dariah_commissioned",
+        "large",
+        "medium",
+        "small",
+        "very_large"
+      ],
+      "name": "event_size",
+      "entityType": "enums",
+      "schema": "dariah_unr"
+    },
+    {
+      "values": [
+        "content_provider",
+        "service_owner",
+        "service_provider",
+        "technical_contact"
+      ],
+      "name": "institution_service_role",
+      "entityType": "enums",
+      "schema": "dariah_unr"
+    },
+    {
+      "values": [
+        "cooperating_partner",
+        "national_coordinating_institution",
+        "national_representative_institution",
+        "other",
+        "partner_institution"
+      ],
+      "name": "institution_type",
+      "entityType": "enums",
+      "schema": "dariah_unr"
+    },
+    {
+      "values": [
+        "engagement",
+        "followers",
+        "impressions",
+        "mention",
+        "new_content",
+        "page_views",
+        "posts",
+        "reach",
+        "subscribers",
+        "unique_visitors",
+        "views",
+        "watch_time"
+      ],
+      "name": "outreach_kpi_type",
+      "entityType": "enums",
+      "schema": "dariah_unr"
+    },
+    {
+      "values": [
+        "national_website",
+        "social_media",
+        "national_social_media"
+      ],
+      "name": "outreach_type",
+      "entityType": "enums",
+      "schema": "dariah_unr"
+    },
+    {
+      "values": [
+        "eu",
+        "national",
+        "regional"
+      ],
+      "name": "project_scope",
+      "entityType": "enums",
+      "schema": "dariah_unr"
+    },
+    {
+      "values": [
+        "in_progress",
+        "done"
+      ],
+      "name": "report_campaign_status",
+      "entityType": "enums",
+      "schema": "dariah_unr"
+    },
+    {
+      "values": [
+        "draft",
+        "final"
+      ],
+      "name": "report_status",
+      "entityType": "enums",
+      "schema": "dariah_unr"
+    },
+    {
+      "values": [
+        "eu",
+        "international",
+        "institutional",
+        "national",
+        "regional"
+      ],
+      "name": "research_policy_level",
+      "entityType": "enums",
+      "schema": "dariah_unr"
+    },
+    {
+      "values": [
+        "dco_member",
+        "director",
+        "national_coordinator",
+        "national_coordinator_deputy",
+        "national_representative",
+        "jrc_member",
+        "scientific_board_member",
+        "smt_member",
+        "wg_chair",
+        "wg_member",
+        "national_representative_deputy",
+        "national_consortium_contact",
+        "cooperating_partner_contact",
+        "jrc_chair",
+        "ncc_chair"
+      ],
+      "name": "role_type",
+      "entityType": "enums",
+      "schema": "dariah_unr"
+    },
+    {
+      "values": [
+        "dariah_team",
+        "global",
+        "national_local"
+      ],
+      "name": "service_audience",
+      "entityType": "enums",
+      "schema": "dariah_unr"
+    },
+    {
+      "values": [
+        "downloads",
+        "hits",
+        "items",
+        "jobs_processed",
+        "page_views",
+        "registered_users",
+        "searches",
+        "sessions",
+        "unique_users",
+        "visits",
+        "websites_hosted"
+      ],
+      "name": "service_kpi_type",
+      "entityType": "enums",
+      "schema": "dariah_unr"
+    },
+    {
+      "values": [
+        "no",
+        "not_applicable",
+        "yes"
+      ],
+      "name": "service_marketplace_status",
+      "entityType": "enums",
+      "schema": "dariah_unr"
+    },
+    {
+      "values": [
+        "core",
+        "large",
+        "medium",
+        "small"
+      ],
+      "name": "service_size",
+      "entityType": "enums",
+      "schema": "dariah_unr"
+    },
+    {
+      "values": [
+        "discontinued",
+        "in_preparation",
+        "live",
+        "needs_review",
+        "to_be_discontinued"
+      ],
+      "name": "service_status",
+      "entityType": "enums",
+      "schema": "dariah_unr"
+    },
+    {
+      "values": [
+        "community",
+        "core",
+        "internal"
+      ],
+      "name": "service_type",
+      "entityType": "enums",
+      "schema": "dariah_unr"
+    },
+    {
+      "values": [
+        "added_as_external_id",
+        "added_as_item",
+        "no",
+        "not_applicable"
+      ],
+      "name": "software_marketplace_status",
+      "entityType": "enums",
+      "schema": "dariah_unr"
+    },
+    {
+      "values": [
+        "maintained",
+        "needs_review",
+        "not_maintained"
+      ],
+      "name": "software_status",
+      "entityType": "enums",
+      "schema": "dariah_unr"
+    },
+    {
+      "values": [
+        "admin",
+        "contributor",
+        "national_coordinator"
+      ],
+      "name": "user_role",
+      "entityType": "enums",
+      "schema": "dariah_unr"
+    },
+    {
+      "values": [
+        "organiser",
+        "presenter"
+      ],
+      "name": "working_group_event_role",
+      "entityType": "enums",
+      "schema": "dariah_unr"
+    },
+    {
+      "values": [
+        "website",
+        "social_media"
+      ],
+      "name": "working_group_outreach_type",
+      "entityType": "enums",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "_BodyToRole",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "_CountryToInstitution",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "_CountryToService",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "_CountryToSoftware",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "_InstitutionToPerson",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "_prisma_migrations",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "bodies",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "contributions",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "countries",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "event_reports",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "event_size_values",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "institution_service",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "institutions",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "outreach",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "outreach_kpis",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "outreach_reports",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "outreach_type_values",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "persons",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "projects",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "report_campaigns",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "reports",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "research_policy_developments",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "role_type_values",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "roles",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "service_kpis",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "service_reports",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "service_size_values",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "services",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "sessions",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "software",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "users",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "working_group_events",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "working_group_outreach",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "working_group_reports",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "working_groups",
+      "entityType": "tables",
+      "schema": "dariah_unr"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "institutions"
+    },
+    {
+      "type": "institution_service_role",
+      "typeSchema": "dariah_unr",
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "role",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "institution_service"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "A",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "_BodyToRole"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "A",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "_CountryToService"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "event_size_values"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_group_outreach"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "event_reports"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "research_policy_developments"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_group_reports"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "software"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "reports"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "report_campaigns"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "services"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "service_kpis"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "users"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "projects"
+    },
+    {
+      "type": "varchar(36)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "_prisma_migrations"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "bodies"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "sessions"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "persons"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "outreach_type_values"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "outreach_reports"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "A",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "_InstitutionToPerson"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "A",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "_CountryToInstitution"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "contributions"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "roles"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "outreach_kpis"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_group_events"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "outreach"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "role_type_values"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "A",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "_CountryToSoftware"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "service_size_values"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_groups"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "countries"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "service_reports"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "acronym",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "bodies"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "report_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "service_reports"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "annual_value",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "service_size_values"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "agreements",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "services"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "end_date",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "contributions"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "B",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "_CountryToInstitution"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "end_date",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_groups"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "code",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "countries"
+    },
+    {
+      "type": "jsonb",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "comments",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_group_reports"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "dariah_commissioned_event",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "event_reports"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "B",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "_CountryToService"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "end_date",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_group_outreach"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "annual_value",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "event_size_values"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "institution_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "institution_service"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "end_date",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "institutions"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "end_date",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "outreach"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "B",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "_CountryToSoftware"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "date",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_group_events"
+    },
+    {
+      "type": "outreach_kpi_type",
+      "typeSchema": "dariah_unr",
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "unit",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "outreach_kpis"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "outreach_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "outreach_reports"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "annual_value",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "outreach_type_values"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "B",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "_InstitutionToPerson"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "email",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "persons"
+    },
+    {
+      "type": "numeric(12,2)",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "amount",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "projects"
+    },
+    {
+      "type": "varchar(64)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "checksum",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "_prisma_migrations"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "email",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "users"
+    },
+    {
+      "type": "jsonb",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "service_size_thresholds",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "report_campaigns"
+    },
+    {
+      "type": "jsonb",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "comments",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "reports"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "comment",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "software"
+    },
+    {
+      "type": "research_policy_level",
+      "typeSchema": "dariah_unr",
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "level",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "research_policy_developments"
+    },
+    {
+      "type": "bytea",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "secret_hash",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "sessions"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "annual_value",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "role_type_values"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "B",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "_BodyToRole"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "name",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "roles"
+    },
+    {
+      "type": "service_kpi_type",
+      "typeSchema": "dariah_unr",
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "unit",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "service_kpis"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "large_meetings",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "event_reports"
+    },
+    {
+      "type": "working_group_event_role",
+      "typeSchema": "dariah_unr",
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "role",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_group_events"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "name",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "outreach"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "start_date",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "contributions"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "service_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "service_reports"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "value",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "outreach_kpis"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "report_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "outreach_reports"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "name",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "bodies"
+    },
+    {
+      "type": "outreach_type",
+      "typeSchema": "dariah_unr",
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "type",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "outreach_type_values"
+    },
+    {
+      "type": "role_type",
+      "typeSchema": "dariah_unr",
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "type",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "role_type_values"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "name",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "persons"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "funders",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "projects"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "value",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "service_kpis"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "name",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "users"
+    },
+    {
+      "type": "service_audience",
+      "typeSchema": "dariah_unr",
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "audience",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "services"
+    },
+    {
+      "type": "report_campaign_status",
+      "typeSchema": "dariah_unr",
+      "notNull": true,
+      "dimensions": 0,
+      "default": "'in_progress'",
+      "generated": null,
+      "identity": null,
+      "name": "status",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "report_campaigns"
+    },
+    {
+      "type": "timestamp with time zone",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "finished_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "_prisma_migrations"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "name",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "software"
+    },
+    {
+      "type": "role_type",
+      "typeSchema": "dariah_unr",
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "type",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "roles"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "contributions_count",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "reports"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "facultative_questions",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_group_reports"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "name",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_group_outreach"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "sessions"
+    },
+    {
+      "type": "service_size",
+      "typeSchema": "dariah_unr",
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "type",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "service_size_values"
+    },
+    {
+      "type": "event_size",
+      "typeSchema": "dariah_unr",
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "type",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "event_size_values"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "service_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "institution_service"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "end_date",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "countries"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "name",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "research_policy_developments"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "name",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "institutions"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "name",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_groups"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "members",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_group_reports"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "last_verified_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "sessions"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "orcid",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "persons"
+    },
+    {
+      "type": "boolean",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "dariah_branding",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "services"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "start_date",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_group_outreach"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "name",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "projects"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "logo",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "countries"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "password",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "users"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "CURRENT_TIMESTAMP",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "service_reports"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "report_campaign_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "role_type_values"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "start_date",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_groups"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "service_report_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "service_kpis"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "year",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "report_campaigns"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "ror",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "institutions"
+    },
+    {
+      "type": "software_marketplace_status",
+      "typeSchema": "dariah_unr",
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "marketplace_status",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "software"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "event_size_values"
+    },
+    {
+      "type": "numeric(12,2)",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "operational_cost",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "reports"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "title",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_group_events"
+    },
+    {
+      "type": "varchar(255)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "migration_name",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "_prisma_migrations"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "outcome",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "research_policy_developments"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "CURRENT_TIMESTAMP",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "roles"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "start_date",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "outreach"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "country_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "contributions"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "service_size_values"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "outreach_report_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "outreach_kpis"
+    },
+    {
+      "type": "body_type",
+      "typeSchema": "dariah_unr",
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "type",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "bodies"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "CURRENT_TIMESTAMP",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "outreach_reports"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "medium_meetings",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "event_reports"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "outreach_type_values"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "CURRENT_TIMESTAMP",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_groups"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "service_reports"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "person_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "contributions"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "CURRENT_TIMESTAMP",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "persons"
+    },
+    {
+      "type": "boolean",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "eosc_onboarding",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "services"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "user_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "sessions"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "role_type_values"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "outreach_type_values"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "outreach_reports"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "project_months",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "projects"
+    },
+    {
+      "type": "outreach_type",
+      "typeSchema": "dariah_unr",
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "type",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "outreach"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "report_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "research_policy_developments"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "roles"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "logs",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "_prisma_migrations"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "url",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_group_events"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "marketplace_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "software"
+    },
+    {
+      "type": "user_role",
+      "typeSchema": "dariah_unr",
+      "notNull": true,
+      "dimensions": 0,
+      "default": "'contributor'",
+      "generated": null,
+      "identity": null,
+      "name": "role",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "users"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "CURRENT_TIMESTAMP",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "service_kpis"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "narrative_report",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_group_reports"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "url",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_group_outreach"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "report_campaigns"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "marketplace_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "countries"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "reusable_outcomes",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "event_reports"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "start_date",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "institutions"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "service_size_values"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "CURRENT_TIMESTAMP",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "outreach_kpis"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "event_size_values"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "CURRENT_TIMESTAMP",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "bodies"
+    },
+    {
+      "type": "jsonb",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "operational_cost_detail",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "reports"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "report_campaign_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "event_size_values"
+    },
+    {
+      "type": "timestamp with time zone",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "rolled_back_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "_prisma_migrations"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "bodies"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "role_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "contributions"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "name",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "countries"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "small_meetings",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "event_reports"
+    },
+    {
+      "type": "institution_type",
+      "typeSchema": "dariah_unr",
+      "notNull": false,
+      "dimensions": 1,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "types",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "institutions"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "url",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "outreach"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "outreach_kpis"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "report_campaign_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "outreach_type_values"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "persons"
+    },
+    {
+      "type": "project_scope",
+      "typeSchema": "dariah_unr",
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "scope",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "projects"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "report_campaigns"
+    },
+    {
+      "type": "numeric(12,2)",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "operational_cost_threshold",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "reports"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "CURRENT_TIMESTAMP",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "research_policy_developments"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "role_type_values"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "service_kpis"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "report_campaign_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "service_size_values"
+    },
+    {
+      "type": "service_marketplace_status",
+      "typeSchema": "dariah_unr",
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "marketplace_status",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "services"
+    },
+    {
+      "type": "software_status",
+      "typeSchema": "dariah_unr",
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "status",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "software"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "country_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "users"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "report_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_group_events"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "working_group_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_group_outreach"
+    },
+    {
+      "type": "report_status",
+      "typeSchema": "dariah_unr",
+      "notNull": true,
+      "dimensions": 0,
+      "default": "'draft'",
+      "generated": null,
+      "identity": null,
+      "name": "status",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_group_reports"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_groups"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "mailing_list",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_groups"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 1,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "url",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "software"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "working_group_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_group_reports"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "start_date",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "projects"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "start_date",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "countries"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "CURRENT_TIMESTAMP",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_group_outreach"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "marketplace_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "services"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "research_policy_developments"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "report_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "event_reports"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 1,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "url",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "institutions"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "country_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "outreach"
+    },
+    {
+      "type": "timestamp with time zone",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "started_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "_prisma_migrations"
+    },
+    {
+      "type": "report_status",
+      "typeSchema": "dariah_unr",
+      "notNull": true,
+      "dimensions": 0,
+      "default": "'draft'",
+      "generated": null,
+      "identity": null,
+      "name": "status",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "reports"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "working_group_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "contributions"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "facultative_questions_template",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "report_campaigns"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "person_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "users"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "0",
+      "generated": null,
+      "identity": null,
+      "name": "applied_steps_count",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "_prisma_migrations"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "country_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "reports"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "narrative_report_template",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "report_campaigns"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "CURRENT_TIMESTAMP",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "software"
+    },
+    {
+      "type": "numeric(12,2)",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "total_amount",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "projects"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "CURRENT_TIMESTAMP",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "outreach"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "CURRENT_TIMESTAMP",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "institutions"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "member_tracking",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_groups"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "CURRENT_TIMESTAMP",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "event_reports"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_group_outreach"
+    },
+    {
+      "type": "country_type",
+      "typeSchema": "dariah_unr",
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "type",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "countries"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "CURRENT_TIMESTAMP",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_group_reports"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "CURRENT_TIMESTAMP",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "contributions"
+    },
+    {
+      "type": "boolean",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "monitoring",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "services"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "outreach"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "institutions"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "event_reports"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "contact_email",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_groups"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "CURRENT_TIMESTAMP",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "reports"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "name",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "services"
+    },
+    {
+      "type": "working_group_outreach_type",
+      "typeSchema": "dariah_unr",
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "type",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_group_outreach"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "CURRENT_TIMESTAMP",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "countries"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_group_reports"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "contributions"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "report_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "projects"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "software"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "report_campaign_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_group_reports"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "countries"
+    },
+    {
+      "type": "boolean",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "private_supplier",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "services"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "reports"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "very_large_meetings",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "event_reports"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "slug",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_groups"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "CURRENT_TIMESTAMP",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "projects"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "description",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "countries"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "marketplace_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "working_groups"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "projects"
+    },
+    {
+      "type": "service_status",
+      "typeSchema": "dariah_unr",
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "status",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "services"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "report_campaign_id",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "reports"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "consortium_name",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "countries"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "technical_contact",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "services"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "technical_readiness_level",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "services"
+    },
+    {
+      "type": "service_type",
+      "typeSchema": "dariah_unr",
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "type",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "services"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 1,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "url",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "services"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "value_proposition",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "services"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "CURRENT_TIMESTAMP",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "services"
+    },
+    {
+      "type": "timestamp(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "services"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "comment",
+      "entityType": "columns",
+      "schema": "dariah_unr",
+      "table": "services"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "B"
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "_BodyToRole_B_index",
+      "entityType": "indexes",
+      "schema": "dariah_unr",
+      "table": "_BodyToRole"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "B"
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "_CountryToInstitution_B_index",
+      "entityType": "indexes",
+      "schema": "dariah_unr",
+      "table": "_CountryToInstitution"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "B"
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "_CountryToService_B_index",
+      "entityType": "indexes",
+      "schema": "dariah_unr",
+      "table": "_CountryToService"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "B"
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "_CountryToSoftware_B_index",
+      "entityType": "indexes",
+      "schema": "dariah_unr",
+      "table": "_CountryToSoftware"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "B"
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "_InstitutionToPerson_B_index",
+      "entityType": "indexes",
+      "schema": "dariah_unr",
+      "table": "_InstitutionToPerson"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "code"
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "countries_code_idx",
+      "entityType": "indexes",
+      "schema": "dariah_unr",
+      "table": "countries"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "report_id"
+        }
+      ],
+      "isUnique": true,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "event_reports_report_id_key",
+      "entityType": "indexes",
+      "schema": "dariah_unr",
+      "table": "event_reports"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "report_campaign_id"
+        },
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "type"
+        }
+      ],
+      "isUnique": true,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "event_size_values_report_campaign_id_type_key",
+      "entityType": "indexes",
+      "schema": "dariah_unr",
+      "table": "event_size_values"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "institution_id"
+        },
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "role"
+        },
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "service_id"
+        }
+      ],
+      "isUnique": true,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "institution_service_institution_id_role_service_id_key",
+      "entityType": "indexes",
+      "schema": "dariah_unr",
+      "table": "institution_service"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "report_campaign_id"
+        },
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "type"
+        }
+      ],
+      "isUnique": true,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "outreach_type_values_report_campaign_id_type_key",
+      "entityType": "indexes",
+      "schema": "dariah_unr",
+      "table": "outreach_type_values"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "year"
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "report_campaigns_year_idx",
+      "entityType": "indexes",
+      "schema": "dariah_unr",
+      "table": "report_campaigns"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "year"
+        }
+      ],
+      "isUnique": true,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "report_campaigns_year_key",
+      "entityType": "indexes",
+      "schema": "dariah_unr",
+      "table": "report_campaigns"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "report_campaign_id"
+        },
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "country_id"
+        }
+      ],
+      "isUnique": true,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "reports_report_campaign_id_country_id_key",
+      "entityType": "indexes",
+      "schema": "dariah_unr",
+      "table": "reports"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "report_campaign_id"
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "reports_report_campaign_id_idx",
+      "entityType": "indexes",
+      "schema": "dariah_unr",
+      "table": "reports"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "report_campaign_id"
+        },
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "type"
+        }
+      ],
+      "isUnique": true,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "role_type_values_report_campaign_id_type_key",
+      "entityType": "indexes",
+      "schema": "dariah_unr",
+      "table": "role_type_values"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "report_campaign_id"
+        },
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "type"
+        }
+      ],
+      "isUnique": true,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "service_size_values_report_campaign_id_type_key",
+      "entityType": "indexes",
+      "schema": "dariah_unr",
+      "table": "service_size_values"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "email"
+        }
+      ],
+      "isUnique": true,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "users_email_key",
+      "entityType": "indexes",
+      "schema": "dariah_unr",
+      "table": "users"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "report_campaign_id"
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "working_group_reports_report_campaign_id_idx",
+      "entityType": "indexes",
+      "schema": "dariah_unr",
+      "table": "working_group_reports"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "report_campaign_id"
+        },
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "working_group_id"
+        }
+      ],
+      "isUnique": true,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "working_group_reports_report_campaign_id_working_group_id_key",
+      "entityType": "indexes",
+      "schema": "dariah_unr",
+      "table": "working_group_reports"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null,
+          "isExpression": false,
+          "value": "slug"
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "working_groups_slug_idx",
+      "entityType": "indexes",
+      "schema": "dariah_unr",
+      "table": "working_groups"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "A"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "bodies",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "name": "_BodyToRole_A_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "_BodyToRole"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "B"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "roles",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "name": "_BodyToRole_B_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "_BodyToRole"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "A"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "countries",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "name": "_CountryToInstitution_A_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "_CountryToInstitution"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "B"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "institutions",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "name": "_CountryToInstitution_B_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "_CountryToInstitution"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "A"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "countries",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "name": "_CountryToService_A_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "_CountryToService"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "B"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "services",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "name": "_CountryToService_B_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "_CountryToService"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "A"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "countries",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "name": "_CountryToSoftware_A_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "_CountryToSoftware"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "B"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "software",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "name": "_CountryToSoftware_B_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "_CountryToSoftware"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "A"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "institutions",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "name": "_InstitutionToPerson_A_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "_InstitutionToPerson"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "B"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "persons",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "name": "_InstitutionToPerson_B_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "_InstitutionToPerson"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "country_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "countries",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "SET NULL",
+      "name": "contributions_country_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "contributions"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "person_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "persons",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "name": "contributions_person_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "contributions"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "role_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "roles",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "name": "contributions_role_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "contributions"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "working_group_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "working_groups",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "SET NULL",
+      "name": "contributions_working_group_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "contributions"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "report_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "reports",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "name": "event_reports_report_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "event_reports"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "report_campaign_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "report_campaigns",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "RESTRICT",
+      "name": "event_size_values_report_campaign_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "event_size_values"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "institution_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "institutions",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "name": "institution_service_institution_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "institution_service"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "service_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "services",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "name": "institution_service_service_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "institution_service"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "country_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "countries",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "name": "outreach_country_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "outreach"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "outreach_report_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "outreach_reports",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "name": "outreach_kpis_outreach_report_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "outreach_kpis"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "outreach_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "outreach",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "name": "outreach_reports_outreach_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "outreach_reports"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "report_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "reports",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "name": "outreach_reports_report_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "outreach_reports"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "report_campaign_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "report_campaigns",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "RESTRICT",
+      "name": "outreach_type_values_report_campaign_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "outreach_type_values"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "report_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "reports",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "name": "projects_report_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "projects"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "country_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "countries",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "name": "reports_country_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "reports"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "report_campaign_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "report_campaigns",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "RESTRICT",
+      "name": "reports_report_campaign_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "reports"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "report_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "reports",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "name": "research_policy_developments_report_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "research_policy_developments"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "report_campaign_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "report_campaigns",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "RESTRICT",
+      "name": "role_type_values_report_campaign_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "role_type_values"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "service_report_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "service_reports",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "name": "service_kpis_service_report_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "service_kpis"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "report_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "reports",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "name": "service_reports_report_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "service_reports"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "service_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "services",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "name": "service_reports_service_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "service_reports"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "report_campaign_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "report_campaigns",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "RESTRICT",
+      "name": "service_size_values_report_campaign_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "service_size_values"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "user_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "users",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "CASCADE",
+      "name": "sessions_user_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "sessions"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "country_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "countries",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "SET NULL",
+      "name": "users_country_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "users"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "person_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "persons",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "SET NULL",
+      "name": "users_person_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "users"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "report_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "working_group_reports",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "RESTRICT",
+      "name": "working_group_events_report_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "working_group_events"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "working_group_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "working_groups",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "RESTRICT",
+      "name": "working_group_outreach_working_group_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "working_group_outreach"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "report_campaign_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "report_campaigns",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "RESTRICT",
+      "name": "working_group_reports_report_campaign_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "working_group_reports"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "working_group_id"
+      ],
+      "schemaTo": "dariah_unr",
+      "tableTo": "working_groups",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "CASCADE",
+      "onDelete": "RESTRICT",
+      "name": "working_group_reports_working_group_id_fkey",
+      "entityType": "fks",
+      "schema": "dariah_unr",
+      "table": "working_group_reports"
+    },
+    {
+      "columns": [
+        "A",
+        "B"
+      ],
+      "nameExplicit": true,
+      "name": "_BodyToRole_AB_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "_BodyToRole"
+    },
+    {
+      "columns": [
+        "A",
+        "B"
+      ],
+      "nameExplicit": true,
+      "name": "_CountryToInstitution_AB_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "_CountryToInstitution"
+    },
+    {
+      "columns": [
+        "A",
+        "B"
+      ],
+      "nameExplicit": true,
+      "name": "_CountryToService_AB_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "_CountryToService"
+    },
+    {
+      "columns": [
+        "A",
+        "B"
+      ],
+      "nameExplicit": true,
+      "name": "_CountryToSoftware_AB_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "_CountryToSoftware"
+    },
+    {
+      "columns": [
+        "A",
+        "B"
+      ],
+      "nameExplicit": true,
+      "name": "_InstitutionToPerson_AB_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "_InstitutionToPerson"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "_prisma_migrations_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "_prisma_migrations"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "bodies_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "bodies"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "contributions_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "contributions"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "countries_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "countries"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "event_reports_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "event_reports"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "event_size_values_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "event_size_values"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "institutions_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "institutions"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "outreach_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "outreach"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "outreach_kpis_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "outreach_kpis"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "outreach_reports_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "outreach_reports"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "outreach_type_values_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "outreach_type_values"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "persons_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "persons"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "projects_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "projects"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "report_campaigns_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "report_campaigns"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "reports_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "reports"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "research_policy_developments_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "research_policy_developments"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "role_type_values_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "role_type_values"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "roles_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "roles"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "service_kpis_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "service_kpis"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "service_reports_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "service_reports"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "service_size_values_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "service_size_values"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "services_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "services"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "sessions_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "sessions"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "software_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "software"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "users_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "users"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "working_group_events_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "working_group_events"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "working_group_outreach_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "working_group_outreach"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "working_group_reports_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "working_group_reports"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": true,
+      "name": "working_groups_pkey",
+      "entityType": "pks",
+      "schema": "dariah_unr",
+      "table": "working_groups"
+    }
+  ],
+  "renames": []
+}

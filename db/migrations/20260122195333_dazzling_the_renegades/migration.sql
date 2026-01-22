@@ -3,6 +3,8 @@
 --
 -- CREATE SCHEMA "dariah_unr";
 -- --> statement-breakpoint
+-- CREATE SCHEMA "pgbouncer";
+-- --> statement-breakpoint
 -- CREATE TYPE "dariah_unr"."body_type" AS ENUM('bod', 'dco', 'ga', 'jrc', 'ncc', 'sb', 'smt');--> statement-breakpoint
 -- CREATE TYPE "dariah_unr"."country_type" AS ENUM('cooperating_partnership', 'member_country', 'other');--> statement-breakpoint
 -- CREATE TYPE "dariah_unr"."event_size" AS ENUM('dariah_commissioned', 'large', 'medium', 'small', 'very_large');--> statement-breakpoint
@@ -210,7 +212,9 @@
 -- 	"status" "dariah_unr"."report_campaign_status" DEFAULT 'in_progress'::"dariah_unr"."report_campaign_status" NOT NULL,
 -- 	"year" integer NOT NULL,
 -- 	"created_at" timestamp(3) DEFAULT now() NOT NULL,
--- 	"updated_at" timestamp(3) NOT NULL
+-- 	"updated_at" timestamp(3) NOT NULL,
+-- 	"facultative_questions_template" text,
+-- 	"narrative_report_template" text
 -- );
 -- --> statement-breakpoint
 -- CREATE TABLE "dariah_unr"."reports" (
@@ -346,11 +350,11 @@
 -- 	"end_date" timestamp(3),
 -- 	"name" text NOT NULL,
 -- 	"start_date" timestamp(3),
--- 	"type" "dariah_unr"."outreach_type" NOT NULL,
 -- 	"url" text NOT NULL,
 -- 	"working_group_id" uuid NOT NULL,
 -- 	"created_at" timestamp(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
--- 	"updated_at" timestamp(3) NOT NULL
+-- 	"updated_at" timestamp(3) NOT NULL,
+-- 	"type" "dariah_unr"."working_group_outreach_type" NOT NULL
 -- );
 -- --> statement-breakpoint
 -- CREATE TABLE "dariah_unr"."working_group_reports" (
@@ -376,7 +380,8 @@
 -- 	"mailing_list" text,
 -- 	"member_tracking" text,
 -- 	"contact_email" text,
--- 	"slug" text NOT NULL
+-- 	"slug" text NOT NULL,
+-- 	"marketplace_id" integer
 -- );
 -- --> statement-breakpoint
 -- CREATE INDEX "_BodyToRole_B_index" ON "dariah_unr"."_BodyToRole" ("B");--> statement-breakpoint
