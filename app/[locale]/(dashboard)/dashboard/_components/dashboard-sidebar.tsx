@@ -112,9 +112,9 @@ export async function DashboardSidebar(
 									<SidebarLabel>Overview</SidebarLabel>
 								</SidebarItem>
 
-								<SidebarItem href="/dashboard/admin/contributions" tooltip="Contributions">
+								<SidebarItem href="/dashboard/admin/contributions" tooltip="Contributors">
 									<ChatBubbleLeftRightIcon />
-									<SidebarLabel>Contributions</SidebarLabel>
+									<SidebarLabel>Contributors</SidebarLabel>
 								</SidebarItem>
 
 								<SidebarItem href="/dashboard/admin/countries" tooltip="Countries">
@@ -204,10 +204,10 @@ export async function DashboardSidebar(
 								{isNationalCoordinator ? (
 									<SidebarItem
 										href={`/dashboard/countries/${country.code}/contributions`}
-										tooltip="Contributions"
+										tooltip="Contributors"
 									>
 										<QuestionMarkCircleIcon />
-										<SidebarLabel>Contributions</SidebarLabel>
+										<SidebarLabel>Contributors</SidebarLabel>
 									</SidebarItem>
 								) : null}
 
@@ -274,14 +274,6 @@ export async function DashboardSidebar(
 											>
 												<QuestionMarkCircleIcon />
 												<SidebarLabel>Outreach</SidebarLabel>
-											</SidebarItem>
-
-											<SidebarItem
-												href={`/dashboard/working-groups/${workingGroup.slug}/members`}
-												tooltip="Members"
-											>
-												<QuestionMarkCircleIcon />
-												<SidebarLabel>Members</SidebarLabel>
 											</SidebarItem>
 
 											<SidebarItem
