@@ -145,9 +145,10 @@ export async function calculateOperationalCost(
 		(outreachsByType.get("national_website")?.length ?? 0) > 0
 			? (outreachTypeValuesByType.get("national_website")?.annualValue ?? 0)
 			: 0;
+	/** Only "national_social_media" is relevant in cost calculation, "social_media" is always 0. */
 	const socialMediaCost =
-		(outreachsByType.get("social_media")?.length ?? 0) > 0
-			? (outreachTypeValuesByType.get("social_media")?.annualValue ?? 0)
+		(outreachsByType.get("national_social_media")?.length ?? 0) > 0
+			? (outreachTypeValuesByType.get("national_social_media")?.annualValue ?? 0)
 			: 0;
 	const serviceLargeCost =
 		(serviceSizeValuesByType.get("large")?.annualValue ?? 0) * largeServicesCount;
