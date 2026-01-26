@@ -112,9 +112,9 @@ export async function DashboardSidebar(
 									<SidebarLabel>Overview</SidebarLabel>
 								</SidebarItem>
 
-								<SidebarItem href="/dashboard/admin/contributions" tooltip="Contributions">
+								<SidebarItem href="/dashboard/admin/contributions" tooltip="Contributors">
 									<ChatBubbleLeftRightIcon />
-									<SidebarLabel>Contributions</SidebarLabel>
+									<SidebarLabel>Contributors</SidebarLabel>
 								</SidebarItem>
 
 								<SidebarItem href="/dashboard/admin/countries" tooltip="Countries">
