@@ -101,8 +101,8 @@ interface GetActiveMemberCountryIdsParams {
 	year: number;
 }
 
-export function getActiveMemberCountryIdsForYear(_params: GetActiveMemberCountryIdsParams) {
-	// const { year } = params;
+export function getActiveMemberCountryIdsForYear(params: GetActiveMemberCountryIdsParams) {
+	const { year } = params;
 
 	return db.country.findMany({
 		where: {
@@ -113,9 +113,9 @@ export function getActiveMemberCountryIdsForYear(_params: GetActiveMemberCountry
 			 */
 			type: "member_country",
 			// /** Must have been active before the end of the year. */
-			// startDate: { lte: new Date(Date.UTC(year, 11, 31)) },
+			startDate: { lte: new Date(Date.UTC(year, 11, 31)) },
 			// /** Must still have been active after beginning of the year. */
-			// OR: [{ endDate: null }, { endDate: { gte: new Date(Date.UTC(year, 0, 1)) } }],
+			OR: [{ endDate: null }, { endDate: { gte: new Date(Date.UTC(year, 0, 1)) } }],
 		},
 		select: { id: true, name: true },
 		orderBy: { name: "asc" },
