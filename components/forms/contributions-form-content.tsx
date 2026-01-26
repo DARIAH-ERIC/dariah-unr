@@ -119,7 +119,7 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 				name="contributionsCount"
 			/>
 
-			<section className="grid content-start items-start gap-x-4 gap-y-6 xs:grid-cols-2 md:grid-cols-4">
+			<section className="grid content-start items-start gap-x-4 gap-y-8 xs:grid-cols-2 lg:grid-cols-3">
 				{relevantRoles.map((roleType) => {
 					const role = rolesByType.get(roleType);
 					if (role == null) return null;
@@ -178,7 +178,7 @@ interface ContributionsByRoleProps {
 	>;
 	persons: Array<Pick<Person, "id" | "name">>;
 	personsById: Map<Person["id"], Pick<Person, "id" | "name">>;
-	role: Pick<Role, "id" | "name">;
+	role: Pick<Role, "id" | "name" | "type">;
 	workingGroups: Array<Pick<Role, "id" | "name">>;
 	workingGroupsById: Map<WorkingGroup["id"], Pick<Role, "id" | "name">>;
 }
