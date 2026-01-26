@@ -85,9 +85,9 @@
 	},
 	"DashboardAdminContributionsPage": {
 		"meta": {
-			"title": "Contributions"
+			"title": "Contributors"
 		},
-		"title": "Contributions"
+		"title": "Contributors"
 	},
 	"DashboardAdminCountriesPage": {
 		"meta": {
@@ -189,9 +189,9 @@
 	},
 	"DashboardCountryContributionsPage": {
 		"meta": {
-			"title": "National Dashboard - {name} - Contributions"
+			"title": "National Dashboard - {name} - Contributors"
 		},
-		"title": "National Dashboard - {name} - Contributions"
+		"title": "National Dashboard - {name} - Contributors"
 	},
 	"DashboardCountryInstitutionsPage": {
 		"meta": {

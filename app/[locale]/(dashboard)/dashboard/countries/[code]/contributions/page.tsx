@@ -69,7 +69,7 @@ export default async function DashboardCountryContributionsPage(
 
 	return (
 		<main className="grid gap-8 content-start max-w-(--breakpoint-2xl)!">
-			<PageTitle>Contributions</PageTitle>
+			<PageTitle>Contributors</PageTitle>
 			<div className="grid w-full gap-4">
 				<ContributionsTableContent
 					contributions={contributions}
