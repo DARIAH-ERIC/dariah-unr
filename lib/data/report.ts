@@ -203,8 +203,8 @@ interface CreateReportForCountryIdParams {
 export function createReportForCountryId(params: CreateReportForCountryIdParams) {
 	const { countryId, operationalCostThreshold, reportCampaignId } = params;
 
-	return db.report.create({
-		data: {
+	return db.report.upsert({
+		create: {
 			country: {
 				connect: {
 					id: countryId,
@@ -215,6 +215,25 @@ export function createReportForCountryId(params: CreateReportForCountryIdParams)
 				connect: {
 					id: reportCampaignId,
 				},
+			},
+		},
+		update: {
+			country: {
+				connect: {
+					id: countryId,
+				},
+			},
+			operationalCostThreshold,
+			reportCampaign: {
+				connect: {
+					id: reportCampaignId,
+				},
+			},
+		},
+		where: {
+			reportCampaignId_countryId: {
+				countryId,
+				reportCampaignId,
 			},
 		},
 	});
