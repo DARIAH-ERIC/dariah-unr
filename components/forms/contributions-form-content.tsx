@@ -1,7 +1,7 @@
 "use client";
 
 import { groupByToMap, keyByToMap } from "@acdh-oeaw/lib";
-import type { Country, Person, Prisma, Report, Role, WorkingGroup } from "@prisma/client";
+import type { Country, Person, Prisma, Report, Role, RoleType, WorkingGroup } from "@prisma/client";
 import { useListData } from "@react-stately/data";
 import { PlusIcon } from "lucide-react";
 import { Fragment, type ReactNode, useActionState, useId } from "react";
@@ -46,7 +46,7 @@ interface ContributionsFormContentProps {
 	previousContributionsCount: Report["contributionsCount"] | undefined;
 	persons: Array<Pick<Person, "id" | "name">>;
 	reportId: Report["id"];
-	roles: Array<Pick<Role, "id" | "name">>;
+	roles: Array<Pick<Role, "id" | "name" | "type">>;
 	workingGroups: Array<Pick<Role, "id" | "name">>;
 	year: number;
 }
@@ -83,16 +83,17 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 		return workingGroup.id;
 	});
 
-	const rolesByName = keyByToMap(roles, (role) => {
-		return role.name;
+	const rolesByType = keyByToMap(roles, (role) => {
+		return role.type;
 	});
 
 	// FIXME: role names should be database enum.
-	const relevantRoles = [
-		"National Representative",
-		"National Coordinator",
-		"JRC member",
-		"WG chair",
+	const relevantRoles: Array<RoleType> = [
+		"national_representative",
+		"national_coordinator",
+		"national_coordinator_deputy",
+		"jrc_member",
+		"wg_chair",
 	] as const;
 
 	return (
@@ -118,9 +119,9 @@ export function ContributionsFormContent(props: ContributionsFormContentProps): 
 				name="contributionsCount"
 			/>
 
-			<section className="grid content-start items-start gap-x-4 gap-y-6 xs:grid-cols-2 md:grid-cols-4">
-				{relevantRoles.map((roleName) => {
-					const role = rolesByName.get(roleName);
+			<section className="grid content-start items-start gap-x-4 gap-y-8 xs:grid-cols-2 lg:grid-cols-3">
+				{relevantRoles.map((roleType) => {
+					const role = rolesByType.get(roleType);
 					if (role == null) return null;
 					const roleId = role.id;
 					const contributions = contributionsByRoleId.get(roleId) ?? [];
@@ -177,7 +178,7 @@ interface ContributionsByRoleProps {
 	>;
 	persons: Array<Pick<Person, "id" | "name">>;
 	personsById: Map<Person["id"], Pick<Person, "id" | "name">>;
-	role: Pick<Role, "id" | "name">;
+	role: Pick<Role, "id" | "name" | "type">;
 	workingGroups: Array<Pick<Role, "id" | "name">>;
 	workingGroupsById: Map<WorkingGroup["id"], Pick<Role, "id" | "name">>;
 }
