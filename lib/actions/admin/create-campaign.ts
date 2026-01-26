@@ -17,6 +17,7 @@ import {
 import { getActiveMemberCountryIdsForYear } from "@/lib/data/country";
 import { createReportForCountryId } from "@/lib/data/report";
 import { getActiveWorkingGroupIdsForYear } from "@/lib/data/working-group";
+import { createReportForWorkingGroupId } from "@/lib/data/working-group-report";
 import { ingestDataFromSshomp } from "@/lib/db/ingest-data-from-sshomp";
 import { getFormData } from "@/lib/get-form-data";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
@@ -170,13 +171,11 @@ export async function createCampaignAction(
 		const workingGroups = await getActiveWorkingGroupIdsForYear({ year });
 
 		for (const workingGroup of workingGroups) {
-			await db?.workingGroupReport.create({
-				data: {
-					facultativeQuestions,
-					narrativeReport,
-					workingGroupId: workingGroup.id,
-					reportCampaignId: reportCampaign.id,
-				},
+			await createReportForWorkingGroupId({
+				facultativeQuestions,
+				narrativeReport,
+				workingGroupId: workingGroup.id,
+				reportCampaignId: reportCampaign.id,
 			});
 		}
 
