@@ -277,14 +277,6 @@ export async function DashboardSidebar(
 											</SidebarItem>
 
 											<SidebarItem
-												href={`/dashboard/working-groups/${workingGroup.slug}/members`}
-												tooltip="Members"
-											>
-												<QuestionMarkCircleIcon />
-												<SidebarLabel>Members</SidebarLabel>
-											</SidebarItem>
-
-											<SidebarItem
 												href={`/dashboard/working-groups/${workingGroup.slug}/reports`}
 												tooltip="Reports"
 											>
