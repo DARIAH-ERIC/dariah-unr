@@ -118,12 +118,15 @@ export async function calculateOperationalCost(
 	const coreServicesCount = servicesBySize.get("core")?.length ?? 0;
 
 	const ncRole = roleTypeValuesByType.get("national_coordinator")!;
+	const deputyNcRole = roleTypeValuesByType.get("national_coordinator_deputy")!;
 	const jrcRole = roleTypeValuesByType.get("jrc_member")!;
 	const wgRole = roleTypeValuesByType.get("wg_chair")!;
 	const jrcChairRole = roleTypeValuesByType.get("jrc_chair")!;
 	const nccRole = roleTypeValuesByType.get("ncc_chair")!;
 
 	const ncCost = (contributionsByRole.get(ncRole.id)?.length ?? 0) * ncRole.annualValue;
+	const deputyNcCost =
+		(contributionsByRole.get(deputyNcRole.id)?.length ?? 0) * deputyNcRole.annualValue;
 	const jrcCost = (contributionsByRole.get(jrcRole.id)?.length ?? 0) * jrcRole.annualValue;
 	const jrcChairCost =
 		(contributionsByRole.get(jrcChairRole.id)?.length ?? 0) * jrcChairRole.annualValue;
@@ -161,6 +164,7 @@ export async function calculateOperationalCost(
 
 	const operationalCost =
 		ncCost +
+		deputyNcCost +
 		jrcCost +
 		jrcChairCost +
 		nccCost +
