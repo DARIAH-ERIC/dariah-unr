@@ -142,6 +142,11 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 					<h3>Outreach type values</h3>
 					<div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
 						{Object.values(OutreachType).map((outreachType) => {
+							/** Always counts as 0. */
+							if (outreachType === "social_media") {
+								return null;
+							}
+
 							return (
 								<NumberInputField
 									key={outreachType}
@@ -165,6 +170,7 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 								"jrc_member",
 								"jrc_chair",
 								"national_coordinator",
+								"national_representative_deputy",
 								"ncc_chair",
 								"wg_chair",
 							] as Array<RoleType>

@@ -1,7 +1,7 @@
 "use server";
 
 import { log } from "@acdh-oeaw/lib";
-import { EventSize, OutreachType, type RoleType, ServiceSize } from "@prisma/client";
+import { EventSize, type OutreachType, type RoleType, ServiceSize } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { getLocale, getTranslations } from "next-intl/server";
 import { z } from "zod";
@@ -39,7 +39,7 @@ const formSchema = z.object({
 	/** Maps type to monetary value. */
 	outreachTypeValues: z.object(
 		Object.fromEntries(
-			Object.values(OutreachType).map((key) => {
+			(["national_social_media", "national_website"] as Array<OutreachType>).map((key) => {
 				return [key, z.coerce.number().min(0)];
 			}),
 		),
@@ -52,6 +52,7 @@ const formSchema = z.object({
 					"jrc_member",
 					"jrc_chair",
 					"national_coordinator",
+					"national_representative_deputy",
 					"ncc_chair",
 					"wg_chair",
 				] as Array<RoleType>
