@@ -3,7 +3,7 @@
 import { log } from "@acdh-oeaw/lib";
 import { EventSize, OutreachType, type RoleType, ServiceSize } from "@prisma/client";
 import { revalidatePath } from "next/cache";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { z } from "zod";
 
 import { assertPermissions } from "@/lib/access-controls";
@@ -17,8 +17,10 @@ import {
 import { getActiveMemberCountryIdsForYear } from "@/lib/data/country";
 import { createReportForCountryId } from "@/lib/data/report";
 import { getActiveWorkingGroupIdsForYear } from "@/lib/data/working-group";
+import { createReportForWorkingGroupId } from "@/lib/data/working-group-report";
 import { ingestDataFromSshomp } from "@/lib/db/ingest-data-from-sshomp";
 import { getFormData } from "@/lib/get-form-data";
+import { redirect } from "@/lib/navigation/navigation";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 const formSchema = z.object({
@@ -90,6 +92,7 @@ export async function createCampaignAction(
 	previousFormState: FormState | undefined,
 	formData: FormData,
 ): Promise<FormState> {
+	const locale = await getLocale();
 	const t = await getTranslations("actions.admin.createCampaign");
 
 	const { user } = await assertAuthenticated();
@@ -170,13 +173,11 @@ export async function createCampaignAction(
 		const workingGroups = await getActiveWorkingGroupIdsForYear({ year });
 
 		for (const workingGroup of workingGroups) {
-			await db?.workingGroupReport.create({
-				data: {
-					facultativeQuestions,
-					narrativeReport,
-					workingGroupId: workingGroup.id,
-					reportCampaignId: reportCampaign.id,
-				},
+			await createReportForWorkingGroupId({
+				facultativeQuestions,
+				narrativeReport,
+				workingGroupId: workingGroup.id,
+				reportCampaignId: reportCampaign.id,
 			});
 		}
 
@@ -188,12 +189,6 @@ export async function createCampaignAction(
 		void ingestDataFromSshomp();
 
 		revalidatePath("/[locale]/dashboard/admin/campaign", "page");
-
-		return {
-			status: "success" as const,
-			message: t("success"),
-			timestamp: Date.now(),
-		};
 	} catch (error) {
 		log.error(error);
 
@@ -204,4 +199,6 @@ export async function createCampaignAction(
 			timestamp: Date.now(),
 		};
 	}
+
+	redirect({ locale, href: "/dashboard/admin" });
 }

@@ -12,8 +12,8 @@ interface CreateReportForWorkingGroupIdParams {
 export function createReportForWorkingGroupId(params: CreateReportForWorkingGroupIdParams) {
 	const { facultativeQuestions, narrativeReport, workingGroupId, reportCampaignId } = params;
 
-	return db.workingGroupReport.create({
-		data: {
+	return db.workingGroupReport.upsert({
+		create: {
 			facultativeQuestions,
 			narrativeReport,
 			reportCampaign: {
@@ -25,6 +25,26 @@ export function createReportForWorkingGroupId(params: CreateReportForWorkingGrou
 				connect: {
 					id: workingGroupId,
 				},
+			},
+		},
+		update: {
+			facultativeQuestions,
+			narrativeReport,
+			reportCampaign: {
+				connect: {
+					id: reportCampaignId,
+				},
+			},
+			workingGroup: {
+				connect: {
+					id: workingGroupId,
+				},
+			},
+		},
+		where: {
+			reportCampaignId_workingGroupId: {
+				reportCampaignId,
+				workingGroupId,
 			},
 		},
 	});
