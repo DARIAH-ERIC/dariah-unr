@@ -204,10 +204,10 @@ export async function DashboardSidebar(
 								{isNationalCoordinator ? (
 									<SidebarItem
 										href={`/dashboard/countries/${country.code}/contributions`}
-										tooltip="Contributions"
+										tooltip="Contributors"
 									>
 										<QuestionMarkCircleIcon />
-										<SidebarLabel>Contributions</SidebarLabel>
+										<SidebarLabel>Contributors</SidebarLabel>
 									</SidebarItem>
 								) : null}
 
