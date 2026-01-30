@@ -55,6 +55,7 @@ type Action =
 	  };
 
 interface ContributionsTableContentProps {
+	countryId: string;
 	countries: Array<Country>;
 	persons: Array<Person>;
 	roles: Array<Pick<Role, "id" | "name" | "type">>;
@@ -72,7 +73,7 @@ interface ContributionsTableContentProps {
 }
 
 export function ContributionsTableContent(props: ContributionsTableContentProps): ReactNode {
-	const { countries, contributions, persons, roles, workingGroups } = props;
+	const { countryId, countries, contributions, persons, roles, workingGroups } = props;
 
 	const { dateTime } = useFormatter();
 
@@ -179,7 +180,7 @@ export function ContributionsTableContent(props: ContributionsTableContentProps)
 			</div>
 
 			<Table
-				aria-label="Services"
+				aria-label="Contributions"
 				className="w-full"
 				// @ts-expect-error It's fine.
 				onSortChange={setSortDescriptor}
@@ -262,6 +263,7 @@ export function ContributionsTableContent(props: ContributionsTableContentProps)
 				key={createKey("create-contribution", action?.item?.id)}
 				action={action}
 				countriesById={countriesById}
+				countryId={countryId}
 				onClose={onDialogClose}
 				personsById={personsById}
 				rolesById={rolesById}
@@ -271,6 +273,7 @@ export function ContributionsTableContent(props: ContributionsTableContentProps)
 				key={createKey("edit-contribution", action?.item?.id)}
 				action={action}
 				countriesById={countriesById}
+				countryId={countryId}
 				onClose={onDialogClose}
 				personsById={personsById}
 				rolesById={rolesById}
@@ -282,6 +285,7 @@ export function ContributionsTableContent(props: ContributionsTableContentProps)
 
 interface CreateContributionDialogProps {
 	action: Action | null;
+	countryId: string;
 	countriesById: Map<Country["id"], Country>;
 	personsById: Map<Person["id"], Person>;
 	rolesById: Map<Role["id"], Pick<Role, "id" | "name" | "type">>;
@@ -290,7 +294,8 @@ interface CreateContributionDialogProps {
 }
 
 function CreateContributionDialog(props: CreateContributionDialogProps) {
-	const { action, countriesById, personsById, rolesById, workingGroupsById, onClose } = props;
+	const { action, countryId, countriesById, personsById, rolesById, workingGroupsById, onClose } =
+		props;
 
 	const formId = useId();
 
@@ -316,6 +321,7 @@ function CreateContributionDialog(props: CreateContributionDialogProps) {
 									<ContributionEditForm
 										contribution={contribution}
 										countriesById={countriesById}
+										countryId={countryId}
 										formAction={formAction}
 										formId={formId}
 										formState={formState}
@@ -341,6 +347,7 @@ function CreateContributionDialog(props: CreateContributionDialogProps) {
 
 interface EditContributionDialogProps {
 	action: Action | null;
+	countryId: string;
 	countriesById: Map<Country["id"], Country>;
 	personsById: Map<Person["id"], Person>;
 	rolesById: Map<Role["id"], Pick<Role, "id" | "name" | "type">>;
@@ -349,7 +356,8 @@ interface EditContributionDialogProps {
 }
 
 function EditContributionDialog(props: EditContributionDialogProps) {
-	const { action, countriesById, personsById, rolesById, workingGroupsById, onClose } = props;
+	const { action, countryId, countriesById, personsById, rolesById, workingGroupsById, onClose } =
+		props;
 
 	const formId = useId();
 
@@ -375,6 +383,7 @@ function EditContributionDialog(props: EditContributionDialogProps) {
 									<ContributionEditForm
 										contribution={contribution}
 										countriesById={countriesById}
+										countryId={countryId}
 										formAction={formAction}
 										formId={formId}
 										formState={formState}
@@ -399,6 +408,7 @@ function EditContributionDialog(props: EditContributionDialogProps) {
 }
 
 interface ContributionEditFormProps {
+	countryId: string;
 	countriesById: Map<Country["id"], Country>;
 	personsById: Map<Person["id"], Person>;
 	rolesById: Map<Role["id"], Pick<Role, "id" | "name" | "type">>;
@@ -419,6 +429,7 @@ interface ContributionEditFormProps {
 
 function ContributionEditForm(props: ContributionEditFormProps) {
 	const {
+		countryId,
 		countriesById,
 		personsById,
 		rolesById,
@@ -496,12 +507,7 @@ function ContributionEditForm(props: ContributionEditFormProps) {
 				})}
 			</SelectField>
 
-			<SelectField
-				defaultSelectedKey={contribution?.country?.id}
-				isClearable={true}
-				label="Country"
-				name="countryId"
-			>
+			<SelectField label="Country" name="countryId" value={countryId}>
 				{Array.from(countriesById.values()).map((country) => {
 					return (
 						<SelectItem key={country.id} id={country.id} textValue={country.name}>

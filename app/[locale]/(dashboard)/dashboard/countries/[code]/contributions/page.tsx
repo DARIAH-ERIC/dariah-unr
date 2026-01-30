@@ -74,6 +74,7 @@ export default async function DashboardCountryContributionsPage(
 				<ContributionsTableContent
 					contributions={contributions}
 					countries={[country]}
+					countryId={id}
 					persons={persons}
 					roles={roles}
 					workingGroups={workingGroups}

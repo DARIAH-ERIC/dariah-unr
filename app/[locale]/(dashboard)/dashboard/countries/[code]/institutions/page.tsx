@@ -63,7 +63,11 @@ export default async function DashboardCountryInstitutionsPage(
 		<main className="grid gap-8 content-start max-w-(--breakpoint-2xl)!">
 			<PageTitle>Institutions</PageTitle>
 			<div className="grid w-full gap-4">
-				<InstitutionsTableContent countries={[country]} institutions={institutions} />
+				<InstitutionsTableContent
+					countries={[country]}
+					countryId={id}
+					institutions={institutions}
+				/>
 			</div>
 		</main>
 	);
