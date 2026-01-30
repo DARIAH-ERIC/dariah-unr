@@ -35,8 +35,8 @@ import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success"
 import { IconButton } from "@/components/ui/icon-button";
 import { Modal, ModalOverlay } from "@/components/ui/modal";
 import { Cell, Column, Row, Table, TableBody, TableHeader } from "@/components/ui/table";
-import { createInstitutionAction } from "@/lib/actions/admin/create-institution";
-import { updateInstitutionAction } from "@/lib/actions/admin/update-institution";
+import { createCountryInstitutionAction } from "@/lib/actions/create-institution";
+import { updateCountryInstitutionAction } from "@/lib/actions/update-institution";
 import { createKey } from "@/lib/create-key";
 import { toDateValue } from "@/lib/to-date-value";
 
@@ -55,6 +55,7 @@ type Action =
 	  };
 
 interface InstitutionsTableContentProps {
+	countryId: string;
 	countries: Array<Country>;
 	institutions: Array<
 		Prisma.InstitutionGetPayload<{
@@ -66,7 +67,7 @@ interface InstitutionsTableContentProps {
 }
 
 export function InstitutionsTableContent(props: InstitutionsTableContentProps): ReactNode {
-	const { countries, institutions } = props;
+	const { countryId, countries, institutions } = props;
 
 	const { dateTime } = useFormatter();
 
@@ -236,12 +237,14 @@ export function InstitutionsTableContent(props: InstitutionsTableContentProps): 
 				key={createKey("create-institution", action?.item?.id)}
 				action={action}
 				countriesById={countriesById}
+				countryId={countryId}
 				onClose={onDialogClose}
 			/>
 			<EditInstitutionDialog
 				key={createKey("edit-institution", action?.item?.id)}
 				action={action}
 				countriesById={countriesById}
+				countryId={countryId}
 				onClose={onDialogClose}
 			/>
 		</Fragment>
@@ -250,16 +253,17 @@ export function InstitutionsTableContent(props: InstitutionsTableContentProps): 
 
 interface CreateInstitutionDialogProps {
 	action: Action | null;
+	countryId: string;
 	countriesById: Map<Country["id"], Country>;
 	onClose: () => void;
 }
 
 function CreateInstitutionDialog(props: CreateInstitutionDialogProps) {
-	const { action, countriesById, onClose } = props;
+	const { action, countryId, countriesById, onClose } = props;
 
 	const formId = useId();
 
-	const [formState, formAction] = useActionState(createInstitutionAction, undefined);
+	const [formState, formAction] = useActionState(createCountryInstitutionAction, undefined);
 
 	if (action?.kind !== "create") return null;
 
@@ -280,6 +284,7 @@ function CreateInstitutionDialog(props: CreateInstitutionDialogProps) {
 								<div>
 									<InstitutionEditForm
 										countriesById={countriesById}
+										countryId={countryId}
 										formAction={formAction}
 										formId={formId}
 										formState={formState}
@@ -303,16 +308,17 @@ function CreateInstitutionDialog(props: CreateInstitutionDialogProps) {
 
 interface EditInstitutionDialogProps {
 	action: Action | null;
+	countryId: string;
 	countriesById: Map<Country["id"], Country>;
 	onClose: () => void;
 }
 
 function EditInstitutionDialog(props: EditInstitutionDialogProps) {
-	const { action, countriesById, onClose } = props;
+	const { action, countryId, countriesById, onClose } = props;
 
 	const formId = useId();
 
-	const [formState, formAction] = useActionState(updateInstitutionAction, undefined);
+	const [formState, formAction] = useActionState(updateCountryInstitutionAction, undefined);
 
 	if (action?.kind !== "edit") return null;
 
@@ -333,6 +339,7 @@ function EditInstitutionDialog(props: EditInstitutionDialogProps) {
 								<div>
 									<InstitutionEditForm
 										countriesById={countriesById}
+										countryId={countryId}
 										formAction={formAction}
 										formId={formId}
 										formState={formState}
@@ -355,10 +362,11 @@ function EditInstitutionDialog(props: EditInstitutionDialogProps) {
 }
 
 interface InstitutionEditFormProps {
+	countryId: string;
 	countriesById: Map<Country["id"], Country>;
 	formId: string;
 	formAction: (formData: FormData) => void;
-	formState: Awaited<ReturnType<typeof createInstitutionAction>> | undefined;
+	formState: Awaited<ReturnType<typeof createCountryInstitutionAction>> | undefined;
 	institution: Prisma.InstitutionGetPayload<{
 		include: {
 			countries: { select: { id: true } };
@@ -368,7 +376,7 @@ interface InstitutionEditFormProps {
 }
 
 function InstitutionEditForm(props: InstitutionEditFormProps) {
-	const { countriesById, formId, formAction, formState, institution, onClose } = props;
+	const { countriesById, countryId, formId, formAction, formState, institution, onClose } = props;
 
 	const availableInstitutionTypes = Object.values(InstitutionType);
 
@@ -397,16 +405,13 @@ function InstitutionEditForm(props: InstitutionEditFormProps) {
 			id={formId}
 			validationErrors={formState?.status === "error" ? formState.fieldErrors : undefined}
 		>
+			<input name="countryId" type="hidden" value={countryId} />
+
 			{institution != null ? <input name="id" type="hidden" value={institution.id} /> : null}
 
 			<TextInputField defaultValue={institution?.name} isRequired={true} label="Name" name="name" />
 
-			<SelectField
-				defaultSelectedKey={institution?.countries[0]?.id}
-				isClearable={true}
-				label="Country"
-				name="countries.0"
-			>
+			<SelectField label="Country" name="countries.0" value={countryId}>
 				{Array.from(countriesById.values()).map((country) => {
 					return (
 						<SelectItem key={country.id} id={country.id} textValue={country.name}>
