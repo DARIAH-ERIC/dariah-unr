@@ -2,7 +2,7 @@
 
 import { keyByToMap } from "@acdh-oeaw/lib";
 import type { Country, Person, Prisma, Role, WorkingGroup } from "@prisma/client";
-import { MoreHorizontalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
+import { MoreHorizontalIcon, PencilIcon, PlusIcon } from "lucide-react";
 import { useFormatter } from "next-intl";
 import { Fragment, type ReactNode, useActionState, useId, useMemo, useState } from "react";
 import type { Key } from "react-aria-components";
@@ -32,8 +32,8 @@ import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success"
 import { IconButton } from "@/components/ui/icon-button";
 import { Modal, ModalOverlay } from "@/components/ui/modal";
 import { Cell, Column, Row, Table, TableBody, TableHeader } from "@/components/ui/table";
-import { createContributionAction } from "@/lib/actions/admin/create-contribution";
-import { updateContributionAction } from "@/lib/actions/admin/update-contribution";
+import { createCountryContributionAction } from "@/lib/actions/create-contribution";
+import { updateCountryContributionAction } from "@/lib/actions/update-contribution";
 import { createKey } from "@/lib/create-key";
 import { toDateValue } from "@/lib/to-date-value";
 
@@ -240,10 +240,10 @@ export function ContributionsTableContent(props: ContributionsTableContentProps)
 													Edit
 													<PencilIcon aria-hidden={true} className="size-4 shrink-0" />
 												</DropdownMenuItem>
-												<DropdownMenuItem id="delete">
+												{/* <DropdownMenuItem id="delete">
 													Delete
 													<Trash2Icon aria-hidden={true} className="size-4 shrink-0" />
-												</DropdownMenuItem>
+												</DropdownMenuItem> */}
 											</DropdownMenu>
 										</DropdownMenuTrigger>
 									</div>
@@ -294,7 +294,7 @@ function CreateContributionDialog(props: CreateContributionDialogProps) {
 
 	const formId = useId();
 
-	const [formState, formAction] = useActionState(createContributionAction, undefined);
+	const [formState, formAction] = useActionState(createCountryContributionAction, undefined);
 
 	if (action?.kind !== "create") return null;
 
@@ -353,7 +353,7 @@ function EditContributionDialog(props: EditContributionDialogProps) {
 
 	const formId = useId();
 
-	const [formState, formAction] = useActionState(updateContributionAction, undefined);
+	const [formState, formAction] = useActionState(updateCountryContributionAction, undefined);
 
 	if (action?.kind !== "edit") return null;
 
@@ -405,7 +405,7 @@ interface ContributionEditFormProps {
 	workingGroupsById: Map<WorkingGroup["id"], WorkingGroup>;
 	formId: string;
 	formAction: (formData: FormData) => void;
-	formState: Awaited<ReturnType<typeof createContributionAction>> | undefined;
+	formState: Awaited<ReturnType<typeof createCountryContributionAction>> | undefined;
 	contribution: Prisma.ContributionGetPayload<{
 		include: {
 			person: { select: { id: true } };
