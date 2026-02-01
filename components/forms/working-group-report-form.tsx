@@ -29,28 +29,26 @@ export async function WorkingGroupReportForm(
 
 	const t = await getTranslations("WorkingGroupReportForm");
 
-	const [resources, { bibliography, items }] = await Promise.all([
-		getActorResources({ marketplaceActorId: workingGroup.marketplaceId }),
-		getWorkingGroupPublications({
-			name: workingGroup.name,
-			slug: workingGroup.slug,
-			year,
-		}),
-	]);
+	const zoteroPromise = getWorkingGroupPublications({
+		name: workingGroup.name,
+		slug: workingGroup.slug,
+		year,
+	});
+
+	const resourcesPromise = getActorResources({ marketplaceActorId: workingGroup.marketplaceId });
 
 	return (
 		<WorkingGroupReportFormContent
-			bibliography={bibliography}
 			confirmationInfo={t("confirmation-info")}
 			confirmationLabel={t("confirm")}
 			isConfirmationAvailable={isConfirmationAvailable}
 			// previousWorkingGroupReport={previousWorkingGroupReport}
-			resources={resources}
+			resourcesPromise={resourcesPromise}
 			submitLabel={t("submit")}
-			total={items.length}
 			workingGroup={workingGroup}
 			workingGroupReport={workingGroupReport}
 			year={year}
+			zoteroPromise={zoteroPromise}
 		/>
 	);
 }

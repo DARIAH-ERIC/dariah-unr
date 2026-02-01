@@ -1,3 +1,4 @@
+import { keyBy } from "@acdh-oeaw/lib";
 import { EllipsisHorizontalIcon } from "@heroicons/react/16/solid";
 import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import {
@@ -57,6 +58,11 @@ export async function DashboardSidebar(
 	const contributions =
 		user.personId != null ? await getWorkingGroupsByPersonId({ personId: user.personId }) : [];
 	const hasWorkingGroups = contributions.length > 0;
+
+	/** Avoid duplicate working group entries when a person was chair/member multiple times. */
+	const contributionsByWorkingGroupSlug = keyBy(contributions, (contribution) => {
+		return contribution.workingGroup!.slug;
+	});
 
 	const defaultExpandedKeys = [];
 
@@ -233,7 +239,7 @@ export async function DashboardSidebar(
 					) : null}
 
 					{hasWorkingGroups
-						? contributions.map((contribution, index) => {
+						? Object.values(contributionsByWorkingGroupSlug).map((contribution, index) => {
 								const { id, role, workingGroup } = contribution;
 
 								if (workingGroup == null) {

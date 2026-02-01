@@ -8,8 +8,9 @@ import {
 	type WorkingGroupReport,
 } from "@prisma/client";
 import { InfoIcon, Trash2Icon } from "lucide-react";
-import { type ReactNode, startTransition, useActionState, useState } from "react";
+import { type ReactNode, startTransition, Suspense, use, useActionState, useState } from "react";
 
+import { ErrorBoundary } from "@/components/error-boundary";
 import { SubmitButton } from "@/components/submit-button";
 import { DateInputField } from "@/components/ui/blocks/date-input-field";
 import { NumberInputField } from "@/components/ui/blocks/number-input-field";
@@ -26,43 +27,44 @@ import { updateWorkingGroupReportStatusAction } from "@/lib/actions/update-worki
 import { createKey } from "@/lib/create-key";
 import { workingGroupReportCommentsSchema } from "@/lib/schemas/report";
 import { toDateValue } from "@/lib/to-date-value";
+import type { ZoteroItem } from "@/lib/zotero";
 
 interface WorkingGroupReportFormContentParams {
-	bibliography: string;
 	confirmationInfo: string;
 	confirmationLabel: string;
 	isConfirmationAvailable: boolean;
 	// previousWorkingGroupReport?: WorkingGroupReport | null;
-	resources: Array<{
-		id: string;
-		label: string;
-		type: "Core service" | "Software" | "Service";
-		accessibleAt: Array<string>;
-	}>;
+	resourcesPromise: Promise<
+		Array<{
+			id: string;
+			label: string;
+			type: "Core service" | "Software" | "Service";
+			accessibleAt: Array<string>;
+		}>
+	>;
 	submitLabel: string;
-	total: number;
 	workingGroup: WorkingGroup;
 	workingGroupReport: Prisma.WorkingGroupReportGetPayload<{
 		include: { workingGroupEvents: true };
 	}>;
 	year: number;
+	zoteroPromise: Promise<{ bibliography: string; items: Array<ZoteroItem> }>;
 }
 
 export function WorkingGroupReportFormContent(
 	params: WorkingGroupReportFormContentParams,
 ): ReactNode {
 	const {
-		bibliography,
 		confirmationLabel,
 		confirmationInfo,
 		isConfirmationAvailable,
 		// previousWorkingGroupReport,
-		resources,
+		resourcesPromise,
 		submitLabel,
-		total,
 		workingGroup,
 		workingGroupReport,
 		year,
+		zoteroPromise,
 	} = params;
 
 	const [formState, formAction] = useActionState(updateWorkingGroupReportAction, undefined);
@@ -207,36 +209,17 @@ export function WorkingGroupReportFormContent(
 					<div className="flex flex-col gap-y-2">
 						<h2 className="text-lg font-semibold">Resources</h2>
 
-						{resources.length > 0 ? (
-							<div className="max-w-(--breakpoint-md) text-sm/relaxed text-neutral-700 dark:text-neutral-300 [&_.csl-bib-body]:flex [&_.csl-bib-body]:flex-col [&_.csl-bib-body]:gap-y-2 [&_.csl-entry]:pl-4 [&_.csl-entry]:-indent-4">
-								<ul className="flex flex-col gap-y-1.5" role="list">
-									{resources.map((resource) => {
-										return (
-											<li key={resource.id}>
-												<div>
-													<strong>{resource.label}</strong>({resource.type})
-												</div>
-												{resource.accessibleAt.length > 0 ? (
-													<div className="flex flex-wrap gap-x-4 gap-y-0.5 text-neutral-600 text-sm dark:text-neutral-400">
-														{resource.accessibleAt.map((url) => {
-															return (
-																<a key={url} href={url}>
-																	{url}
-																</a>
-															);
-														})}
-													</div>
-												) : null}
-											</li>
-										);
-									})}
-								</ul>
-							</div>
-						) : (
-							<div className="grid place-items-center py-6 text-sm/relaxed text-neutral-700 dark:text-neutral-300">
-								No resources found in sshoc marketplace.
-							</div>
-						)}
+						<ErrorBoundary
+							fallback={
+								<p className="text-sm text-muted">
+									Failed to retrieve resources from SSHOC marketplace.
+								</p>
+							}
+						>
+							<Suspense fallback={<p className="text-sm text-muted">Loading...</p>}>
+								<ResourcesSection resourcesPromise={resourcesPromise} />
+							</Suspense>
+						</ErrorBoundary>
 					</div>
 
 					<hr />
@@ -244,17 +227,15 @@ export function WorkingGroupReportFormContent(
 					<div className="flex flex-col gap-y-2">
 						<h2 className="text-lg font-semibold">Publications</h2>
 
-						{total > 0 ? (
-							<div
-								// eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml
-								dangerouslySetInnerHTML={{ __html: bibliography }}
-								className="max-w-(--breakpoint-md) text-sm/relaxed text-neutral-700 dark:text-neutral-300 [&_.csl-bib-body]:flex [&_.csl-bib-body]:flex-col [&_.csl-bib-body]:gap-y-2 [&_.csl-entry]:pl-4 [&_.csl-entry]:-indent-4"
-							/>
-						) : (
-							<div className="grid place-items-center py-6 text-sm/relaxed text-neutral-700 dark:text-neutral-300">
-								No entries found for {year} in your zotero collection.
-							</div>
-						)}
+						<ErrorBoundary
+							fallback={
+								<p className="text-sm text-muted">Failed to retrieve publications from zotero.</p>
+							}
+						>
+							<Suspense fallback={<p className="text-sm text-muted">Loading...</p>}>
+								<PublicationsSection year={year} zoteroPromise={zoteroPromise} />
+							</Suspense>
+						</ErrorBoundary>
 					</div>
 
 					<hr />
@@ -331,5 +312,86 @@ function ConfirmationForm(props: ConfirmationFormProps) {
 					: null}
 			</FormErrorMessage>
 		</Form>
+	);
+}
+
+interface ResourcesSectionProps {
+	resourcesPromise: Promise<
+		Array<{
+			id: string;
+			label: string;
+			type: "Core service" | "Software" | "Service";
+			accessibleAt: Array<string>;
+		}>
+	>;
+}
+
+function ResourcesSection(props: Readonly<ResourcesSectionProps>): ReactNode {
+	const { resourcesPromise } = props;
+
+	const resources = use(resourcesPromise);
+
+	if (resources.length === 0) {
+		return (
+			<div className="grid place-items-center py-6 text-sm/relaxed text-neutral-700 dark:text-neutral-300">
+				No resources found in sshoc marketplace.
+			</div>
+		);
+	}
+
+	return (
+		<div className="max-w-(--breakpoint-md) text-sm/relaxed text-neutral-700 dark:text-neutral-300 [&_.csl-bib-body]:flex [&_.csl-bib-body]:flex-col [&_.csl-bib-body]:gap-y-2 [&_.csl-entry]:pl-4 [&_.csl-entry]:-indent-4">
+			<ul className="flex flex-col gap-y-1.5" role="list">
+				{resources.map((resource) => {
+					return (
+						<li key={resource.id}>
+							<div>
+								<strong>{resource.label}</strong>({resource.type})
+							</div>
+							{resource.accessibleAt.length > 0 ? (
+								<div className="flex flex-wrap gap-x-4 gap-y-0.5 text-neutral-600 text-sm dark:text-neutral-400">
+									{resource.accessibleAt.map((url) => {
+										return (
+											<a key={url} href={url}>
+												{url}
+											</a>
+										);
+									})}
+								</div>
+							) : null}
+						</li>
+					);
+				})}
+			</ul>
+		</div>
+	);
+}
+
+interface PublicationsSectionProps {
+	year: number;
+	zoteroPromise: Promise<{ bibliography: string; items: Array<ZoteroItem> }>;
+}
+
+function PublicationsSection(props: Readonly<PublicationsSectionProps>): ReactNode {
+	const { year, zoteroPromise } = props;
+
+	const { bibliography, items } = use(zoteroPromise);
+
+	const total = items.length;
+
+	if (total === 0) {
+		return (
+			<div className="grid place-items-center py-6 text-sm/relaxed text-neutral-700 dark:text-neutral-300">
+				No entries found for {year} in your zotero collection.
+			</div>
+		);
+	}
+
+	return (
+		<div
+			// eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml
+			dangerouslySetInnerHTML={{ __html: bibliography }}
+			className="max-w-(--breakpoint-md) text-sm/relaxed text-neutral-700 dark:text-neutral-300 [&_.csl-bib-body]:flex [&_.csl-bib-body]:flex-col [&_.csl-bib-body]:gap-y-2 [&_.csl-entry]:pl-4 [&_.csl-entry]:-indent-4"
+		/>
 	);
 }
