@@ -19,7 +19,7 @@ const QuestionsSchema = v.object({
 	items: v.array(
 		v.object({
 			question: v.string(),
-			answer: v.string(),
+			answer: v.optional(v.string(), ""),
 		}),
 	),
 });
