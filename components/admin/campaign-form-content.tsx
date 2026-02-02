@@ -1,19 +1,33 @@
 "use client";
 
-import { EventSize, OutreachType, type RoleType, ServiceSize } from "@prisma/client";
-import { type ReactNode, useActionState, useId } from "react";
+import { EventSize, OutreachType, type Prisma, type RoleType, ServiceSize } from "@prisma/client";
+import { type ReactNode, useActionState, useId, useState } from "react";
+import * as v from "valibot";
 
 import { SubmitButton } from "@/components/submit-button";
 import { NumberInputField } from "@/components/ui/blocks/number-input-field";
-import { TextAreaField } from "@/components/ui/blocks/text-area-field";
+import { TiptapEditor } from "@/components/ui/blocks/tiptap-editor";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
 import { createCampaignAction } from "@/lib/actions/admin/create-campaign";
 import { createKey } from "@/lib/create-key";
 
+import { Button } from "../ui/button";
+
+const QuestionsSchema = v.object({
+	items: v.array(
+		v.object({
+			question: v.string(),
+			answer: v.string(),
+		}),
+	),
+});
+
 interface AdminCampaignFormContentProps {
 	countries: Array<{ id: string; name: string; previousOperationalCostThreshold: number }>;
+	facultativeQuestionsListTemplate?: Prisma.JsonValue;
+	narrativeQuestionsListTemplate?: Prisma.JsonValue;
 	previousEventSizeValues: Record<
 		EventSize,
 		{ id: string; type: EventSize; annualValue: number }
@@ -36,6 +50,8 @@ interface AdminCampaignFormContentProps {
 export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): ReactNode {
 	const {
 		countries,
+		facultativeQuestionsListTemplate,
+		narrativeQuestionsListTemplate,
 		previousEventSizeValues,
 		previousOutreachTypeValues,
 		previousRoleTypeValues,
@@ -51,6 +67,18 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 	const operationalCostThresholdsSectionId = useId();
 	const workingGroupReportingSectionId = useId();
 
+	const [facultativeQuestions, setFacultativeQuestions] = useState(() => {
+		return facultativeQuestionsListTemplate
+			? v.parse(QuestionsSchema, facultativeQuestionsListTemplate).items
+			: [];
+	});
+
+	const [narrativeQuestions, setNarrativeQuestions] = useState(() => {
+		return narrativeQuestionsListTemplate
+			? v.parse(QuestionsSchema, narrativeQuestionsListTemplate).items
+			: [];
+	});
+
 	return (
 		<Form
 			action={formAction}
@@ -61,28 +89,80 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 
 			<section
 				aria-labelledby={workingGroupReportingSectionId}
-				className="flex flex-col gap-y-4"
+				className="flex flex-col gap-y-8"
 				role="group"
 			>
 				<h2 className="text-lg font-semibold" id={workingGroupReportingSectionId}>
 					Working groups
 				</h2>
 
-				<TextAreaField
-					description="Questions for working group reporting"
-					isRequired={true}
-					label="Narrative questions"
-					name="narrativeReport"
-					rows={12}
-				/>
+				<section className="flex flex-col gap-y-4">
+					<h3 className="text-lg font-semibold">Facultative questions</h3>
 
-				<TextAreaField
-					description="Questions for working group reporting"
-					isRequired={true}
-					label="Facultative questions"
-					name="facultativeQuestions"
-					rows={12}
-				/>
+					<div className="flex flex-col gap-y-4">
+						{facultativeQuestions.map((item, index) => {
+							return (
+								<div key={index} className="flex flex-col gap-y-1">
+									<TiptapEditor
+										defaultContent={item.question}
+										description="Question for working group reporting"
+										label={`${String(index + 1)}. facultative question`}
+										name={`facultativeQuestions.${String(index)}.question`}
+									/>
+									<input
+										name={`facultativeQuestions.${String(index)}.answer`}
+										type="hidden"
+										value=""
+									/>
+								</div>
+							);
+						})}
+					</div>
+
+					<Button
+						onPress={() => {
+							setFacultativeQuestions((facultativeQuestions) => {
+								return [...facultativeQuestions, { question: "", answer: "" }];
+							});
+						}}
+					>
+						Add
+					</Button>
+				</section>
+
+				<section className="flex flex-col gap-y-4">
+					<h3 className="text-lg font-semibold">Narrative questions</h3>
+
+					<div className="flex flex-col gap-y-4">
+						{narrativeQuestions.map((item, index) => {
+							return (
+								<div key={index} className="flex flex-col gap-y-1">
+									<TiptapEditor
+										defaultContent={item.question}
+										description="Question for working group reporting"
+										label={`${String(index + 1)}. narrative question`}
+										name={`narrativeQuestions.${String(index)}.question`}
+									/>
+									<input
+										name={`narrativeQuestions.${String(index)}.answer`}
+										type="hidden"
+										value=""
+									/>
+								</div>
+							);
+						})}
+					</div>
+
+					<Button
+						onPress={() => {
+							setNarrativeQuestions((narrativeQuestions) => {
+								return [...narrativeQuestions, { question: "", answer: "" }];
+							});
+						}}
+					>
+						Add
+					</Button>
+				</section>
 			</section>
 
 			<section
@@ -126,7 +206,8 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 							return (
 								<NumberInputField
 									key={eventSize}
-									defaultValue={previousEventSizeValues?.[eventSize].annualValue ?? 0}
+									// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+									defaultValue={previousEventSizeValues?.[eventSize]?.annualValue ?? 0}
 									formatOptions={{ style: "currency", currency: "EUR" }}
 									isRequired={true}
 									label={eventSize}
@@ -150,7 +231,8 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 							return (
 								<NumberInputField
 									key={outreachType}
-									defaultValue={previousOutreachTypeValues?.[outreachType].annualValue ?? 0}
+									// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+									defaultValue={previousOutreachTypeValues?.[outreachType]?.annualValue ?? 0}
 									formatOptions={{ style: "currency", currency: "EUR" }}
 									isRequired={true}
 									label={outreachType}
@@ -178,7 +260,8 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 							return (
 								<NumberInputField
 									key={roleType}
-									defaultValue={previousRoleTypeValues?.[roleType].annualValue ?? 0}
+									// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+									defaultValue={previousRoleTypeValues?.[roleType]?.annualValue ?? 0}
 									formatOptions={{ style: "currency", currency: "EUR" }}
 									isRequired={true}
 									label={roleType}
@@ -197,7 +280,8 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 							return (
 								<NumberInputField
 									key={serviceSizeType}
-									defaultValue={previousServiceSizeValues?.[serviceSizeType].annualValue ?? 0}
+									// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+									defaultValue={previousServiceSizeValues?.[serviceSizeType]?.annualValue ?? 0}
 									formatOptions={{ style: "currency", currency: "EUR" }}
 									isRequired={true}
 									label={serviceSizeType}

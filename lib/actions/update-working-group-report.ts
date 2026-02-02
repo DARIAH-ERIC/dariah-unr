@@ -12,8 +12,12 @@ import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 const formSchema = z.object({
 	workingGroupReportId: z.string(),
-	facultativeQuestions: z.string(),
-	narrativeReport: z.string(),
+	facultativeQuestions: z.array(
+		z.object({ question: z.string(), answer: z.string().optional().default("") }),
+	),
+	narrativeQuestions: z.array(
+		z.object({ question: z.string(), answer: z.string().optional().default("") }),
+	),
 	members: z.coerce.number(),
 	comments: z.string().optional(),
 	workingGroupEvents: z
@@ -76,7 +80,7 @@ export async function updateWorkingGroupReportAction(
 		const {
 			comments,
 			facultativeQuestions,
-			narrativeReport,
+			narrativeQuestions,
 			members,
 			workingGroupEvents = [],
 			workingGroupReportId,
@@ -84,8 +88,8 @@ export async function updateWorkingGroupReportAction(
 
 		await updateWorkingGroupReport({
 			comments,
-			facultativeQuestions,
-			narrativeReport,
+			facultativeQuestionsList: { items: facultativeQuestions },
+			narrativeQuestionsList: { items: narrativeQuestions },
 			members,
 			workingGroupEvents,
 			workingGroupReportId,

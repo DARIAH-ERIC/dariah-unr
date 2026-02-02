@@ -9,6 +9,7 @@ import {
 } from "@prisma/client";
 import { InfoIcon, Trash2Icon } from "lucide-react";
 import { type ReactNode, startTransition, Suspense, use, useActionState, useState } from "react";
+import * as v from "valibot";
 
 import { ErrorBoundary } from "@/components/error-boundary";
 import { SubmitButton } from "@/components/submit-button";
@@ -17,6 +18,7 @@ import { NumberInputField } from "@/components/ui/blocks/number-input-field";
 import { SelectField, SelectItem } from "@/components/ui/blocks/select-field";
 import { TextAreaField } from "@/components/ui/blocks/text-area-field";
 import { TextInputField } from "@/components/ui/blocks/text-input-field";
+import { TiptapEditor } from "@/components/ui/blocks/tiptap-editor";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
@@ -28,6 +30,15 @@ import { createKey } from "@/lib/create-key";
 import { workingGroupReportCommentsSchema } from "@/lib/schemas/report";
 import { toDateValue } from "@/lib/to-date-value";
 import type { ZoteroItem } from "@/lib/zotero";
+
+const QuestionsSchema = v.object({
+	items: v.array(
+		v.object({
+			question: v.string(),
+			answer: v.optional(v.string(), ""),
+		}),
+	),
+});
 
 interface WorkingGroupReportFormContentParams {
 	confirmationInfo: string;
@@ -80,6 +91,13 @@ export function WorkingGroupReportFormContent(
 		workingGroupReport.workingGroupEvents,
 	);
 
+	const { items: facultativeQuestions } = workingGroupReport.facultativeQuestionsList
+		? v.parse(QuestionsSchema, workingGroupReport.facultativeQuestionsList)
+		: { items: [] };
+	const { items: narrativeQuestions } = workingGroupReport.narrativeQuestionsList
+		? v.parse(QuestionsSchema, workingGroupReport.narrativeQuestionsList)
+		: { items: [] };
+
 	return (
 		<div className="grid gap-6 content-start">
 			<Form
@@ -104,6 +122,8 @@ export function WorkingGroupReportFormContent(
 						label="Members"
 						name="members"
 					/>
+
+					<hr />
 
 					<div className="flex flex-col gap-4">
 						<h2 className="font-semibold text-lg">Events</h2>
@@ -188,21 +208,67 @@ export function WorkingGroupReportFormContent(
 						</div>
 					</div>
 
-					<TextAreaField
-						defaultValue={workingGroupReport.narrativeReport}
-						isRequired={true}
-						label="Narrative questions"
-						name="narrativeReport"
-						rows={12}
-					/>
+					<hr />
 
-					<TextAreaField
-						defaultValue={workingGroupReport.facultativeQuestions}
-						isRequired={true}
-						label="Facultative questions"
-						name="facultativeQuestions"
-						rows={12}
-					/>
+					<section className="flex flex-col gap-y-4">
+						<h3 className="font-semibold text-lg">Facultative questions</h3>
+
+						<div className="flex flex-col gap-y-6">
+							{facultativeQuestions.map((item, index) => {
+								return (
+									<div key={index} className="flex flex-col gap-y-2">
+										<div
+											// eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml
+											dangerouslySetInnerHTML={{ __html: item.question }}
+											className="prose prose-sm max-w-2xl!"
+										/>
+										<input
+											name={`facultativeQuestions.${String(index)}.question`}
+											type="hidden"
+											value={item.question}
+										/>
+										<TiptapEditor
+											defaultContent={item.answer}
+											isLabelVisible={false}
+											label="Answer"
+											name={`facultativeQuestions.${String(index)}.answer`}
+										/>
+									</div>
+								);
+							})}
+						</div>
+					</section>
+
+					<hr />
+
+					<section className="flex flex-col gap-y-4">
+						<h3 className="font-semibold text-lg">Narrative questions</h3>
+
+						<div className="flex flex-col gap-y-6">
+							{narrativeQuestions.map((item, index) => {
+								return (
+									<div key={index} className="flex flex-col gap-y-2">
+										<div
+											// eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml
+											dangerouslySetInnerHTML={{ __html: item.question }}
+											className="prose prose-sm max-w-2xl!"
+										/>
+										<input
+											name={`narrativeQuestions.${String(index)}.question`}
+											type="hidden"
+											value={item.question}
+										/>
+										<TiptapEditor
+											defaultContent={item.answer}
+											isLabelVisible={false}
+											label="Answer"
+											name={`narrativeQuestions.${String(index)}.answer`}
+										/>
+									</div>
+								);
+							})}
+						</div>
+					</section>
 
 					<hr />
 

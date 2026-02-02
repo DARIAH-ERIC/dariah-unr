@@ -111,6 +111,8 @@ export default async function DashboardAdminCampaignPage(
 			<section className="grid gap-y-8">
 				<AdminCampaignFormContent
 					countries={countries}
+					facultativeQuestionsListTemplate={currentCampaign?.facultativeQuestionsListTemplate}
+					narrativeQuestionsListTemplate={currentCampaign?.narrativeQuestionsListTemplate}
 					previousEventSizeValues={
 						campaignData != null
 							? keyBy(campaignData.eventSizeValues, (value) => {

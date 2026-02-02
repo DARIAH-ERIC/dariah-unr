@@ -10,10 +10,11 @@ import { type Editor, EditorContent, useEditor, useEditorState } from "@tiptap/r
 // eslint-disable-next-line import-x/no-named-as-default
 import DOMPurify from "dompurify";
 import { BoldIcon, LinkIcon, UnlinkIcon } from "lucide-react";
-import { Fragment, type ReactNode, useState } from "react";
+import { Fragment, type ReactNode, useId, useState } from "react";
 import { DialogTrigger, Group } from "react-aria-components";
 import { z } from "zod";
 
+import { RequiredIndicator } from "@/components/ui/blocks/required-indicator";
 import { TextInputField } from "@/components/ui/blocks/text-input-field";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +24,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
+import { FieldDescription } from "@/components/ui/field-description";
 import { IconButton } from "@/components/ui/icon-button";
 import { IconToggleButton } from "@/components/ui/icon-toggle-button";
 import { Label } from "@/components/ui/label";
@@ -54,6 +56,9 @@ interface TipTapLink {
 
 interface TipTapEditorProps {
 	defaultContent: string | null | undefined;
+	description?: string;
+	isLabelVisible?: boolean;
+	isRequired?: boolean;
 	label: string;
 	name: string;
 }
@@ -61,7 +66,7 @@ interface TipTapEditorProps {
 const allowedProtocols = ["http:", "https:", "mailto:"];
 
 export function TiptapEditor(props: TipTapEditorProps): ReactNode {
-	const { defaultContent, label, name } = props;
+	const { defaultContent, description, isLabelVisible = true, isRequired, label, name } = props;
 
 	const [isOpen, setIsOpen] = useState(false);
 
@@ -120,10 +125,21 @@ export function TiptapEditor(props: TipTapEditorProps): ReactNode {
 		},
 	});
 
+	const editorId = useId();
+	const labelId = useId();
+	const descriptionId = useId();
+
 	return (
 		<>
-			<Label>{label}</Label>
-			<Group aria-label="rich text editor">
+			<Label className={isLabelVisible ? undefined : "sr-only"} id={labelId}>
+				{label}
+				<RequiredIndicator isVisible={isRequired} />
+			</Label>
+			<Group
+				aria-describedby={description != null ? descriptionId : undefined}
+				aria-labelledby={labelId}
+				id={editorId}
+			>
 				<Group className="flex gap-x-1.5">
 					<IconToggleButton
 						aria-label={"toggle-bold"}
@@ -153,9 +169,12 @@ export function TiptapEditor(props: TipTapEditorProps): ReactNode {
 						<span className="sr-only">remove link</span>
 					</IconButton>
 				</Group>
-				<EditorContent className="mt-2" editor={editor} />
-				<input name={name} type="hidden" value={String(content)} />
+				<EditorContent className="mt-2 **:data-placeholder:text-muted" editor={editor} />
+				<input name={name} type="hidden" value={content ?? ""} />
 			</Group>
+			{description != null ? (
+				<FieldDescription id={descriptionId}>{description}</FieldDescription>
+			) : null}
 		</>
 	);
 }
