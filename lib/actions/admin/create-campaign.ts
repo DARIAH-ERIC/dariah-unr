@@ -127,7 +127,12 @@ export async function createCampaignAction(
 		// TODO: wrap in transaction
 
 		const serviceSizeThresholds = { small: 7000, large: 170000 };
-		const reportCampaign = await createReportCampaign({ serviceSizeThresholds, year });
+		const reportCampaign = await createReportCampaign({
+			facultativeQuestionsListTemplate: { items: facultativeQuestions },
+			narrativeQuestionsListTemplate: { items: narrativeQuestions },
+			serviceSizeThresholds,
+			year,
+		});
 
 		for (const [type, annualValue] of Object.entries(eventSizeValues)) {
 			await createEventSizeValue({
