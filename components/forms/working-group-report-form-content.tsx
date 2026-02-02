@@ -35,7 +35,7 @@ const QuestionsSchema = v.object({
 	items: v.array(
 		v.object({
 			question: v.string(),
-			answer: v.string(),
+			answer: v.optional(v.string(), ""),
 		}),
 	),
 });
@@ -123,6 +123,8 @@ export function WorkingGroupReportFormContent(
 						name="members"
 					/>
 
+					<hr />
+
 					<div className="flex flex-col gap-4">
 						<h2 className="font-semibold text-lg">Events</h2>
 
@@ -206,15 +208,20 @@ export function WorkingGroupReportFormContent(
 						</div>
 					</div>
 
-					<section>
-						<h3>Facultative questions</h3>
+					<hr />
 
-						<div>
+					<section className="flex flex-col gap-y-4">
+						<h3 className="font-semibold text-lg">Facultative questions</h3>
+
+						<div className="flex flex-col gap-y-6">
 							{facultativeQuestions.map((item, index) => {
 								return (
-									<div key={index}>
-										{/* eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml */}
-										<div dangerouslySetInnerHTML={{ __html: item.question }} />
+									<div key={index} className="flex flex-col gap-y-2">
+										<div
+											// eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml
+											dangerouslySetInnerHTML={{ __html: item.question }}
+											className="prose prose-sm max-w-2xl!"
+										/>
 										<input
 											name={`facultativeQuestions.${String(index)}.question`}
 											type="hidden"
@@ -222,7 +229,7 @@ export function WorkingGroupReportFormContent(
 										/>
 										<TiptapEditor
 											defaultContent={item.answer}
-											description="Question for working group reporting"
+											isLabelVisible={false}
 											label="Answer"
 											name={`facultativeQuestions.${String(index)}.answer`}
 										/>
@@ -232,15 +239,20 @@ export function WorkingGroupReportFormContent(
 						</div>
 					</section>
 
-					<section>
-						<h3>Narrative questions</h3>
+					<hr />
 
-						<div>
+					<section className="flex flex-col gap-y-4">
+						<h3 className="font-semibold text-lg">Narrative questions</h3>
+
+						<div className="flex flex-col gap-y-6">
 							{narrativeQuestions.map((item, index) => {
 								return (
-									<div key={index}>
-										{/* eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml */}
-										<div dangerouslySetInnerHTML={{ __html: item.question }} />
+									<div key={index} className="flex flex-col gap-y-2">
+										<div
+											// eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml
+											dangerouslySetInnerHTML={{ __html: item.question }}
+											className="prose prose-sm max-w-2xl!"
+										/>
 										<input
 											name={`narrativeQuestions.${String(index)}.question`}
 											type="hidden"
@@ -248,7 +260,7 @@ export function WorkingGroupReportFormContent(
 										/>
 										<TiptapEditor
 											defaultContent={item.answer}
-											description="Question for working group reporting"
+											isLabelVisible={false}
 											label="Answer"
 											name={`narrativeQuestions.${String(index)}.answer`}
 										/>
@@ -257,18 +269,6 @@ export function WorkingGroupReportFormContent(
 							})}
 						</div>
 					</section>
-
-					<TiptapEditor
-						defaultContent={workingGroupReport.narrativeReport}
-						label="Narrative questions"
-						name="narrativeReport"
-					/>
-
-					<TiptapEditor
-						defaultContent={workingGroupReport.facultativeQuestions}
-						label="Facultative questions"
-						name="facultativeQuestions"
-					/>
 
 					<hr />
 

@@ -569,9 +569,11 @@ model WorkingGroupReport {
   id String @id @default(uuid()) @db.Uuid
 
   comments                 Json?
+  // @deprecated
   facultativeQuestions     String?      @map(name: "facultative_questions")
   facultativeQuestionsList Json?        @map(name: "facultative_questions_list")
   members                  Int?
+  // @deprecated
   narrativeReport          String?      @map(name: "narrative_report")
   narrativeQuestionsList   Json?        @map(name: "narrative_questions_list")
   status                   ReportStatus @default(draft)
@@ -738,8 +740,10 @@ enum ReportCampaignStatus {
 model ReportCampaign {
   id String @id @default(uuid()) @db.Uuid
 
+  // @deprecated
   facultativeQuestionsTemplate     String?              @map(name: "facultative_questions_template")
   facultativeQuestionsListTemplate Json?                @map(name: "facultative_questions_list_template")
+  // @deprecated
   narrativeReportTemplate          String?              @map(name: "narrative_report_template")
   narrativeQuestionsListTemplate   Json?                @map(name: "narrative_questions_list_template")
   serviceSizeThresholds            Json                 @map(name: "service_size_thresholds") // could become a separate thing

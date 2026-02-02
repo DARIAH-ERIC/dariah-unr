@@ -57,6 +57,7 @@ interface TipTapLink {
 interface TipTapEditorProps {
 	defaultContent: string | null | undefined;
 	description?: string;
+	isLabelVisible?: boolean;
 	isRequired?: boolean;
 	label: string;
 	name: string;
@@ -65,7 +66,7 @@ interface TipTapEditorProps {
 const allowedProtocols = ["http:", "https:", "mailto:"];
 
 export function TiptapEditor(props: TipTapEditorProps): ReactNode {
-	const { defaultContent, description, isRequired, label, name } = props;
+	const { defaultContent, description, isLabelVisible = true, isRequired, label, name } = props;
 
 	const [isOpen, setIsOpen] = useState(false);
 
@@ -130,7 +131,7 @@ export function TiptapEditor(props: TipTapEditorProps): ReactNode {
 
 	return (
 		<>
-			<Label id={labelId}>
+			<Label className={isLabelVisible ? undefined : "sr-only"} id={labelId}>
 				{label}
 				<RequiredIndicator isVisible={isRequired} />
 			</Label>
@@ -168,7 +169,7 @@ export function TiptapEditor(props: TipTapEditorProps): ReactNode {
 						<span className="sr-only">remove link</span>
 					</IconButton>
 				</Group>
-				<EditorContent className="mt-2" editor={editor} />
+				<EditorContent className="mt-2 **:data-placeholder:text-muted" editor={editor} />
 				<input name={name} type="hidden" value={content ?? ""} />
 			</Group>
 			{description != null ? (

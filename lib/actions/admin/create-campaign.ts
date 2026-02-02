@@ -24,8 +24,8 @@ import { redirect } from "@/lib/navigation/navigation";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 const formSchema = z.object({
-	facultativeQuestions: z.string().nonempty(),
-	narrativeReport: z.string().nonempty(),
+	facultativeQuestions: z.array(z.object({ question: z.string() })),
+	narrativeQuestions: z.array(z.object({ question: z.string() })),
 	/** Maps country id to monetary value. */
 	operationalCostThresholds: z.record(z.string(), z.coerce.number().min(0)),
 	/** Maps type to monetary value. */
@@ -114,7 +114,7 @@ export async function createCampaignAction(
 
 	const {
 		facultativeQuestions,
-		narrativeReport,
+		narrativeQuestions,
 		operationalCostThresholds,
 		year,
 		eventSizeValues,
@@ -175,8 +175,8 @@ export async function createCampaignAction(
 
 		for (const workingGroup of workingGroups) {
 			await createReportForWorkingGroupId({
-				facultativeQuestions,
-				narrativeReport,
+				facultativeQuestionsList: { items: facultativeQuestions },
+				narrativeQuestionsList: { items: narrativeQuestions },
 				workingGroupId: workingGroup.id,
 				reportCampaignId: reportCampaign.id,
 			});

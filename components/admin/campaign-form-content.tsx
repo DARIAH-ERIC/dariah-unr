@@ -1,7 +1,7 @@
 "use client";
 
 import { EventSize, OutreachType, type Prisma, type RoleType, ServiceSize } from "@prisma/client";
-import { type ReactNode, useActionState, useId } from "react";
+import { type ReactNode, useActionState, useId, useState } from "react";
 import * as v from "valibot";
 
 import { SubmitButton } from "@/components/submit-button";
@@ -12,6 +12,8 @@ import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
 import { createCampaignAction } from "@/lib/actions/admin/create-campaign";
 import { createKey } from "@/lib/create-key";
+
+import { Button } from "../ui/button";
 
 const QuestionsSchema = v.object({
 	items: v.array(
@@ -65,12 +67,17 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 	const operationalCostThresholdsSectionId = useId();
 	const workingGroupReportingSectionId = useId();
 
-	const { items: facultativeQuestions } = facultativeQuestionsListTemplate
-		? v.parse(QuestionsSchema, facultativeQuestionsListTemplate)
-		: { items: [] };
-	const { items: narrativeQuestions } = narrativeQuestionsListTemplate
-		? v.parse(QuestionsSchema, narrativeQuestionsListTemplate)
-		: { items: [] };
+	const [facultativeQuestions, setFacultativeQuestions] = useState(() => {
+		return facultativeQuestionsListTemplate
+			? v.parse(QuestionsSchema, facultativeQuestionsListTemplate).items
+			: [];
+	});
+
+	const [narrativeQuestions, setNarrativeQuestions] = useState(() => {
+		return narrativeQuestionsListTemplate
+			? v.parse(QuestionsSchema, narrativeQuestionsListTemplate).items
+			: [];
+	});
 
 	return (
 		<Form
@@ -82,24 +89,24 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 
 			<section
 				aria-labelledby={workingGroupReportingSectionId}
-				className="flex flex-col gap-y-4"
+				className="flex flex-col gap-y-8"
 				role="group"
 			>
 				<h2 className="text-lg font-semibold" id={workingGroupReportingSectionId}>
 					Working groups
 				</h2>
 
-				<section>
-					<h3>Facultative questions</h3>
+				<section className="flex flex-col gap-y-4">
+					<h3 className="text-lg font-semibold">Facultative questions</h3>
 
-					<div>
+					<div className="flex flex-col gap-y-4">
 						{facultativeQuestions.map((item, index) => {
 							return (
-								<div key={index}>
+								<div key={index} className="flex flex-col gap-y-1">
 									<TiptapEditor
 										defaultContent={item.question}
 										description="Question for working group reporting"
-										label="Question"
+										label={`${String(index + 1)}. facultative question`}
 										name={`facultativeQuestions.${String(index)}.question`}
 									/>
 									<input
@@ -111,19 +118,29 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 							);
 						})}
 					</div>
+
+					<Button
+						onPress={() => {
+							setFacultativeQuestions((facultativeQuestions) => {
+								return [...facultativeQuestions, { question: "", answer: "" }];
+							});
+						}}
+					>
+						Add
+					</Button>
 				</section>
 
-				<section>
-					<h3>Narrative questions</h3>
+				<section className="flex flex-col gap-y-4">
+					<h3 className="text-lg font-semibold">Narrative questions</h3>
 
-					<div>
+					<div className="flex flex-col gap-y-4">
 						{narrativeQuestions.map((item, index) => {
 							return (
-								<div key={index}>
+								<div key={index} className="flex flex-col gap-y-1">
 									<TiptapEditor
 										defaultContent={item.question}
 										description="Question for working group reporting"
-										label="Question"
+										label={`${String(index + 1)}. narrative question`}
 										name={`narrativeQuestions.${String(index)}.question`}
 									/>
 									<input
@@ -135,6 +152,16 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 							);
 						})}
 					</div>
+
+					<Button
+						onPress={() => {
+							setNarrativeQuestions((narrativeQuestions) => {
+								return [...narrativeQuestions, { question: "", answer: "" }];
+							});
+						}}
+					>
+						Add
+					</Button>
 				</section>
 			</section>
 
@@ -179,7 +206,8 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 							return (
 								<NumberInputField
 									key={eventSize}
-									defaultValue={previousEventSizeValues?.[eventSize].annualValue ?? 0}
+									// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+									defaultValue={previousEventSizeValues?.[eventSize]?.annualValue ?? 0}
 									formatOptions={{ style: "currency", currency: "EUR" }}
 									isRequired={true}
 									label={eventSize}
@@ -203,7 +231,8 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 							return (
 								<NumberInputField
 									key={outreachType}
-									defaultValue={previousOutreachTypeValues?.[outreachType].annualValue ?? 0}
+									// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+									defaultValue={previousOutreachTypeValues?.[outreachType]?.annualValue ?? 0}
 									formatOptions={{ style: "currency", currency: "EUR" }}
 									isRequired={true}
 									label={outreachType}
@@ -231,7 +260,8 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 							return (
 								<NumberInputField
 									key={roleType}
-									defaultValue={previousRoleTypeValues?.[roleType].annualValue ?? 0}
+									// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+									defaultValue={previousRoleTypeValues?.[roleType]?.annualValue ?? 0}
 									formatOptions={{ style: "currency", currency: "EUR" }}
 									isRequired={true}
 									label={roleType}
@@ -250,7 +280,8 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 							return (
 								<NumberInputField
 									key={serviceSizeType}
-									defaultValue={previousServiceSizeValues?.[serviceSizeType].annualValue ?? 0}
+									// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+									defaultValue={previousServiceSizeValues?.[serviceSizeType]?.annualValue ?? 0}
 									formatOptions={{ style: "currency", currency: "EUR" }}
 									isRequired={true}
 									label={serviceSizeType}

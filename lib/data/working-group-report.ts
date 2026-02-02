@@ -8,19 +8,20 @@ import type {
 import { db } from "@/lib/db";
 
 interface CreateReportForWorkingGroupIdParams {
-	facultativeQuestions: WorkingGroupReport["facultativeQuestions"];
-	narrativeReport: WorkingGroupReport["narrativeReport"];
+	facultativeQuestionsList: Prisma.InputJsonValue;
+	narrativeQuestionsList: Prisma.InputJsonValue;
 	workingGroupId: WorkingGroup["id"];
 	reportCampaignId: string;
 }
 
 export function createReportForWorkingGroupId(params: CreateReportForWorkingGroupIdParams) {
-	const { facultativeQuestions, narrativeReport, workingGroupId, reportCampaignId } = params;
+	const { facultativeQuestionsList, narrativeQuestionsList, workingGroupId, reportCampaignId } =
+		params;
 
 	return db.workingGroupReport.upsert({
 		create: {
-			facultativeQuestions,
-			narrativeReport,
+			facultativeQuestionsList,
+			narrativeQuestionsList,
 			reportCampaign: {
 				connect: {
 					id: reportCampaignId,
@@ -33,8 +34,8 @@ export function createReportForWorkingGroupId(params: CreateReportForWorkingGrou
 			},
 		},
 		update: {
-			facultativeQuestions,
-			narrativeReport,
+			facultativeQuestionsList,
+			narrativeQuestionsList,
 			reportCampaign: {
 				connect: {
 					id: reportCampaignId,
@@ -137,8 +138,8 @@ export function getWorkingGroupReport(params: GetWorkingGroupReportParams) {
 }
 
 interface UpdateWorkingGroupReportParams {
-	facultativeQuestions: Prisma.InputJsonValue;
-	narrativeQuestions: Prisma.InputJsonValue;
+	facultativeQuestionsList: Prisma.InputJsonValue;
+	narrativeQuestionsList: Prisma.InputJsonValue;
 	workingGroupReportId: string;
 	comments: string | undefined;
 	members: number;
@@ -154,10 +155,10 @@ interface UpdateWorkingGroupReportParams {
 export function updateWorkingGroupReport(params: UpdateWorkingGroupReportParams) {
 	const {
 		comments,
-		facultativeQuestions,
+		facultativeQuestionsList,
 		members,
 		workingGroupEvents,
-		narrativeQuestions,
+		narrativeQuestionsList,
 		workingGroupReportId,
 	} = params;
 
@@ -166,8 +167,8 @@ export function updateWorkingGroupReport(params: UpdateWorkingGroupReportParams)
 			id: workingGroupReportId,
 		},
 		data: {
-			facultativeQuestionsList: facultativeQuestions,
-			narrativeQuestionsList: narrativeQuestions,
+			facultativeQuestionsList,
+			narrativeQuestionsList,
 			members,
 			comments: { comments },
 			workingGroupEvents: {
