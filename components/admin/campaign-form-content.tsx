@@ -1,7 +1,8 @@
 "use client";
 
-import { EventSize, OutreachType, type RoleType, ServiceSize } from "@prisma/client";
+import { EventSize, OutreachType, type Prisma, type RoleType, ServiceSize } from "@prisma/client";
 import { type ReactNode, useActionState, useId } from "react";
+import * as v from "valibot";
 
 import { SubmitButton } from "@/components/submit-button";
 import { NumberInputField } from "@/components/ui/blocks/number-input-field";
@@ -12,10 +13,19 @@ import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success"
 import { createCampaignAction } from "@/lib/actions/admin/create-campaign";
 import { createKey } from "@/lib/create-key";
 
+const QuestionsSchema = v.object({
+	items: v.array(
+		v.object({
+			question: v.string(),
+			answer: v.string(),
+		}),
+	),
+});
+
 interface AdminCampaignFormContentProps {
 	countries: Array<{ id: string; name: string; previousOperationalCostThreshold: number }>;
-	facultativeQuestionsTemplate?: string | null;
-	narrativeReportTemplate?: string | null;
+	facultativeQuestionsListTemplate?: Prisma.JsonValue;
+	narrativeQuestionsListTemplate?: Prisma.JsonValue;
 	previousEventSizeValues: Record<
 		EventSize,
 		{ id: string; type: EventSize; annualValue: number }
@@ -38,8 +48,8 @@ interface AdminCampaignFormContentProps {
 export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): ReactNode {
 	const {
 		countries,
-		facultativeQuestionsTemplate,
-		narrativeReportTemplate,
+		facultativeQuestionsListTemplate,
+		narrativeQuestionsListTemplate,
 		previousEventSizeValues,
 		previousOutreachTypeValues,
 		previousRoleTypeValues,
@@ -54,6 +64,13 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 	const annualValuesSectionId = useId();
 	const operationalCostThresholdsSectionId = useId();
 	const workingGroupReportingSectionId = useId();
+
+	const { items: facultativeQuestions } = facultativeQuestionsListTemplate
+		? v.parse(QuestionsSchema, facultativeQuestionsListTemplate)
+		: { items: [] };
+	const { items: narrativeQuestions } = narrativeQuestionsListTemplate
+		? v.parse(QuestionsSchema, narrativeQuestionsListTemplate)
+		: { items: [] };
 
 	return (
 		<Form
@@ -72,19 +89,53 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 					Working groups
 				</h2>
 
-				<TiptapEditor
-					defaultContent={facultativeQuestionsTemplate ?? ""}
-					description="Questions for working group reporting"
-					label="Narrative questions"
-					name="narrativeReport"
-				/>
+				<section>
+					<h3>Facultative questions</h3>
 
-				<TiptapEditor
-					defaultContent={narrativeReportTemplate ?? ""}
-					description="Questions for working group reporting"
-					label="Facultative questions"
-					name="facultativeQuestions"
-				/>
+					<div>
+						{facultativeQuestions.map((item, index) => {
+							return (
+								<div key={index}>
+									<TiptapEditor
+										defaultContent={item.question}
+										description="Question for working group reporting"
+										label="Question"
+										name={`facultativeQuestions.${String(index)}.question`}
+									/>
+									<input
+										name={`facultativeQuestions.${String(index)}.answer`}
+										type="hidden"
+										value=""
+									/>
+								</div>
+							);
+						})}
+					</div>
+				</section>
+
+				<section>
+					<h3>Narrative questions</h3>
+
+					<div>
+						{narrativeQuestions.map((item, index) => {
+							return (
+								<div key={index}>
+									<TiptapEditor
+										defaultContent={item.question}
+										description="Question for working group reporting"
+										label="Question"
+										name={`narrativeQuestions.${String(index)}.question`}
+									/>
+									<input
+										name={`narrativeQuestions.${String(index)}.answer`}
+										type="hidden"
+										value=""
+									/>
+								</div>
+							);
+						})}
+					</div>
+				</section>
 			</section>
 
 			<section

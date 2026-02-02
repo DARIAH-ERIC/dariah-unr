@@ -9,6 +9,7 @@ import {
 } from "@prisma/client";
 import { InfoIcon, Trash2Icon } from "lucide-react";
 import { type ReactNode, startTransition, Suspense, use, useActionState, useState } from "react";
+import * as v from "valibot";
 
 import { ErrorBoundary } from "@/components/error-boundary";
 import { SubmitButton } from "@/components/submit-button";
@@ -29,6 +30,15 @@ import { createKey } from "@/lib/create-key";
 import { workingGroupReportCommentsSchema } from "@/lib/schemas/report";
 import { toDateValue } from "@/lib/to-date-value";
 import type { ZoteroItem } from "@/lib/zotero";
+
+const QuestionsSchema = v.object({
+	items: v.array(
+		v.object({
+			question: v.string(),
+			answer: v.string(),
+		}),
+	),
+});
 
 interface WorkingGroupReportFormContentParams {
 	confirmationInfo: string;
@@ -80,6 +90,13 @@ export function WorkingGroupReportFormContent(
 	const [events, setEvents] = useState<Array<Partial<WorkingGroupEvent & { _id?: string }>>>(
 		workingGroupReport.workingGroupEvents,
 	);
+
+	const { items: facultativeQuestions } = workingGroupReport.facultativeQuestionsList
+		? v.parse(QuestionsSchema, workingGroupReport.facultativeQuestionsList)
+		: { items: [] };
+	const { items: narrativeQuestions } = workingGroupReport.narrativeQuestionsList
+		? v.parse(QuestionsSchema, workingGroupReport.narrativeQuestionsList)
+		: { items: [] };
 
 	return (
 		<div className="grid gap-6 content-start">
@@ -188,6 +205,58 @@ export function WorkingGroupReportFormContent(
 							</Button>
 						</div>
 					</div>
+
+					<section>
+						<h3>Facultative questions</h3>
+
+						<div>
+							{facultativeQuestions.map((item, index) => {
+								return (
+									<div key={index}>
+										{/* eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml */}
+										<div dangerouslySetInnerHTML={{ __html: item.question }} />
+										<input
+											name={`facultativeQuestions.${String(index)}.question`}
+											type="hidden"
+											value={item.question}
+										/>
+										<TiptapEditor
+											defaultContent={item.answer}
+											description="Question for working group reporting"
+											label="Answer"
+											name={`facultativeQuestions.${String(index)}.answer`}
+										/>
+									</div>
+								);
+							})}
+						</div>
+					</section>
+
+					<section>
+						<h3>Narrative questions</h3>
+
+						<div>
+							{narrativeQuestions.map((item, index) => {
+								return (
+									<div key={index}>
+										{/* eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml */}
+										<div dangerouslySetInnerHTML={{ __html: item.question }} />
+										<input
+											name={`narrativeQuestions.${String(index)}.question`}
+											type="hidden"
+											value={item.question}
+										/>
+										<TiptapEditor
+											defaultContent={item.answer}
+											description="Question for working group reporting"
+											label="Answer"
+											name={`narrativeQuestions.${String(index)}.answer`}
+										/>
+									</div>
+								);
+							})}
+						</div>
+					</section>
 
 					<TiptapEditor
 						defaultContent={workingGroupReport.narrativeReport}

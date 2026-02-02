@@ -1,4 +1,9 @@
-import type { WorkingGroup, WorkingGroupEventRole, WorkingGroupReport } from "@prisma/client";
+import type {
+	Prisma,
+	WorkingGroup,
+	WorkingGroupEventRole,
+	WorkingGroupReport,
+} from "@prisma/client";
 
 import { db } from "@/lib/db";
 
@@ -132,8 +137,8 @@ export function getWorkingGroupReport(params: GetWorkingGroupReportParams) {
 }
 
 interface UpdateWorkingGroupReportParams {
-	facultativeQuestions: string;
-	narrativeReport: string;
+	facultativeQuestions: Prisma.InputJsonValue;
+	narrativeQuestions: Prisma.InputJsonValue;
 	workingGroupReportId: string;
 	comments: string | undefined;
 	members: number;
@@ -152,7 +157,7 @@ export function updateWorkingGroupReport(params: UpdateWorkingGroupReportParams)
 		facultativeQuestions,
 		members,
 		workingGroupEvents,
-		narrativeReport,
+		narrativeQuestions,
 		workingGroupReportId,
 	} = params;
 
@@ -161,8 +166,8 @@ export function updateWorkingGroupReport(params: UpdateWorkingGroupReportParams)
 			id: workingGroupReportId,
 		},
 		data: {
-			facultativeQuestions,
-			narrativeReport,
+			facultativeQuestionsList: facultativeQuestions,
+			narrativeQuestionsList: narrativeQuestions,
 			members,
 			comments: { comments },
 			workingGroupEvents: {
