@@ -212,7 +212,7 @@ export function WorkingGroupReportFormContent(
 						<ErrorBoundary
 							fallback={
 								<p className="text-sm text-muted">
-									Failed to retrieve resources from SSHOC marketplace.
+									Failed to retrieve resources from SSHOC Marketplace.
 								</p>
 							}
 						>
@@ -229,7 +229,7 @@ export function WorkingGroupReportFormContent(
 
 						<ErrorBoundary
 							fallback={
-								<p className="text-sm text-muted">Failed to retrieve publications from zotero.</p>
+								<p className="text-sm text-muted">Failed to retrieve publications from Zotero.</p>
 							}
 						>
 							<Suspense fallback={<p className="text-sm text-muted">Loading...</p>}>
@@ -334,7 +334,7 @@ function ResourcesSection(props: Readonly<ResourcesSectionProps>): ReactNode {
 	if (resources.length === 0) {
 		return (
 			<div className="grid place-items-center py-6 text-sm/relaxed text-neutral-700 dark:text-neutral-300">
-				No resources found in sshoc marketplace.
+				No resources found in SSHOC Marketplace.
 			</div>
 		);
 	}
@@ -382,7 +382,7 @@ function PublicationsSection(props: Readonly<PublicationsSectionProps>): ReactNo
 	if (total === 0) {
 		return (
 			<div className="grid place-items-center py-6 text-sm/relaxed text-neutral-700 dark:text-neutral-300">
-				No entries found for {year} in your zotero collection.
+				No entries found for {year} in your Zotero collection.
 			</div>
 		);
 	}

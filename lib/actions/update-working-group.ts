@@ -66,8 +66,15 @@ export async function updateWorkingGroupAction(
 	}
 
 	try {
-		const { id, contactEmail, mailingList, memberTracking, startDate, endDate, chairs } =
-			result.data;
+		const {
+			id,
+			contactEmail = null,
+			mailingList = null,
+			memberTracking = null,
+			startDate,
+			endDate,
+			chairs,
+		} = result.data;
 
 		await updateWorkingGroup({
 			id,
