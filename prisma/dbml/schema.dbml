@@ -278,10 +278,8 @@ Table working_groups {
 Table working_group_reports {
   id String [pk]
   comments Json
-  facultativeQuestions String
   facultativeQuestionsList Json
   members Int
-  narrativeReport String
   narrativeQuestionsList Json
   status ReportStatus [not null, default: 'draft']
   reportCampaignId String [not null]
@@ -378,9 +376,7 @@ Table service_size_values {
 
 Table report_campaigns {
   id String [pk]
-  facultativeQuestionsTemplate String
   facultativeQuestionsListTemplate Json
-  narrativeReportTemplate String
   narrativeQuestionsListTemplate Json
   serviceSizeThresholds Json [not null]
   status ReportCampaignStatus [not null, default: 'in_progress']

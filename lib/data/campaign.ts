@@ -1,21 +1,32 @@
-import type { EventSize, OutreachType, RoleType, ServiceSize } from "@prisma/client";
+import type { EventSize, OutreachType, Prisma, RoleType, ServiceSize } from "@prisma/client";
 
 import { db } from "@/lib/db";
 
 interface CreateReportCampaignParams {
+	facultativeQuestionsListTemplate?: Prisma.InputJsonValue;
+	narrativeQuestionsListTemplate?: Prisma.InputJsonValue;
 	serviceSizeThresholds: Record<string, number>;
 	year: number;
 }
 
 export function createReportCampaign(params: CreateReportCampaignParams) {
-	const { serviceSizeThresholds, year } = params;
+	const {
+		facultativeQuestionsListTemplate,
+		narrativeQuestionsListTemplate,
+		serviceSizeThresholds,
+		year,
+	} = params;
 
 	return db.reportCampaign.upsert({
 		create: {
+			facultativeQuestionsListTemplate,
+			narrativeQuestionsListTemplate,
 			serviceSizeThresholds,
 			year,
 		},
 		update: {
+			facultativeQuestionsListTemplate,
+			narrativeQuestionsListTemplate,
 			serviceSizeThresholds,
 			year,
 		},
