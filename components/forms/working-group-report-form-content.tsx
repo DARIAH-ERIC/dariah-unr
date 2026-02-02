@@ -17,6 +17,7 @@ import { NumberInputField } from "@/components/ui/blocks/number-input-field";
 import { SelectField, SelectItem } from "@/components/ui/blocks/select-field";
 import { TextAreaField } from "@/components/ui/blocks/text-area-field";
 import { TextInputField } from "@/components/ui/blocks/text-input-field";
+import { TiptapEditor } from "@/components/ui/blocks/tiptap-editor";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
@@ -188,20 +189,16 @@ export function WorkingGroupReportFormContent(
 						</div>
 					</div>
 
-					<TextAreaField
-						defaultValue={workingGroupReport.narrativeReport}
-						isRequired={true}
+					<TiptapEditor
+						defaultContent={workingGroupReport.narrativeReport}
 						label="Narrative questions"
 						name="narrativeReport"
-						rows={12}
 					/>
 
-					<TextAreaField
-						defaultValue={workingGroupReport.facultativeQuestions}
-						isRequired={true}
+					<TiptapEditor
+						defaultContent={workingGroupReport.facultativeQuestions}
 						label="Facultative questions"
 						name="facultativeQuestions"
-						rows={12}
 					/>
 
 					<hr />

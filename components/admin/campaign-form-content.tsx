@@ -5,7 +5,7 @@ import { type ReactNode, useActionState, useId } from "react";
 
 import { SubmitButton } from "@/components/submit-button";
 import { NumberInputField } from "@/components/ui/blocks/number-input-field";
-import { TextAreaField } from "@/components/ui/blocks/text-area-field";
+import { TiptapEditor } from "@/components/ui/blocks/tiptap-editor";
 import { Form } from "@/components/ui/form";
 import { FormError as FormErrorMessage } from "@/components/ui/form-error";
 import { FormSuccess as FormSuccessMessage } from "@/components/ui/form-success";
@@ -14,6 +14,8 @@ import { createKey } from "@/lib/create-key";
 
 interface AdminCampaignFormContentProps {
 	countries: Array<{ id: string; name: string; previousOperationalCostThreshold: number }>;
+	facultativeQuestionsTemplate?: string | null;
+	narrativeReportTemplate?: string | null;
 	previousEventSizeValues: Record<
 		EventSize,
 		{ id: string; type: EventSize; annualValue: number }
@@ -36,6 +38,8 @@ interface AdminCampaignFormContentProps {
 export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): ReactNode {
 	const {
 		countries,
+		facultativeQuestionsTemplate,
+		narrativeReportTemplate,
 		previousEventSizeValues,
 		previousOutreachTypeValues,
 		previousRoleTypeValues,
@@ -68,20 +72,18 @@ export function AdminCampaignFormContent(props: AdminCampaignFormContentProps): 
 					Working groups
 				</h2>
 
-				<TextAreaField
+				<TiptapEditor
+					defaultContent={facultativeQuestionsTemplate ?? ""}
 					description="Questions for working group reporting"
-					isRequired={true}
 					label="Narrative questions"
 					name="narrativeReport"
-					rows={12}
 				/>
 
-				<TextAreaField
+				<TiptapEditor
+					defaultContent={narrativeReportTemplate ?? ""}
 					description="Questions for working group reporting"
-					isRequired={true}
 					label="Facultative questions"
 					name="facultativeQuestions"
-					rows={12}
 				/>
 			</section>
 
