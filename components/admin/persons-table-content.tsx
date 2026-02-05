@@ -463,9 +463,16 @@ function PersonEditForm(props: PersonEditFormProps) {
 		? institutionsById.get(defaultSelectedInstitutionId)?.countries[0]?.id
 		: undefined;
 
+	const initialItems = useMemo(() => {
+		return Array.from(institutionsById.values());
+	}, [institutionsById]);
+
 	const list = useListData({
-		initialItems: Array.from(institutionsById.values()),
+		initialItems,
 		filter(item, countryId) {
+			if (!countryId) {
+				return true;
+			}
 			return item.countries.some((country) => {
 				return country.id === countryId;
 			});
@@ -474,10 +481,18 @@ function PersonEditForm(props: PersonEditFormProps) {
 	});
 
 	const institutionCountries = useMemo(() => {
-		return Array.from(institutionsById.values()).flatMap((institution) => {
+		const countries = initialItems.flatMap((institution) => {
 			return institution.countries;
 		});
-	}, [institutionsById]);
+
+		const countriesById = keyByToMap(countries, (country) => {
+			return country.id;
+		});
+
+		return Array.from(countriesById.values()).sort((a, z) => {
+			return a.name.localeCompare(z.name);
+		});
+	}, [initialItems]);
 
 	return (
 		<Form
