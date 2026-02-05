@@ -65,6 +65,12 @@ export default async function DashboardWorkingGroupOutreachPage(
 	return (
 		<MainContent className="max-w-(--breakpoint-lg) grid content-start gap-8">
 			<PageTitle>Outreach</PageTitle>
+			<div className="prose max-w-3xl!">
+				<p>
+					This section records the outreach channels and activities of the WG. Please include start
+					and end dates where relevant. Leave the end date empty for ongoing outreach activities.
+				</p>
+			</div>
 			<WorkingGroupOutreachForm outreach={outreach} workingGroup={workingGroup} />
 		</MainContent>
 	);

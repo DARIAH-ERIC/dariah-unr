@@ -65,6 +65,7 @@ export function WorkingGroupFormContent(params: WorkingGroupFormParamsContent): 
 
 			<TextInputField
 				defaultValue={workingGroup.contactEmail ?? undefined}
+				description="Primary email address for contacting the Working Group."
 				label="Contact email"
 				name="contactEmail"
 				type="email"
@@ -72,24 +73,28 @@ export function WorkingGroupFormContent(params: WorkingGroupFormParamsContent): 
 
 			<TextInputField
 				defaultValue={workingGroup.mailingList ?? undefined}
+				description=" Mailing list used by the WG for member communication, if applicable."
 				label="Mailing list"
 				name="mailingList"
 			/>
 
 			<TextInputField
 				defaultValue={workingGroup.memberTracking ?? undefined}
-				label="Member tracking"
+				description="For example: approximate number of members, registration form, use of a mailing list, etc."
+				label="How do you keep track of your WG members?"
 				name="memberTracking"
 			/>
 
 			<DateInputField
 				defaultValue={workingGroup.startDate ? toDateValue(workingGroup.startDate) : undefined}
+				description="Official start date of the working group."
 				label="Start date"
 				name="startDate"
 			/>
 
 			<DateInputField
 				defaultValue={workingGroup.endDate ? toDateValue(workingGroup.endDate) : undefined}
+				description="End date of the working group. Leave empty if the working group is active."
 				label="End date"
 				name="endDate"
 			/>
@@ -130,7 +135,7 @@ export function WorkingGroupFormContent(params: WorkingGroupFormParamsContent): 
 								className="w-32 shrink-0"
 								defaultValue={chair.startDate ? toDateValue(chair.startDate) : undefined}
 								granularity="day"
-								label="Start date"
+								label="Term start date"
 								name={`chairs.${String(index)}.startDate`}
 							/>
 
@@ -138,7 +143,7 @@ export function WorkingGroupFormContent(params: WorkingGroupFormParamsContent): 
 								className="w-32 shrink-0"
 								defaultValue={chair.endDate ? toDateValue(chair.endDate) : undefined}
 								granularity="day"
-								label="End date"
+								label="Term end date"
 								name={`chairs.${String(index)}.endDate`}
 							/>
 
@@ -170,6 +175,9 @@ export function WorkingGroupFormContent(params: WorkingGroupFormParamsContent): 
 					>
 						Add chair
 					</Button>
+					<p className="text-xs text-muted-fg">
+						If the person you want to add does not appear in the list, please contact ...
+					</p>
 				</div>
 			</div>
 
