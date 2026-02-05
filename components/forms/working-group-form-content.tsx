@@ -165,7 +165,7 @@ export function WorkingGroupFormContent(params: WorkingGroupFormParamsContent): 
 					);
 				})}
 
-				<div>
+				<div className="flex flex-col gap-y-1.5 items-start">
 					<Button
 						onPress={() => {
 							setChairs((chairs) => {
@@ -176,12 +176,15 @@ export function WorkingGroupFormContent(params: WorkingGroupFormParamsContent): 
 						Add chair
 					</Button>
 					<p className="text-xs text-muted-fg">
-						If the person you want to add does not appear in the list, please contact ...
+						If the person you want to add does not appear in the list, please contact{" "}
+						<a className="underline" href={`mailto:working.groups@dariah.eu`}>
+							working.groups@dariah.eu
+						</a>
 					</p>
 				</div>
 			</div>
 
-			<div>
+			<div className="flex flex-col">
 				<SubmitButton>Save</SubmitButton>
 			</div>
 
