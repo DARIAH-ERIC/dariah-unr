@@ -169,7 +169,7 @@ export function TiptapEditor(props: TipTapEditorProps): ReactNode {
 						<span className="sr-only">remove link</span>
 					</IconButton>
 				</Group>
-				<EditorContent className="mt-2 **:data-placeholder:text-muted" editor={editor} />
+				<EditorContent className="mt-2 **:data-placeholder:text-muted-fg" editor={editor} />
 				<input name={name} type="hidden" value={content ?? ""} />
 			</Group>
 			{description != null ? (

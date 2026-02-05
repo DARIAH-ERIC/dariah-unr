@@ -59,6 +59,12 @@ export default async function DashboardWorkingGroupPage(
 	return (
 		<MainContent className="max-w-(--breakpoint-lg) grid content-start gap-8">
 			<PageTitle>Overview</PageTitle>
+			<div className="prose max-w-3xl!">
+				<p>
+					This section displays information drawn from the new DARIAH website currently under
+					construction.
+				</p>
+			</div>
 		</MainContent>
 	);
 }

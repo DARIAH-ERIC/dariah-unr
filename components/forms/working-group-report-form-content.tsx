@@ -118,6 +118,7 @@ export function WorkingGroupReportFormContent(
 				<section className="grid gap-y-6">
 					<NumberInputField
 						defaultValue={workingGroupReport.members ?? 0}
+						description="Number of active members."
 						isRequired={true}
 						label="Members"
 						name="members"
@@ -127,6 +128,10 @@ export function WorkingGroupReportFormContent(
 
 					<div className="flex flex-col gap-4">
 						<h2 className="font-semibold text-lg">Events</h2>
+
+						<div className="prose prose-sm max-w-3xl!">
+							<p>Events organized by or involving the WG during the reporting period.</p>
+						</div>
 
 						{events.map((event, index) => {
 							return (
@@ -211,7 +216,11 @@ export function WorkingGroupReportFormContent(
 					<hr />
 
 					<section className="flex flex-col gap-y-4">
-						<h3 className="font-semibold text-lg">Facultative questions</h3>
+						<h3 className="font-semibold text-lg">Additional information</h3>
+
+						<div className="prose prose-sm max-w-3xl!">
+							<p>Optional questions that help us better understand the profile and scope of WGs.</p>
+						</div>
 
 						<div className="flex flex-col gap-y-6">
 							{facultativeQuestions.map((item, index) => {
@@ -242,7 +251,11 @@ export function WorkingGroupReportFormContent(
 					<hr />
 
 					<section className="flex flex-col gap-y-4">
-						<h3 className="font-semibold text-lg">Narrative questions</h3>
+						<h3 className="font-semibold text-lg">Highlights and Plans</h3>
+
+						<div className="prose prose-sm max-w-3xl!">
+							<p>Short narrative inputs that highlight the work and direction of the WG.</p>
+						</div>
 
 						<div className="flex flex-col gap-y-6">
 							{narrativeQuestions.map((item, index) => {
@@ -275,14 +288,22 @@ export function WorkingGroupReportFormContent(
 					<div className="flex flex-col gap-y-2">
 						<h2 className="text-lg font-semibold">Resources</h2>
 
+						<div className="prose prose-sm max-w-3xl!">
+							<p>
+								Resources associated with your WG, drawn automatically from the SSH Open
+								Marketplace. This list updates automatically when new resources are added in the
+								Marketplace. We recommend keeping the Marketplace up to date.
+							</p>
+						</div>
+
 						<ErrorBoundary
 							fallback={
-								<p className="text-sm text-muted">
+								<p className="text-sm text-muted-fg">
 									Failed to retrieve resources from SSHOC Marketplace.
 								</p>
 							}
 						>
-							<Suspense fallback={<p className="text-sm text-muted">Loading...</p>}>
+							<Suspense fallback={<p className="text-sm text-muted-fg">Loading...</p>}>
 								<ResourcesSection resourcesPromise={resourcesPromise} />
 							</Suspense>
 						</ErrorBoundary>
@@ -293,12 +314,22 @@ export function WorkingGroupReportFormContent(
 					<div className="flex flex-col gap-y-2">
 						<h2 className="text-lg font-semibold">Publications</h2>
 
+						<div className="prose prose-sm max-w-3xl!">
+							<p>
+								Publications associated with your WG, drawn automatically from the WG’s Zotero
+								Collection. This list updates automatically when new publications are added in the
+								collection. We recommend keeping the collection up to date.
+							</p>
+						</div>
+
 						<ErrorBoundary
 							fallback={
-								<p className="text-sm text-muted">Failed to retrieve publications from Zotero.</p>
+								<p className="text-sm text-muted-fg">
+									Failed to retrieve publications from Zotero.
+								</p>
 							}
 						>
-							<Suspense fallback={<p className="text-sm text-muted">Loading...</p>}>
+							<Suspense fallback={<p className="text-sm text-muted-fg">Loading...</p>}>
 								<PublicationsSection year={year} zoteroPromise={zoteroPromise} />
 							</Suspense>
 						</ErrorBoundary>
@@ -306,7 +337,12 @@ export function WorkingGroupReportFormContent(
 
 					<hr />
 
-					<TextAreaField defaultValue={comments ?? ""} label="Comments" name="comments" />
+					<TextAreaField
+						defaultValue={comments ?? ""}
+						description="Any additional information, clarification or notes you would like to share."
+						label="Comments"
+						name="comments"
+					/>
 
 					<SubmitButton>{submitLabel}</SubmitButton>
 				</section>

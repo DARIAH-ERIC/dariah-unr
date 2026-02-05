@@ -66,6 +66,15 @@ export default async function DashboardWorkingGroupWorkingGroupPage(
 	return (
 		<MainContent className="max-w-(--breakpoint-lg) grid content-start gap-8">
 			<PageTitle>Working group</PageTitle>
+			<div className="prose max-w-3xl!">
+				<p>
+					This section contains core information about your Working Group. Some fields are
+					pre-filled from the DARIAH knowledge base and can be updated if needed. Please review the
+					information and make any necessary corrections or additions. If you have any question,
+					please write to us:{" "}
+					<a href={`mailto:working.groups@dariah.eu`}>working.groups@dariah.eu</a>
+				</p>
+			</div>
 			<WorkingGroupForm persons={persons} roles={roles} workingGroup={workingGroup} />
 		</MainContent>
 	);
