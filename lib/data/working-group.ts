@@ -174,8 +174,8 @@ interface UpdateWorkingGroupParams {
 		id?: string;
 		personId: string;
 		roleId: string;
-		endDate?: Date;
-		startDate?: Date;
+		endDate?: Date | null;
+		startDate?: Date | null;
 	}>;
 	contactEmail?: WorkingGroup["contactEmail"];
 	endDate?: WorkingGroup["endDate"];

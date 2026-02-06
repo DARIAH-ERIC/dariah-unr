@@ -14,21 +14,22 @@ import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 const formSchema = z.object({
 	id: z.string(),
 	name: z.string(),
-	startDate: z.coerce.date().optional(),
-	endDate: z.coerce.date().optional(),
+	startDate: z.coerce.date().nullish().default(null),
+	endDate: z.coerce.date().nullish().default(null),
 	chairs: z
 		.array(
 			z.object({
 				id: z.string().optional(),
 				personId: z.string(),
-				startDate: z.coerce.date().optional(),
-				endDate: z.coerce.date().optional(),
+				startDate: z.coerce.date().nullish().default(null),
+				endDate: z.coerce.date().nullish().default(null),
 			}),
 		)
-		.optional(),
-	contactEmail: z.string().optional(),
-	mailingList: z.string().optional(),
-	memberTracking: z.string().optional(),
+		.optional()
+		.default([]),
+	contactEmail: z.string().nullish().default(null),
+	mailingList: z.string().nullish().default(null),
+	memberTracking: z.string().nullish().default(null),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -84,7 +85,7 @@ export async function updateWorkingGroupAction(
 			endDate,
 			contactEmail,
 			startDate,
-			chairs: chairs?.map((chair) => {
+			chairs: chairs.map((chair) => {
 				return { ...chair, roleId: workingGroupChairRoleId };
 			}),
 			mailingList,

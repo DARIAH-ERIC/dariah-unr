@@ -11,18 +11,18 @@ import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 const formSchema = z.object({
 	id: z.string(),
-	contactEmail: z.string().optional(),
-	mailingList: z.string().optional(),
-	memberTracking: z.string().optional(),
-	startDate: z.coerce.date().optional(),
-	endDate: z.coerce.date().optional(),
+	contactEmail: z.string().nullish().default(null),
+	mailingList: z.string().nullish().default(null),
+	memberTracking: z.string().nullish().default(null),
+	startDate: z.coerce.date().nullish().default(null),
+	endDate: z.coerce.date().nullish().default(null),
 	chairs: z.array(
 		z.object({
 			id: z.string().optional(),
 			personId: z.string(),
 			roleId: z.string(),
-			startDate: z.coerce.date().optional(),
-			endDate: z.coerce.date().optional(),
+			startDate: z.coerce.date().nullish().default(null),
+			endDate: z.coerce.date().nullish().default(null),
 		}),
 	),
 });
@@ -66,15 +66,8 @@ export async function updateWorkingGroupAction(
 	}
 
 	try {
-		const {
-			id,
-			contactEmail = null,
-			mailingList = null,
-			memberTracking = null,
-			startDate,
-			endDate,
-			chairs,
-		} = result.data;
+		const { id, contactEmail, mailingList, memberTracking, startDate, endDate, chairs } =
+			result.data;
 
 		await updateWorkingGroup({
 			id,
