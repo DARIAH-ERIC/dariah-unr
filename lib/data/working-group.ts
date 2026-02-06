@@ -15,6 +15,7 @@ export function getWorkingGroups() {
 					endDate: true,
 					personId: true,
 				},
+				orderBy: [{ endDate: "asc" }, { startDate: "asc" }],
 			},
 		},
 	});
@@ -97,7 +98,9 @@ export function getWorkingGroupBySlug(params: GetWorkingGroupBySlugParams) {
 			slug,
 		},
 		include: {
-			chairs: true,
+			chairs: {
+				orderBy: [{ endDate: "asc" }, { startDate: "asc" }],
+			},
 		},
 	});
 }
