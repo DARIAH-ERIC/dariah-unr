@@ -22,11 +22,13 @@ const formSchema = z.object({
 				...Array<SoftwareMarketplaceStatus>,
 			],
 		)
-		.optional(),
-	marketplaceId: z.string().optional(),
+		.nullish()
+		.default(null),
+	marketplaceId: z.string().nullish().default(null),
 	status: z
 		.enum(Object.values(SoftwareStatus) as [SoftwareStatus, ...Array<SoftwareStatus>])
-		.optional(),
+		.nullish()
+		.default(null),
 	url: z.array(z.string()).optional(),
 	countries: z.array(z.string()).optional(),
 });

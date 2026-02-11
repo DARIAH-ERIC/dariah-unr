@@ -14,12 +14,15 @@ import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 const formSchema = z.object({
 	id: z.string(),
 	name: z.string(),
-	amount: z.coerce.number().optional(),
-	funders: z.string().optional(),
-	projectMonths: z.coerce.number().optional(),
-	scope: z.enum(Object.values(ProjectScope) as [ProjectScope, ...Array<ProjectScope>]).optional(),
-	totalAmount: z.coerce.number().optional(),
-	startDate: z.coerce.date().optional(),
+	amount: z.coerce.number().nullish().default(null),
+	funders: z.string().nullish().default(null),
+	projectMonths: z.coerce.number().nullish().default(null),
+	scope: z
+		.enum(Object.values(ProjectScope) as [ProjectScope, ...Array<ProjectScope>])
+		.nullish()
+		.default(null),
+	totalAmount: z.coerce.number().nullish().default(null),
+	startDate: z.coerce.date().nullish().default(null),
 });
 
 type FormSchema = z.infer<typeof formSchema>;

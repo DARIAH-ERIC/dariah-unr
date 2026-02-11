@@ -15,10 +15,10 @@ const formSchema = z.object({
 	id: z.string(),
 	personId: z.string(),
 	roleId: z.string(),
-	workingGroupId: z.string().optional(),
-	startDate: z.coerce.date().optional(),
-	endDate: z.coerce.date().optional(),
-	countryId: z.string().optional(),
+	workingGroupId: z.string().nullish().default(null),
+	startDate: z.coerce.date().nullish().default(null),
+	endDate: z.coerce.date().nullish().default(null),
+	countryId: z.string().nullish().default(null),
 });
 
 type FormSchema = z.infer<typeof formSchema>;

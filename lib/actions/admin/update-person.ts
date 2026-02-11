@@ -13,8 +13,8 @@ import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 const formSchema = z.object({
 	id: z.string(),
 	name: z.string(),
-	email: z.string().optional(),
-	orcid: z.string().optional(),
+	email: z.string().nullish().default(null),
+	orcid: z.string().nullish().default(null),
 	institutions: z.array(z.string()).optional(),
 });
 

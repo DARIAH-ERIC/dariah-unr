@@ -207,10 +207,10 @@ interface UpdateContributionParams {
 	id: Contribution["id"];
 	personId: Contribution["personId"];
 	roleId: Contribution["roleId"];
-	countryId?: Contribution["countryId"];
-	startDate?: Contribution["startDate"];
-	endDate?: Contribution["endDate"];
-	workingGroupId?: Contribution["workingGroupId"];
+	countryId?: Contribution["countryId"] | null;
+	startDate?: Contribution["startDate"] | null;
+	endDate?: Contribution["endDate"] | null;
+	workingGroupId?: Contribution["workingGroupId"] | null;
 }
 
 export function updateContribution(params: UpdateContributionParams) {
@@ -222,12 +222,16 @@ export function updateContribution(params: UpdateContributionParams) {
 		},
 		data: {
 			country:
-				countryId != null
-					? {
-							connect: {
-								id: countryId,
-							},
-						}
+				countryId !== undefined
+					? countryId === null
+						? {
+								disconnect: true,
+							}
+						: {
+								connect: {
+									id: countryId,
+								},
+							}
 					: undefined,
 			person: {
 				connect: {
@@ -242,12 +246,16 @@ export function updateContribution(params: UpdateContributionParams) {
 			startDate,
 			endDate,
 			workingGroup:
-				workingGroupId != null
-					? {
-							connect: {
-								id: workingGroupId,
-							},
-						}
+				workingGroupId !== undefined
+					? workingGroupId === null
+						? {
+								disconnect: true,
+							}
+						: {
+								connect: {
+									id: workingGroupId,
+								},
+							}
 					: undefined,
 		},
 	});
