@@ -20,11 +20,12 @@ import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
 const formSchema = z.object({
 	id: z.string(),
-	agreements: z.string().optional(),
+	agreements: z.string().nullish().default(null),
 	audience: z
 		.enum(Object.values(ServiceAudience) as [ServiceAudience, ...Array<ServiceAudience>])
-		.optional(),
-	comment: z.string().optional(),
+		.nullish()
+		.default(null),
+	comment: z.string().nullish().default(null),
 	dariahBranding: checkBox(z.boolean().optional()),
 	eoscOnboarding: checkBox(z.boolean().optional()),
 	marketplaceStatus: z
@@ -34,19 +35,24 @@ const formSchema = z.object({
 				...Array<ServiceMarketplaceStatus>,
 			],
 		)
-		.optional(),
-	marketplaceId: z.string().optional(),
+		.nullish()
+		.default(null),
+	marketplaceId: z.string().nullish().default(null),
 	monitoring: checkBox(z.boolean().optional()),
 	name: z.string().min(1),
 	privateSupplier: checkBox(z.boolean().optional()),
 	status: z
 		.enum(Object.values(ServiceStatus) as [ServiceStatus, ...Array<ServiceStatus>])
-		.optional(),
-	technicalContact: z.string().optional(),
-	technicalReadinessLevel: z.coerce.number().int().positive().optional(),
-	type: z.enum(Object.values(ServiceType) as [ServiceType, ...Array<ServiceType>]).optional(),
+		.nullish()
+		.default(null),
+	technicalContact: z.string().nullish().default(null),
+	technicalReadinessLevel: z.coerce.number().int().positive().nullish().default(null),
+	type: z
+		.enum(Object.values(ServiceType) as [ServiceType, ...Array<ServiceType>])
+		.nullish()
+		.default(null),
 	url: z.array(z.string()).optional(),
-	valueProposition: z.string().optional(),
+	valueProposition: z.string().nullish().default(null),
 	countries: z.array(z.string()).optional(),
 	institutions: z
 		.array(

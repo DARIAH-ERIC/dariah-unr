@@ -613,7 +613,9 @@ function ContributionEditForm(props: ContributionEditFormProps) {
 
 			<SelectField
 				defaultSelectedKey={contribution?.workingGroup?.id}
-				isDisabled={selectedRole == null || !["wg_chair", "wg_member"].includes(selectedRole.type)}
+				isClearable={true}
+				/** Invalid data in the db shouls still be editable by admins. */
+				// isDisabled={selectedRole == null || !["wg_chair", "wg_member"].includes(selectedRole.type)}
 				isRequired={selectedRole != null && ["wg_chair", "wg_member"].includes(selectedRole.type)}
 				label="Working Group"
 				name="workingGroupId"

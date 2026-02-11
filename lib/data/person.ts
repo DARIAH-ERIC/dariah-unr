@@ -49,8 +49,8 @@ export function getPersons() {
 interface UpdatePersonParams {
 	id: string;
 	name: string;
-	email?: string;
-	orcid?: string;
+	email?: string | null;
+	orcid?: string | null;
 	institutions?: Array<string>;
 }
 

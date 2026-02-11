@@ -135,7 +135,7 @@ interface UpdateOutreachParams {
 	name: Outreach["name"];
 	type: Outreach["type"];
 	url: Outreach["url"];
-	country?: string;
+	country?: string | null;
 	startDate?: Outreach["startDate"];
 	endDate?: Outreach["endDate"];
 }
@@ -154,12 +154,16 @@ export function updateOutreach(params: UpdateOutreachParams) {
 			startDate,
 			endDate,
 			country:
-				country != null
-					? {
-							connect: {
-								id: country,
-							},
-						}
+				country !== undefined
+					? country === null
+						? {
+								disconnect: true,
+							}
+						: {
+								connect: {
+									id: country,
+								},
+							}
 					: undefined,
 		},
 	});

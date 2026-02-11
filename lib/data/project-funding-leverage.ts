@@ -21,12 +21,12 @@ export function getProjectsFundingLeverages() {
 interface UpdateProjectFundingLeverageParams {
 	id: string;
 	name?: ProjectsFundingLeverage["name"];
-	amount?: number;
-	funders?: string;
-	projectMonths?: number;
-	scope?: ProjectScope;
-	totalAmount?: number;
-	startDate?: ProjectsFundingLeverage["startDate"];
+	amount?: number | null;
+	funders?: string | null;
+	projectMonths?: number | null;
+	scope?: ProjectScope | null;
+	totalAmount?: number | null;
+	startDate?: ProjectsFundingLeverage["startDate"] | null;
 }
 
 export function updateProjectFundingLeverage(params: UpdateProjectFundingLeverageParams) {

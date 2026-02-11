@@ -18,9 +18,9 @@ const formSchema = z.object({
 		.array(z.enum(Object.values(InstitutionType) as [InstitutionType, ...Array<InstitutionType>]))
 		.optional(),
 	url: z.array(z.string()).optional(),
-	ror: z.string().optional(),
-	startDate: z.coerce.date().optional(),
-	endDate: z.coerce.date().optional(),
+	ror: z.string().nullish().default(null),
+	startDate: z.coerce.date().nullish().default(null),
+	endDate: z.coerce.date().nullish().default(null),
 	countries: z.array(z.string()).optional(),
 });
 

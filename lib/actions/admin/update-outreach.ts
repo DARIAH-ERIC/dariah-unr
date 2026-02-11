@@ -16,9 +16,9 @@ const formSchema = z.object({
 	name: z.string(),
 	type: z.enum(Object.values(OutreachType) as [OutreachType, ...Array<OutreachType>]),
 	url: z.string().min(1),
-	country: z.string().optional(),
-	startDate: z.coerce.date().optional(),
-	endDate: z.coerce.date().optional(),
+	country: z.string().nullish().default(null),
+	startDate: z.coerce.date().nullish().default(null),
+	endDate: z.coerce.date().nullish().default(null),
 });
 
 type FormSchema = z.infer<typeof formSchema>;

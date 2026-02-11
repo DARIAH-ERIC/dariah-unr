@@ -55,8 +55,8 @@ interface UpdateUserParams {
 	id: string;
 	name?: string;
 	role: User["role"];
-	countryId?: string;
-	personId?: string;
+	countryId?: string | null;
+	personId?: string | null;
 }
 
 export function updateUser(params: UpdateUserParams) {
@@ -70,20 +70,28 @@ export function updateUser(params: UpdateUserParams) {
 			name,
 			role,
 			country:
-				countryId != null
-					? {
-							connect: {
-								id: countryId,
-							},
-						}
+				countryId !== undefined
+					? countryId === null
+						? {
+								disconnect: true,
+							}
+						: {
+								connect: {
+									id: countryId,
+								},
+							}
 					: undefined,
 			person:
-				personId != null
-					? {
-							connect: {
-								id: personId,
-							},
-						}
+				personId !== undefined
+					? personId === null
+						? {
+								disconnect: true,
+							}
+						: {
+								connect: {
+									id: personId,
+								},
+							}
 					: undefined,
 		},
 	});

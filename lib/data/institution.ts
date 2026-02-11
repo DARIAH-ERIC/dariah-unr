@@ -139,10 +139,10 @@ export function getInstitutions() {
 
 interface UpdateInstitutionParams {
 	id: string;
-	endDate?: Date;
+	endDate?: Date | null;
 	name: string;
-	ror?: string;
-	startDate?: Date;
+	ror?: string | null;
+	startDate?: Date | null;
 	types?: Institution["types"];
 	url?: Institution["url"];
 	countries?: Array<string>;

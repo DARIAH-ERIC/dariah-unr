@@ -15,8 +15,8 @@ const formSchema = z.object({
 	id: z.string(),
 	name: z.string().optional(),
 	role: z.enum(Object.values(UserRole) as [UserRole, ...Array<UserRole>]),
-	country: z.string().optional(),
-	person: z.string().optional(),
+	country: z.string().nullish().default(null),
+	person: z.string().nullish().default(null),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
