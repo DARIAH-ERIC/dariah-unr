@@ -216,41 +216,6 @@ export function WorkingGroupReportFormContent(
 					<hr />
 
 					<section className="flex flex-col gap-y-4">
-						<h3 className="font-semibold text-lg">Additional information</h3>
-
-						<div className="prose prose-sm max-w-3xl!">
-							<p>Optional questions that help us better understand the profile and scope of WGs.</p>
-						</div>
-
-						<div className="flex flex-col gap-y-6">
-							{facultativeQuestions.map((item, index) => {
-								return (
-									<div key={index} className="flex flex-col gap-y-2">
-										<div
-											// eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml
-											dangerouslySetInnerHTML={{ __html: item.question }}
-											className="prose prose-sm max-w-2xl!"
-										/>
-										<input
-											name={`facultativeQuestions.${String(index)}.question`}
-											type="hidden"
-											value={item.question}
-										/>
-										<TiptapEditor
-											defaultContent={item.answer}
-											isLabelVisible={false}
-											label="Answer"
-											name={`facultativeQuestions.${String(index)}.answer`}
-										/>
-									</div>
-								);
-							})}
-						</div>
-					</section>
-
-					<hr />
-
-					<section className="flex flex-col gap-y-4">
 						<h3 className="font-semibold text-lg">Highlights and Plans</h3>
 
 						<div className="prose prose-sm max-w-3xl!">
@@ -276,6 +241,41 @@ export function WorkingGroupReportFormContent(
 											isLabelVisible={false}
 											label="Answer"
 											name={`narrativeQuestions.${String(index)}.answer`}
+										/>
+									</div>
+								);
+							})}
+						</div>
+					</section>
+
+					<hr />
+
+					<section className="flex flex-col gap-y-4">
+						<h3 className="font-semibold text-lg">Additional information</h3>
+
+						<div className="prose prose-sm max-w-3xl!">
+							<p>Optional questions that help us better understand the profile and scope of WGs.</p>
+						</div>
+
+						<div className="flex flex-col gap-y-6">
+							{facultativeQuestions.map((item, index) => {
+								return (
+									<div key={index} className="flex flex-col gap-y-2">
+										<div
+											// eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml
+											dangerouslySetInnerHTML={{ __html: item.question }}
+											className="prose prose-sm max-w-2xl!"
+										/>
+										<input
+											name={`facultativeQuestions.${String(index)}.question`}
+											type="hidden"
+											value={item.question}
+										/>
+										<TiptapEditor
+											defaultContent={item.answer}
+											isLabelVisible={false}
+											label="Answer"
+											name={`facultativeQuestions.${String(index)}.answer`}
 										/>
 									</div>
 								);
