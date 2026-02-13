@@ -529,8 +529,6 @@ function PersonEditForm(props: PersonEditFormProps) {
 				})}
 			</SelectField>
 
-			<pre>{JSON.stringify({ defaultSelectedInstitutionId })}</pre>
-
 			{/* TODO: Multiple institutions */}
 			<SelectField
 				defaultSelectedKey={defaultSelectedInstitutionId}
