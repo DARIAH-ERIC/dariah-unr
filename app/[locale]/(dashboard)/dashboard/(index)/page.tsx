@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
+import { Link } from "@/components/link";
 import { PageTitle } from "@/components/page-title";
 import { assertAuthenticated } from "@/lib/server/auth/assert-authenticated";
 
@@ -34,6 +35,10 @@ export default async function DashboardPage(_props: DashboardPageProps): Promise
 					for the evaluation and measurement of DARIAH-EU, its national consortia, and its working
 					groups. This information will be used as well to display basic data on our national
 					consortia and working groups for the new website.
+				</p>
+				<p>
+					You can find further information in the{" "}
+					<Link href="/documentation/guidelines">documentation</Link>.
 				</p>
 			</div>
 		</main>
