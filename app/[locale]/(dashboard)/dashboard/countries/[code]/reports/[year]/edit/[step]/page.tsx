@@ -258,7 +258,8 @@ async function DashboardCountryReportEditStepPageContent(
 						<p>This response will consist of three numbers:</p>
 
 						<ul>
-							<li>number of large meetings (more than 50 people in attendance),</li>
+							<li>number of very large meetings (more than 100 people in attendance),</li>
+							<li>number of large meetings (50 to 100 people),</li>
 							<li>number of medium sized meetings (20 to 50 people) and</li>
 							<li>number of small meetings (less than 20 people).</li>
 						</ul>
