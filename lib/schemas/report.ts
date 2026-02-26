@@ -24,6 +24,7 @@ export type WorkingGroupReportCommentsSchema = z.infer<typeof workingGroupReport
 
 export const eventReportSchema = z.object({
 	dariahCommissionedEvent: nonEmptyString(z.string().optional()),
+	veryLargeMeetings: nonEmptyString(z.coerce.number().int().nonnegative().optional()),
 	largeMeetings: nonEmptyString(z.coerce.number().int().nonnegative().optional()),
 	mediumMeetings: nonEmptyString(z.coerce.number().int().nonnegative().optional()),
 	reusableOutcomes: nonEmptyString(z.string().optional()),

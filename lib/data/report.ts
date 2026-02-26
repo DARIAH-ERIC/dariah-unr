@@ -381,6 +381,7 @@ export function getServiceReports(params: GetServiceReportsParams) {
 interface UpsertEventReportParams {
 	dariahCommissionedEvent?: EventReport["dariahCommissionedEvent"];
 	eventReportId: EventReport["id"] | undefined;
+	veryLargeMeetings?: EventReport["veryLargeMeetings"];
 	largeMeetings?: EventReport["largeMeetings"];
 	mediumMeetings?: EventReport["mediumMeetings"];
 	reportId: Report["id"];
