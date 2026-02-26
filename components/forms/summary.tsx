@@ -76,6 +76,14 @@ export function Summary(props: SummaryProps): ReactNode {
 						})}
 				</dd>
 			</div>
+
+			<div className="print:break-inside-avoid-page">
+				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
+					Number of very large meetings
+				</dt>
+				<dd>{reportSummary.events.count.veryLarge}</dd>
+			</div>
+
 			<div className="print:break-inside-avoid-page">
 				<dt className="text-xs tracking-wide text-neutral-600 uppercase dark:text-neutral-400">
 					Number of large meetings

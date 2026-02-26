@@ -45,6 +45,7 @@ export interface ReportSummaryParamsResult {
 			small: number;
 			medium: number;
 			large: number;
+			veryLarge: number;
 			dariah: number;
 		};
 	};
