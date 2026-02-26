@@ -7,7 +7,7 @@ import { getCollectionItems, getCollectionsByCountryCode } from "@/lib/zotero";
 
 interface AdminStatisticsContentProps {
 	contributionsCount: { count: number; byRole: Record<string, number> };
-	events: { small: number; medium: number; large: number };
+	events: { small: number; medium: number; large: number; veryLarge: number };
 	institutionsCount: Record<string, number>;
 	outreach: { count: Record<string, number>; kpis: Record<string, number> };
 	projectFundingLeverages: number;
@@ -70,6 +70,7 @@ export function AdminStatisticsContent(props: AdminStatisticsContentProps) {
 						<div>Small: {events.small}</div>
 						<div>Medium: {events.medium}</div>
 						<div>Large: {events.large}</div>
+						<div>Very large: {events.veryLarge}</div>
 					</dd>
 				</div>
 

@@ -112,6 +112,7 @@ async function AdminStatistics(props: AdminStatisticsProps) {
 		small: 0,
 		medium: 0,
 		large: 0,
+		veryLarge: 0,
 	};
 
 	const services = {
@@ -128,6 +129,7 @@ async function AdminStatistics(props: AdminStatisticsProps) {
 		events.small += report.eventReport?.smallMeetings ?? 0;
 		events.medium += report.eventReport?.mediumMeetings ?? 0;
 		events.large += report.eventReport?.largeMeetings ?? 0;
+		events.veryLarge += report.eventReport?.veryLargeMeetings ?? 0;
 
 		totalContributions += report.contributionsCount ?? 0;
 
